@@ -14,14 +14,14 @@ _MODEL_PROVIDERS_DICT = {}
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
     """Parse model string and provider.
-    
+
     Args:
         model: Model name string, potentially including provider prefix
         model_provider: Optional provider name
-        
+
     Returns:
         Tuple of (model_name, provider_name)
-        
+
     Raises:
         ValueError: If unable to infer model provider
     """
@@ -48,12 +48,12 @@ def _load_chat_model_helper(
     **kwargs: Any,
 ) -> BaseChatModel:
     """Helper function to load chat model.
-    
+
     Args:
         model: Model name
         model_provider: Optional provider name
         **kwargs: Additional arguments for model initialization
-        
+
     Returns:
         BaseChatModel: Initialized chat model instance
     """
@@ -87,12 +87,12 @@ def register_model_provider(
     base_url: Optional[str] = None,
 ):
     """Register a new model provider.
-    
+
     Args:
         provider_name: Name of the provider to register
         chat_model: Either a BaseChatModel class or a string identifier for a supported provider
         base_url: Optional base URL for API endpoints (required when chat_model is a string)
-        
+
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
                    or if chat_model string is not in supported providers
@@ -114,18 +114,18 @@ def register_model_provider(
 
 
 def load_chat_model(
-    model: Optional[str] = None,
+    model: str,
     *,
     model_provider: Optional[str] = None,
     **kwargs: Any,
 ) -> BaseChatModel:
     """Load a chat model.
-    
+
     Args:
         model: Model name
         model_provider: Optional provider name
         **kwargs: Additional arguments for model initialization
-        
+
     Returns:
         BaseChatModel: Initialized chat model instance
     """
