@@ -69,12 +69,20 @@ def _load_chat_model_helper(
                     )
                 kwargs["api_key"] = api_key
             base_url = _MODEL_PROVIDERS_DICT[model_provider]["base_url"]
-            return init_chat_model(
-                model=model,
-                model_provider=chat_model,
-                base_url=base_url,
-                **kwargs,
-            )
+            if chat_model in ["openai", "anthropic"]:
+                return init_chat_model(
+                    model=model,
+                    model_provider=chat_model,
+                    base_url=base_url,
+                    **kwargs,
+                )
+            else:
+                return init_chat_model(
+                    model=model,
+                    model_provider=chat_model,
+                    api_base=base_url,
+                    **kwargs,
+                )
         else:
             return chat_model(model=model, **kwargs)
 
