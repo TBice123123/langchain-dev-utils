@@ -1,6 +1,6 @@
 # LangChain Dev Utils
 
-[中文文档](README_cn.md)
+[中文文档](https://github.com/TBice123123/langchain-dev-utils/blob/master/README_cn.md)
 
 This toolkit is designed to provide encapsulated utility tools for developers using LangChain and LangGraph to develop large language model applications, helping developers work more efficiently.
 
@@ -130,8 +130,22 @@ if has_tool_calling(message):
     pass
 ```
 
-2. Import the required functions in your project:
+## Test
 
-```python
-from langchain_dev_utils import load_chat_model, register_model_provider
+All the current tool functions in this project have been tested, and you can also clone this project for testing.
+
+```bash
+git clone https://github.com/TBice123123/langchain-dev-utils.git
+```
+
+```bash
+cd langchain-dev-utils
+```
+
+```bash
+uv sync --group test
+```
+
+```bash
+uv run pytest .
 ```

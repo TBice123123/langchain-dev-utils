@@ -128,8 +128,22 @@ if has_tool_calling(message):
     pass
 ```
 
-2. 在项目中导入所需功能：
+## Test
 
-```python
-from langchain_dev_utils import load_chat_model, register_model_provider
+本项目目前所有的工具函数均通过测试，你也可以克隆本项目进行测试
+
+```bash
+git clone https://github.com/TBice123123/langchain-dev-utils.git
+```
+
+```bash
+cd langchain-dev-utils
+```
+
+```bash
+uv sync --group test
+```
+
+```bash
+uv run pytest .
 ```
