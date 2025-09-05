@@ -64,34 +64,47 @@ print(model.invoke("Hello!"))
 
 **Note**: Since the underlying implementation of the function is a global dictionary, **all model providers must be registered at application startup**. Modifications should not be made at runtime, otherwise multi-threading concurrency synchronization issues may occur.
 
-### 2. Reasoning Content Processing Functionality
+We recommend that you place `register_model_provider` in the `__init__.py` file of your application.
 
-Provides utility functions for processing model reasoning content, supporting both synchronous and asynchronous operations.
+For example, if you have the following LangGraph directory structure:
+
+```text
+langgraph-project/
+├── src
+│   ├── __init__.py
+│   └── graphs
+│       ├── __init__.py # call register_model_provider here
+│       ├── graph1
+│       └── graph2
+```
+
+### 2. Merge Inference Content
+
+Provides a function to merge `reasoning_content` returned by the model into the `content` of AI messages.
 
 #### Core Functions
 
-- `convert_reasoning_content_for_ai_message`: Convert reasoning content for a single AI message
-- `convert_reasoning_content_for_chunk_iterator`: Convert reasoning content for streaming response message chunk iterator
-- `aconvert_reasoning_content_for_ai_message`: Asynchronously convert reasoning content for a single AI message
-- `aconvert_reasoning_content_for_chunk_iterator`: Asynchronously convert reasoning content for streaming response message chunk iterator
+- `convert_reasoning_content_for_ai_message`: Convert the reasoning content of a single AI message
+- `convert_reasoning_content_for_chunk_iterator`: Convert the reasoning content of an iterator of message blocks in a streaming response
+- `aconvert_reasoning_content_for_chunk_iterator`: Asynchronously convert the reasoning content of an iterator of message blocks in a streaming response
 
 #### Usage Example
 
 ```python
-# Synchronously process reasoning content
+# 同步处理推理内容
 from langchain_dev_utils.content import convert_reasoning_content_for_ai_message
 
-response = model.invoke("Please solve this math problem")
-converted_response = convert_reasoning_content_for_ai_message(response, think_tag=("", ""))
+response = model.invoke("请解决这个数学问题")
+converted_response = convert_reasoning_content_for_ai_message(response, think_tag=("<think>", "</think>"))
 
-# Stream processing reasoning content
+# 流式处理推理内容
 from langchain_dev_utils.content import convert_reasoning_content_for_chunk_iterator
 
-for chunk in convert_reasoning_content_for_chunk_iterator(model.stream("Please solve this math problem"), think_tag=("", "")):
+for chunk in convert_reasoning_content_for_chunk_iterator(model.stream("请解决这个数学问题"), think_tag=("<think>", "</think>")):
     print(chunk.content, end="", flush=True)
 ```
 
-### 3. Embeddings Model Loading Functionality
+### 3. Extended Embeddings Model Loading Functionality
 
 Provides extended embeddings model loading functionality, similar to the model loading functionality.
 
@@ -112,6 +125,10 @@ register_embeddings_provider("openai", "openai", base_url="https://api.openai.co
 embeddings = load_embeddings("openai:text-embedding-ada-002")
 ```
 
+**Note**: Since the underlying implementation of the function is a global dictionary, **all embeddings model providers must be registered at application startup**. Modifications should not be made at runtime, otherwise multi-threading concurrency synchronization issues may occur.
+
+We recommend that you place `register_embeddings_provider` in the `__init__.py` file of your application.
+
 ### 4. Tool Calling Detection Functionality
 
 Provides a simple function to detect whether a message contains tool calls.
@@ -128,6 +145,26 @@ from langchain_dev_utils.has_tool_calling import has_tool_calling
 if has_tool_calling(message):
     # Handle tool calling logic
     pass
+```
+
+### 5. Merge AI Message Chunks
+
+Provides a tool function for merging multiple AI message chunks into a single AI message.
+
+#### Core Functions
+
+- `merge_ai_message_chunk`: Merge AI message chunks
+
+#### Usage Example
+
+```python
+from langchain_dev_utils.content import merge_ai_message_chunk
+
+chunks = [
+    AIMessageChunk(content="Chunk 1"),
+    AIMessageChunk(content="Chunk 2"),
+]
+merged_message = merge_ai_message_chunk(chunks)
 ```
 
 ## Test
