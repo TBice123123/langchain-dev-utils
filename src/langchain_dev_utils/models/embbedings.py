@@ -1,6 +1,7 @@
 import os
 from typing import Any, Optional, Union
-from langchain.embeddings.base import init_embeddings, _SUPPORTED_PROVIDERS, Embeddings
+
+from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
 from langchain_core.runnables import Runnable
 
 
@@ -9,13 +10,13 @@ _EMBEDDINGS_PROVIDERS_DICT = {}
 
 def _parse_model_string(model_name: str) -> tuple[str, str]:
     """Parse model string into provider and model name.
-    
+
     Args:
         model_name: Model name string in format 'provider:model-name'
-        
+
     Returns:
         Tuple of (provider, model) parsed from the model_name
-        
+
     Raises:
         ValueError: If model name format is invalid or model name is empty
     """
@@ -41,12 +42,12 @@ def register_embeddings_provider(
     base_url: Optional[str] = None,
 ):
     """Register an embeddings provider.
-    
+
     Args:
         provider_name: Name of the provider to register
         embeddings_model: Either an Embeddings class or a string identifier for a supported provider
         base_url: Optional base URL for API endpoints (required when embeddings_model is a string)
-        
+
     Raises:
         ValueError: If base_url is not provided when embeddings_model is a string
     """
@@ -82,15 +83,15 @@ def load_embeddings(
     **kwargs: Any,
 ) -> Union[Embeddings, Runnable[Any, list[float]]]:
     """Load embeddings model.
-    
+
     Args:
         model: Model name in format 'provider:model-name' if provider not specified separately
         provider: Optional provider name (if not included in model parameter)
         **kwargs: Additional arguments for model initialization
-        
+
     Returns:
         Union[Embeddings, Runnable[Any, list[float]]]: Initialized embeddings model instance
-        
+
     Raises:
         ValueError: If provider is not registered or API key is not found
     """

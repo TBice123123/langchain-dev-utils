@@ -1,11 +1,7 @@
 from functools import reduce
-from typing import AsyncIterator, Iterator, Tuple, cast
+from typing import AsyncIterator, Iterator, Sequence, Tuple, cast
 
-from langchain_core.messages import (
-    AIMessage,
-    AIMessageChunk,
-    BaseMessageChunk,
-)
+from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessageChunk
 
 
 def convert_reasoning_content_for_ai_message(
@@ -104,7 +100,7 @@ async def aconvert_reasoning_content_for_chunk_iterator(
         yield chunk
 
 
-def merge_ai_message_chunk(chunks: list[AIMessageChunk]) -> AIMessage:
+def merge_ai_message_chunk(chunks: Sequence[AIMessageChunk]) -> AIMessage:
     ai_message_chunk = cast(AIMessageChunk, reduce(lambda x, y: x + y, chunks))
     ai_message_chunk.additional_kwargs.pop("tool_calls", None)
 

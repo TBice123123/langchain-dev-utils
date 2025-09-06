@@ -3,7 +3,7 @@ from langchain_qwq import ChatQwen
 from langchain_siliconflow import ChatSiliconFlow
 from dotenv import load_dotenv
 
-from langchain_dev_utils.chat_model import load_chat_model, register_model_provider
+from langchain_dev_utils import load_chat_model, register_model_provider
 import pytest
 
 load_dotenv()

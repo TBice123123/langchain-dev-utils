@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from langchain.embeddings.base import Embeddings
 from typing import cast
-from langchain_dev_utils.embbedings import load_embeddings, register_embeddings_provider
+from langchain_dev_utils import load_embeddings, register_embeddings_provider
 import pytest
 
 load_dotenv()
