@@ -75,7 +75,7 @@ print(model.invoke("你好啊"))
 
 **注意事项**：由于函数的底层实现是一个全局字典，**必须在应用启动时完成所有模型提供商的注册**，运行时不应再进行修改，否则可能引发多线程并发同步问题。
 
-**建议**：我们建议你将将`register_model_provider`放在应用的`__init__.py`文件中。
+**建议**：我们建议你将`register_model_provider`放在应用的`__init__.py`文件中（只需要确保在应用启动时执行且完成所有模型提供商的注册即可）。
 
 例如你有如下的 LangGraph 目录结构
 
@@ -99,7 +99,7 @@ langgraph-project/
 **`register_embeddings_provider` 参数说明**
 
 - `provider_name`: 提供商名称，需要自定义名称
-- `embeddings_model`: Embeddings 类或者字符串，如果是字符串，必须是官方 `init_embeddings` 支持的提供商（例如 `openai`、`anthropic`）此时会调用`init_embeddings`函数
+- `embeddings_model`: Embeddings 类或者字符串，如果是字符串，必须是官方 `init_embeddings` 支持的提供商（例如 `openai`、`cohere`）此时会调用`init_embeddings`函数
 - `base_url`: 可选的基础 URL，在 `embeddings` 为字符串时建议传入
 
 **`load_embeddings` 参数说明**
@@ -125,7 +125,7 @@ print(embeddings.embed_query("hello world"))
 
 **注意事项**：由于该函数的底层实现是同样是一个全局字典，**必须在应用启动时完成所有嵌入模型提供商的注册**，后续调用的时候不应再进行修改，否则可能引发多线程并发同步问题。
 
-同样的我们建议你将`register_embeddings_provider`放在应用的`__init__.py`文件中。具体可以参考上文的`注册模型提供商`部分。
+同样的我们建议你将`register_embeddings_provider`放在应用的`__init__.py`文件中（只需要确保在应用启动时执行且完成所有嵌入模型提供商的注册即可）。具体可以参考上文的`注册模型提供商`部分。
 
 ### Message 类处理
 

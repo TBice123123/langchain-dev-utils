@@ -79,7 +79,7 @@ print(model.invoke("Hello"))
 
 **Important**: Since the underlying implementation uses a global dictionary, **all model providers must be registered at application startup**. Modifications during runtime should be avoided to prevent multi-thread concurrency synchronization issues.
 
-**Recommendation**: We suggest placing the `register_model_provider` calls in your application's `__init__.py` file.
+**Recommendation**: We suggest placing the `register_model_provider` calls in your application's `__init__.py` file.(Only need to ensure that all model providers are registered at application startup)
 
 For example, if you have the following LangGraph project structure:
 
@@ -103,7 +103,7 @@ langgraph-project/
 **Parameters for `register_embeddings_provider`**
 
 - `provider_name`: Provider name; must be a custom name
-- `embeddings_model`: Either an Embeddings class or a string. If it's a string, it must be a provider supported by the official `init_embeddings` (e.g., `openai`, `anthropic`). In this case, the `init_embeddings` function will be called.
+- `embeddings_model`: Either an Embeddings class or a string. If it's a string, it must be a provider supported by the official `init_embeddings` (e.g., `openai`, `cohere`). In this case, the `init_embeddings` function will be called.
 - `base_url`: Optional base URL. Recommended when `embeddings_model` is a string.
 
 **Parameters for `load_embeddings`**
@@ -129,7 +129,7 @@ print(embeddings.embed_query("hello world"))
 
 **Important**: Similarly, since the underlying implementation uses a global dictionary, **all embedding model providers must be registered at application startup**, and no modifications should be made afterward to avoid multi-thread concurrency issues.
 
-As before, we recommend placing `register_embeddings_provider` in your application's `__init__.py` file. Refer to the previous section on registering model providers for details.
+As before, we recommend placing `register_embeddings_provider` in your application's `__init__.py` file(Only need to ensure that all embedding model providers are registered at application startup). Refer to the previous section on registering model providers for details.
 
 ---
 

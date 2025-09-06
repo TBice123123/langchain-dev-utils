@@ -25,11 +25,8 @@ def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
     Raises:
         ValueError: If unable to infer model provider
     """
-    if (
-        not model_provider
-        and ":" in model
-        and model.split(":")[0] in _MODEL_PROVIDERS_DICT
-    ):
+    support_providers = list(_MODEL_PROVIDERS_DICT.keys()) + list(_SUPPORTED_PROVIDERS)
+    if not model_provider and ":" in model and model.split(":")[0] in support_providers:
         model_provider = model.split(":")[0]
         model = ":".join(model.split(":")[1:])
     if not model_provider:

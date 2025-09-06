@@ -21,10 +21,12 @@ def test_model_invoke():
     model3 = load_chat_model(
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     )
+    model4 = load_chat_model("deepseek:deepseek-chat")
 
     assert model1.invoke("what's your name").content
     assert model2.invoke("what's your name").content
     assert model3.invoke("what's your name").content
+    assert model4.invoke("what's your name").content
 
 
 @pytest.mark.asyncio
@@ -36,13 +38,16 @@ async def test_model_ainvoke():
     model3 = load_chat_model(
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     )
+    model4 = load_chat_model("deepseek:deepseek-chat")
 
     response1 = await model1.ainvoke("what's your name")
     response2 = await model2.ainvoke("what's your name")
     response3 = await model3.ainvoke("what's your name")
+    response4 = await model4.ainvoke("what's your name")
     assert response1.content
     assert response2.content
     assert response3.content
+    assert response4.content
 
 
 def test_model_tool_calling():
@@ -62,6 +67,7 @@ def test_model_tool_calling():
     model3 = load_chat_model(
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     ).bind_tools([get_current_time])
+    model4 = load_chat_model("deepseek:deepseek-chat").bind_tools([get_current_time])
 
     response1 = model1.invoke("what's the time")
     assert (
@@ -75,6 +81,10 @@ def test_model_tool_calling():
     response3 = model3.invoke("what's the time")
     assert (
         hasattr(response3, "tool_calls") and len(response3.tool_calls) == 1  # type: ignore
+    )
+    response4 = model4.invoke("what's the time")
+    assert (
+        hasattr(response4, "tool_calls") and len(response4.tool_calls) == 1  # type: ignore
     )
 
 
@@ -96,6 +106,7 @@ async def test_model_tool_calling_async():
     model3 = load_chat_model(
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     ).bind_tools([get_current_time])
+    model4 = load_chat_model("deepseek:deepseek-chat").bind_tools([get_current_time])
 
     response1 = await model1.ainvoke("what's the time")
     assert (
@@ -109,4 +120,8 @@ async def test_model_tool_calling_async():
     response3 = await model3.ainvoke("what's the time")
     assert (
         hasattr(response3, "tool_calls") and len(response3.tool_calls) == 1  # type: ignore
+    )
+    response4 = await model4.ainvoke("what's the time")
+    assert (
+        hasattr(response4, "tool_calls") and len(response4.tool_calls) == 1  # type: ignore
     )
