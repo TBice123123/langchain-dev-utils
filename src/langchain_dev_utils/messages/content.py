@@ -6,7 +6,7 @@ from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessageChunk
 
 def convert_reasoning_content_for_ai_message(
     model_response: AIMessage,
-    think_tag: Tuple[str, str] = ("", ""),
+    think_tag: Tuple[str, str] = ("<think>", "</think>"),
 ) -> AIMessage:
     """Convert reasoning content in AI message to visible content.
 
@@ -24,7 +24,7 @@ def convert_reasoning_content_for_ai_message(
 
 def convert_reasoning_content_for_chunk_iterator(
     model_response: Iterator[BaseMessageChunk],
-    think_tag: Tuple[str, str] = ("", ""),
+    think_tag: Tuple[str, str] = ("<think>", "</think>"),
 ) -> Iterator[BaseMessageChunk]:
     """Convert reasoning content for streaming response chunks.
 
@@ -62,13 +62,13 @@ def convert_reasoning_content_for_chunk_iterator(
 
 
 async def aconvert_reasoning_content_for_chunk_iterator(
-    amodel_response: AsyncIterator[BaseMessageChunk],
-    think_tag: Tuple[str, str] = ("", ""),
+    model_response: AsyncIterator[BaseMessageChunk],
+    think_tag: Tuple[str, str] = ("<think>", "</think>"),
 ) -> AsyncIterator[BaseMessageChunk]:
     """Async convert reasoning content for streaming response chunks.
 
     Args:
-        amodel_response: Async iterator of message chunks from streaming response
+        model_response: Async iterator of message chunks from streaming response
         think_tag: Tuple of (opening_tag, closing_tag) to wrap reasoning content
 
     Yields:
@@ -77,7 +77,7 @@ async def aconvert_reasoning_content_for_chunk_iterator(
     isfirst = True
     isend = True
 
-    async for chunk in amodel_response:
+    async for chunk in model_response:
         if (
             isinstance(chunk, AIMessageChunk)
             and "reasoning_content" in chunk.additional_kwargs
