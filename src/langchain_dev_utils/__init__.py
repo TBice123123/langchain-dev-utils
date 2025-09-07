@@ -11,7 +11,7 @@ from .models.embbedings import load_embeddings, register_embeddings_provider
 from .tools.interrupt import (
     human_in_the_loop,
     human_in_the_loop_async,
-    InterrruptParams,
+    InterruptParams,
 )
 
 __all__ = [
@@ -28,7 +28,7 @@ __all__ = [
     "register_model_provider",
     "human_in_the_loop",
     "human_in_the_loop_async",
-    "InterrruptParams",
+    "InterruptParams",
 ]
 
 

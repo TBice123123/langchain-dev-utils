@@ -7,14 +7,14 @@ from langgraph.prebuilt.interrupt import HumanInterrupt
 from langgraph.types import interrupt
 
 
-class InterrruptParams(TypedDict):
+class InterruptParams(TypedDict):
     tool_call_name: str
     tool_call_args: Dict[str, Any]
     tool: BaseTool
     config: RunnableConfig
 
 
-HumanInterruptHandler = Callable[[InterrruptParams], Any]
+HumanInterruptHandler = Callable[[InterruptParams], Any]
 
 
 @overload
@@ -59,7 +59,7 @@ def human_in_the_loop_async(
     ...
 
 
-def default_handler(params: InterrruptParams) -> Any:
+def default_handler(params: InterruptParams) -> Any:
     request: HumanInterrupt = {
         "action_request": {
             "action": params["tool_call_name"],
@@ -86,7 +86,7 @@ def default_handler(params: InterrruptParams) -> Any:
         raise ValueError(f"Unsupported interrupt response type: {response['type']}")
 
 
-async def default_handler_async(params: InterrruptParams) -> Any:
+async def default_handler_async(params: InterruptParams) -> Any:
     request: HumanInterrupt = {
         "action_request": {
             "action": params["tool_call_name"],
