@@ -21,19 +21,23 @@ def test_convert_reasoning_content_for_ai_message():
     result = convert_reasoning_content_for_ai_message(
         ai_message, ("<think>", "</think>")
     )
-    assert result.content == "<think>I think therefore I am</think>"
+    assert result.content == "<think>I think therefore I am</think>Hello"
 
-    result = convert_reasoning_content_for_ai_message(ai_message)
-    assert result.content == "I think therefore I am"
+    ai_message = AIMessage(
+        content="Hello",
+        additional_kwargs={"reasoning_content": "I think therefore I am"},
+    )
+    result = convert_reasoning_content_for_ai_message(ai_message, ("<", ">"))
+    assert result.content == "<I think therefore I am>Hello"
 
 
 def test_convert_reasoning_content_for_chunk_iterator():
     chunks = [
         AIMessageChunk(
-            content="Hello", additional_kwargs={"reasoning_content": "First thought"}
+            content="", additional_kwargs={"reasoning_content": "First thought"}
         ),
         AIMessageChunk(
-            content="Hello", additional_kwargs={"reasoning_content": "Second thought"}
+            content="", additional_kwargs={"reasoning_content": "Second thought"}
         ),
         AIMessageChunk(content="Final answer"),
     ]
@@ -54,11 +58,11 @@ async def test_aconvert_reasoning_content_for_chunk_iterator():
     async def async_chunk_generator():
         chunks = [
             AIMessageChunk(
-                content="Hello",
+                content="",
                 additional_kwargs={"reasoning_content": "First thought"},
             ),
             AIMessageChunk(
-                content="Hello",
+                content="",
                 additional_kwargs={"reasoning_content": "Second thought"},
             ),
             AIMessageChunk(content="Final answer"),

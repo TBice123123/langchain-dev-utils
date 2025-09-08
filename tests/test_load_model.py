@@ -11,6 +11,7 @@ load_dotenv()
 register_model_provider("dashscope", ChatQwen)
 register_model_provider("siliconflow", ChatSiliconFlow)
 register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/api/v1")
+register_model_provider("zai", "openai")
 
 
 def test_model_invoke():
@@ -22,11 +23,14 @@ def test_model_invoke():
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     )
     model4 = load_chat_model("deepseek:deepseek-chat")
+    model5 = load_chat_model("zai:glm-4.5")
 
     assert model1.invoke("what's your name").content
     assert model2.invoke("what's your name").content
     assert model3.invoke("what's your name").content
     assert model4.invoke("what's your name").content
+    assert model5.invoke("what's your name").content
+    assert model1.invoke("what's your name").content
 
 
 @pytest.mark.asyncio
@@ -39,15 +43,18 @@ async def test_model_ainvoke():
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     )
     model4 = load_chat_model("deepseek:deepseek-chat")
+    model5 = load_chat_model("zai:glm-4.5")
 
     response1 = await model1.ainvoke("what's your name")
     response2 = await model2.ainvoke("what's your name")
     response3 = await model3.ainvoke("what's your name")
     response4 = await model4.ainvoke("what's your name")
+    response5 = await model5.ainvoke("what's your name")
     assert response1.content
     assert response2.content
     assert response3.content
     assert response4.content
+    assert response5.content
 
 
 def test_model_tool_calling():
@@ -68,6 +75,7 @@ def test_model_tool_calling():
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     ).bind_tools([get_current_time])
     model4 = load_chat_model("deepseek:deepseek-chat").bind_tools([get_current_time])
+    model5 = load_chat_model("zai:glm-4.5").bind_tools([get_current_time])
 
     response1 = model1.invoke("what's the time")
     assert (
@@ -85,6 +93,10 @@ def test_model_tool_calling():
     response4 = model4.invoke("what's the time")
     assert (
         hasattr(response4, "tool_calls") and len(response4.tool_calls) == 1  # type: ignore
+    )
+    response5 = model5.invoke("what's the time")
+    assert (
+        hasattr(response5, "tool_calls") and len(response5.tool_calls) == 1  # type: ignore
     )
 
 
@@ -107,6 +119,7 @@ async def test_model_tool_calling_async():
         "openrouter:deepseek/deepseek-chat-v3.1:free", temperature=0
     ).bind_tools([get_current_time])
     model4 = load_chat_model("deepseek:deepseek-chat").bind_tools([get_current_time])
+    model5 = load_chat_model("zai:glm-4.5").bind_tools([get_current_time])
 
     response1 = await model1.ainvoke("what's the time")
     assert (
@@ -124,4 +137,8 @@ async def test_model_tool_calling_async():
     response4 = await model4.ainvoke("what's the time")
     assert (
         hasattr(response4, "tool_calls") and len(response4.tool_calls) == 1  # type: ignore
+    )
+    response5 = await model5.ainvoke("what's the time")
+    assert (
+        hasattr(response5, "tool_calls") and len(response5.tool_calls) == 1  # type: ignore
     )

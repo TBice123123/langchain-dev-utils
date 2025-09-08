@@ -52,9 +52,10 @@ def register_embeddings_provider(
         ValueError: If base_url is not provided when embeddings_model is a string
     """
     if isinstance(embeddings_model, str):
+        base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
         if base_url is None:
             raise ValueError(
-                "base_url must be provided when embeddings_model is a string"
+                f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when embeddings_model is a string"
             )
 
         if embeddings_model not in _SUPPORTED_PROVIDERS:
@@ -97,7 +98,9 @@ def load_embeddings(
     """
     if provider is None:
         provider, model = _parse_model_string(model)
-    if provider not in _EMBEDDINGS_PROVIDERS_DICT:
+    if provider not in list(_EMBEDDINGS_PROVIDERS_DICT.keys()) + list(
+        _SUPPORTED_PROVIDERS
+    ):
         raise ValueError(f"Provider {provider} not registered")
 
     embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]

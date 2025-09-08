@@ -103,8 +103,11 @@ def register_model_provider(
                    or if chat_model string is not in supported providers
     """
     if isinstance(chat_model, str):
+        base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
         if base_url is None:
-            raise ValueError("base_url must be provided when chat_model is a string")
+            raise ValueError(
+                f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when chat_model is a string"
+            )
 
         if chat_model not in _SUPPORTED_PROVIDERS:
             raise ValueError(

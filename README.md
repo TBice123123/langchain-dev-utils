@@ -43,9 +43,8 @@ register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/
 model = load_chat_model(model="dashscope:qwen-flash")
 print(model.invoke("Hello"))
 
-model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905")
-print(model.invoke("Hello"))sh", temperature=0.7)
-emb  = load_embeddings("zai:zai-embed")
+model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905", temperature=0.7)
+print(model.invoke("Hello"))
 
 ```
 
@@ -53,13 +52,18 @@ emb  = load_embeddings("zai:zai-embed")
 
 ```python
 from langchain_dev_utils import register_embeddings_provider, load_embeddings
+from langchain_siliconflow import SiliconFlowEmbeddings
 
 register_embeddings_provider(
     "dashscope", "openai", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
 )
 
-embeddings = load_embeddings("dashscope:text-embedding-v4")
+register_embeddings_provider("siliconflow", SiliconFlowEmbeddings)
 
+embeddings = load_embeddings("dashscope:text-embedding-v4")
+print(embeddings.embed_query("hello world"))
+
+embeddings = load_embeddings("siliconflow:BAAI/bge-m3")
 print(embeddings.embed_query("hello world"))
 ```
 
@@ -91,7 +95,7 @@ if has_tool_calling(msg):
     name, args = parse_tool_calling(msg, first_tool_call_only=True)
 
 # pretty print mixed items
-text = message_format([human_msg, doc, "note"], separator="\n", with_num=True)
+text = message_format(["text", "image", "note"], separator="\n", with_num=True)
 ```
 
 ### 3. Tool Enhancement

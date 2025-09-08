@@ -18,7 +18,7 @@ def convert_reasoning_content_for_ai_message(
         AIMessage: Modified AI message with reasoning content in visible content
     """
     if "reasoning_content" in model_response.additional_kwargs:
-        model_response.content = f"{think_tag[0]}{model_response.additional_kwargs['reasoning_content']}{think_tag[1]}"
+        model_response.content = f"{think_tag[0]}{model_response.additional_kwargs['reasoning_content']}{think_tag[1]}{model_response.content}"
     return model_response
 
 
@@ -101,6 +101,14 @@ async def aconvert_reasoning_content_for_chunk_iterator(
 
 
 def merge_ai_message_chunk(chunks: Sequence[AIMessageChunk]) -> AIMessage:
+    """Merge a sequence of AIMessageChunk into a single AIMessage.
+
+    Args:
+        chunks: Sequence of AIMessageChunk to merge
+
+    Returns:
+        AIMessage: Merged AIMessage
+    """
     ai_message_chunk = cast(AIMessageChunk, reduce(lambda x, y: x + y, chunks))
     ai_message_chunk.additional_kwargs.pop("tool_calls", None)
 
