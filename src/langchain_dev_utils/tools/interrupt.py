@@ -22,7 +22,9 @@ def human_in_the_loop(
     func: Callable,
 ) -> BaseTool:
     """
-    Usage: @human_in_the_loop_sync
+    Decorator for adding human-in-the-loop review to a synchronous tool function.
+    
+    Usage: @human_in_the_loop
     """
     ...
 
@@ -33,7 +35,9 @@ def human_in_the_loop(
     handler: Optional[HumanInterruptHandler] = None,
 ) -> Callable[[Callable], BaseTool]:
     """
-    Usage: @human_in_the_loop_sync(interrupt_config={...})
+    Decorator for adding human-in-the-loop review to a synchronous tool function with custom handler.
+    
+    Usage: @human_in_the_loop(handler=custom_handler)
     """
     ...
 
@@ -43,6 +47,8 @@ def human_in_the_loop_async(
     func: Callable,
 ) -> BaseTool:
     """
+    Decorator for adding human-in-the-loop review to an asynchronous tool function.
+    
     Usage: @human_in_the_loop_async
     """
     ...
@@ -54,7 +60,9 @@ def human_in_the_loop_async(
     handler: Optional[HumanInterruptHandler] = None,
 ) -> Callable[[Callable], BaseTool]:
     """
-    Usage: @human_in_the_loop_async(interrupt_config={...})
+    Decorator for adding human-in-the-loop review to an asynchronous tool function with custom handler.
+    
+    Usage: @human_in_the_loop_async(handler=custom_handler)
     """
     ...
 
@@ -176,11 +184,11 @@ def human_in_the_loop_async(
 
     Supports both syntaxes:
         @human_in_the_loop_async
-        @human_in_the_loop_async(interrupt_config={...})
+        @human_in_the_loop_async(handler=fn)
 
     Args:
         func: The function to decorate. **Do not pass this directly.**
-        interrupt_config: Configuration for the human interrupt.
+        handler: Configuration for the human interrupt.
 
     Returns:
         If `func` is provided, returns the decorated BaseTool.

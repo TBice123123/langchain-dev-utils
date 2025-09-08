@@ -34,6 +34,8 @@ def message_format(
         A formatted string composed of the input contents, joined by `separator`.
 
     """
+    if not inputs:
+        return ""
 
     outputs = []
 
