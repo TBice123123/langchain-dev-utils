@@ -14,7 +14,7 @@ def message_format(
     inputs: Union[Sequence[Document], Sequence[BaseMessage], Sequence[str]],
     separator: str = "-",
     with_num: bool = False,
-):
+) -> str:
     """Convert a list of messages, documents, or strings into a formatted string.
 
     This function extracts text content from various types (e.g., HumanMessage, Document)

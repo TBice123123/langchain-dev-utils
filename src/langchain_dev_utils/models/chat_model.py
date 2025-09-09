@@ -8,7 +8,6 @@ from langchain.chat_models.base import (
     init_chat_model,
 )
 
-
 _MODEL_PROVIDERS_DICT = {}
 
 

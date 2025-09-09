@@ -1,10 +1,11 @@
+from typing import cast
+
 from dotenv import load_dotenv
 from langchain.embeddings.base import Embeddings
-from typing import cast
-from langchain_dev_utils import load_embeddings, register_embeddings_provider
 from langchain_siliconflow.embeddings import SiliconFlowEmbeddings
-
 import pytest
+
+from langchain_dev_utils import load_embeddings, register_embeddings_provider
 
 load_dotenv()
 
