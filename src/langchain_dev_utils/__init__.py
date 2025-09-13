@@ -6,8 +6,16 @@ from .messages.content import (
 )
 from .messages.format import message_format
 from .messages.tool_call import has_tool_calling, parse_tool_calling
-from .models.chat_model import load_chat_model, register_model_provider
-from .models.embbedings import load_embeddings, register_embeddings_provider
+from .models.chat_model import (
+    load_chat_model,
+    register_model_provider,
+    batch_register_model_provider,
+)
+from .models.embeddings import (
+    load_embeddings,
+    register_embeddings_provider,
+    batch_register_embeddings_provider,
+)
 from .tools.interrupt import (
     human_in_the_loop,
     human_in_the_loop_async,
@@ -24,8 +32,10 @@ __all__ = [
     "parse_tool_calling",
     "load_embeddings",
     "register_embeddings_provider",
+    "batch_register_embeddings_provider",
     "load_chat_model",
     "register_model_provider",
+    "batch_register_model_provider",
     "human_in_the_loop",
     "human_in_the_loop_async",
     "InterruptParams",

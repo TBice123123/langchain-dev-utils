@@ -3,9 +3,16 @@ from typing import Any, Optional, Union
 
 from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
 from langchain_core.runnables import Runnable
+from typing import TypedDict, NotRequired
 
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
+
+
+class EmbeddingProvider(TypedDict):
+    provider: str
+    embeddings_model: Union[type[Embeddings], str]
+    base_url: NotRequired[str]
 
 
 def _parse_model_string(model_name: str) -> tuple[str, str]:
@@ -74,6 +81,23 @@ def register_embeddings_provider(
     else:
         _EMBEDDINGS_PROVIDERS_DICT.update(
             {provider_name: {"embeddings_model": embeddings_model}}
+        )
+
+
+def batch_register_embeddings_provider(
+    providers: list[EmbeddingProvider],
+):
+    """Batch register embeddings providers.
+
+    Args:
+        providers: List of EmbeddingProvider dictionaries
+
+    Raises:
+        ValueError: If any of the providers are invalid
+    """
+    for provider in providers:
+        register_embeddings_provider(
+            provider["provider"], provider["embeddings_model"], provider.get("base_url")
         )
 
 

@@ -5,14 +5,34 @@ from langchain_qwq import ChatQwen
 from langchain_siliconflow import ChatSiliconFlow
 import pytest
 
-from langchain_dev_utils import load_chat_model, register_model_provider
+from langchain_dev_utils import (
+    load_chat_model,
+    batch_register_model_provider,
+)
 
 load_dotenv()
 
-register_model_provider("dashscope", ChatQwen)
-register_model_provider("siliconflow", ChatSiliconFlow)
-register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/api/v1")
-register_model_provider("zai", "openai")
+batch_register_model_provider(
+    [
+        {
+            "provider": "dashscope",
+            "chat_model": ChatQwen,
+        },
+        {
+            "provider": "siliconflow",
+            "chat_model": ChatSiliconFlow,
+        },
+        {
+            "provider": "openrouter",
+            "chat_model": "openai",
+            "base_url": "https://openrouter.ai/api/v1",
+        },
+        {
+            "provider": "zai",
+            "chat_model": "openai",
+        },
+    ]
+)
 
 
 def test_model_invoke():

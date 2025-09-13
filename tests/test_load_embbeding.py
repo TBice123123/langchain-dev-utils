@@ -5,13 +5,17 @@ from langchain.embeddings.base import Embeddings
 from langchain_siliconflow.embeddings import SiliconFlowEmbeddings
 import pytest
 
-from langchain_dev_utils import load_embeddings, register_embeddings_provider
+from langchain_dev_utils import load_embeddings, batch_register_embeddings_provider
 
 load_dotenv()
 
-register_embeddings_provider("dashscope", "openai")
 
-register_embeddings_provider("siliconflow", SiliconFlowEmbeddings)
+batch_register_embeddings_provider(
+    [
+        {"provider": "dashscope", "embeddings_model": "openai"},
+        {"provider": "siliconflow", "embeddings_model": SiliconFlowEmbeddings},
+    ]
+)
 
 
 def test_embbedings():

@@ -1,14 +1,20 @@
 import os
-from typing import Any, Optional, Union, cast
+from typing import Any, NotRequired, Optional, TypedDict, Union, cast
 
 from langchain.chat_models.base import (
-    BaseChatModel,
     _SUPPORTED_PROVIDERS,
+    BaseChatModel,
     _init_chat_model_helper,
     init_chat_model,
 )
 
 _MODEL_PROVIDERS_DICT = {}
+
+
+class ChatModelProvider(TypedDict):
+    provider: str
+    chat_model: Union[type[BaseChatModel], str]
+    base_url: NotRequired[str]
 
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
@@ -118,6 +124,24 @@ def register_model_provider(
         )
     else:
         _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
+
+
+def batch_register_model_provider(
+    providers: list[ChatModelProvider],
+):
+    """Batch register model providers.
+
+    Args:
+        providers: List of ChatModelProvider dictionaries
+
+    Raises:
+        ValueError: If any of the providers are invalid
+    """
+
+    for provider in providers:
+        register_model_provider(
+            provider["provider"], provider["chat_model"], provider.get("base_url")
+        )
 
 
 def load_chat_model(
