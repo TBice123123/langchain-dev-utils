@@ -26,8 +26,19 @@ class NoteStateMixin(TypedDict):
 
 
 def create_write_note_tool(
-    name: Optional[str] = None, description: Optional[str] = None
+    name: Optional[str] = None,
+    description: Optional[str] = None,
+    message_key: Optional[str] = None,
 ) -> BaseTool:
+    """Create a tool for writing notes.
+
+    Args:
+        name: The name of the tool.
+        description: The description of the tool.
+        message_key: The key of the message to be updated.
+    Returns:
+        BaseTool: The tool for writing notes.
+    """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore
     except ImportError:
@@ -47,10 +58,11 @@ def create_write_note_tool(
             notes = state["note"] if "note" in state else {}
             file_name = file_name + "_" + str(len(notes[file_name]))
 
+        msg_key = message_key or "messages"
         return Command(
             update={
                 "note": {file_name: content},
-                "messages": [
+                msg_key: [
                     ToolMessage(
                         content=f"note {file_name} written successfully, content is {content}",
                         tool_call_id=tool_call_id,
@@ -65,6 +77,14 @@ def create_write_note_tool(
 def create_ls_tool(
     name: Optional[str] = None, description: Optional[str] = None
 ) -> BaseTool:
+    """Create a tool for listing all the saved note names.
+
+    Args:
+        name: The name of the tool.
+        description: The description of the tool.
+    Returns:
+        BaseTool: The tool for listing all the saved note names.
+    """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore
     except ImportError:
@@ -84,6 +104,14 @@ def create_ls_tool(
 def create_query_note_tool(
     name: Optional[str] = None, description: Optional[str] = None
 ) -> BaseTool:
+    """Create a tool for querying the content of a note.
+
+    Args:
+        name: The name of the tool.
+        description: The description of the tool.
+    Returns:
+        BaseTool: The tool for querying the content of a note.
+    """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore
     except ImportError:

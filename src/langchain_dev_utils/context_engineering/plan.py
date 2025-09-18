@@ -52,12 +52,14 @@ class PlanStateMixin(TypedDict):
 def create_write_plan_tool(
     name: Optional[str] = None,
     description: Optional[str] = None,
+    message_key: Optional[str] = None,
 ) -> BaseTool:
     """Create a tool for writing initial plan.
 
     Args:
         name: The name of the tool.
         description: The description of the tool.
+        message_key: The key of the message to update.
     Returns:
         BaseTool: The tool for writing initial plan.
     """
@@ -67,6 +69,7 @@ def create_write_plan_tool(
         description=description or _DEFAULT_WRITE_TOOL_DESCRIPTION,
     )
     def write_plan(plan: list[str], tool_call_id: Annotated[str, InjectedToolCallId]):
+        msg_key = message_key or "messages"
         return Command(
             update={
                 "plan": [
@@ -76,7 +79,7 @@ def create_write_plan_tool(
                     }
                     for index, content in enumerate(plan)
                 ],
-                "messages": [
+                msg_key: [
                     ToolMessage(
                         content=f"Plan successfully written, please first execute the {plan[0]} task (no need to change the status to in_process)",
                         tool_call_id=tool_call_id,
@@ -91,12 +94,14 @@ def create_write_plan_tool(
 def create_update_plan_tool(
     name: Optional[str] = None,
     description: Optional[str] = None,
+    message_key: Optional[str] = None,
 ) -> BaseTool:
     """Create a tool for updating plan tasks.
 
     Args:
         name: The name of the tool.
         description: The description of the tool.
+        message_key: The key of the message to update.
     Returns:
         BaseTool: The tool for updating plan tasks.
     """
@@ -140,11 +145,12 @@ def create_update_plan_tool(
                     [plan["content"] for plan in plan_list if plan["status"] != "done"]
                 )
             )
+        msg_key = message_key or "messages"
 
         return Command(
             update={
                 "plan": plan_list,
-                "messages": [
+                msg_key: [
                     ToolMessage(
                         content="Plan updated successfully", tool_call_id=tool_call_id
                     )
