@@ -112,6 +112,33 @@ def danger(x: int) -> str: ...
 async def danger_async(x: int) -> str: ...
 ```
 
+### 4. Plan and Note
+
+```Python
+from langchain_dev_utils import (
+    create_write_plan_tool,
+    create_update_plan_tool,
+    create_write_note_tool,
+    create_query_note_tool,
+    create_ls_tool,
+    PlanStateMixin,
+    NoteStateMixin,
+)
+
+## define graph state
+from langgraph.graph.message import MessagesState
+class State(MessagesState, PlanStateMixin, NoteStateMixin):
+    pass
+
+tools=[
+    create_write_plan_tool(),
+    create_update_plan_tool(),
+    create_write_note_tool(),
+    create_query_note_tool(),
+    create_ls_tool(),
+]
+```
+
 ## Testing
 
 All utility functions in this project have been tested. You can also clone the repository to run the tests:
