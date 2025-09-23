@@ -30,8 +30,11 @@ from .context_engineering.note import (
     create_query_note_tool,
     create_ls_tool,
     create_write_note_tool,
+    create_update_note_tool,
     NoteStateMixin,
 )
+from .graph_pipeline.sequential import sequential_pipeline
+from .graph_pipeline.parallel import parallel_pipeline
 
 __all__ = [
     "has_tool_calling",
@@ -52,12 +55,15 @@ __all__ = [
     "InterruptParams",
     "create_update_plan_tool",
     "create_write_plan_tool",
+    "create_update_note_tool",
     "create_query_note_tool",
     "create_ls_tool",
     "create_write_note_tool",
     "PlanStateMixin",
     "NoteStateMixin",
+    "sequential_pipeline",
+    "parallel_pipeline",
 ]
 
 
-__version__ = "0.1.10"
+__version__ = "0.1.11"

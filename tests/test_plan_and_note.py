@@ -11,6 +11,7 @@ from langchain_dev_utils import (
     create_write_note_tool,
     create_update_plan_tool,
     create_ls_tool,
+    create_update_note_tool,
 )
 
 from langgraph.prebuilt.tool_node import ToolNode
@@ -102,6 +103,33 @@ def build_graph():
         }
         return {}
 
+    def update_note(state: State):
+        return {
+            "messages": [
+                AIMessage(
+                    content="",
+                    tool_calls=[
+                        {
+                            "name": "update_note",
+                            "args": {
+                                "file_name": "note1",
+                                "origin_content": "note1",
+                                "new_content": "note_new",
+                            },
+                            "id": "12345",
+                        },
+                    ],
+                )
+            ]
+        }
+
+    def test_update_note(state: State):
+        assert state["note"] == {
+            "note1": "note_new content",
+            "note2": "note2 content",
+        }
+        return {}
+
     graph = StateGraph(State, input_schema=StateIn)
     graph.add_node("make_plan", make_plan)
     graph.add_node("test_make_plan", test_make_plan)
@@ -109,6 +137,8 @@ def build_graph():
     graph.add_node("test_update_plan", test_update_plan)
     graph.add_node("write_note", write_note)
     graph.add_node("test_write_note", test_write_note)
+    graph.add_node("update_note", update_note)
+    graph.add_node("test_update_note", test_update_note)
     graph.add_node(
         "write_plan_tool_node",
         ToolNode(
@@ -129,6 +159,12 @@ def build_graph():
         "write_note_tool_node",
         ToolNode([create_write_note_tool()]),
     )
+
+    graph.add_node(
+        "update_note_tool_node",
+        ToolNode([create_update_note_tool()]),
+    )
+
     graph.set_entry_point("make_plan")
     graph.add_edge("make_plan", "write_plan_tool_node")
     graph.add_edge("write_plan_tool_node", "test_make_plan")
@@ -138,6 +174,9 @@ def build_graph():
     graph.add_edge("test_update_plan", "write_note")
     graph.add_edge("write_note", "write_note_tool_node")
     graph.add_edge("write_note_tool_node", "test_write_note")
+    graph.add_edge("test_write_note", "update_note")
+    graph.add_edge("update_note", "update_note_tool_node")
+    graph.add_edge("update_note_tool_node", "test_update_note")
     return graph
 
 

@@ -121,6 +121,7 @@ from langchain_dev_utils import (
     create_write_note_tool,
     create_query_note_tool,
     create_ls_tool,
+    create_update_note_tool,
     PlanStateMixin,
     NoteStateMixin,
 )
@@ -136,7 +137,32 @@ tools=[
     create_write_note_tool(),
     create_query_note_tool(),
     create_ls_tool(),
+    create_update_note_tool(),
 ]
+```
+
+### 5. Graph Pipeline
+
+```Python
+from langchain_dev_utils import sequential_pipeline, parallel_pipeline
+
+sequential_pipeline(
+    [
+        subgraph1,
+        subgraph2,
+        subgraph3,
+        subgraph4,
+    ]
+)
+
+parallel_pipeline(
+    [
+        subgraph1,
+        subgraph2,
+        subgraph3,
+        subgraph4,
+    ]
+)
 ```
 
 ## Testing
