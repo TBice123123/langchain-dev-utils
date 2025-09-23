@@ -1,5 +1,7 @@
 from langgraph.graph import StateGraph
 from typing import Annotated, TypedDict
+
+from langgraph.types import Send
 from langchain_dev_utils import sequential_pipeline, parallel_pipeline
 
 
@@ -12,7 +14,6 @@ class State(TypedDict):
 
 
 def add(state: State):
-    print(state)
     return {"a": state["a"] + 1}
 
 
@@ -62,3 +63,21 @@ def test_parallel_graph_with_entry_note():
 
     result = graph.invoke({"a": 1})
     assert result["a"] == 3
+
+
+def test_parallel_graph_with_branches_fn():
+    graph = parallel_pipeline(
+        sub_graphs=[
+            make_graph("graph1"),
+            make_graph("graph2"),
+            make_graph("graph3"),
+        ],
+        state_schema=State,
+        branches_fn=lambda state: [
+            Send("graph1", arg={"a": state["a"]}),
+            Send("graph2", arg={"a": state["a"]}),
+        ],
+    )
+
+    result = graph.invoke({"a": 1})
+    assert result["a"] == 2
