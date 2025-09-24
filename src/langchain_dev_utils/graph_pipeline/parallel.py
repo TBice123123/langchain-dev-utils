@@ -81,7 +81,7 @@ def parallel_pipeline(
                 if subgraph.name != entry_node
             ],
         )
-        return graph.compile()
+        return graph.compile(name=graph_name or "parallel graph")
     else:
         filtered_subgraphs = [
             subgraph for subgraph in compiled_subgraphs if subgraph.name != entry_node
