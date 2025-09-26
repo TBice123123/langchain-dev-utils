@@ -50,7 +50,7 @@ def test_parallel_graph():
     assert result["a"] == 2
 
 
-def test_parallel_graph_with_entry_note():
+def test_parallel_graph_with_entry_graph():
     graph = parallel_pipeline(
         sub_graphs=[
             make_graph("graph1"),
@@ -58,7 +58,7 @@ def test_parallel_graph_with_entry_note():
             make_graph("graph3"),
         ],
         state_schema=State,
-        parallel_entry_node="graph1",
+        parallel_entry_graph="graph1",
     )
 
     result = graph.invoke({"a": 1})
