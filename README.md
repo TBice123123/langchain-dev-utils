@@ -1,188 +1,123 @@
-# LangChain Dev Utils
+# langchain-dev-utils
 
-This toolkit is designed to provide encapsulated utility functions for developers building applications with large language models using LangChain and LangGraph, helping developers work more efficiently.
+A practical enhancement utility library for LangChain / LangGraph developers, empowering the construction of complex and maintainable large language model applications.
 
-## Installation and Usage
-
-1. Using pip
+## 🚀 Installation
 
 ```bash
 pip install -U langchain-dev-utils
 ```
 
-2. Using poetry
+## 📦 Core Features
 
-```bash
-poetry add langchain-dev-utils
-```
+### 1. **Model Management**
 
-3. Using uv
+- Supports registering any chat model or embedding model provider
+- Provides unified interfaces `load_chat_model()` / `load_embeddings()` to simplify model loading
+- Fully compatible with LangChain’s official `init_chat_model` / `init_embeddings`, enabling seamless extension
 
-```bash
-uv add langchain-dev-utils
-```
-
-## Usage
-
-### 1. Model Management ⭐
-
-(1) ChatModel
-
-```Python
+```python
 from langchain_dev_utils import register_model_provider, load_chat_model
 from langchain_qwq import ChatQwen
-from dotenv import load_dotenv
 
-load_dotenv()
-
-# Register custom model providers
 register_model_provider("dashscope", ChatQwen)
 register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/api/v1")
 
-# Load models
-model = load_chat_model(model="dashscope:qwen-flash")
-print(model.invoke("Hello"))
-
-model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905", temperature=0.7)
-print(model.invoke("Hello"))
-
+model = load_chat_model("dashscope:qwen-flash")
+print(model.invoke("Hello!"))
 ```
 
-(2) Embedding
+---
+
+### 2. **Message Processing**
+
+- Automatically merges reasoning content (e.g., from DeepSeek models) into the `content` field
+- Supports streaming and asynchronous streaming responses (`stream` / `astream`)
+- Utility functions include:
+  - `merge_ai_message_chunk()`: merges message chunks
+  - `has_tool_calling()` / `parse_tool_calling()`: detects and parses tool calls
+  - `message_format()`: formats messages or document lists (with numbering, separators, etc.)
 
 ```python
-from langchain_dev_utils import register_embeddings_provider, load_embeddings
-from langchain_siliconflow import SiliconFlowEmbeddings
+from langchain_dev_utils import has_tool_calling, parse_tool_calling
 
-register_embeddings_provider(
-    "dashscope", "openai", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
-)
-
-register_embeddings_provider("siliconflow", SiliconFlowEmbeddings)
-
-embeddings = load_embeddings("dashscope:text-embedding-v4")
-print(embeddings.embed_query("hello world"))
-
-embeddings = load_embeddings("siliconflow:BAAI/bge-m3")
-print(embeddings.embed_query("hello world"))
+response = model.invoke("What time is it now?")
+if has_tool_calling(response):
+    tool_calls = parse_tool_calling(response)
+    print(tool_calls)
 ```
 
-### 2. Message Utilities
+---
 
-```Python
-from langchain_dev_utils import (
-    convert_reasoning_content_for_ai_message,
-    convert_reasoning_content_for_chunk_iterator,
-    aconvert_reasoning_content_for_chunk_iterator,
-    merge_ai_message_chunk,
-    has_tool_calling,
-    parse_tool_calling,
-    message_format
-)
+### 3. **Tool Enhancement**
 
-# merge reasoning tags into content
-msg = convert_reasoning_content_for_ai_message(ai_msg, think_tag=("<think>","</think>"))
+- Easily extend existing tools with new capabilities
+- Currently supports adding **human-in-the-loop** functionality to tools
 
-# streaming (sync / async)
-for chunk in convert_reasoning_content_for_chunk_iterator(model.stream("hi")):
-    print(chunk.content, end="")
+```python
+from langchain_dev_utils import human_in_the_loop_async
+from langchain_core.tools import tool
+import asyncio
+import datetime
 
-# re-assemble chunks
-full = merge_ai_message_chunk(chunks)
-
-# tool-call helpers
-if has_tool_calling(msg):
-    name, args = parse_tool_calling(msg, first_tool_call_only=True)
-
-# pretty print mixed items
-text = message_format(["text", "image", "note"], separator="\n", with_num=True)
-```
-
-### 3. Tool Enhancement
-
-```Python
-from langchain_dev_utils import human_in_the_loop, human_in_the_loop_async
-
-@human_in_the_loop          # sync
+@human_in_the_loop_async
 @tool
-def danger(x: int) -> str: ...
-
-@human_in_the_loop_async    # async
-@tool
-async def danger_async(x: int) -> str: ...
+async def async_get_current_time() -> str:
+    """Asynchronously retrieve the current timestamp"""
+    await asyncio.sleep(1)
+    return str(datetime.datetime.now().timestamp())
 ```
 
-### 4. Plan and Note
+---
 
-```Python
+### 4. **Context Engineering**
+
+- Automatically generates essential context management tools:
+
+  - `create_write_plan_tool()` / `create_update_plan_tool()`
+  - `create_write_note_tool()` / `create_query_note_tool()` / `create_ls_tool()` / `create_update_note_tool()`
+
+- Provides corresponding State classes—no need to reimplement them
+
+```python
 from langchain_dev_utils import (
     create_write_plan_tool,
     create_update_plan_tool,
     create_write_note_tool,
-    create_query_note_tool,
     create_ls_tool,
+    create_query_note_tool,
     create_update_note_tool,
-    PlanStateMixin,
-    NoteStateMixin,
 )
 
-## define graph state
-from langgraph.graph.message import MessagesState
-class State(MessagesState, PlanStateMixin, NoteStateMixin):
-    pass
-
-tools=[
-    create_write_plan_tool(),
-    create_update_plan_tool(),
-    create_write_note_tool(),
-    create_query_note_tool(),
-    create_ls_tool(),
-    create_update_note_tool(),
-]
+plan_tools = [create_write_plan_tool(), create_update_plan_tool()]
+note_tools = [create_write_note_tool(), create_ls_tool(), create_query_note_tool(), create_update_note_tool()]
 ```
 
-### 5. Graph Pipeline
+---
 
-```Python
-from langchain_dev_utils import sequential_pipeline, parallel_pipeline
+### 5. **Graph Orchestration**
 
-sequential_pipeline(
-    [
-        subgraph1,
-        subgraph2,
-        subgraph3,
-        subgraph4,
-    ]
-)
+- Composes multiple `StateGraph`s in **sequential** or **parallel** fashion
+- Supports complex multi-agent workflows:
+  - `sequential_pipeline()`: executes subgraphs sequentially
+  - `parallel_pipeline()`: executes subgraphs in parallel with dynamic branching (via the `Send` API)
+- Allows specifying entry nodes and custom state/input/output schemas
 
-parallel_pipeline(
-    [
-        subgraph1,
-        subgraph2,
-        subgraph3,
-        subgraph4,
+```python
+from langchain_dev_utils import parallel_pipeline
+
+graph = parallel_pipeline(
+    sub_graphs=[graph1, graph2, graph3],
+    state_schema=State,
+    branches_fn=lambda state: [
+        Send("graph1", arg={"a": state["a"]}),
+        Send("graph2", arg={"a": state["a"]}),
     ]
 )
 ```
 
-## Testing
+---
 
-All utility functions in this project have been tested. You can also clone the repository to run the tests:
+## 📚 Documentation and Examples
 
-```bash
-git clone https://github.com/TBice123123/langchain-dev-utils.git
-```
-
-```bash
-cd langchain-dev-utils
-```
-
-```bash
-uv sync --group test
-```
-
-```bash
-uv run pytest .
-```
-
-**For more information**, please refer to the following [documents](https://tbice123123.github.io/langchain-dev-utils-docs/en/).
+**For more information**, please refer to the following [documentation](https://tbice123123.github.io/langchain-dev-utils-docs/en/).

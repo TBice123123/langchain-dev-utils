@@ -17,12 +17,12 @@ def sequential_pipeline(
     Create a sequential pipeline from a list of subgraphs.
 
     Args:
-        sub_graphs (list[SubGraph]): List of subgraphs to be executed sequentially.
-        state_schema (type[StateT]): State schema for the pipeline.
-        graph_name (Optional[str], optional): Name for the pipeline. Defaults to None.
-        context_schema (type[ContextT] | None, optional): Context schema for the pipeline. Defaults to None.
-        input_schema (type[InputT] | None, optional): Input schema for the pipeline. Defaults to None.
-        output_schema (type[OutputT] | None, optional): Output schema for the pipeline. Defaults to None.
+       sub_graphs: List of sub-graphs
+       state_schema: state schema of the final constructed graph
+       graph_name: Name of the final constructed graph
+       context_schema: context schema of the final constructed graph
+       input_schema: input schema of the final constructed graph
+       output_schema: output schema of the final constructed graph
 
     Returns:
         CompiledStateGraph[StateT, ContextT, InputT, OutputT]: Compiled state graph of the pipeline.
