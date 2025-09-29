@@ -55,10 +55,11 @@ def sequential_pipeline(
 
         subgraphs_names.add(subgraph.name)
 
-    for sub_graph in compiled_subgraphs:
-        graph.add_node(sub_graph.name, sub_graph)
-
-    for i in range(len(compiled_subgraphs) - 1):
-        graph.add_edge(compiled_subgraphs[i].name, compiled_subgraphs[i + 1].name)
+    graph.add_sequence(
+        [
+            (compiled_subgraphs[i].name, compiled_subgraphs[i])
+            for i in range(len(compiled_subgraphs))
+        ]
+    )
     graph.add_edge("__start__", compiled_subgraphs[0].name)
     return graph.compile(name=graph_name or "sequential graph")
