@@ -4,19 +4,31 @@ from langchain_core.tools import BaseTool, InjectedToolCallId, tool
 from langgraph.types import Command
 from typing_extensions import TypedDict
 
-_DEFAULT_WRITE_NOTE_DESCRIPTION = """A tool for writing notes.
-Parameters:
-content: str, the content of the note
+_DEFAULT_WRITE_NOTE_DESCRIPTION = """
+A tool for writing notes.
+
+Args:
+    content: The content of the note
 """
 
 _DEFAULT_LS_DESCRIPTION = """List all the saved note names."""
 
 
-_DEFAULT_UPDATE_NOTE_DESCRIPTION = """Update the content of a note.
-Parameters:
-file_name: str, the name of the note
-origin_content: str, the original content of the note, must be a content in the note
-new_content: str, the new content of the note
+_DEFAULT_QUERY_NOTE_DESCRIPTION = """
+Query the content of a note.
+
+Args:
+    file_name: The name of the note
+"""
+
+_DEFAULT_UPDATE_NOTE_DESCRIPTION = """
+Update the content of a note.
+
+Args:
+    file_name: The name of the note
+    origin_content: The original content of the note, must be a content in the note
+    new_content: The new content of the note
+    replace_all: Whether to replace all the origin content
 """
 
 
@@ -100,7 +112,7 @@ def create_ls_tool(
 
     @tool(
         name_or_callable=name or "ls",
-        description=description or "List all the saved note names.",
+        description=description or _DEFAULT_LS_DESCRIPTION,
     )
     def ls(state: Annotated[NoteStateMixin, InjectedState]):
         notes = state["note"] if "note" in state else {}
@@ -127,11 +139,19 @@ def create_query_note_tool(
 
     @tool(
         name_or_callable=name or "query_note",
-        description=description or "Query the content of a note.",
+        description=description or _DEFAULT_QUERY_NOTE_DESCRIPTION,
     )
     def query_note(file_name: str, state: Annotated[NoteStateMixin, InjectedState]):
         notes = state["note"] if "note" in state else {}
-        return notes.get(file_name, "not found")
+        if file_name not in notes:
+            raise ValueError(f"Error: Note {file_name} not found")
+
+        content = notes.get(file_name)
+
+        if not content or content.strip() == "":
+            raise ValueError(f"Error: Note {file_name} is empty")
+
+        return content
 
     return query_note
 
@@ -165,15 +185,27 @@ def create_update_note_tool(
         new_content: Annotated[str, "the new content of the note"],
         tool_call_id: Annotated[str, InjectedToolCallId],
         state: Annotated[NoteStateMixin, InjectedState],
+        replace_all: Annotated[bool, "replace all the origin content"] = False,
     ):
         msg_key = message_key or "messages"
         note = state["note"] if "note" in state else {}
         if file_name not in note:
-            raise ValueError(f"Note {file_name} not found")
-        new_note_content = note.get(file_name, "").replace(origin_content, new_content)
+            raise ValueError(f"Error: Note {file_name} not found")
+
+        if origin_content not in note.get(file_name, ""):
+            raise ValueError(
+                f"Error: Origin content {origin_content} not found in note {file_name}"
+            )
+
+        if replace_all:
+            new_content = note.get(file_name, "").replace(origin_content, new_content)
+        else:
+            new_content = note.get(file_name, "").replace(
+                origin_content, new_content, 1
+            )
         return Command(
             update={
-                "note": {file_name: new_note_content},
+                "note": {file_name: new_content},
                 msg_key: [
                     ToolMessage(
                         content=f"note {file_name} updated successfully, content is {new_content}",

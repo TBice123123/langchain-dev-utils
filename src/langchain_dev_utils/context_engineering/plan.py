@@ -7,35 +7,44 @@ from langgraph.types import Command
 from typing_extensions import TypedDict
 
 
-_DEFAULT_WRITE_TOOL_DESCRIPTION = """A tool for writing initial plan — can only be used once, at the very beginning. Use update_plan for subsequent modifications.
-Parameters:
-plan: list[str] — The list of plan items to write. Each string in the list represents the content of one plan item.
+_DEFAULT_WRITE_TOOL_DESCRIPTION = """
+A tool for writing initial plan — can only be used once, at the very beginning. 
+Use update_plan for subsequent modifications.
+
+Args:
+    plan: The list of plan items to write. Each string in the list represents 
+          the content of one plan item.
 """
 
-_DEFAULT_UPDATE_TOOL_DESCRIPTION = """A tool for updating the status of plan tasks. Can be called multiple times to track task progress.
+_DEFAULT_UPDATE_TOOL_DESCRIPTION = """
+A tool for updating the status of plan tasks. Can be called multiple times to track task progress.
 
-Parameters:
-update_plans: list[Plan] — A list of plan items to update. Each item is a dictionary containing the following fields:
-- content: str — The exact content of the plan task. Must match an existing task verbatim.
-- status: str — The task status. Must be either "in_progress" or "done".
+Args:
+    update_plans: A list of plan items to update. Each item is a dictionary containing 
+                  the following fields:
+                  - content: str — The exact content of the plan task. Must match an 
+                    existing task verbatim.
+                  - status: str — The task status. Must be either "in_progress" or "done".
 
 Usage Guidelines:
+- Only pass the tasks whose status needs to be updated — no need to include all tasks.
+- Each call must include at least one task with status "done" AND at least one task with 
+  status "in_progress":
+  - Mark completed tasks as "done"
+  - Mark the next tasks to work on as "in_progress"
+- The "content" field must exactly match the content of an existing task 
+  (case-sensitive, whitespace-sensitive).
 
-Only pass the tasks whose status needs to be updated — no need to include all tasks.
-Each call must include at least one task with status "done" AND at least one task with status "in_progress":
-Mark completed tasks as "done"
-Mark the next tasks to work on as "in_progress"
-The "content" field must exactly match the content of an existing task (case-sensitive, whitespace-sensitive).
 Example:
 Suppose the current task list is:
+- Task 1 (in_progress)
+- Task 2 (pending)
+- Task 3 (pending)
 
-Task 1 (in_progress)
-Task 2 (pending)
-Task 3 (pending)
 When "Task 1" is completed and you are ready to start "Task 2", pass in:
 [
-{"content": "Task 1", "status": "done"},
-{"content": "Task 2", "status": "in_progress"}
+    {"content": "Task 1", "status": "done"},
+    {"content": "Task 2", "status": "in_progress"}
 ]
 """
 
