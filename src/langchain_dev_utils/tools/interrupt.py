@@ -23,7 +23,7 @@ def human_in_the_loop(
 ) -> BaseTool:
     """
     Decorator for adding human-in-the-loop review to a synchronous tool function.
-    
+
     Usage: @human_in_the_loop
     """
     ...
@@ -36,7 +36,7 @@ def human_in_the_loop(
 ) -> Callable[[Callable], BaseTool]:
     """
     Decorator for adding human-in-the-loop review to a synchronous tool function with custom handler.
-    
+
     Usage: @human_in_the_loop(handler=custom_handler)
     """
     ...
@@ -48,7 +48,7 @@ def human_in_the_loop_async(
 ) -> BaseTool:
     """
     Decorator for adding human-in-the-loop review to an asynchronous tool function.
-    
+
     Usage: @human_in_the_loop_async
     """
     ...
@@ -61,7 +61,7 @@ def human_in_the_loop_async(
 ) -> Callable[[Callable], BaseTool]:
     """
     Decorator for adding human-in-the-loop review to an asynchronous tool function with custom handler.
-    
+
     Usage: @human_in_the_loop_async(handler=custom_handler)
     """
     ...
@@ -129,17 +129,50 @@ def human_in_the_loop(
     """
     A decorator that adds human-in-the-loop review support to a synchronous tool.
 
+    This decorator allows you to add human review functionality to tools, enabling
+    users to approve, edit, or reject tool invocations before they are executed.
+
     Supports both syntaxes:
         @human_in_the_loop
         @human_in_the_loop(handler=fn)
 
     Args:
         func: The function to decorate. **Do not pass this directly.**
-        handler: Configuration for the human interrupt.
+        handler: Configuration for the human interrupt. If not provided, uses default_handler.
 
     Returns:
         If `func` is provided, returns the decorated BaseTool.
         If `func` is None, returns a decorator that will decorate the target function.
+
+    Example:
+        Basic usage with default handler:
+        >>> from langchain_dev_utils import human_in_the_loop
+        >>> from langchain_core.tools import tool
+        >>> import datetime
+        >>>
+        >>> @human_in_the_loop
+        >>> @tool
+        >>> def get_current_time() -> str:
+        ...     \"\"\"Get current timestamp\"\"\"
+        ...     return str(datetime.datetime.now().timestamp())
+
+        Usage with custom handler:
+        >>> def custom_handler(params: InterruptParams) -> Any:
+        ...     response = interrupt(
+        ...         f"I am about to invoke tool '{params['tool_call_name']}' with arguments {params['tool_call_args']}. Please confirm whether to proceed."
+        ...     )
+        ...     if response["type"] == "accept":
+        ...         return params["tool"].invoke(params["tool_call_args"], params["config"])
+        ...     elif response["type"] == "reject":
+        ...         return "User rejected this tool call"
+        ...     else:
+        ...         raise ValueError(f"Unsupported response type: {response['type']}")
+        >>>
+        >>> @human_in_the_loop(handler=custom_handler)
+        >>> @tool
+        >>> def sensitive_operation(data: str) -> str:
+        ...     \"\"\"Perform sensitive operation on data\"\"\"
+        ...     return f"Processed: {data}"
     """
 
     def decorator(target_func: Callable) -> BaseTool:
@@ -182,17 +215,53 @@ def human_in_the_loop_async(
     """
     A decorator that adds human-in-the-loop review support to an asynchronous tool.
 
+    This is the async version of human_in_the_loop. It allows you to add human review
+    functionality to async tools, enabling users to approve, edit, or reject tool
+    invocations before they are executed.
+
     Supports both syntaxes:
         @human_in_the_loop_async
         @human_in_the_loop_async(handler=fn)
 
     Args:
         func: The function to decorate. **Do not pass this directly.**
-        handler: Configuration for the human interrupt.
+        handler: Configuration for the human interrupt. If not provided, uses default_handler_async.
 
     Returns:
         If `func` is provided, returns the decorated BaseTool.
         If `func` is None, returns a decorator that will decorate the target function.
+
+    Example:
+        Basic usage with default handler:
+        >>> from langchain_dev_utils import human_in_the_loop_async
+        >>> from langchain_core.tools import tool
+        >>> import asyncio
+        >>> import datetime
+        >>>
+        >>> @human_in_the_loop_async
+        >>> @tool
+        >>> async def async_get_current_time() -> str:
+        ...     \"\"\"Asynchronously get current timestamp\"\"\"
+        ...     await asyncio.sleep(1)
+        ...     return str(datetime.datetime.now().timestamp())
+
+        Usage with custom handler:
+        >>> async def custom_handler(params: InterruptParams) -> Any:
+        ...     response = interrupt(
+        ...         f"I am about to invoke tool '{params['tool_call_name']}' with arguments {params['tool_call_args']}. Please confirm whether to proceed."
+        ...     )
+        ...     if response["type"] == "accept":
+        ...         return await params["tool"].ainvoke(params["tool_call_args"], params["config"])
+        ...     elif response["type"] == "reject":
+        ...         return "User rejected this tool call"
+        ...     else:
+        ...         raise ValueError(f"Unsupported response type: {response['type']}")
+        >>> @human_in_the_loop_async(handler=custom_handler)
+        >>> @tool
+        >>> async def async_sensitive_operation(data: str) -> str:
+        ...     \"\"\"Perform sensitive async operation on data\"\"\"
+        ...     await asyncio.sleep(0.1)  # Simulate async work
+        ...     return f"Processed: {data}"
     """
 
     def decorator(target_func: Callable) -> BaseTool:

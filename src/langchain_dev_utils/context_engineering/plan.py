@@ -65,12 +65,22 @@ def create_write_plan_tool(
 ) -> BaseTool:
     """Create a tool for writing initial plan.
 
+    This function creates a tool that allows agents to write an initial plan
+    with a list of tasks. The first task in the plan will be marked as "in_progress"
+    and the rest as "pending".
+
     Args:
-        name: The name of the tool.
-        description: The description of the tool.
-        message_key: The key of the message to update.
+        name: The name of the tool. Defaults to "write_plan".
+        description: The description of the tool. Uses default description if not provided.
+        message_key: The key of the message to be updated. Defaults to "messages".
+
     Returns:
         BaseTool: The tool for writing initial plan.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils import create_write_plan_tool
+        >>> write_plan_tool = create_write_plan_tool()
     """
 
     @tool(
@@ -107,12 +117,21 @@ def create_update_plan_tool(
 ) -> BaseTool:
     """Create a tool for updating plan tasks.
 
+    This function creates a tool that allows agents to update the status of tasks
+    in a plan. Tasks can be marked as "in_progress" or "done" to track progress.
+
     Args:
-        name: The name of the tool.
-        description: The description of the tool.
-        message_key: The key of the message to update.
+        name: The name of the tool. Defaults to "update_plan".
+        description: The description of the tool. Uses default description if not provided.
+        message_key: The key of the message to be updated. Defaults to "messages".
+
     Returns:
         BaseTool: The tool for updating plan tasks.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils import create_update_plan_tool
+        >>> update_plan_tool = create_update_plan_tool()
     """
 
     try:

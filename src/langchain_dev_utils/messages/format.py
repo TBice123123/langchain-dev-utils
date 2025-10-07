@@ -33,6 +33,20 @@ def message_format(
     Returns:
         A formatted string composed of the input contents, joined by `separator`.
 
+    Example:
+        Format messages with default separator:
+        >>> from langchain_dev_utils import message_format
+        >>> from langchain_core.messages import HumanMessage, AIMessage
+        >>> messages = [
+        ...     HumanMessage(content="Hello, how are you?"),
+        ...     AIMessage(content="I'm doing well, thank you!")
+        ... ]
+        >>> formatted = message_format(messages)
+        >>> formatted
+
+        Format with custom separator and numbering:
+        >>> formatted = message_format(messages, separator="---", with_num=True)
+        >>> formatted
     """
     if not inputs:
         return ""

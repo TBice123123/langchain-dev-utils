@@ -10,12 +10,28 @@ def convert_reasoning_content_for_ai_message(
 ) -> AIMessage:
     """Convert reasoning content in AI message to visible content.
 
+    This function extracts reasoning content from the additional_kwargs of an AI message
+    and merges it into the visible content, wrapping it with the specified tags.
+
     Args:
         model_response: AI message response from model
         think_tag: Tuple of (opening_tag, closing_tag) to wrap reasoning content
 
     Returns:
         AIMessage: Modified AI message with reasoning content in visible content
+
+    Example:
+        Basic usage with default tags:
+        >>> from langchain_dev_utils import convert_reasoning_content_for_ai_message
+        >>> response = model.invoke("Explain quantum computing")
+        >>> response = convert_reasoning_content_for_ai_message(response)
+        >>> response.content
+
+        Custom tags for reasoning content:
+        >>> response = convert_reasoning_content_for_ai_message(
+        ...     response, think_tag=('<reasoning>', '</reasoning>')
+        ... )
+        >>> response.content
     """
     if "reasoning_content" in model_response.additional_kwargs:
         model_response.content = f"{think_tag[0]}{model_response.additional_kwargs['reasoning_content']}{think_tag[1]}{model_response.content}"
@@ -28,12 +44,32 @@ def convert_reasoning_content_for_chunk_iterator(
 ) -> Iterator[BaseMessageChunk]:
     """Convert reasoning content for streaming response chunks.
 
+    This function processes streaming response chunks and merges reasoning content
+    into the visible content, wrapping it with the specified tags. It handles
+    the first chunk, middle chunks, and last chunk differently to properly
+    format the reasoning content.
+
     Args:
         model_response: Iterator of message chunks from streaming response
         think_tag: Tuple of (opening_tag, closing_tag) to wrap reasoning content
 
     Yields:
         BaseMessageChunk: Modified message chunks with reasoning content
+
+    Example:
+        Process streaming response:
+        >>> from langchain_dev_utils import convert_reasoning_content_for_chunk_iterator
+        >>> for chunk in convert_reasoning_content_for_chunk_iterator(
+        ...     model.stream("What is the capital of France?")
+        ... ):
+        ...     print(chunk.content, end="", flush=True)
+
+        Custom tags for streaming:
+        >>> for chunk in convert_reasoning_content_for_chunk_iterator(
+        ...     model.stream("Explain quantum computing"),
+        ...     think_tag=('<reasoning>', '</reasoning>')
+        ... ):
+        ...     print(chunk.content, end="", flush=True)
     """
     isfirst = True
     isend = True
@@ -67,12 +103,31 @@ async def aconvert_reasoning_content_for_chunk_iterator(
 ) -> AsyncIterator[BaseMessageChunk]:
     """Async convert reasoning content for streaming response chunks.
 
+    This is the async version of convert_reasoning_content_for_chunk_iterator.
+    It processes async streaming response chunks and merges reasoning content
+    into the visible content, wrapping it with the specified tags.
+
     Args:
         model_response: Async iterator of message chunks from streaming response
         think_tag: Tuple of (opening_tag, closing_tag) to wrap reasoning content
 
     Yields:
         BaseMessageChunk: Modified message chunks with reasoning content
+
+    Example:
+        Process async streaming response:
+        >>> from langchain_dev_utils import aconvert_reasoning_content_for_chunk_iterator
+        >>> async for chunk in aconvert_reasoning_content_for_chunk_iterator(
+        ...     model.astream("What is the capital of France?")
+        ... ):
+        ...     print(chunk.content, end="", flush=True)
+
+        Custom tags for async streaming:
+        >>> async for chunk in aconvert_reasoning_content_for_chunk_iterator(
+        ...     model.astream("Explain quantum computing"),
+        ...     think_tag=('<reasoning>', '</reasoning>')
+        ... ):
+        ...     print(chunk.content, end="", flush=True)
     """
     isfirst = True
     isend = True
@@ -103,11 +158,23 @@ async def aconvert_reasoning_content_for_chunk_iterator(
 def merge_ai_message_chunk(chunks: Sequence[AIMessageChunk]) -> AIMessage:
     """Merge a sequence of AIMessageChunk into a single AIMessage.
 
+    This function combines multiple message chunks into a single message,
+    preserving the content and metadata while handling tool calls appropriately.
+
     Args:
         chunks: Sequence of AIMessageChunk to merge
 
     Returns:
         AIMessage: Merged AIMessage
+
+    Example:
+        Merge streaming chunks:
+        >>> from langchain_dev_utils import merge_ai_message_chunk
+        >>> chunks = []
+        >>> for chunk in model.stream("What is the capital of France?"):
+        ...     chunks.append(chunk)
+        >>> merged_message = merge_ai_message_chunk(chunks)
+        >>> merged_message.content
     """
     ai_message_chunk = cast(AIMessageChunk, reduce(lambda x, y: x + y, chunks))
     ai_message_chunk.additional_kwargs.pop("tool_calls", None)

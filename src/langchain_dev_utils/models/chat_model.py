@@ -98,6 +98,10 @@ def register_model_provider(
 ):
     """Register a new model provider.
 
+    This function allows you to register custom chat model providers that can be used
+    with the load_chat_model function. It supports both custom model classes and
+    string identifiers for supported providers.
+
     Args:
         provider_name: Name of the provider to register
         chat_model: Either a BaseChatModel class or a string identifier for a supported provider
@@ -106,6 +110,24 @@ def register_model_provider(
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
                    or if chat_model string is not in supported providers
+
+    Example:
+        Basic usage with custom model class:
+        >>> from langchain_dev_utils import register_model_provider, load_chat_model
+        >>> from langchain_qwq import ChatQwen
+        >>> from dotenv import load_dotenv
+        >>>
+        >>> load_dotenv()
+        >>>
+        >>> # Register custom model provider
+        >>> register_model_provider("dashscope", ChatQwen)
+        >>> model = load_chat_model(model="dashscope:qwen-flash")
+        >>> model.invoke("Hello")
+
+        Using with OpenAI-compatible API:
+        >>> register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/api/v1")
+        >>> model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905")
+        >>> model.invoke("Hello")
     """
     if isinstance(chat_model, str):
         base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
@@ -131,11 +153,38 @@ def batch_register_model_provider(
 ):
     """Batch register model providers.
 
+    This function allows you to register multiple model providers at once, which is
+    useful when setting up applications that need to work with multiple model services.
+
     Args:
-        providers: List of ChatModelProvider dictionaries
+        providers: List of ChatModelProvider dictionaries, each containing:
+            - provider: str - Provider name
+            - chat_model: Union[Type[BaseChatModel], str] - Model class or provider string
+            - base_url: Optional[str] - Base URL for API endpoints
 
     Raises:
         ValueError: If any of the providers are invalid
+
+    Example:
+        Register multiple providers at once:
+        >>> from langchain_dev_utils import batch_register_model_provider, load_chat_model
+        >>> from langchain_qwq import ChatQwen
+        >>>
+        >>> batch_register_model_provider([
+        ...     {
+        ...         "provider": "dashscope",
+        ...         "chat_model": ChatQwen,
+        ...     },
+        ...     {
+        ...         "provider": "openrouter",
+        ...         "chat_model": "openai",
+        ...         "base_url": "https://openrouter.ai/api/v1",
+        ...     },
+        ... ])
+        >>> model = load_chat_model(model="dashscope:qwen-flash")
+        >>> model.invoke("Hello")
+        >>> model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905")
+        >>> model.invoke("Hello")
     """
 
     for provider in providers:
@@ -152,13 +201,36 @@ def load_chat_model(
 ) -> BaseChatModel:
     """Load a chat model.
 
+    This function loads a chat model from the registered providers. The model parameter
+    can be specified in two ways:
+    1. "provider:model-name" - When model_provider is not specified
+    2. "model-name" - When model_provider is specified separately
+
     Args:
-        model: Model name
-        model_provider: Optional provider name
-        **kwargs: Additional arguments for model initialization
+        model: Model name, either as "provider:model-name" or just "model-name"
+        model_provider: Optional provider name (if not included in model parameter)
+        **kwargs: Additional arguments for model initialization (e.g., temperature, api_key)
 
     Returns:
         BaseChatModel: Initialized chat model instance
+
+    Example:
+        Load model with provider prefix:
+        >>> from langchain_dev_utils import load_chat_model
+        >>> model = load_chat_model("dashscope:qwen3-235b-a22b-instruct-2507")
+        >>> model.invoke("hello")
+
+        Load model with separate provider parameter:
+        >>> model = load_chat_model("qwen-flash", model_provider="dashscope")
+        >>> model.invoke("hello")
+
+        Load model with additional parameters:
+        >>> model = load_chat_model(
+        ...     "dashscope:qwen-flash",
+        ...     temperature=0.7,
+        ...     enable_thinking=True
+        ... )
+        >>> model.invoke("Hello, how are you?")
     """
     return _load_chat_model_helper(
         cast(str, model),

@@ -52,12 +52,22 @@ def create_write_note_tool(
 ) -> BaseTool:
     """Create a tool for writing notes.
 
+    This function creates a tool that allows agents to write notes and store them
+    in the state. The notes are stored in a dictionary with the note name as the key
+    and the content as the value.
+
     Args:
-        name: The name of the tool.
-        description: The description of the tool.
-        message_key: The key of the message to be updated.
+        name: The name of the tool. Defaults to "write_note".
+        description: The description of the tool. Uses default description if not provided.
+        message_key: The key of the message to be updated. Defaults to "messages".
+
     Returns:
         BaseTool: The tool for writing notes.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils import create_write_note_tool
+        >>> write_note = create_write_note_tool()
     """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore
@@ -99,11 +109,21 @@ def create_ls_tool(
 ) -> BaseTool:
     """Create a tool for listing all the saved note names.
 
+    This function creates a tool that allows agents to list all available notes
+    stored in the state. This is useful for discovering what notes have been
+    created before querying or updating them.
+
     Args:
-        name: The name of the tool.
-        description: The description of the tool.
+        name: The name of the tool. Defaults to "ls".
+        description: The description of the tool. Uses default description if not provided.
+
     Returns:
         BaseTool: The tool for listing all the saved note names.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils import create_ls_tool
+        >>> ls = create_ls_tool()
     """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore
@@ -126,11 +146,21 @@ def create_query_note_tool(
 ) -> BaseTool:
     """Create a tool for querying the content of a note.
 
+    This function creates a tool that allows agents to retrieve the content of
+    a specific note by its name. This is useful for accessing previously stored
+    information during the conversation.
+
     Args:
-        name: The name of the tool.
-        description: The description of the tool.
+        name: The name of the tool. Defaults to "query_note".
+        description: The description of the tool. Uses default description if not provided.
+
     Returns:
         BaseTool: The tool for querying the content of a note.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils import create_query_note_tool
+        >>> query_note = create_query_note_tool()
     """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore
@@ -163,12 +193,22 @@ def create_update_note_tool(
 ) -> BaseTool:
     """Create a tool for updating notes.
 
+    This function creates a tool that allows agents to update the content of
+    existing notes. The tool can replace either the first occurrence of the
+    original content or all occurrences, depending on the replace_all parameter.
+
     Args:
-        name: The name of the tool.
-        description: The description of the tool.
-        message_key: The key of the message to be updated.
+        name: The name of the tool. Defaults to "update_note".
+        description: The description of the tool. Uses default description if not provided.
+        message_key: The key of the message to be updated. Defaults to "messages".
+
     Returns:
-        BaseTool: The tool for writing notes.
+        BaseTool: The tool for updating notes.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils import create_update_note_tool
+        >>> update_note_tool = create_update_note_tool()
     """
     try:
         from langchain.agents.tool_node import InjectedState  # type: ignore

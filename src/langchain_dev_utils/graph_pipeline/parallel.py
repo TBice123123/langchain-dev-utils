@@ -19,18 +19,34 @@ def parallel_pipeline(
     """
     Create a parallel pipeline from a list of subgraphs.
 
+    This function allows you to compose multiple StateGraphs in a parallel fashion,
+    where subgraphs can execute concurrently. This is useful for creating complex
+    multi-agent workflows where agents can work independently or with dynamic branching.
+
     Args:
-        sub_graphs: List of sub-graphs
+        sub_graphs: List of sub-graphs to execute in parallel
         state_schema: state schema of the final constructed graph
         graph_name: Name of the final constructed graph
-        parallel_entry_graph: Parallel entry graph
-        branches_fn: Function to determine which sub-graphs to execute in parallel
+        parallel_entry_graph: Optional entry graph that starts the parallel execution
+        branches_fn: Optional function to determine which sub-graphs to execute in parallel
         context_schema: context schema of the final constructed graph
         input_schema: input schema of the final constructed graph
         output_schema: output schema of the final constructed graph
 
     Returns:
         CompiledStateGraph[StateT, ContextT, InputT, OutputT]: Compiled state graph of the pipeline.
+
+    Example:
+        Parallel pipeline with entry graph:
+        >>> from langchain_dev_utils import parallel_pipeline
+        >>> from src.graph import graph1,graph2
+        >>> from src.state import State
+        >>>
+        >>> graph = parallel_pipeline(
+        ...     sub_graphs=[graph1,graph2],
+        ...     state_schema=State,
+        ...     graph_name="parallel graph",
+        ... )
     """
     graph = StateGraph(
         state_schema=state_schema,

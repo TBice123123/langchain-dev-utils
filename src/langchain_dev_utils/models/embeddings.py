@@ -50,6 +50,10 @@ def register_embeddings_provider(
 ):
     """Register an embeddings provider.
 
+    This function allows you to register custom embeddings providers that can be used
+    with the load_embeddings function. It supports both custom model classes and
+    string identifiers for supported providers.
+
     Args:
         provider_name: Name of the provider to register
         embeddings_model: Either an Embeddings class or a string identifier for a supported provider
@@ -57,6 +61,22 @@ def register_embeddings_provider(
 
     Raises:
         ValueError: If base_url is not provided when embeddings_model is a string
+
+    Example:
+        Register with custom model class:
+        >>> from langchain_dev_utils import register_embeddings_provider, load_embeddings
+        >>> from langchain_siliconflow import SiliconFlowEmbeddings
+        >>>
+        >>> register_embeddings_provider("siliconflow", SiliconFlowEmbeddings)
+        >>> embeddings = load_embeddings("siliconflow:text-embedding-v4")
+        >>> embeddings.embed_query("hello world")
+
+        Register with OpenAI-compatible API:
+        >>> register_embeddings_provider(
+        ...     "dashscope", "openai", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+        ... )
+        >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
+        >>> embeddings.embed_query("hello world")
     """
     if isinstance(embeddings_model, str):
         base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
@@ -89,11 +109,33 @@ def batch_register_embeddings_provider(
 ):
     """Batch register embeddings providers.
 
+    This function allows you to register multiple embeddings providers at once, which is
+    useful when setting up applications that need to work with multiple embedding services.
+
     Args:
-        providers: List of EmbeddingProvider dictionaries
+        providers: List of EmbeddingProvider dictionaries, each containing:
+            - provider: str - Provider name
+            - embeddings_model: Union[Type[Embeddings], str] - Model class or provider string
+            - base_url: Optional[str] - Base URL for API endpoints
 
     Raises:
         ValueError: If any of the providers are invalid
+
+    Example:
+        Register multiple providers at once:
+        >>> from langchain_dev_utils import batch_register_embeddings_provider, load_embeddings
+        >>> from langchain_siliconflow import SiliconFlowEmbeddings
+        >>>
+        >>> batch_register_embeddings_provider(
+        ...     [
+        ...         {"provider": "dashscope", "embeddings_model": "openai", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"},
+        ...         {"provider": "siliconflow", "embeddings_model": SiliconFlowEmbeddings},
+        ...     ]
+        ... )
+        >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
+        >>> embeddings.embed_query("hello world")
+        >>> embeddings = load_embeddings("siliconflow:text-embedding-v4")
+        >>> embeddings.embed_query("hello world")
     """
     for provider in providers:
         register_embeddings_provider(
@@ -109,16 +151,42 @@ def load_embeddings(
 ) -> Union[Embeddings, Runnable[Any, list[float]]]:
     """Load embeddings model.
 
+    This function loads an embeddings model from the registered providers. The model parameter
+    must be specified in the format "provider:model-name" when provider is not specified separately.
+
     Args:
         model: Model name in format 'provider:model-name' if provider not specified separately
         provider: Optional provider name (if not included in model parameter)
-        **kwargs: Additional arguments for model initialization
+        **kwargs: Additional arguments for model initialization (e.g., api_key)
 
     Returns:
         Union[Embeddings, Runnable[Any, list[float]]]: Initialized embeddings model instance
 
     Raises:
         ValueError: If provider is not registered or API key is not found
+
+    Example:
+        Load model with provider prefix:
+        >>> from langchain_dev_utils import load_embeddings
+        >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
+        >>> embeddings.embed_query("hello world")
+
+        Load model with separate provider parameter:
+        >>> embeddings = load_embeddings("text-embedding-v4", provider="dashscope")
+        >>> embeddings.embed_query("hello world")
+
+        Load model with additional parameters:
+        >>> embeddings = load_embeddings(
+        ...     "dashscope:text-embedding-v4",
+        ...     api_key="your-api-key"
+        ... )
+        >>> embeddings.embed_query("hello world")
+
+        Batch processing:
+        >>> texts = ["hello world", "how are you", "good morning"]
+        >>> embeddings_list = embeddings.embed_documents(texts)
+        >>> len(embeddings_list)
+        >>> len(embeddings_list[0])
     """
     if provider is None:
         provider, model = _parse_model_string(model)
