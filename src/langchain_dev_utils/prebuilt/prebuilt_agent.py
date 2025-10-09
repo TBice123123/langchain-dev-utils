@@ -59,6 +59,8 @@ def create_agent(
     Example:
         >>> from langchain_dev_utils import register_model_provider
         >>> from langchain_dev_utils.prebuilt import create_agent
+        >>> from langchain_core.tools import tool
+        >>> import datetime
         >>>
         >>> # Register a model provider
         >>> register_model_provider(
@@ -67,32 +69,18 @@ def create_agent(
         ...     base_url="https://api.moonshot.cn/v1",
         ... )
         >>>
-        >>> # Create an agent with the registered model
+        >>> @tool
+        ... def get_current_time() -> str:
+        ...     \"\"\"Get current time.\"\"\"
+        ...     return str(datetime.datetime.now().timestamp())
+        >>>
         >>> agent = create_agent(
         ...     "moonshot:kimi-k2-0905-preview",
-        ...     tools=[],
-        ...     name="kimi",
+        ...     tools=[get_current_time],
+        ...     name="time-agent"
         ... )
         >>> response = agent.invoke({
-        ...     "messages": [{"role": "user", "content": "Introduce yourself"}]
-        ... })
-        >>> print(response)
-
-        Using with custom tools:
-        >>> from langchain_core.tools import tool
-        >>>
-        >>> @tool
-        ... def get_weather(location: str) -> str:
-        ...     \"\"\"Get weather information for a location.\"\"\"
-        ...     return f"Weather in {location}: Sunny, 25°C"
-        >>>
-        >>> agent = create_agent(
-        ...     "openai:gpt-4",
-        ...     tools=[get_weather],
-        ...     name="weather-agent"
-        ... )
-        >>> response = agent.invoke({
-        ...     "messages": [{"role": "user", "content": "What's the weather in Tokyo?"}]
+        ...     "messages": [{"role": "user", "content": "What's the time?"}]
         ... })
         >>> print(response)
     """
