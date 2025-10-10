@@ -84,8 +84,8 @@ def create_write_note_tool(
         tool_call_id: Annotated[str, InjectedToolCallId],
         state: Annotated[NoteStateMixin, InjectedState],
     ):
-        if file_name in state["note"] if "note" in state else {}:
-            notes = state["note"] if "note" in state else {}
+        notes = state.get("note", {})
+        if file_name in notes:
             file_name = file_name + "_" + str(len(notes[file_name]))
 
         msg_key = message_key or "messages"
@@ -135,7 +135,7 @@ def create_ls_tool(
         description=description or _DEFAULT_LS_DESCRIPTION,
     )
     def ls(state: Annotated[NoteStateMixin, InjectedState]):
-        notes = state["note"] if "note" in state else {}
+        notes = state.get("note", {})
         return list(notes.keys())
 
     return ls
@@ -172,7 +172,7 @@ def create_query_note_tool(
         description=description or _DEFAULT_QUERY_NOTE_DESCRIPTION,
     )
     def query_note(file_name: str, state: Annotated[NoteStateMixin, InjectedState]):
-        notes = state["note"] if "note" in state else {}
+        notes = state.get("note", {})
         if file_name not in notes:
             raise ValueError(f"Error: Note {file_name} not found")
 
@@ -228,19 +228,19 @@ def create_update_note_tool(
         replace_all: Annotated[bool, "replace all the origin content"] = False,
     ):
         msg_key = message_key or "messages"
-        note = state["note"] if "note" in state else {}
-        if file_name not in note:
+        notes = state.get("note", {})
+        if file_name not in notes:
             raise ValueError(f"Error: Note {file_name} not found")
 
-        if origin_content not in note.get(file_name, ""):
+        if origin_content not in notes.get(file_name, ""):
             raise ValueError(
                 f"Error: Origin content {origin_content} not found in note {file_name}"
             )
 
         if replace_all:
-            new_content = note.get(file_name, "").replace(origin_content, new_content)
+            new_content = notes.get(file_name, "").replace(origin_content, new_content)
         else:
-            new_content = note.get(file_name, "").replace(
+            new_content = notes.get(file_name, "").replace(
                 origin_content, new_content, 1
             )
         return Command(

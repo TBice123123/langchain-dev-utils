@@ -148,7 +148,7 @@ def create_update_plan_tool(
         tool_call_id: Annotated[str, InjectedToolCallId],
         state: Annotated[PlanStateMixin, InjectedState],
     ):
-        plan_list = state["plan"] if "plan" in state else []
+        plan_list = state.get("plan", [])
 
         updated_plan_list = []
 
