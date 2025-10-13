@@ -12,7 +12,7 @@ load_dotenv()
 
 batch_register_embeddings_provider(
     [
-        {"provider": "dashscope", "embeddings_model": "openai"},
+        {"provider": "dashscope", "embeddings_model": "openai-compatible"},
         {"provider": "siliconflow", "embeddings_model": SiliconFlowEmbeddings},
     ]
 )

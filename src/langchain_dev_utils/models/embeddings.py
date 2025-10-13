@@ -1,5 +1,5 @@
 import os
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
 from langchain_core.runnables import Runnable
@@ -11,7 +11,7 @@ _EMBEDDINGS_PROVIDERS_DICT = {}
 
 class EmbeddingProvider(TypedDict):
     provider: str
-    embeddings_model: Union[type[Embeddings], str]
+    embeddings_model: Union[type[Embeddings], Literal["openai-compatible"]]
     base_url: NotRequired[str]
 
 
@@ -45,7 +45,7 @@ def _parse_model_string(model_name: str) -> tuple[str, str]:
 
 def register_embeddings_provider(
     provider_name: str,
-    embeddings_model: Union[type[Embeddings], str],
+    embeddings_model: Union[type[Embeddings], Literal["openai-compatible"]],
     base_url: Optional[str] = None,
 ):
     """Register an embeddings provider.
@@ -73,7 +73,7 @@ def register_embeddings_provider(
 
         Register with OpenAI-compatible API:
         >>> register_embeddings_provider(
-        ...     "dashscope", "openai", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+        ...     "dashscope", "openai-compatible", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
         ... )
         >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
         >>> embeddings.embed_query("hello world")
@@ -85,9 +85,9 @@ def register_embeddings_provider(
                 f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when embeddings_model is a string"
             )
 
-        if embeddings_model not in _SUPPORTED_PROVIDERS:
+        if embeddings_model != "openai-compatible":
             raise ValueError(
-                f"when embeddings_model is a string, the value must be one of {_SUPPORTED_PROVIDERS}"
+                "when embeddings_model is a string, the value must be 'openai-compatible'"
             )
 
         _EMBEDDINGS_PROVIDERS_DICT.update(
@@ -128,7 +128,7 @@ def batch_register_embeddings_provider(
         >>>
         >>> batch_register_embeddings_provider(
         ...     [
-        ...         {"provider": "dashscope", "embeddings_model": "openai", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"},
+        ...         {"provider": "dashscope", "embeddings_model": "openai-compatible", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"},
         ...         {"provider": "siliconflow", "embeddings_model": SiliconFlowEmbeddings},
         ...     ]
         ... )
@@ -204,8 +204,9 @@ def load_embeddings(
                     f"API key for {provider} not found. Please set it in the environment."
                 )
             kwargs["api_key"] = api_key
-            if embeddings == "openai":
+            if embeddings == "openai-compatible":
                 kwargs["check_embedding_ctx_length"] = False
+                embeddings = "openai"
 
         return init_embeddings(
             model=model,
