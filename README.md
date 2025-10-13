@@ -21,7 +21,7 @@ from langchain_dev_utils import register_model_provider, load_chat_model
 from langchain_qwq import ChatQwen
 
 register_model_provider("dashscope", ChatQwen)
-register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/api/v1")
+register_model_provider("openrouter", "openai-compatible", base_url="https://openrouter.ai/api/v1")
 
 model = load_chat_model("dashscope:qwen-flash")
 print(model.invoke("Hello!"))
