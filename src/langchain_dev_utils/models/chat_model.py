@@ -47,6 +47,7 @@ def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
 def _load_chat_model_helper(
     model: str,
     model_provider: Optional[str] = None,
+    enable_reasoning_parse: bool = False,
     **kwargs: Any,
 ) -> BaseChatModel:
     """Helper function to load chat model.
@@ -54,6 +55,7 @@ def _load_chat_model_helper(
     Args:
         model: Model name
         model_provider: Optional provider name
+        enable_reasoning_parse: Optional enable reasoning parse
         **kwargs: Additional arguments for model initialization
 
     Returns:
@@ -71,6 +73,9 @@ def _load_chat_model_helper(
                     )
                 kwargs["api_key"] = api_key
             base_url = _MODEL_PROVIDERS_DICT[model_provider]["base_url"]
+            if chat_model == "openai" and enable_reasoning_parse:
+                chat_model = "deepseek"
+
             if chat_model in ["openai", "anthropic"]:
                 return init_chat_model(
                     model=model,
@@ -197,6 +202,7 @@ def load_chat_model(
     model: str,
     *,
     model_provider: Optional[str] = None,
+    enable_reasoning_parse: bool = False,
     **kwargs: Any,
 ) -> BaseChatModel:
     """Load a chat model.
@@ -209,6 +215,7 @@ def load_chat_model(
     Args:
         model: Model name, either as "provider:model-name" or just "model-name"
         model_provider: Optional provider name (if not included in model parameter)
+        enable_reasoning_parse: optional parameter to enable reasoning parse when chat_model is 'openai', default is False
         **kwargs: Additional arguments for model initialization (e.g., temperature, api_key)
 
     Returns:
@@ -235,5 +242,6 @@ def load_chat_model(
     return _load_chat_model_helper(
         cast(str, model),
         model_provider=model_provider,
+        enable_reasoning_parse=enable_reasoning_parse,
         **kwargs,
     )

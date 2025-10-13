@@ -37,7 +37,7 @@ def test_model_invoke():
         "deepseek-ai/DeepSeek-V3.1", model_provider="siliconflow", temperature=0
     )
     model3 = load_chat_model("deepseek:deepseek-chat")
-    model4 = load_chat_model("zai:glm-4.5")
+    model4 = load_chat_model("zai:glm-4.6")
 
     assert model1.invoke("what's your name").content
     assert model2.invoke("what's your name").content
@@ -52,7 +52,7 @@ async def test_model_ainvoke():
         "deepseek-ai/DeepSeek-V3.1", model_provider="siliconflow", temperature=0
     )
     model3 = load_chat_model("deepseek:deepseek-chat")
-    model4 = load_chat_model("zai:glm-4.5")
+    model4 = load_chat_model("zai:glm-4.6")
 
     response1 = await model1.ainvoke("what's your name")
     response2 = await model2.ainvoke("what's your name")
@@ -79,7 +79,7 @@ def test_model_tool_calling():
         "deepseek-ai/DeepSeek-V3.1", model_provider="siliconflow", temperature=0
     ).bind_tools([get_current_time])
     model3 = load_chat_model("deepseek:deepseek-chat").bind_tools([get_current_time])
-    model4 = load_chat_model("zai:glm-4.5").bind_tools([get_current_time])
+    model4 = load_chat_model("zai:glm-4.6").bind_tools([get_current_time])
 
     response1 = model1.invoke("what's the time")
     assert (
@@ -116,7 +116,7 @@ async def test_model_tool_calling_async():
         "deepseek-ai/DeepSeek-V3.1", model_provider="siliconflow", temperature=0
     ).bind_tools([get_current_time])
     model3 = load_chat_model("deepseek:deepseek-chat").bind_tools([get_current_time])
-    model4 = load_chat_model("zai:glm-4.5").bind_tools([get_current_time])
+    model4 = load_chat_model("zai:glm-4.6").bind_tools([get_current_time])
 
     response1 = await model1.ainvoke("what's the time")
     assert (
@@ -168,3 +168,32 @@ async def test_prebuilt_agent_async():
     assert len(response["messages"]) == 4
 
     assert response["messages"][1].tool_calls[0]["name"] == "get_current_time"
+
+
+def test_model_reasoning_parse():
+    model = load_chat_model(
+        "zai:glm-4.6",
+        enable_reasoning_parse=True,
+        extra_body={
+            "thinking": {
+                "type": "enabled",
+            },
+        },
+    )
+    response = model.invoke("what's the time")
+    assert response.additional_kwargs.get("reasoning_content")
+
+
+@pytest.mark.asyncio
+async def test_model_reasoning_parse_async():
+    model = load_chat_model(
+        "zai:glm-4.6",
+        enable_reasoning_parse=True,
+        extra_body={
+            "thinking": {
+                "type": "enabled",
+            },
+        },
+    )
+    response = await model.ainvoke("what's the time")
+    assert response.additional_kwargs.get("reasoning_content")
