@@ -25,7 +25,7 @@ batch_register_model_provider(
         },
         {
             "provider": "zai",
-            "chat_model": "openai",
+            "chat_model": "openai-compatible",
         },
     ]
 )
@@ -43,6 +43,7 @@ def test_model_invoke():
     assert model2.invoke("what's your name").content
     assert model3.invoke("what's your name").content
     assert model4.invoke("what's your name").content
+    assert model4._llm_type == "chat-zai"
 
 
 @pytest.mark.asyncio
@@ -58,6 +59,7 @@ async def test_model_ainvoke():
     response2 = await model2.ainvoke("what's your name")
     response3 = await model3.ainvoke("what's your name")
     response4 = await model4.ainvoke("what's your name")
+    assert model4._llm_type == "chat-zai"
     assert response1.content
     assert response2.content
     assert response3.content
@@ -173,7 +175,6 @@ async def test_prebuilt_agent_async():
 def test_model_reasoning_parse():
     model = load_chat_model(
         "zai:glm-4.6",
-        enable_reasoning_parse=True,
         extra_body={
             "thinking": {
                 "type": "enabled",
@@ -188,7 +189,6 @@ def test_model_reasoning_parse():
 async def test_model_reasoning_parse_async():
     model = load_chat_model(
         "zai:glm-4.6",
-        enable_reasoning_parse=True,
         extra_body={
             "thinking": {
                 "type": "enabled",

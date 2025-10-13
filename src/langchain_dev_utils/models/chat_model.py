@@ -1,11 +1,10 @@
 import os
-from typing import Any, NotRequired, Optional, TypedDict, Union, cast
+from typing import Any, Literal, NotRequired, Optional, TypedDict, Union, cast
 
 from langchain.chat_models.base import (
     _SUPPORTED_PROVIDERS,
     BaseChatModel,
     _init_chat_model_helper,
-    init_chat_model,
 )
 
 _MODEL_PROVIDERS_DICT = {}
@@ -13,7 +12,7 @@ _MODEL_PROVIDERS_DICT = {}
 
 class ChatModelProvider(TypedDict):
     provider: str
-    chat_model: Union[type[BaseChatModel], str]
+    chat_model: Union[type[BaseChatModel], Literal["openai-compatible"]]
     base_url: NotRequired[str]
 
 
@@ -47,7 +46,6 @@ def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
 def _load_chat_model_helper(
     model: str,
     model_provider: Optional[str] = None,
-    enable_reasoning_parse: bool = False,
     **kwargs: Any,
 ) -> BaseChatModel:
     """Helper function to load chat model.
@@ -55,7 +53,6 @@ def _load_chat_model_helper(
     Args:
         model: Model name
         model_provider: Optional provider name
-        enable_reasoning_parse: Optional enable reasoning parse
         **kwargs: Additional arguments for model initialization
 
     Returns:
@@ -64,41 +61,14 @@ def _load_chat_model_helper(
     model, model_provider = _parse_model(model, model_provider)
     if model_provider in _MODEL_PROVIDERS_DICT.keys():
         chat_model = _MODEL_PROVIDERS_DICT[model_provider]["chat_model"]
-        if isinstance(chat_model, str):
-            if not (api_key := kwargs.get("api_key")):
-                api_key = os.getenv(f"{model_provider.upper()}_API_KEY")
-                if not api_key:
-                    raise ValueError(
-                        f"API key for {model_provider} not found. Please set it in the environment."
-                    )
-                kwargs["api_key"] = api_key
-            base_url = _MODEL_PROVIDERS_DICT[model_provider]["base_url"]
-            if chat_model == "openai" and enable_reasoning_parse:
-                chat_model = "deepseek"
-
-            if chat_model in ["openai", "anthropic"]:
-                return init_chat_model(
-                    model=model,
-                    model_provider=chat_model,
-                    base_url=base_url,
-                    **kwargs,
-                )
-            else:
-                return init_chat_model(
-                    model=model,
-                    model_provider=chat_model,
-                    api_base=base_url,
-                    **kwargs,
-                )
-        else:
-            return chat_model(model=model, **kwargs)
+        return chat_model(model=model, **kwargs)
 
     return _init_chat_model_helper(model, model_provider=model_provider, **kwargs)
 
 
 def register_model_provider(
     provider_name: str,
-    chat_model: Union[type[BaseChatModel], str],
+    chat_model: Union[type[BaseChatModel], Literal["openai-compatible"]],
     base_url: Optional[str] = None,
 ):
     """Register a new model provider.
@@ -129,23 +99,31 @@ def register_model_provider(
         >>> model = load_chat_model(model="dashscope:qwen-flash")
         >>> model.invoke("Hello")
 
-        Using with OpenAI-compatible API:
-        >>> register_model_provider("openrouter", "openai", base_url="https://openrouter.ai/api/v1")
+        >>> # Using with OpenAI-compatible API:
+        >>> register_model_provider("openrouter", "openai-compatible", base_url="https://openrouter.ai/api/v1")
         >>> model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905")
         >>> model.invoke("Hello")
     """
     if isinstance(chat_model, str):
+        try:
+            from .adapters.openai_compatible import _create_openai_compatible_model
+        except ImportError:
+            raise ImportError(
+                "Please install langchain_dev_utils[standard],when chat_model is a 'openai-compatible'"
+            )
+
         base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
         if base_url is None:
             raise ValueError(
                 f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when chat_model is a string"
             )
 
-        if chat_model not in _SUPPORTED_PROVIDERS:
+        if chat_model != "openai-compatible":
             raise ValueError(
-                f"when chat_model is a string, the value must be one of {_SUPPORTED_PROVIDERS}"
+                "when chat_model is a string, the value must be 'openai-compatible'"
             )
 
+        chat_model = _create_openai_compatible_model(provider_name, base_url)
         _MODEL_PROVIDERS_DICT.update(
             {provider_name: {"chat_model": chat_model, "base_url": base_url}}
         )
@@ -182,7 +160,7 @@ def batch_register_model_provider(
         ...     },
         ...     {
         ...         "provider": "openrouter",
-        ...         "chat_model": "openai",
+        ...         "chat_model": "openai-compatible",
         ...         "base_url": "https://openrouter.ai/api/v1",
         ...     },
         ... ])
@@ -202,7 +180,6 @@ def load_chat_model(
     model: str,
     *,
     model_provider: Optional[str] = None,
-    enable_reasoning_parse: bool = False,
     **kwargs: Any,
 ) -> BaseChatModel:
     """Load a chat model.
@@ -242,6 +219,5 @@ def load_chat_model(
     return _load_chat_model_helper(
         cast(str, model),
         model_provider=model_provider,
-        enable_reasoning_parse=enable_reasoning_parse,
         **kwargs,
     )

@@ -82,7 +82,7 @@ def create_agent(
         >>> response = agent.invoke({
         ...     "messages": [{"role": "user", "content": "What's the time?"}]
         ... })
-        >>> print(response)
+        >>> response
     """
     try:
         from langgraph.prebuilt import create_react_agent

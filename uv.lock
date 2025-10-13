@@ -343,11 +343,16 @@ wheels = [
 
 [[package]]
 name = "langchain-dev-utils"
-version = "0.1.3"
+version = "0.1.21"
 source = { editable = "." }
 dependencies = [
     { name = "langchain" },
     { name = "langgraph" },
+]
+
+[package.optional-dependencies]
+standard = [
+    { name = "langchain-openai" },
 ]
 
 [package.dev-dependencies]
@@ -367,8 +372,10 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "langchain", specifier = ">=0.3.27" },
+    { name = "langchain-openai", marker = "extra == 'standard'", specifier = ">=0.3.32" },
     { name = "langgraph", specifier = ">=0.6.6" },
 ]
+provides-extras = ["standard"]
 
 [package.metadata.requires-dev]
 dev = [
