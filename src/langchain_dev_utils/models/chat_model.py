@@ -10,9 +10,12 @@ from langchain.chat_models.base import (
 _MODEL_PROVIDERS_DICT = {}
 
 
+ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
+
+
 class ChatModelProvider(TypedDict):
     provider: str
-    chat_model: Union[type[BaseChatModel], Literal["openai-compatible"]]
+    chat_model: ChatModelType
     base_url: NotRequired[str]
 
 
@@ -68,7 +71,7 @@ def _load_chat_model_helper(
 
 def register_model_provider(
     provider_name: str,
-    chat_model: Union[type[BaseChatModel], Literal["openai-compatible"]],
+    chat_model: ChatModelType,
     base_url: Optional[str] = None,
 ):
     """Register a new model provider.

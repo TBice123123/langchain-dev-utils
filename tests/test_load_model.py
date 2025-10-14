@@ -172,7 +172,7 @@ async def test_prebuilt_agent_async():
     assert response["messages"][1].tool_calls[0]["name"] == "get_current_time"
 
 
-def test_model_reasoning_parse():
+def test_model_with_reasoning():
     model = load_chat_model(
         "zai:glm-4.6",
         extra_body={
@@ -186,7 +186,7 @@ def test_model_reasoning_parse():
 
 
 @pytest.mark.asyncio
-async def test_model_reasoning_parse_async():
+async def test_model_with_reasoning_async():
     model = load_chat_model(
         "zai:glm-4.6",
         extra_body={

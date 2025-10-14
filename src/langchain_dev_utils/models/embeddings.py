@@ -8,10 +8,12 @@ from typing import TypedDict, NotRequired
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
 
+EmbeddingsType = Union[type[Embeddings], Literal["openai-compatible"]]
+
 
 class EmbeddingProvider(TypedDict):
     provider: str
-    embeddings_model: Union[type[Embeddings], Literal["openai-compatible"]]
+    embeddings_model: EmbeddingsType
     base_url: NotRequired[str]
 
 
@@ -45,7 +47,7 @@ def _parse_model_string(model_name: str) -> tuple[str, str]:
 
 def register_embeddings_provider(
     provider_name: str,
-    embeddings_model: Union[type[Embeddings], Literal["openai-compatible"]],
+    embeddings_model: EmbeddingsType,
     base_url: Optional[str] = None,
 ):
     """Register an embeddings provider.

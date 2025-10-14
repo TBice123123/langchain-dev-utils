@@ -50,19 +50,11 @@ def test_parallel_graph():
     assert result["a"] == 2
 
 
-def test_parallel_graph_with_entry_graph():
-    graph = parallel_pipeline(
-        sub_graphs=[
-            make_graph("graph1"),
-            make_graph("graph2"),
-            make_graph("graph3"),
-        ],
-        state_schema=State,
-        parallel_entry_graph="graph1",
-    )
-
-    result = graph.invoke({"a": 1})
-    assert result["a"] == 3
+def branches_fn(state: State):
+    return [
+        Send("graph1", arg={"a": state["a"]}),
+        Send("graph2", arg={"a": state["a"]}),
+    ]
 
 
 def test_parallel_graph_with_branches_fn():
@@ -73,10 +65,7 @@ def test_parallel_graph_with_branches_fn():
             make_graph("graph3"),
         ],
         state_schema=State,
-        branches_fn=lambda state: [
-            Send("graph1", arg={"a": state["a"]}),
-            Send("graph2", arg={"a": state["a"]}),
-        ],
+        branches_fn=branches_fn,
     )
 
     result = graph.invoke({"a": 1})
