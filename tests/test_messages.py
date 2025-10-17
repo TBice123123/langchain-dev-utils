@@ -1,15 +1,13 @@
-from langchain_core.documents import Document
-from langchain_core.messages import AIMessage, AIMessageChunk, ToolCall
 import pytest
+from langchain_core.documents import Document
+from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage
 
-from langchain_dev_utils import (
+from langchain_dev_utils.message_convert import (
     aconvert_reasoning_content_for_chunk_iterator,
     convert_reasoning_content_for_ai_message,
     convert_reasoning_content_for_chunk_iterator,
-    has_tool_calling,
     merge_ai_message_chunk,
     message_format,
-    parse_tool_calling,
 )
 
 
@@ -82,78 +80,79 @@ async def test_aconvert_reasoning_content_for_chunk_iterator():
     assert result_chunks[2].content == "</think>Final answer"
 
 
-def test_message_format():
-    strs = [
-        "Hello",
-        "Hello",
-        "Hello",
-    ]
-    format_str = message_format(strs)
-    assert format_str == "-Hello\n-Hello\n-Hello"
+@pytest.mark.parametrize(
+    "input_data,expected_output,with_num,separator",
+    [
+        # Test with list of strings
+        (
+            ["Hello", "Hello", "Hello"],
+            "-Hello\n-Hello\n-Hello",
+            False,
+            "-",
+        ),
+        # Test with list of Document objects
+        (
+            [
+                Document(page_content="Hello"),
+                Document(page_content="Hello"),
+                Document(page_content="Hello"),
+            ],
+            "-Hello\n-Hello\n-Hello",
+            False,
+            "-",
+        ),
+        # Test with list of AIMessage objects
+        (
+            [
+                AIMessage(content="Hello"),
+                AIMessage(content="Hello"),
+                AIMessage(content="Hello"),
+            ],
+            "-Hello\n-Hello\n-Hello",
+            False,
+            "-",
+        ),
+        # Test with numbering
+        (
+            [
+                AIMessage(content="Hello"),
+                AIMessage(content="Hello"),
+                AIMessage(content="Hello"),
+            ],
+            "-1. Hello\n-2. Hello\n-3. Hello",
+            True,
+            "-",
+        ),
+        # Test with custom separator and numbering
+        (
+            [
+                AIMessage(content="Hello"),
+                AIMessage(content="Hello"),
+                AIMessage(content="Hello"),
+            ],
+            "|1. Hello\n|2. Hello\n|3. Hello",
+            True,
+            "|",
+        ),
+    ],
+)
+def test_message_format(
+    input_data: list[Document] | list[str] | list[BaseMessage],
+    expected_output: str,
+    with_num: bool,
+    separator: str,
+):
+    if with_num:
+        if separator != "-":
+            formatted_message = message_format(
+                input_data, with_num=True, separator=separator
+            )
+        else:
+            formatted_message = message_format(input_data, with_num=True)
+    else:
+        formatted_message = message_format(input_data)
 
-    documents = [
-        Document(page_content="Hello"),
-        Document(page_content="Hello"),
-        Document(page_content="Hello"),
-    ]
-    formatted_message = message_format(documents)
-    assert formatted_message == "-Hello\n-Hello\n-Hello"
-
-    messages = [
-        AIMessage(content="Hello"),
-        AIMessage(content="Hello"),
-        AIMessage(content="Hello"),
-    ]
-    formatted_message = message_format(messages)
-    assert formatted_message == "-Hello\n-Hello\n-Hello"
-
-    messages = [
-        AIMessage(content="Hello"),
-        AIMessage(content="Hello"),
-        AIMessage(content="Hello"),
-    ]
-    formatted_message = message_format(messages, with_num=True)
-    assert formatted_message == "-1. Hello\n-2. Hello\n-3. Hello"
-
-    messages = [
-        AIMessage(content="Hello"),
-        AIMessage(content="Hello"),
-        AIMessage(content="Hello"),
-    ]
-    formatted_message = message_format(messages, with_num=True, separator="|")
-    assert formatted_message == "|1. Hello\n|2. Hello\n|3. Hello"
-
-
-def test_has_tool_calling():
-    message = AIMessage(
-        content="Hello",
-        tool_calls=[ToolCall(id="1", name="tool1", args={"arg1": "value1"})],
-    )
-    assert has_tool_calling(message)
-
-    message = AIMessage(content="Hello")
-    assert not has_tool_calling(message)
-
-    message = AIMessage(content="Hello", tool_calls=[])
-    assert not has_tool_calling(message)
-
-
-def test_parse_tool_call():
-    message = AIMessage(
-        content="Hello",
-        tool_calls=[
-            ToolCall(id="1", name="tool1", args={"arg1": "value1"}),
-            ToolCall(id="2", name="tool2", args={"arg2": "value2"}),
-        ],
-    )
-    assert parse_tool_calling(message) == [
-        ("tool1", {"arg1": "value1"}),
-        ("tool2", {"arg2": "value2"}),
-    ]
-    assert parse_tool_calling(message, first_tool_call_only=True) == (
-        "tool1",
-        {"arg1": "value1"},
-    )
+    assert formatted_message == expected_output
 
 
 def test_merge_ai_message_chunk():

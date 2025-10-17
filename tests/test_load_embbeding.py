@@ -1,35 +1,42 @@
-from typing import cast
-
-from dotenv import load_dotenv
-from langchain.embeddings.base import Embeddings
-from langchain_siliconflow.embeddings import SiliconFlowEmbeddings
 import pytest
+from dotenv import load_dotenv
+from langchain_community.embeddings import DashScopeEmbeddings
 
-from langchain_dev_utils import load_embeddings, batch_register_embeddings_provider
+from langchain_dev_utils.embeddings import (
+    batch_register_embeddings_provider,
+    load_embeddings,
+)
+from langchain_core.embeddings import Embeddings
 
 load_dotenv()
 
 
 batch_register_embeddings_provider(
     [
-        {"provider": "dashscope", "embeddings_model": "openai-compatible"},
-        {"provider": "siliconflow", "embeddings_model": SiliconFlowEmbeddings},
+        {
+            "provider": "siliconflow",
+            "embeddings_model": "openai-compatible",
+            "base_url": "https://api.siliconflow.cn/v1",
+        },
+        {"provider": "dashscope", "embeddings_model": DashScopeEmbeddings},
     ]
 )
 
 
-def test_embbedings():
-    emb1 = cast(Embeddings, load_embeddings("dashscope:text-embedding-v4"))
-    emb2 = cast(Embeddings, load_embeddings("siliconflow:BAAI/bge-m3"))
+@pytest.fixture(params=["dashscope:text-embedding-v4", "siliconflow:BAAI/bge-m3"])
+def embbeding_model(request: pytest.FixtureRequest) -> Embeddings:
+    params = request.param
+    return load_embeddings(params)
 
-    assert emb1.embed_query("what's your name")
-    assert emb2.embed_query("what's your name")
+
+def test_embbedings(
+    embbeding_model: Embeddings,
+):
+    assert embbeding_model.embed_query("what's your name")
 
 
 @pytest.mark.asyncio
-async def test_embbedings_async():
-    emb1 = cast(Embeddings, load_embeddings("dashscope:text-embedding-v4"))
-    emb2 = cast(Embeddings, load_embeddings("siliconflow:BAAI/bge-m3"))
-
-    assert await emb1.aembed_query("what's your name")
-    assert await emb2.aembed_query("what's your name")
+async def test_embbedings_async(
+    embbeding_model: Embeddings,
+):
+    assert await embbeding_model.aembed_query("what's your name")
