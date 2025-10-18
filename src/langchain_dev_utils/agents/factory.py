@@ -2,7 +2,11 @@ from typing import Any, Callable, Sequence
 
 from langchain.agents import AgentState, create_agent as _create_agent
 from langchain.agents.factory import ResponseT
-from langchain.agents.middleware.types import AgentMiddleware, PublicAgentState
+from langchain.agents.middleware.types import (
+    AgentMiddleware,
+    _InputAgentState,
+    _OutputAgentState,
+)
 from langchain.agents.structured_output import ResponseFormat
 from langchain_core.tools import BaseTool
 from langgraph.cache.base import BaseCache
@@ -31,10 +35,7 @@ def create_agent(  # noqa: PLR0915
     name: str | None = None,
     cache: BaseCache | None = None,
 ) -> CompiledStateGraph[
-    AgentState[ResponseT],
-    ContextT,
-    PublicAgentState[ResponseT],
-    PublicAgentState[ResponseT],
+    AgentState[ResponseT], ContextT, _InputAgentState, _OutputAgentState[ResponseT]
 ]:
     """
     Create a prebuilt agent with string-based model specification.
