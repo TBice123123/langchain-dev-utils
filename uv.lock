@@ -749,10 +749,7 @@ version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "langchain" },
-    { name = "langchain-community" },
-    { name = "langchain-tests" },
     { name = "langgraph" },
-    { name = "python-dotenv" },
 ]
 
 [package.optional-dependencies]
@@ -771,11 +768,8 @@ tests = [
 [package.metadata]
 requires-dist = [
     { name = "langchain", specifier = ">=1.0.0" },
-    { name = "langchain-community", specifier = ">=1.0.0a1" },
     { name = "langchain-openai", marker = "extra == 'standard'" },
-    { name = "langchain-tests", specifier = ">=1.0.0" },
     { name = "langgraph", specifier = ">=1.0.0" },
-    { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
 provides-extras = ["standard"]
 
@@ -783,7 +777,7 @@ provides-extras = ["standard"]
 tests = [
     { name = "langchain-community", specifier = ">=1.0.0a1" },
     { name = "langchain-deepseek", specifier = ">=1.0.0" },
-    { name = "langchain-tests", specifier = ">=1.0.0a2" },
+    { name = "langchain-tests", specifier = ">=1.0.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
 

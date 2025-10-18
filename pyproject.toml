@@ -5,13 +5,7 @@ description = "A practical utility library for LangChain and LangGraph developme
 readme = "README.md"
 authors = [{ name = "tiebingice", email = "tiebingice123@outlook.com" }]
 requires-python = ">=3.11"
-dependencies = [
-    "langchain>=1.0.0",
-    "langchain-community>=1.0.0a1",
-    "langchain-tests>=1.0.0",
-    "langgraph>=1.0.0",
-    "python-dotenv>=1.1.1",
-]
+dependencies = ["langchain>=1.0.0", "langgraph>=1.0.0"]
 
 [project.urls]
 "Source Code" = "https://github.com/TBice123123/langchain-dev-utils"
@@ -37,6 +31,6 @@ python_functions = ["test_*"]
 tests = [
     "langchain-community>=1.0.0a1",
     "python-dotenv>=1.1.1",
-    "langchain-tests>=1.0.0a2",
+    "langchain-tests>=1.0.0",
     "langchain-deepseek>=1.0.0",
 ]
