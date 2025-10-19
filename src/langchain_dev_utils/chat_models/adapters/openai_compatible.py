@@ -166,6 +166,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                     reasoning
                 )
 
+        if rtn.llm_output and rtn.llm_output.get("model_provider") == "openai":
+            # Remove model_provider=openai from dict to ensure default content_blocks parsing is used instead of openai's.
+            rtn.llm_output.pop("model_provider", None)
+
         return rtn
 
     def _convert_chunk_to_generation_chunk(
@@ -206,6 +210,15 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                     generation_chunk.message.additional_kwargs["reasoning_content"] = (
                         reasoning
                     )
+        if not generation_chunk:
+            return generation_chunk
+        message_chunk = generation_chunk.message
+        if (
+            message_chunk.response_metadata
+            and message_chunk.response_metadata.get("model_provider") == "openai"
+        ):
+            # Remove model_provider=openai from dict to ensure default content_blocks parsing is used instead of openai's.
+            message_chunk.response_metadata.pop("model_provider", None)
 
         return generation_chunk
 

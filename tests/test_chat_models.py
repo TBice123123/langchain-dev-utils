@@ -42,7 +42,14 @@ class TestStandard(ChatModelIntegrationTests):
 
     @property
     def chat_model_params(self) -> dict:
-        return {"model": "zai:glm-4.5"}
+        return {
+            "model": "zai:glm-4.5",
+            "extra_body": {
+                "thinking": {
+                    "type": "disabled",
+                }
+            },
+        }
 
     @property
     def has_tool_calling(self) -> bool:
