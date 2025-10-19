@@ -92,18 +92,15 @@ def register_model_provider(
         Basic usage with custom model class:
         >>> from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
         >>> from langchain_core.language_models.fake_chat_models import FakeChatModel
-        >>> from dotenv import load_dotenv
-        >>>
-        >>> load_dotenv()
         >>>
         >>> # Register custom model provider
-        >>> register_model_provider("fake", FakeChatModel)
-        >>> model = load_chat_model(model="fake:fake-model")
+        >>> register_model_provider("fakechat", FakeChatModel)
+        >>> model = load_chat_model(model="fakechat:fake-model")
         >>> model.invoke("Hello")
-
+        >>>
         >>> # Using with OpenAI-compatible API:
-        >>> register_model_provider("openrouter", "openai-compatible", base_url="https://openrouter.ai/api/v1")
-        >>> model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905")
+        >>> register_model_provider("vllm","openai-compatible",base_url="http://localhost:8000/v1")
+        >>> model = load_chat_model(model="vllm:qwen3-4b")
         >>> model.invoke("Hello")
     """
     if isinstance(chat_model, str):
@@ -155,18 +152,18 @@ def batch_register_model_provider(
         >>>
         >>> batch_register_model_provider([
         ...     {
-        ...         "provider": "fake",
+        ...         "provider": "fakechat",
         ...         "chat_model": FakeChatModel,
         ...     },
         ...     {
-        ...         "provider": "openrouter",
+        ...         "provider": "vllm",
         ...         "chat_model": "openai-compatible",
-        ...         "base_url": "https://openrouter.ai/api/v1",
+        ...         "base_url": "http://localhost:8000/v1",
         ...     },
         ... ])
-        >>> model = load_chat_model(model="fake:fake-model")
+        >>> model = load_chat_model(model="fakechat:fake-model")
         >>> model.invoke("Hello")
-        >>> model = load_chat_model(model="openrouter:moonshotai/kimi-k2-0905")
+        >>> model = load_chat_model(model="vllm:qwen3-4b")
         >>> model.invoke("Hello")
     """
 
@@ -200,16 +197,16 @@ def load_chat_model(
     Example:
         Load model with provider prefix:
         >>> from langchain_dev_utils.chat_models import load_chat_model
-        >>> model = load_chat_model("openrouter:moonshotai/kimi-k2-0905")
+        >>> model = load_chat_model("vllm:qwen3-4b")
         >>> model.invoke("hello")
 
         Load model with separate provider parameter:
-        >>> model = load_chat_model("moonshotai/kimi-k2-0905", model_provider="openrouter")
+        >>> model = load_chat_model("qwen3-4b", model_provider="vllm")
         >>> model.invoke("hello")
 
         Load model with additional parameters:
         >>> model = load_chat_model(
-        ...     "openrouter:moonshotai/kimi-k2-0905",
+        ...     "vllm:qwen3-4b",
         ...     temperature=0.7
         ... )
         >>> model.invoke("Hello, how are you?")

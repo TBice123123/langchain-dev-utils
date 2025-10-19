@@ -74,7 +74,7 @@ def get_weather(city: str) -> str:  # noqa: ARG001
 
 def test_inference_to_tool_output():
     agent = create_agent(
-        "zai:glm-4.6",
+        model="zai:glm-4.6",
         system_prompt=(
             "You are a helpful weather assistant. Please call the get_weather tool, "
             "then use the **WeatherBaseModel** to generate the final response."

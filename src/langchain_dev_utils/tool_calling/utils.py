@@ -1,5 +1,4 @@
-from typing import Dict, List, Tuple, Union
-
+from typing import Union
 from langchain_core.messages import AIMessage
 
 
@@ -33,7 +32,7 @@ def has_tool_calling(message: AIMessage) -> bool:
 
 def parse_tool_calling(
     message: AIMessage, first_tool_call_only: bool = False
-) -> Union[Tuple[str, dict], List[Tuple[str, Dict]]]:
+) -> Union[tuple[str, dict], list[tuple[str, dict]]]:
     """Parse a tool call from a message.
 
     This function extracts tool call information from an AI message, returning
@@ -44,7 +43,7 @@ def parse_tool_calling(
         first_tool_call_only: If True, only the first tool call will be parsed
 
     Returns:
-        Union[Tuple[str, dict], List[Tuple[str, Dict]]]: The tool call name and args
+        Union[tuple[str, dict], list[tuple[str, dict]]]: The tool call name and args
 
     Example:
         Parse single tool call:

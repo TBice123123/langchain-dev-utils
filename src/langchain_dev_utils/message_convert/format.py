@@ -10,7 +10,7 @@ from langchain_core.messages import (
 )
 
 
-def message_format(
+def format_sequence(
     inputs: Union[Sequence[Document], Sequence[BaseMessage], Sequence[str]],
     separator: str = "-",
     with_num: bool = False,
@@ -35,17 +35,17 @@ def message_format(
 
     Example:
         Format messages with default separator:
-        >>> from langchain_dev_utils.message_convert import message_format
+        >>> from langchain_dev_utils.message_convert import format_sequence
         >>> from langchain_core.messages import HumanMessage, AIMessage
         >>> messages = [
         ...     HumanMessage(content="Hello, how are you?"),
         ...     AIMessage(content="I'm doing well, thank you!")
         ... ]
-        >>> formatted = message_format(messages)
+        >>> formatted = format_sequence(messages)
         >>> formatted
 
         Format with custom separator and numbering:
-        >>> formatted = message_format(messages, separator="---", with_num=True)
+        >>> formatted = format_sequence(messages, separator="---", with_num=True)
         >>> formatted
     """
     if not inputs:

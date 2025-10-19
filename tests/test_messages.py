@@ -6,8 +6,8 @@ from langchain_dev_utils.message_convert import (
     aconvert_reasoning_content_for_chunk_iterator,
     convert_reasoning_content_for_ai_message,
     convert_reasoning_content_for_chunk_iterator,
+    format_sequence,
     merge_ai_message_chunk,
-    message_format,
 )
 
 
@@ -144,13 +144,13 @@ def test_message_format(
 ):
     if with_num:
         if separator != "-":
-            formatted_message = message_format(
+            formatted_message = format_sequence(
                 input_data, with_num=True, separator=separator
             )
         else:
-            formatted_message = message_format(input_data, with_num=True)
+            formatted_message = format_sequence(input_data, with_num=True)
     else:
-        formatted_message = message_format(input_data)
+        formatted_message = format_sequence(input_data)
 
     assert formatted_message == expected_output
 

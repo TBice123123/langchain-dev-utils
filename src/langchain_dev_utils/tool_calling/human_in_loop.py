@@ -1,6 +1,5 @@
-from typing import Any, Callable, Dict, Optional, TypedDict, Union, overload
+from typing import Any, Callable, Optional, TypedDict, Union, overload
 
-from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import BaseTool
 from langchain_core.tools import tool as create_tool
 from langgraph.types import interrupt
@@ -8,9 +7,8 @@ from langgraph.types import interrupt
 
 class InterruptParams(TypedDict):
     tool_call_name: str
-    tool_call_args: Dict[str, Any]
+    tool_call_args: dict[str, Any]
     tool: BaseTool
-    config: RunnableConfig
 
 
 HumanInterruptHandler = Callable[[InterruptParams], Any]
@@ -66,7 +64,7 @@ def human_in_the_loop_async(
     ...
 
 
-def _get_human_in_the_loop_request(params: InterruptParams) -> Dict[str, Any]:
+def _get_human_in_the_loop_request(params: InterruptParams) -> dict[str, Any]:
     return {
         "action_request": {
             "action": params["tool_call_name"],
@@ -82,14 +80,14 @@ def _get_human_in_the_loop_request(params: InterruptParams) -> Dict[str, Any]:
 
 
 def default_handler(params: InterruptParams) -> Any:
-    request: Dict[str, Any] = _get_human_in_the_loop_request(params)
-    response = interrupt([request])
+    request = _get_human_in_the_loop_request(params)
+    response = interrupt(request)
 
     if response["type"] == "accept":
-        return params["tool"].invoke(params["tool_call_args"], params["config"])
+        return params["tool"].invoke(params["tool_call_args"])
     elif response["type"] == "edit":
-        updated_args = response["args"]["args"]
-        return params["tool"].invoke(updated_args, params["config"])
+        updated_args = response["args"]
+        return params["tool"].invoke(updated_args)
     elif response["type"] == "response":
         return response["args"]
     else:
@@ -97,14 +95,14 @@ def default_handler(params: InterruptParams) -> Any:
 
 
 async def default_handler_async(params: InterruptParams) -> Any:
-    request: Dict[str, Any] = _get_human_in_the_loop_request(params)
-    response = await interrupt([request])
+    request = _get_human_in_the_loop_request(params)
+    response = await interrupt(request)
 
     if response["type"] == "accept":
-        return await params["tool"].ainvoke(params["tool_call_args"], params["config"])
+        return await params["tool"].ainvoke(params["tool_call_args"])
     elif response["type"] == "edit":
-        updated_args = response["args"]["args"]
-        return await params["tool"].ainvoke(updated_args, params["config"])
+        updated_args = response["args"]
+        return await params["tool"].ainvoke(updated_args)
     elif response["type"] == "response":
         return response["args"]
     else:
@@ -152,7 +150,7 @@ def human_in_the_loop(
         ...         f"I am about to invoke tool '{params['tool_call_name']}' with arguments {params['tool_call_args']}. Please confirm whether to proceed."
         ...     )
         ...     if response["type"] == "accept":
-        ...         return params["tool"].invoke(params["tool_call_args"], params["config"])
+        ...         return params["tool"].invoke(params["tool_call_args"])
         ...     elif response["type"] == "reject":
         ...         return "User rejected this tool call"
         ...     else:
@@ -179,13 +177,12 @@ def human_in_the_loop(
             description=tool_obj.description,
             args_schema=tool_obj.args_schema,
         )
-        def tool_with_human_review(config: RunnableConfig, **tool_input: Any) -> Any:
+        def tool_with_human_review(**tool_input: Any) -> Any:
             return handler_func(
                 {
                     "tool_call_name": tool_obj.name,
                     "tool_call_args": tool_input,
                     "tool": tool_obj,
-                    "config": config,
                 }
             )
 
@@ -241,7 +238,7 @@ def human_in_the_loop_async(
         ...         f"I am about to invoke tool '{params['tool_call_name']}' with arguments {params['tool_call_args']}. Please confirm whether to proceed."
         ...     )
         ...     if response["type"] == "accept":
-        ...         return await params["tool"].ainvoke(params["tool_call_args"], params["config"])
+        ...         return await params["tool"].ainvoke(params["tool_call_args"])
         ...     elif response["type"] == "reject":
         ...         return "User rejected this tool call"
         ...     else:
@@ -269,7 +266,6 @@ def human_in_the_loop_async(
             args_schema=tool_obj.args_schema,
         )
         async def atool_with_human_review(
-            config: RunnableConfig,
             **tool_input: Any,
         ) -> Any:
             return await handler_func(
@@ -277,7 +273,6 @@ def human_in_the_loop_async(
                     "tool_call_name": tool_obj.name,
                     "tool_call_args": tool_input,
                     "tool": tool_obj,
-                    "config": config,
                 }
             )
 

@@ -1,14 +1,8 @@
-from typing import Any, Callable, Sequence
+from typing import Any, Sequence
 
 from langchain.agents import AgentState, create_agent as _create_agent
 from langchain.agents.factory import ResponseT
-from langchain.agents.middleware.types import (
-    AgentMiddleware,
-    _InputAgentState,
-    _OutputAgentState,
-)
 from langchain.agents.structured_output import ResponseFormat
-from langchain_core.tools import BaseTool
 from langgraph.cache.base import BaseCache
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.store.base import BaseStore
@@ -16,6 +10,9 @@ from langgraph.types import Checkpointer
 from langgraph.typing import ContextT
 
 from ..chat_models import load_chat_model
+from langchain_core.tools import BaseTool
+from langchain.agents.middleware import AgentMiddleware
+from typing import Callable, cast
 
 
 def create_agent(  # noqa: PLR0915
@@ -34,9 +31,7 @@ def create_agent(  # noqa: PLR0915
     debug: bool = False,
     name: str | None = None,
     cache: BaseCache | None = None,
-) -> CompiledStateGraph[
-    AgentState[ResponseT], ContextT, _InputAgentState, _OutputAgentState[ResponseT]
-]:
+) -> CompiledStateGraph:
     """
     Create a prebuilt agent with string-based model specification.
 
@@ -65,9 +60,9 @@ def create_agent(  # noqa: PLR0915
         >>>
         >>> # Register a model provider
         >>> register_model_provider(
-        ...     provider_name="moonshot",
+        ...     provider_name="vllm",
         ...     chat_model="openai-compatible",
-        ...     base_url="https://api.moonshot.cn/v1",
+        ...     base_url="http://localhost:8000/v1",
         ... )
         >>>
         >>> @tool
@@ -76,7 +71,7 @@ def create_agent(  # noqa: PLR0915
         ...     return str(datetime.datetime.now().timestamp())
         >>>
         >>> agent = create_agent(
-        ...     "moonshot:kimi-k2-0905-preview",
+        ...     "vllm:qwen3-4b",
         ...     tools=[get_current_time],
         ...     name="time-agent"
         ... )
@@ -85,18 +80,22 @@ def create_agent(  # noqa: PLR0915
         ... })
         >>> response
     """
-    return _create_agent(
-        model=load_chat_model(model),
-        tools=tools,
-        middleware=middleware,
-        system_prompt=system_prompt,
-        response_format=response_format,
-        state_schema=state_schema,
-        context_schema=context_schema,
-        checkpointer=checkpointer,
-        store=store,
-        interrupt_before=interrupt_before,
-        interrupt_after=interrupt_after,
-        debug=debug,
-        name=name,
+    return cast(
+        CompiledStateGraph,
+        _create_agent(
+            model=load_chat_model(model),
+            tools=tools,
+            system_prompt=system_prompt,
+            middleware=middleware,
+            response_format=response_format,
+            state_schema=state_schema,
+            context_schema=context_schema,
+            checkpointer=checkpointer,
+            store=store,
+            interrupt_before=interrupt_before,
+            interrupt_after=interrupt_after,
+            debug=debug,
+            name=name,
+            cache=cache,
+        ),
     )

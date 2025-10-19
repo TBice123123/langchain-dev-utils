@@ -31,7 +31,7 @@ class SummarizationMiddleware(_SummarizationMiddleware):
             ```python
             from langchain_dev_utils.agents.middleware import SummarizationMiddleware
 
-            middleware = SummarizationMiddleware(model="dashscope:qwen-flash", max_tokens_before_summary=100)
+            middleware = SummarizationMiddleware(model="vllm:qwen3-4b", max_tokens_before_summary=100)
             ```
         """
 

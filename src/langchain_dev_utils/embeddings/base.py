@@ -63,18 +63,18 @@ def register_embeddings_provider(
 
     Example:
         Register with custom model class:
-        >>> from langchain_dev_utils import register_embeddings_provider, load_embeddings
+        >>> from langchain_dev_utils.embeddings import register_embeddings_provider, load_embeddings
         >>> from langchain_core.embeddings.fake import FakeEmbeddings
         >>>
-        >>> register_embeddings_provider("fake", FakeEmbeddings)
-        >>> embeddings = load_embeddings("fake:text-embedding-v4",size=1024)
+        >>> register_embeddings_provider("fakeembeddings", FakeEmbeddings)
+        >>> embeddings = load_embeddings("fakeembeddings:fake-embeddings",size=1024)
         >>> embeddings.embed_query("hello world")
 
         Register with OpenAI-compatible API:
         >>> register_embeddings_provider(
-        ...     "dashscope", "openai-compatible", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+        ...     "vllm", "openai-compatible", base_url="http://localhost:8000/v1"
         ... )
-        >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
+        >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
     """
     if isinstance(embeddings_model, str):
@@ -127,13 +127,13 @@ def batch_register_embeddings_provider(
         >>>
         >>> batch_register_embeddings_provider(
         ...     [
-        ...         {"provider": "dashscope", "embeddings_model": "openai-compatible", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"},
-        ...         {"provider": "fake", "embeddings_model": FakeEmbeddings},
+        ...         {"provider": "fakeembeddings", "embeddings_model": FakeEmbeddings},
+        ...         {"provider": "vllm", "embeddings_model": "openai-compatible", "base_url": "http://localhost:8000/v1"},
         ...     ]
         ... )
-        >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
+        >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
-        >>> embeddings = load_embeddings("fake:text-embedding-v4")
+        >>> embeddings = load_embeddings("fakeembeddings:fake-embeddings",size=1024)
         >>> embeddings.embed_query("hello world")
     """
     for provider in providers:
@@ -167,25 +167,12 @@ def load_embeddings(
     Example:
         Load model with provider prefix:
         >>> from langchain_dev_utils.embeddings import load_embeddings
-        >>> embeddings = load_embeddings("dashscope:text-embedding-v4")
+        >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
 
         Load model with separate provider parameter:
-        >>> embeddings = load_embeddings("text-embedding-v4", provider="dashscope")
+        >>> embeddings = load_embeddings("qwen3-embedding-4b", provider="vllm")
         >>> embeddings.embed_query("hello world")
-
-        Load model with additional parameters:
-        >>> embeddings = load_embeddings(
-        ...     "dashscope:text-embedding-v4",
-        ...     dimensions=1024
-        ... )
-        >>> embeddings.embed_query("hello world")
-
-        Batch processing:
-        >>> texts = ["hello world", "how are you", "good morning"]
-        >>> embeddings_list = embeddings.embed_documents(texts)
-        >>> len(embeddings_list)
-        >>> len(embeddings_list[0])
     """
     if provider is None:
         provider, model = _parse_model_string(model)

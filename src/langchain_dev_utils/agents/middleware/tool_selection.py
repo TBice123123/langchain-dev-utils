@@ -18,7 +18,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         ```python
         from langchain_dev_utils.agents.middleware import LLMToolSelectorMiddleware
 
-        middleware = LLMToolSelectorMiddleware(model="dashscope:qwen-flash", max_tools=3)
+        middleware = LLMToolSelectorMiddleware(model="vllm:qwen3-4b", max_tools=3)
         ```
     """
 
