@@ -1,7 +1,7 @@
 import os
 from typing import Any, Literal, NotRequired, Optional, TypedDict, Union
 
-from langchain.embeddings.base import _SUPPORTED_PROVIDERS, Embeddings, init_embeddings
+from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
 

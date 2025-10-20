@@ -1,11 +1,15 @@
 from typing import Annotated, Literal, Optional
-from langchain_core.tools import InjectedToolCallId, tool, BaseTool
-from langgraph.prebuilt import InjectedState
-from langchain_core.messages import ToolMessage
+import warnings
 
+from langchain.tools import BaseTool, ToolRuntime, tool
+from langchain_core.messages import ToolMessage
 from langgraph.types import Command
 from typing_extensions import TypedDict
 
+warnings.warn(
+    "langchain_dev_utils.agents.file_system is deprecated, and it will be removed in a future version. Please use middleware in deepagents instead.",
+    DeprecationWarning,
+)
 
 _DEFAULT_WRITE_FILE_DESCRIPTION = """
 A tool for writing files.
@@ -80,13 +84,12 @@ def create_write_file_tool(
     def write_file(
         file_name: Annotated[str, "the name of the file"],
         content: Annotated[str, "the content of the file"],
-        tool_call_id: Annotated[str, InjectedToolCallId],
-        state: Annotated[FileStateMixin, InjectedState],
+        runtime: ToolRuntime,
         write_mode: Annotated[
             Literal["write", "append"], "the write mode of the file"
         ] = "write",
     ):
-        files = state.get("file", {})
+        files = runtime.state.get("file", {})
         if write_mode == "append":
             content = files.get(file_name, "") + content
         if write_mode == "write" and file_name in files:
@@ -99,7 +102,7 @@ def create_write_file_tool(
                 msg_key: [
                     ToolMessage(
                         content=f"file {file_name} written successfully, content is {content}",
-                        tool_call_id=tool_call_id,
+                        tool_call_id=runtime.tool_call_id,
                     )
                 ],
             }
@@ -134,8 +137,8 @@ def create_ls_file_tool(
         name_or_callable=name or "ls",
         description=description or _DEFAULT_LS_DESCRIPTION,
     )
-    def ls(state: Annotated[FileStateMixin, InjectedState]):
-        files = state.get("file", {})
+    def ls(runtime: ToolRuntime):
+        files = runtime.state.get("file", {})
         return list(files.keys())
 
     return ls
@@ -167,8 +170,8 @@ def create_query_file_tool(
         name_or_callable=name or "query_file",
         description=description or _DEFAULT_QUERY_FILE_DESCRIPTION,
     )
-    def query_file(file_name: str, state: Annotated[FileStateMixin, InjectedState]):
-        files = state.get("file", {})
+    def query_file(file_name: str, runtime: ToolRuntime):
+        files = runtime.state.get("file", {})
         if file_name not in files:
             raise ValueError(f"Error: File {file_name} not found")
 
@@ -215,12 +218,11 @@ def create_update_file_tool(
         file_name: Annotated[str, "the name of the file"],
         origin_content: Annotated[str, "the original content of the file"],
         new_content: Annotated[str, "the new content of the file"],
-        tool_call_id: Annotated[str, InjectedToolCallId],
-        state: Annotated[FileStateMixin, InjectedState],
+        runtime: ToolRuntime,
         replace_all: Annotated[bool, "replace all the origin content"] = False,
     ):
         msg_key = message_key or "messages"
-        files = state.get("file", {})
+        files = runtime.state.get("file", {})
         if file_name not in files:
             raise ValueError(f"Error: File {file_name} not found")
 
@@ -241,7 +243,7 @@ def create_update_file_tool(
                 msg_key: [
                     ToolMessage(
                         content=f"file {file_name} updated successfully, content is {new_content}",
-                        tool_call_id=tool_call_id,
+                        tool_call_id=runtime.tool_call_id,
                     )
                 ],
             }

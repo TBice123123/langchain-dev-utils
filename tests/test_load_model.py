@@ -1,7 +1,7 @@
-from langchain_core.language_models import BaseChatModel
-import pytest
 from dotenv import load_dotenv
 from langchain_community.chat_models import ChatTongyi
+from langchain_core.language_models import BaseChatModel
+import pytest
 
 from langchain_dev_utils.chat_models import (
     batch_register_model_provider,

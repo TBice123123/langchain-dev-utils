@@ -131,7 +131,6 @@ if has_tool_calling(cast(AIMessage, response)):
 ### 4. **Agent Development**
 
 - Pre-built agent factory functions
-- Context management utilities
 - Common middleware components
 
 ```python
@@ -143,57 +142,20 @@ agent = create_agent("vllm:qwen3-4b", tools=[get_current_time], name="time-agent
 response = agent.invoke({"messages": [{"role": "user", "content": "What time is it?"}]})
 print(response)
 
-# Plan tools
-from langchain_dev_utils.agents.plan import (
-    create_write_plan_tool,
-    create_update_plan_tool,
-    PlanStateMixin,
-)
-
-class PlanAgentState(AgentState, PlanStateMixin):
-    pass
-
-agent = create_agent(
-    "vllm:qwen3-4b",
-    tools=[
-        create_write_plan_tool(),
-        create_update_plan_tool(),
-    ],
-    name="plan-agent",
-    state_schema=PlanAgentState,
-)
-
-# File system tools
-from langchain_dev_utils.agents.file_system import (
-    create_write_file_tool,
-    create_update_file_tool,
-    create_ls_file_tool,
-    create_query_file_tool,
-    FileStateMixin,
-)
-
-class FileAgentState(AgentState, FileStateMixin):
-    pass
-
-agent = create_agent(
-    "vllm:qwen3-4b",
-    tools=[
-        create_write_file_tool(),
-        create_update_file_tool(),
-        create_ls_file_tool(),
-        create_query_file_tool(),
-    ],
-    name="file-agent",
-    state_schema=FileAgentState,
-)
 
 # Middleware
 from langchain_dev_utils.agents.middleware import (
     SummarizationMiddleware,
     LLMToolSelectorMiddleware,
+    PlanMiddleware,
 )
 
-response = agent.invoke({"messages": [{"role": "user", "content": "What time is it?"}]})
+agent=create_agent(
+    "vllm:qwen3-4b",
+    name="plan-agent",
+    middleware=[PlanMiddleware(), SummarizationMiddleware(), LLMToolSelectorMiddleware()]
+)
+response = agent.invoke({"messages": [{"role": "user", "content": "Give me a plan to travel to New York"}]}))
 print(response)
 ```
 
@@ -205,7 +167,7 @@ print(response)
 - Parallel graph pipelines
 
 ```python
-from langchain_dev_utils.pipelines import sequential_pipeline, parallel_pipeline
+from langchain_dev_utils.pipeline import sequential_pipeline, parallel_pipeline
 
 # Build sequential pipeline
 graph = sequential_pipeline(

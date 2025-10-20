@@ -1,10 +1,8 @@
 import os
 from typing import Any, Literal, NotRequired, Optional, TypedDict, Union, cast
+
+from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain.chat_models.base import (
-    _SUPPORTED_PROVIDERS,
-    _init_chat_model_helper,
-)
 
 _MODEL_PROVIDERS_DICT = {}
 

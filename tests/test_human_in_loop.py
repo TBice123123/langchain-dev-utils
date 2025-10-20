@@ -1,15 +1,16 @@
 import datetime
 from typing import Annotated, Any
+from typing import cast
+
 from langchain_core.messages import BaseMessage, HumanMessage
 from langchain_core.tools import BaseTool
 from langgraph.graph.message import add_messages
 from langgraph.graph.state import StateGraph
+from langgraph.types import interrupt
 import pytest
 from typing_extensions import TypedDict
-from langchain_dev_utils.tool_calling import human_in_the_loop, human_in_the_loop_async
-from typing import cast
-from langgraph.types import interrupt
 
+from langchain_dev_utils.tool_calling import human_in_the_loop, human_in_the_loop_async
 from langchain_dev_utils.tool_calling.human_in_loop import InterruptParams
 
 

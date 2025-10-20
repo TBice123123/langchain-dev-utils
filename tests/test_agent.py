@@ -1,9 +1,9 @@
-import pytest
 from dotenv import load_dotenv
 from langchain.agents.structured_output import ToolStrategy
 from langchain_community.chat_models import ChatTongyi
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, Field
+import pytest
 
 from langchain_dev_utils.agents import create_agent
 from langchain_dev_utils.chat_models import batch_register_model_provider

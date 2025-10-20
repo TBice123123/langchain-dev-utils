@@ -1,12 +1,12 @@
-import pytest
 from dotenv import load_dotenv
 from langchain_community.embeddings import DashScopeEmbeddings
+from langchain_core.embeddings import Embeddings
+import pytest
 
 from langchain_dev_utils.embeddings import (
     batch_register_embeddings_provider,
     load_embeddings,
 )
-from langchain_core.embeddings import Embeddings
 
 load_dotenv()
 

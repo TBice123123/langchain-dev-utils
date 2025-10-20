@@ -1,11 +1,15 @@
-from typing import Annotated, Literal, Optional
+from typing import Literal, Optional
+import warnings
 
+from langchain.tools import BaseTool, ToolRuntime, tool
 from langchain_core.messages import ToolMessage
-from langgraph.prebuilt import InjectedState
-from langchain_core.tools import InjectedToolCallId, BaseTool, tool
-
 from langgraph.types import Command
 from typing_extensions import TypedDict
+
+warnings.warn(
+    "langchain_dev_utils.agents.plan is deprecated, and it will be removed in a future version. Please use middleware in langchain-dev-utils instead.",
+    DeprecationWarning,
+)
 
 _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION = """
 A tool for writing initial plan — can only be used once, at the very beginning. 
@@ -87,7 +91,7 @@ def create_write_plan_tool(
         name_or_callable=name or "write_plan",
         description=description or _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION,
     )
-    def write_plan(plan: list[str], tool_call_id: Annotated[str, InjectedToolCallId]):
+    def write_plan(plan: list[str], runtime: ToolRuntime):
         msg_key = message_key or "messages"
         return Command(
             update={
@@ -101,7 +105,7 @@ def create_write_plan_tool(
                 msg_key: [
                     ToolMessage(
                         content=f"Plan successfully written, please first execute the {plan[0]} task (no need to change the status to in_process)",
-                        tool_call_id=tool_call_id,
+                        tool_call_id=runtime.tool_call_id,
                     )
                 ],
             }
@@ -140,10 +144,9 @@ def create_update_plan_tool(
     )
     def update_plan(
         update_plans: list[Plan],
-        tool_call_id: Annotated[str, InjectedToolCallId],
-        state: Annotated[PlanStateMixin, InjectedState],
+        runtime: ToolRuntime,
     ):
-        plan_list = state.get("plan", [])
+        plan_list = runtime.state.get("plan", [])
 
         updated_plan_list = []
 
@@ -175,7 +178,8 @@ def create_update_plan_tool(
                 "plan": plan_list,
                 msg_key: [
                     ToolMessage(
-                        content="Plan updated successfully", tool_call_id=tool_call_id
+                        content="Plan updated successfully",
+                        tool_call_id=runtime.tool_call_id,
                     )
                 ],
             }

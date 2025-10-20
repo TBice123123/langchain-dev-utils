@@ -1,9 +1,10 @@
 from typing import Optional
 
-from langchain_dev_utils.chat_models.base import load_chat_model
 from langchain.agents.middleware.tool_selection import (
     LLMToolSelectorMiddleware as _LLMToolSelectorMiddleware,
 )
+
+from langchain_dev_utils.chat_models.base import load_chat_model
 
 
 class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
