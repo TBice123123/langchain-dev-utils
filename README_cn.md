@@ -189,7 +189,7 @@ from langchain_dev_utils.agents.middleware import (
 agent=create_agent(
     "vllm:qwen3-4b",
     name="plan-agent",
-    middleware=[PlanMiddleware(), SummarizationMiddleware(), LLMToolSelectorMiddleware()]
+    middleware=[PlanMiddleware(), SummarizationMiddleware(model="vllm:qwen3-4b"), LLMToolSelectorMiddleware(model="vllm:qwen3-4b")]
 )
 response = agent.invoke({"messages": [{"role": "user", "content": "给我一个去纽约旅行的计划"}]}))
 print(response)
