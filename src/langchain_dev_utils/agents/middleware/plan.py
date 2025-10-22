@@ -234,27 +234,28 @@ def create_finish_sub_plan_tool(
     def finish_sub_plan(
         runtime: ToolRuntime,
     ):
+        msg_key = message_key or "messages"
         plan_list = runtime.state.get("plan", [])
 
         sub_finish_plan = ""
-        sub_next_plan = ""
+        sub_next_plan = ",all sub plan are done"
         for plan in plan_list:
             if plan["status"] == "in_progress":
                 plan["status"] = "done"
-                sub_finish_plan = plan["content"]
+                sub_finish_plan = f"finish sub plan:**{plan['content']}**"
 
         for plan in plan_list:
             if plan["status"] == "pending":
                 plan["status"] = "in_progress"
-                sub_next_plan = plan["content"]
+                sub_next_plan = f",next plan:**{plan['content']}**"
                 break
 
         return Command(
             update={
                 "plan": plan_list,
-                "messages": [
+                msg_key: [
                     ToolMessage(
-                        content=f"finish sub plan {sub_finish_plan}, next plan {sub_next_plan}",
+                        content=sub_finish_plan + sub_next_plan,
                         tool_call_id=runtime.tool_call_id,
                     )
                 ],
@@ -375,7 +376,7 @@ class PlanMiddleware(AgentMiddleware):
     def __init__(
         self,
         *,
-        system_prompt: str = _PLAN_MIDDLEWARE_SYSTEM_PROMPT,
+        system_prompt: Optional[str] = None,
         tools: Optional[list[BaseTool]] = None,
     ) -> None:
         """Initialize the TodoListMiddleware with optional custom prompts.
@@ -385,7 +386,6 @@ class PlanMiddleware(AgentMiddleware):
             tools: Custom tools to be added to the agent. The tools must be created by `create_write_plan_tool`, `create_finish_sub_plan_tool`, and `create_read_plan_tool`(optional).
         """
         super().__init__()
-        self.system_prompt = system_prompt
 
         if tools is None:
             tools = [
@@ -393,17 +393,33 @@ class PlanMiddleware(AgentMiddleware):
                 create_finish_sub_plan_tool(),
                 create_read_plan_tool(),
             ]
+
+        # Check if required tools exist
+        has_write_plan = any(tool_obj.name == "write_plan" for tool_obj in tools)
+        has_finish_sub_plan = any(
+            tool_obj.name == "finish_sub_plan" for tool_obj in tools
+        )
+
+        if not (has_write_plan and has_finish_sub_plan):
+            raise ValueError(
+                "PlanMiddleware requires exactly two tools: write_plan and finish_sub_plan."
+            )
+
         self.tools = tools
 
-        num = 2
-        read_plan_system = ""
-        if len(self.tools) == 3:
-            num = 3
-            read_plan_system = _READ_PLAN_SYSTEM_PROMPT
+        if system_prompt is None:
+            num = len(self.tools)
+            read_plan_system = (
+                _READ_PLAN_SYSTEM_PROMPT if num == 3 else ""
+            )  # if read_plan tool is not provided, do not include it in the system prompt
 
-        self.system_prompt = self.system_prompt.format(
-            num=num, read_plan_system_prompt=read_plan_system
-        )
+            system_prompt = _PLAN_MIDDLEWARE_SYSTEM_PROMPT.format(
+                num=num, read_plan_system_prompt=read_plan_system
+            )
+        else:
+            system_prompt = system_prompt
+
+        self.system_prompt = system_prompt
 
     def wrap_model_call(
         self,
