@@ -8,6 +8,7 @@ from .plan import (
 )
 from .model_fallback import ModelFallbackMiddleware
 from .tool_emulator import LLMToolEmulator
+from .model_router import ModelRouterMiddleware
 
 __all__ = [
     "SummarizationMiddleware",
@@ -18,4 +19,5 @@ __all__ = [
     "create_write_plan_tool",
     "ModelFallbackMiddleware",
     "LLMToolEmulator",
+    "ModelRouterMiddleware",
 ]

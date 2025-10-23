@@ -14,104 +14,109 @@ from langgraph.types import Command
 from typing_extensions import TypedDict
 
 _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION = """
-This tool is used to create new task plans or modify existing plans.
+This tool is used to **create a new plan list ** or **modify an existing plan**.
 
-Args:
-    task_list: A list of strings representing tasks to be executed.
-               The first task will automatically be set to 'in_progress' status,
-               while all other tasks will be set to 'pending' status.
-               Internally, each string is converted to a dictionary containing 
-               'content' and 'status' keys, where content corresponds to each value in the string list,
-               and status values are: the first task is 'in_progress', and the remaining tasks are 'pending'.
+Parameters:
+`plan`: A list of strings representing the plans to be executed. The first plan in the list will automatically be set to the "in_progress" status, and all remaining plans will be set to the "pending" status. Internally, each string is converted into a dictionary containing "content" and "status" keys, where "content" corresponds to each string value in the list, and the "status" is assigned according to the rule: the first plan is "in_progress", and all others are "pending".
+When modifying a plan, only provide the plans that need to be executed next. For example, if the current plan is ['Plan 1', 'Plan 2', 'Plan 3'], and Plan 1 is completed, but you determine that Plan 2 and Plan 3 are no longer suitable and should be replaced with ['Plan 4', 'Plan 5'], then only pass ['Plan 4', 'Plan 5'].
 
-               When modifying plans, only provide the tasks that need to be executed next.
-               For example, if the current plan is 
-               ['task1', 'task2', 'task3'] and task1 is completed, but you
-               determine that task2 and task3 are no longer appropriate and
-               should be replaced with ['task4', 'task5'], simply pass
-               ['task4', 'task5'].
+## Tool Functionality
 
-## Tool Function
-This tool is used to **create new plans** or **modify existing plans**.
+This tool is used to **create a new plan list** or **modify an existing plan list**.
 
-- **Primary use**: Create new task plans
-- **Secondary use**: Modify plans when issues are identified in existing plans
-- **Not for**: Marking task completion status
+- **Primary Use**: Create a new plan list.
+- **Secondary Use**: Modify the plan when problems are identified with the existing one.
+- **Not For**: Marking plans as completed.
 
-## Task States
-Use the following states to track progress:
-- `pending`: Task not yet started
-- `in_progress`: Currently being processed
-- `done`: Task completed
+## Plan Statuses
 
-## Usage Specifications
+Use the following statuses to track progress:
 
-### Creating Plans (Primary Use)
-Call this tool to create structured task lists when dealing with complex tasks:
-- Complex multi-step tasks (≥3 steps)
-- Non-trivial tasks requiring careful planning
-- When user explicitly requests a task list
-- When user provides multiple task items
+- `pending`: Plan has not yet started.
+- `in_progress`: Currently being worked on.
+- `done`: Plan has been completed.
 
-### Modifying Plans (Special Circumstances)
-Modify existing plans only in the following cases:
-- When current plan structure is identified as problematic
-- When task structure or content needs adjustment
-- When existing plan cannot be executed effectively
+## Usage Guidelines
 
-**Important Update Behavior**: When updating plans, only pass the list of tasks that need to be executed next. The tool will automatically handle status assignment - first task as `in_progress`, others as `pending`.
+### Creating a Plan (Primary Use)
 
-### Task Completion
-**Important**: When completing subtasks, call the `finish_sub_plan()` function to update task status, NOT this tool.
+Call this tool to create a structured plan when dealing with complex tasks:
+
+- Complex multi-step tasks (≥3 steps).
+- Non-trivial tasks requiring careful planning.
+- The user explicitly requests a plan list.
+
+### Modifying a Plan (Special Cases)
+
+Modify an existing plan only under the following circumstances:
+
+- The current plan structure is found to be problematic.
+- The plan structure or content needs adjustment.
+- The existing plan cannot be executed effectively.
+
+**Important Update Behavior**: When updating a plan, only pass the list of plans that need to be executed next. The tool automatically handles status assignment – the first plan is set to `in_progress`, and the rest are set to `pending`.
+
+### Plan Completion
+
+**Important Note**: When completing a plan, call the `finish_sub_plan()` function to update the plan status. **Do not use this tool**.
 
 ## When to Use
-**Usage scenarios**:
-- When starting new complex work sessions
-- When needing to restructure task organization
-- When current plan requires revision based on new information
 
-**Avoid usage scenarios**:
-- Simple tasks (<3 steps)
-- When only needing to mark task completion status
-- Purely informational inquiries or conversations
-- Trivial tasks that can be completed directly
+**Appropriate Scenarios**:
+
+- When starting a new complex work session.
+- When needing to reorganize the plan structure.
+- When the current plan needs revision based on new information.
+
+**Scenarios to Avoid**:
+
+- Simple tasks (<3 steps).
+- When only needing to mark a plan as complete.
+- Purely informational queries or conversation.
+- Trivial tasks that can be completed directly.
 
 ## Best Practices
-1. When creating a plan, the first task is automatically set to `in_progress`
-2. Ensure tasks in the plan are specific and actionable
-3. Break down complex tasks into smaller steps
-4. Unless all tasks are completed, always maintain at least one task in `in_progress` status
-5. When modifying plans, provide only the remaining tasks that need execution
-6. Use descriptive and clear task names
 
-## Internal Processing
-The tool automatically converts input strings to structured format:
-- Input: `["task1", "task2", "task3"]`
-- Internal representation:
+1. When creating a plan, the first plan is automatically set to `in_progress`.
+2. Ensure sub-plans within the plan are specific and actionable.
+3. Break down complex sub-plans into smaller steps.
+4. Always keep at least one plan in the `in_progress` status unless all plans are completed.
+5. When modifying a plan, only provide the sub-plans that need to be executed next.
+6. Use clear, descriptive names for sub-plans.
+
+## Internal Processing Logic
+
+The tool automatically converts the input strings into a structured format:
+
+- Input: `["Sub-plan 1", "Sub-plan 2", "Sub-plan 3"]`
+- Internal Representation:
+```json
   [
-    {"content": "task1", "status": "in_progress"},
-    {"content": "task2", "status": "pending"},
-    {"content": "task3", "status": "pending"}
+  {"content": "Sub-plan 1", "status": "in_progress"},
+  {"content": "Sub-plan 2", "status": "pending"},
+  {"content": "Sub-plan 3", "status": "pending"}
   ]
+```
 
-Remember:
-- For simple tasks, execute directly without calling this tool
-- Use `finish_sub_plan()` function when completing tasks
-- When modifying plans, only provide the tasks that need to be executed next
+Please remember:
+
+- For simple plans, execute them directly; there is no need to call this tool.
+- Use the `finish_sub_plan()` function to mark sub-plans as completed.
+- When modifying a plan, only provide the sub-plans that need to be executed next.
 """
 
 _DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION = """
-This tool is used to mark the completion status of a subtask in an existing plan.
+This tool is used to mark the completion status of a sub-plan in an existing plan.
 
 Functionality:
-    - Marks the task with status 'in_progress' as 'done'
-    - Sets the first task with status 'pending' to 'in_progress' (if one exists)
+- Marks the sub-plan with status 'in_progress' as 'done'
+- Sets the first sub-plan with status 'pending' to 'in_progress' (if one exists)
 
 ## Tool Purpose
-Specifically designed to **mark the current subtask as completed** in an existing plan.
+Specifically designed to **mark the current sub-plan as completed** in an existing plan.
 
 ### When to Use
-Use only when the current subtask is confirmed complete.
+Use only when the current sub-plan is confirmed complete.
 
 ### Automatic Status Management
 - `in_progress` → `done`
@@ -119,30 +124,31 @@ Use only when the current subtask is confirmed complete.
 
 ## Usage Example
 Current plan status:
+```json
 [
     {"content": "Research market trends", "status": "done"},
     {"content": "Analyze competitor data", "status": "in_progress"},
     {"content": "Prepare summary report", "status": "pending"}
 ]
+```
 
 After calling finish_sub_plan():
+```json
 [
     {"content": "Research market trends", "status": "done"},
     {"content": "Analyze competitor data", "status": "done"},
     {"content": "Prepare summary report", "status": "in_progress"}
 ]
+```
 
 Remember:
 - Only for marking completion—do not use to create or modify plans (use write_plan instead)
-- Ensure the task is truly complete before calling
+- Ensure the sub-plan is truly complete before calling
 - No parameters needed; status transitions are handled automatically
 """
 
 _DEFAULT_READ_PLAN_TOOL_DESCRIPTION = """
-Retrieves the current task plan with all subtasks and their statuses.
-
-### When to Use
-When you forget which subtask you're currently supposed to execute.
+Get all sub-plans with their current status.
 """
 
 
@@ -162,11 +168,10 @@ def create_write_plan_tool(
     """Create a tool for writing initial plan.
 
     This function creates a tool that allows agents to write an initial plan
-    with a list of tasks. The first task in the plan will be marked as "in_progress"
+    with a list of plans. The first plan in the plan will be marked as "in_progress"
     and the rest as "pending".
 
     Args:
-        name: The name of the tool. Defaults to "write_plan".
         description: The description of the tool. Uses default description if not provided.
         message_key: The key of the message to be updated. Defaults to "messages".
 
@@ -195,7 +200,7 @@ def create_write_plan_tool(
                 ],
                 msg_key: [
                     ToolMessage(
-                        content=f"Plan successfully written, please first execute the {plan[0]} task (no need to change the status to in_process)",
+                        content=f"Plan successfully written, please first execute the {plan[0]} sub-plan (no need to change the status to in_process)",
                         tool_call_id=runtime.tool_call_id,
                     )
                 ],
@@ -209,18 +214,16 @@ def create_finish_sub_plan_tool(
     description: Optional[str] = None,
     message_key: Optional[str] = None,
 ) -> BaseTool:
-    """Create a tool for finish sub plan tasks.
+    """Create a tool for finishing sub-plan tasks.
 
-    This function creates a tool that allows agents to update the status of tasks
-    in a plan. Tasks can be marked as "done" to track progress.
+    This function creates a tool that allows agents to update the status of sub-plans in a plan. Sub-plans can be marked as "done" to track progress.
 
     Args:
-        name: The name of the tool. Defaults to "finish_sub_plan".
         description: The description of the tool. Uses default description if not provided.
         message_key: The key of the message to be updated. Defaults to "messages".
 
     Returns:
-        BaseTool: The tool for finish sub plan tasks.
+        BaseTool: The tool for finishing sub-plan tasks.
 
     Example:
         Basic usage:
@@ -268,6 +271,23 @@ def create_finish_sub_plan_tool(
 def create_read_plan_tool(
     description: Optional[str] = None,
 ):
+    """Create a tool for reading all sub-plans.
+
+    This function creates a tool that allows agents to read all sub-plans
+    in the current plan with their status information.
+
+    Args:
+        description: The description of the tool. Uses default description if not provided.
+
+    Returns:
+        BaseTool: The tool for reading all sub-plans.
+
+    Example:
+        Basic usage:
+        >>> from langchain_dev_utils.agents.middleware import create_read_plan_tool
+        >>> read_plan_tool = create_read_plan_tool()
+    """
+
     @tool(
         description=description or _DEFAULT_READ_PLAN_TOOL_DESCRIPTION,
     )
@@ -279,65 +299,65 @@ def create_read_plan_tool(
 
 
 _READ_PLAN_SYSTEM_PROMPT = """### 3. read_plan: View Current Plan
-- **Purpose**: Retrieve the full current task list with statuses, especially when you forget which subtask you're supposed to execute next.
+- **Purpose**: Retrieve the full current plan list with statuses, especially when you forget which sub-plan you're supposed to execute next.
 - **No parameters required**—returns a complete snapshot of the active plan.
 """
 _PLAN_MIDDLEWARE_SYSTEM_PROMPT = """
 You can manage task plans using the following {num} tools:
 
 ## 1. write_plan: Create or Replace a Plan
-- **Primary Purpose**: Generate a structured execution framework for complex tasks, or completely replace the remaining task sequence when the current plan is no longer valid.
+- **Primary Purpose**: Generate a structured execution framework for complex tasks, or completely replace the remaining plan sequence when the current plan is no longer valid.
 - **When to Use**:
   - The task requires 3 or more distinct, actionable steps
-  - The user explicitly requests a task list or "to-do plan"
-  - The user provides multiple tasks (e.g., numbered list, comma-separated items)
+  - The user explicitly requests a plan list or "to-do plan"
+  - The user provides multiple plans (e.g., numbered list, comma-separated items)
   - Execution reveals fundamental flaws in the current plan, requiring a new direction
-- **Input Format**: A list of task description strings, e.g., ["Analyze user needs", "Design system architecture", "Implement core module"]
+- **Input Format**: A list of plan description strings, e.g., ["Analyze user needs", "Design system architecture", "Implement core module"]
 - **Automatic Status Assignment**:
-  - First task → `"in_progress"`
-  - All subsequent tasks → `"pending"`
-- **Plan Replacement Rule**: Provide **only the new tasks that should be executed next**. Do not include completed, obsolete, or irrelevant tasks.
+  - First plan → `"in_progress"`
+  - All subsequent plans → `"pending"`
+- **Plan Replacement Rule**: Provide **only the new plans that should be executed next**. Do not include completed, obsolete, or irrelevant plans.
 - **Plan Quality Requirements**:
-  - Tasks must be specific, actionable, and verifiable
+  - Plans must be specific, actionable, and verifiable
   - Break work into logical phases (chronological or dependency-based)
   - Define clear milestones and deliverable standards
   - Avoid vague, ambiguous, or non-executable descriptions
 - **Do NOT Use When**:
   - The task is simple (<3 steps)
   - The request is conversational, informational, or a one-off query
-  - You only need to mark a task as complete (use `finish_sub_plan` instead)
+  - You only need to mark a plan as complete (use `finish_sub_plan` instead)
 
-## 2. finish_sub_plan: Mark Current Task as Complete
-- **Primary Purpose**: Confirm the current `"in_progress"` task is fully done, mark it as `"done"`, and automatically promote the first `"pending"` task to `"in_progress"`.
+## 2. finish_sub_plan: Mark Current Plan as Complete
+- **Primary Purpose**: Confirm the current `"in_progress"` plan is fully done, mark it as `"done"`, and automatically promote the first `"pending"` plan to `"in_progress"`.
 - **Call Only If ALL Conditions Are Met**:
-  - The subtask has been **fully executed**
+  - The sub-plan has been **fully executed**
   - All specified requirements have been satisfied
   - There are no unresolved errors, omissions, or blockers
   - The output meets quality standards and has been verified
 - **Automatic Behavior**:
   - No parameters needed—status transitions are handled internally
-  - If no `"pending"` tasks remain, the plan ends naturally
+  - If no `"pending"` plans remain, the plan ends naturally
 - **Never Call If**:
-  - The task is partially complete
+  - The plan is partially complete
   - Known issues or defects remain
   - Execution was blocked due to missing resources or dependencies
   - The result fails to meet expected quality
 
 {read_plan_system_prompt}
 
-## Task Status Rules (Only These Three Are Valid)
-- **`"pending"`**: Task not yet started
+## Plan Status Rules (Only These Three Are Valid)
+- **`"pending"`**: Plan not yet started
 - **`"in_progress"`**: Currently being executed (exactly one allowed at any time)
 - **`"done"`**: Fully completed and verified  
 > ⚠️ No other status values (e.g., "completed", "failed", "blocked") are permitted.
 
 ## General Usage Principles
-1. **Execute simple tasks directly**: If a request can be fulfilled in 1–2 steps, do not create a plan—just complete it.
-2. **Decompose thoughtfully**: Break complex work into clear, independent, trackable subtasks.
+1. **Execute simple plans directly**: If a request can be fulfilled in 1–2 steps, do not create a plan—just complete it.
+2. **Decompose thoughtfully**: Break complex work into clear, independent, trackable sub-plans.
 3. **Manage status rigorously**:
-   - Always maintain exactly one `"in_progress"` task while work is ongoing
-   - Call `finish_sub_plan` immediately after task completion—never delay
-4. **Plan modification = full replacement**: Never edit individual tasks. To adjust the plan, use `write_plan` with a new list of remaining tasks.
+   - Always maintain exactly one `"in_progress"` plan while work is ongoing
+   - Call `finish_sub_plan` immediately after plan completion—never delay
+4. **Plan modification = full replacement**: Never edit individual plans. To adjust the plan, use `write_plan` with a new list of remaining plans.
 5. **Respect user intent**: If the user explicitly asks for a plan—even for a simpler task—honor the request and create one.
 """
 
@@ -352,6 +372,11 @@ class PlanMiddleware(AgentMiddleware):
 
     The middleware automatically injects system prompts that guide the agent on how to use the plan functionality effectively.
 
+    Args:
+        system_prompt: Custom system prompt to guide the agent on using the plan tool.
+            If not provided, uses the default `_PLAN_MIDDLEWARE_SYSTEM_PROMPT`.
+        tools: List of tools to be added to the agent. The tools must be created by `create_write_plan_tool`, `create_finish_sub_plan_tool`, and `create_read_plan_tool`(optional).
+
     Example:
         ```python
         from langchain_dev_utils.agents.middleware.plan import PlanMiddleware
@@ -364,11 +389,6 @@ class PlanMiddleware(AgentMiddleware):
 
         print(result["plan"])  # Array of plan items with status tracking
         ```
-
-    Args:
-        system_prompt: Custom system prompt to guide the agent on using the plan tool.
-            If not provided, uses the default `_PLAN_MIDDLEWARE_SYSTEM_PROMPT`.
-        tools: List of tools to be added to the agent. The tools must be created by `create_write_plan_tool`, `create_finish_sub_plan_tool`, and `create_read_plan_tool`(optional).
     """
 
     state_schema = PlanState
@@ -379,12 +399,6 @@ class PlanMiddleware(AgentMiddleware):
         system_prompt: Optional[str] = None,
         tools: Optional[list[BaseTool]] = None,
     ) -> None:
-        """Initialize the TodoListMiddleware with optional custom prompts.
-
-        Args:
-            system_prompt: Custom system prompt to guide the agent on using the todo tool.
-            tools: Custom tools to be added to the agent. The tools must be created by `create_write_plan_tool`, `create_finish_sub_plan_tool`, and `create_read_plan_tool`(optional).
-        """
         super().__init__()
 
         if tools is None:
@@ -426,7 +440,6 @@ class PlanMiddleware(AgentMiddleware):
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse],
     ) -> ModelCallResult:
-        """Update the system prompt to include the todo system prompt."""
         request.system_prompt = (
             request.system_prompt + "\n\n" + self.system_prompt
             if request.system_prompt
@@ -439,7 +452,6 @@ class PlanMiddleware(AgentMiddleware):
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        """Update the system prompt to include the todo system prompt (async version)."""
         request.system_prompt = (
             request.system_prompt + "\n\n" + self.system_prompt
             if request.system_prompt

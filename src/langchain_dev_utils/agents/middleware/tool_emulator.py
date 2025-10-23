@@ -13,6 +13,12 @@ class LLMToolEmulator(_LLMToolEmulator):
     By default (when tools=None), all tools are emulated. You can specify which
     tools to emulate by passing a list of tool names or BaseTool instances.
 
+    Args:
+        tools: List of tool names (str) or BaseTool instances to emulate.
+            If None (default), ALL tools will be emulated.
+            If empty list, no tools will be emulated.
+        model: Model to use for emulation. Must be a string identifier.
+
     Examples:
         Emulate all tools (default behavior):
         ```python
@@ -47,14 +53,6 @@ class LLMToolEmulator(_LLMToolEmulator):
         model: str,
         tools: list[str | BaseTool] | None = None,
     ) -> None:
-        """Initialize the tool emulator.
-
-        Args:
-            tools: List of tool names (str) or BaseTool instances to emulate.
-                If None (default), ALL tools will be emulated.
-                If empty list, no tools will be emulated.
-            model: Model to use for emulation. Must be a string identifier.
-        """
         chat_model = load_chat_model(model)
         super().__init__(
             model=chat_model,

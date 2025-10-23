@@ -11,6 +11,10 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
     Retries failed model calls with alternative models in sequence until
     success or all models exhausted. Primary model specified in create_agent().
 
+    Args:
+        first_model: The first model to try on error. Must be a string identifier.
+        additional_models: Additional models to try in sequence on error.
+
     Example:
         ```python
         from langchain_dev_utils.agents.middleware.model_fallback import ModelFallbackMiddleware
@@ -36,12 +40,6 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
         first_model: str,
         *additional_models: str,
     ) -> None:
-        """Initialize model fallback middleware.
-
-        Args:
-            first_model: First fallback model (must be a string identifier).
-            *additional_models: Additional fallbacks in order (must be string identifiers).
-        """
         first_chat_model = load_chat_model(first_model)
 
         additional_chat_models = [load_chat_model(model) for model in additional_models]

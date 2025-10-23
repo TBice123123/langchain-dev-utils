@@ -14,6 +14,14 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
     to only the most relevant ones for the user's query. This reduces token usage
     and helps the main model focus on the right tools.
 
+    Args:
+        model: Model to use for selection. Only string identifiers are supported.
+        system_prompt: Instructions for the selection model.
+        max_tools: Maximum number of tools to select. If the model selects more,
+            only the first max_tools will be used. No limit if not specified.
+        always_include: Tool names to always include regardless of selection.
+            These do not count against the max_tools limit.
+
     Examples:
         Limit to 3 tools:
         ```python
@@ -31,16 +39,6 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         max_tools: Optional[int] = None,
         always_include: Optional[list[str]] = None,
     ) -> None:
-        """Initialize the tool selector.
-
-        Args:
-            model: Model to use for selection. Only string identifiers are supported.
-            system_prompt: Instructions for the selection model.
-            max_tools: Maximum number of tools to select. If the model selects more,
-                only the first max_tools will be used. No limit if not specified.
-            always_include: Tool names to always include regardless of selection.
-                These do not count against the max_tools limit.
-        """
         chat_model = load_chat_model(model)
 
         tool_selector_kwargs = {}
