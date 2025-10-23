@@ -1,7 +1,10 @@
 from typing import Optional
 
+from langgraph.cache.base import BaseCache
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
+from langgraph.store.base import BaseStore
+from langgraph.types import Checkpointer
 from langgraph.typing import ContextT, InputT, OutputT, StateT
 
 from .types import SubGraph
@@ -14,6 +17,9 @@ def sequential_pipeline(
     context_schema: type[ContextT] | None = None,
     input_schema: type[InputT] | None = None,
     output_schema: type[OutputT] | None = None,
+    checkpointer: Checkpointer | None = None,
+    store: BaseStore | None = None,
+    cache: BaseCache | None = None,
 ) -> CompiledStateGraph[StateT, ContextT, InputT, OutputT]:
     """
     Create a sequential pipeline from a list of subgraphs.
@@ -23,27 +29,52 @@ def sequential_pipeline(
     complex multi-agent workflows where agents need to work in a specific order.
 
     Args:
-       sub_graphs: List of sub-graphs to execute sequentially
-       state_schema: state schema of the final constructed graph
-       graph_name: Name of the final constructed graph
-       context_schema: context schema of the final constructed graph
-       input_schema: input schema of the final constructed graph
-       output_schema: output schema of the final constructed graph
+        sub_graphs: List of sub-graphs to execute sequentially
+        state_schema: state schema of the final constructed graph
+        graph_name: Name of the final constructed graph
+        context_schema: context schema of the final constructed graph
+        input_schema: input schema of the final constructed graph
+        output_schema: output schema of the final constructed graph
+        checkpointer: Optional LangGraph checkpointer for the final constructed graph
+        store: Optional LangGraph store for the final constructed graph
+        cache: Optional LangGraph cache for the final constructed graph
 
     Returns:
         CompiledStateGraph[StateT, ContextT, InputT, OutputT]: Compiled state graph of the pipeline.
 
     Example:
-        Basic sequential pipeline:
+        Basic sequential pipeline with multiple specialized agents:
         >>> from langchain_dev_utils.pipeline import sequential_pipeline
-        >>> from src.graph import graph1, graph2
-        >>> from src.state import State
+        >>> from src.graph import create_agent
+        >>> from src.state import AgentState
+        >>> from langchain_core.messages import HumanMessage
         >>>
         >>> graph = sequential_pipeline(
-        ...     sub_graphs=[graph1, graph2],
-        ...     state_schema=State,
-        ...     graph_name="sequential graph",
+        ...     sub_graphs=[
+        ...         create_agent(
+        ...             model="vllm:qwen3-4b",
+        ...             tools=[get_current_time],
+        ...             system_prompt="You are a time query assistant. You can only answer questions about current time. If the question is unrelated to time, please directly respond with 'I cannot answer that'.",
+        ...             name="time_agent",
+        ...         ),
+        ...         create_agent(
+        ...             model="vllm:qwen3-4b",
+        ...             tools=[get_current_weather],
+        ...             system_prompt="You are a weather query assistant. You can only answer questions about current weather. If the question is unrelated to weather, please directly respond with 'I cannot answer that'.",
+        ...             name="weather_agent",
+        ...         ),
+        ...         create_agent(
+        ...             model="vllm:qwen3-4b",
+        ...             tools=[get_current_user],
+        ...             system_prompt="You are a user query assistant. You can only answer questions about current user. If the question is unrelated to user information, please directly respond with 'I cannot answer that'.",
+        ...             name="user_agent",
+        ...         ),
+        ...     ],
+        ...     state_schema=AgentState,
+        ...     graph_name="sequential_agents_pipeline",
         ... )
+        >>>
+        >>> response = graph.invoke({"messages": [HumanMessage("Hello")]})
     """
     graph = StateGraph(
         state_schema=state_schema,
@@ -80,4 +111,9 @@ def sequential_pipeline(
         ]
     )
     graph.add_edge("__start__", compiled_subgraphs[0].name)
-    return graph.compile(name=graph_name or "sequential graph")
+    return graph.compile(
+        name=graph_name or "sequential graph",
+        checkpointer=checkpointer,
+        store=store,
+        cache=cache,
+    )

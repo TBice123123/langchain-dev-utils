@@ -204,28 +204,81 @@ print(response)
 - 顺序图编排
 - 并行图编排
 
-```python
-from langchain_dev_utils.pipeline import sequential_pipeline, parallel_pipeline
+顺序图编排：
 
-# 构建顺序流程
+```python
+from langchain.agents import AgentState
+from langchain_core.messages import HumanMessage
+from langchain_dev_utils.agents import create_agent
+from langchain_dev_utils.pipeline import sequential_pipeline
+from langchain_dev_utils.chat_models import register_model_provider
+
+register_model_provider(
+    provider_name="vllm",
+    chat_model="openai-compatible",
+    base_url="http://localhost:8000/v1",
+)
+
+# 构建顺序管道（所有子图顺序执行）
 graph = sequential_pipeline(
     sub_graphs=[
-        make_graph("graph1"),
-        make_graph("graph2"),
-        make_graph("graph3"),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_time],
+            system_prompt="你是一个时间查询助手,仅能回答当前时间,如果这个问题和时间无关,请直接回答我无法回答",
+            name="time_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_weather],
+            system_prompt="你是一个天气查询助手,仅能回答当前天气,如果这个问题和天气无关,请直接回答我无法回答",
+            name="weather_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_user],
+            system_prompt="你是一个用户查询助手,仅能回答当前用户,如果这个问题和用户无关,请直接回答我无法回答",
+            name="user_agent",
+        ),
     ],
-    state_schema=State,
+    state_schema=AgentState,
 )
 
-# 构建并行流程
+response = graph.invoke({"messages": [HumanMessage("你好")]})
+print(response)
+```
+
+并行图编排：
+
+```python
+from langchain_dev_utils.pipeline import parallel_pipeline
+
+# 构建并行管道（所有子图并行执行）
 graph = parallel_pipeline(
     sub_graphs=[
-        make_graph("graph1"),
-        make_graph("graph2"),
-        make_graph("graph3"),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_time],
+            system_prompt="你是一个时间查询助手,仅能回答当前时间,如果这个问题和时间无关,请直接回答我无法回答",
+            name="time_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_weather],
+            system_prompt="你是一个天气查询助手,仅能回答当前天气,如果这个问题和天气无关,请直接回答我无法回答",
+            name="weather_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_user],
+            system_prompt="你是一个用户查询助手,仅能回答当前用户,如果这个问题和用户无关,请直接回答我无法回答",
+            name="user_agent",
+        ),
     ],
-    state_schema=State,
+    state_schema=AgentState,
 )
+response = graph.invoke({"messages": [HumanMessage("你好")]})
+print(response)
 ```
 
 **了解更多**：[状态图编排](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration.html)

@@ -204,28 +204,81 @@ Includes the following features:
 - Sequential graph orchestration
 - Parallel graph orchestration
 
-```python
-from langchain_dev_utils.pipeline import sequential_pipeline, parallel_pipeline
+Sequential Graph Orchestration:
 
-# Build a sequential workflow
+```python
+from langchain.agents import AgentState
+from langchain_core.messages import HumanMessage
+from langchain_dev_utils.agents import create_agent
+from langchain_dev_utils.pipeline import sequential_pipeline
+from langchain_dev_utils.chat_models import register_model_provider
+
+register_model_provider(
+    provider_name="vllm",
+    chat_model="openai-compatible",
+    base_url="http://localhost:8000/v1",
+)
+
+# Build a sequential pipeline (all subgraphs execute in order)
 graph = sequential_pipeline(
     sub_graphs=[
-        make_graph("graph1"),
-        make_graph("graph2"),
-        make_graph("graph3"),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_time],
+            system_prompt="You are a time query assistant. You can only answer the current time. If the question is unrelated to time, please directly reply that you cannot answer.",
+            name="time_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_weather],
+            system_prompt="You are a weather query assistant. You can only answer the current weather. If the question is unrelated to weather, please directly reply that you cannot answer.",
+            name="weather_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_user],
+            system_prompt="You are a user query assistant. You can only answer the current user. If the question is unrelated to the user, please directly reply that you cannot answer.",
+            name="user_agent",
+        ),
     ],
-    state_schema=State,
+    state_schema=AgentState,
 )
 
-# Build a parallel workflow
+response = graph.invoke({"messages": [HumanMessage("Hello")]})
+print(response)
+```
+
+Parallel Graph Orchestration:
+
+```python
+from langchain_dev_utils.pipeline import parallel_pipeline
+
+# Build a parallel pipeline (all subgraphs execute in parallel)
 graph = parallel_pipeline(
     sub_graphs=[
-        make_graph("graph1"),
-        make_graph("graph2"),
-        make_graph("graph3"),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_time],
+            system_prompt="You are a time query assistant. You can only answer the current time. If the question is unrelated to time, please directly reply that you cannot answer.",
+            name="time_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_weather],
+            system_prompt="You are a weather query assistant. You can only answer the current weather. If the question is unrelated to weather, please directly reply that you cannot answer.",
+            name="weather_agent",
+        ),
+        create_agent(
+            model="vllm:qwen3-4b",
+            tools=[get_current_user],
+            system_prompt="You are a user query assistant. You can only answer the current user. If the question is unrelated to the user, please directly reply that you cannot answer.",
+            name="user_agent",
+        ),
     ],
-    state_schema=State,
+    state_schema=AgentState,
 )
+response = graph.invoke({"messages": [HumanMessage("Hello")]})
+print(response)
 ```
 
 **Learn More**: [State Graph Orchestration](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration.html)
