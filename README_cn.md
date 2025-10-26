@@ -76,7 +76,7 @@ emb = embeddings.embed_query("Hello")
 print(emb)
 ```
 
-**了解更多**：[模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management.html)
+**了解更多**: [对话模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/chat.html)、[嵌入模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/embedding.html)
 
 ### 2. **消息转换**
 
@@ -125,7 +125,7 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**了解更多**：[消息转换](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion.html)
+**了解更多**: [模型处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/message.html),[格式化列表内容](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/format.html)
 
 ### 3. **工具调用**
 
@@ -157,7 +157,7 @@ if has_tool_calling(cast(AIMessage, response)):
     print(name, args)
 ```
 
-**了解更多**：[工具调用](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling.html)
+**了解更多**: [添加人在回路支持](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/human-in-loop.html),[工具调用处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/tool.html)
 
 ### 4. **智能体开发**
 
@@ -195,7 +195,7 @@ response = agent.invoke({"messages": [{"role": "user", "content": "给我一个�
 print(response)
 ```
 
-**了解更多**：[智能体开发](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development.html)
+**了解更多**: [预构建智能体函数](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/prebuilt.html),[中间件](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/middleware.html)
 
 ### 5. **状态图编排**
 
@@ -281,7 +281,7 @@ response = graph.invoke({"messages": [HumanMessage("你好")]})
 print(response)
 ```
 
-**了解更多**：[状态图编排](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration.html)
+**了解更多**: [状态图编排管道](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration/pipeline.html)
 
 ## 💬 加入社区
 

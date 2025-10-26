@@ -2,7 +2,7 @@ from typing import Awaitable, Callable, Optional, cast
 
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 from langchain.agents.middleware.types import ModelCallResult
-from langchain_core.messages import AnyMessage, SystemMessage
+from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 
@@ -146,9 +146,12 @@ class ModelRouterMiddleware(AgentMiddleware):
     def wrap_model_call(
         self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelCallResult:
-        model_name = self._select_model(request.messages)
-        if model_name is not None:
-            request.model = load_chat_model(model_name)
+        messages = request.state.get("messages")
+        # when the last message is human message, we will use router model to select model
+        if len(messages) > 0 and isinstance(messages[-1], HumanMessage):
+            model_name = self._select_model(messages)
+            if model_name is not None:
+                request.model = load_chat_model(model_name)
 
         return handler(request)
 
@@ -157,8 +160,11 @@ class ModelRouterMiddleware(AgentMiddleware):
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        model_name = await self._aselect_model(request.messages)
-        if model_name is not None:
-            request.model = load_chat_model(model_name)
+        messages = request.state.get("messages")
+        # when the last message is human message, we will use router model to select model
+        if len(messages) > 0 and isinstance(messages[-1], HumanMessage):
+            model_name = await self._aselect_model(messages)
+            if model_name is not None:
+                request.model = load_chat_model(model_name)
 
         return await handler(request)

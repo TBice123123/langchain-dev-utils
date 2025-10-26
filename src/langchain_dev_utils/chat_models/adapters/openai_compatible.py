@@ -1,17 +1,29 @@
 from __future__ import annotations
 from collections.abc import AsyncIterator, Iterator
 from json import JSONDecodeError
-from typing import Any, List, Literal, Optional, Type, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    List,
+    Literal,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+)
 
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
 )
 from langchain_core.language_models import LangSmithParams, LanguageModelInput
-from langchain_core.messages import AIMessageChunk, BaseMessage
+from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage
 from langchain_core.outputs import ChatGenerationChunk, ChatResult
 from langchain_core.runnables import Runnable
+from langchain_core.tools import BaseTool
 from langchain_core.utils import from_env, secret_from_env
+from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_openai.chat_models.base import BaseChatOpenAI
 import openai
 from pydantic import (
@@ -24,6 +36,7 @@ from pydantic import (
     model_validator,
 )
 from typing_extensions import Self
+
 
 _BM = TypeVar("_BM", bound=BaseModel)
 _DictOrPydanticClass = Union[dict[str, Any], type[_BM], type]
@@ -64,6 +77,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     model_config = ConfigDict(populate_by_name=True)
 
     _provider: str = PrivateAttr(default="openai-compatible")
+    _supported_tool_choice: list[str] = PrivateAttr(default=[])
 
     @property
     def _llm_type(self) -> str:
@@ -301,6 +315,46 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 e.pos,
             ) from e
 
+    def bind_tools(
+        self,
+        tools: Sequence[dict[str, Any] | type | Callable | BaseTool],
+        *,
+        tool_choice: dict | str | bool | None = None,
+        strict: bool | None = None,
+        parallel_tool_calls: bool | None = None,
+        **kwargs: Any,
+    ) -> Runnable[LanguageModelInput, AIMessage]:
+        support_tool_choice = False
+        if tool_choice is not None and isinstance(tool_choice, str):
+            if (
+                tool_choice in ["auto", "none", "any", "required"]
+                and tool_choice in self._supported_tool_choice
+            ):
+                support_tool_choice = True
+
+            elif "specific" in self._supported_tool_choice:
+                formatted_tools = [
+                    convert_to_openai_tool(tool, strict=strict) for tool in tools
+                ]
+                tool_names = []
+                for tool in formatted_tools:
+                    if "function" in tool:
+                        tool_names.append(tool["function"]["name"])
+                    elif "name" in tool:
+                        tool_names.append(tool["name"])
+                    else:
+                        pass
+                if tool_choice in tool_names:
+                    support_tool_choice = True
+        tool_choice = tool_choice if support_tool_choice else None
+        return super().bind_tools(
+            tools,
+            tool_choice=tool_choice,
+            strict=strict,
+            parallel_tool_calls=parallel_tool_calls,
+            **kwargs,
+        )
+
     def with_structured_output(
         self,
         schema: Optional[_DictOrPydanticClass] = None,
@@ -344,7 +398,11 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
 
 def _create_openai_compatible_model(
-    provider: str, base_url: str
+    provider: str,
+    base_url: str,
+    tool_choice: Optional[
+        list[Literal["auto", "none", "any", "required", "specific"]]
+    ] = None,
 ) -> Type[_BaseChatOpenAICompatible]:
     """Factory function for creating provider-specific OpenAI-compatible model classes.
 
@@ -380,5 +438,9 @@ def _create_openai_compatible_model(
         _provider=(
             str,
             PrivateAttr(default=provider),
+        ),
+        _supported_tool_choice=(
+            list[str],
+            PrivateAttr(default=tool_choice if tool_choice else []),
         ),
     )

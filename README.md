@@ -76,7 +76,7 @@ emb = embeddings.embed_query("Hello")
 print(emb)
 ```
 
-**Learn More**: [Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management.html)
+**Learn More**: [Chat Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/chat.html),[Embeddings Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/embedding.html)
 
 ### 2. **Message Conversion**
 
@@ -125,7 +125,7 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**Learn More**: [Message Conversion](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion.html)
+**Learn More**: [Message Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/message.html),[Format List Content](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/format.html)
 
 ### 3. **Tool Calling**
 
@@ -157,7 +157,7 @@ if has_tool_calling(cast(AIMessage, response)):
     print(name, args)
 ```
 
-**Learn More**: [Tool Calling](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling.html)
+**Learn More**: [Adding Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-loop.html),[Tool Calling Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
 
 ### 4. **Agent Development**
 
@@ -195,7 +195,7 @@ response = agent.invoke({"messages": [{"role": "user", "content": "Give me a tra
 print(response)
 ```
 
-**Learn More**: [Agent Development](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development.html)
+**Learn More**: [Pre-built Agent Functions](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/prebuilt.html),[Middleware](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/middleware.html)
 
 ### 5. **State Graph Orchestration**
 
@@ -281,7 +281,7 @@ response = graph.invoke({"messages": [HumanMessage("Hello")]})
 print(response)
 ```
 
-**Learn More**: [State Graph Orchestration](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration.html)
+**Learn More**: [State Graph Orchestration Pipeline](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration/pipeline.html)
 
 ## 💬 Join the Community
 

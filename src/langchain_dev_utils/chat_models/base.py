@@ -10,10 +10,14 @@ _MODEL_PROVIDERS_DICT = {}
 ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
 
 
+ToolChoiceType = list[Literal["auto", "none", "any", "required", "specific"]]
+
+
 class ChatModelProvider(TypedDict):
     provider: str
     chat_model: ChatModelType
     base_url: NotRequired[str]
+    tool_choice: NotRequired[ToolChoiceType]
 
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
@@ -70,6 +74,7 @@ def register_model_provider(
     provider_name: str,
     chat_model: ChatModelType,
     base_url: Optional[str] = None,
+    tool_choice: Optional[ToolChoiceType] = None,
 ):
     """Register a new model provider.
 
@@ -81,6 +86,8 @@ def register_model_provider(
         provider_name: Name of the provider to register
         chat_model: Either a BaseChatModel class or a string identifier for a supported provider
         base_url: Optional base URL for API endpoints (required when chat_model is a string)
+        tool_choice: Optional tool choice for the model.
+            It is a list of unique values representing **auto**, **none**, **any**, **required**, and **specific**.
 
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
@@ -119,8 +126,9 @@ def register_model_provider(
             raise ValueError(
                 "when chat_model is a string, the value must be 'openai-compatible'"
             )
-
-        chat_model = _create_openai_compatible_model(provider_name, base_url)
+        chat_model = _create_openai_compatible_model(
+            provider_name, base_url, tool_choice
+        )
         _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
     else:
         _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
@@ -139,6 +147,8 @@ def batch_register_model_provider(
             - provider: str - Provider name
             - chat_model: Union[Type[BaseChatModel], str] - Model class or provider string
             - base_url: Optional[str] - Base URL for API endpoints
+            - tool_choice: Optional[list[Literal["auto", "none", "any", "required", "specific"]]] - Tool choice for the model.
+            It is a list of unique values representing **auto**, **none**, **any**, **required**, and **specific**.
 
     Raises:
         ValueError: If any of the providers are invalid
@@ -167,7 +177,10 @@ def batch_register_model_provider(
 
     for provider in providers:
         register_model_provider(
-            provider["provider"], provider["chat_model"], provider.get("base_url")
+            provider["provider"],
+            provider["chat_model"],
+            provider.get("base_url"),
+            tool_choice=provider.get("tool_choice"),
         )
 
 
