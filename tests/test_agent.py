@@ -16,11 +16,7 @@ batch_register_model_provider(
             "provider": "dashscope",
             "chat_model": ChatTongyi,
         },
-        {
-            "provider": "zai",
-            "chat_model": "openai-compatible",
-            "base_url": "https://open.bigmodel.cn/api/paas/v4",
-        },
+        {"provider": "zai", "chat_model": "openai-compatible"},
     ]
 )
 

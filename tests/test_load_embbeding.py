@@ -16,7 +16,6 @@ batch_register_embeddings_provider(
         {
             "provider": "siliconflow",
             "embeddings_model": "openai-compatible",
-            "base_url": "https://api.siliconflow.cn/v1",
         },
         {"provider": "dashscope", "embeddings_model": DashScopeEmbeddings},
     ]

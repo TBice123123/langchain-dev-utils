@@ -15,7 +15,6 @@ load_dotenv()
 register_model_provider(
     provider_name="zai",
     chat_model="openai-compatible",
-    base_url="https://open.bigmodel.cn/api/paas/v4",
 )
 
 

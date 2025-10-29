@@ -430,8 +430,6 @@ class PlanMiddleware(AgentMiddleware):
             system_prompt = _PLAN_MIDDLEWARE_SYSTEM_PROMPT.format(
                 num=num, read_plan_system_prompt=read_plan_system
             )
-        else:
-            system_prompt = system_prompt
 
         self.system_prompt = system_prompt
 

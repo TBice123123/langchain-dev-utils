@@ -9,12 +9,10 @@ from langchain_dev_utils.agents.middleware.plan import (
 )
 from langchain_dev_utils.chat_models import register_model_provider
 from langchain_dev_utils.tool_calling.utils import has_tool_calling, parse_tool_calling
+from dotenv import load_dotenv
 
-register_model_provider(
-    provider_name="zai",
-    chat_model="openai-compatible",
-    base_url="https://open.bigmodel.cn/api/paas/v4",
-)
+load_dotenv()
+register_model_provider(provider_name="zai", chat_model="openai-compatible")
 
 
 def test_plan_tool():
@@ -45,10 +43,12 @@ def test_plan_middleware():
     agent = create_agent(
         model="zai:glm-4.5",
         middleware=[plan_middleware],
-        system_prompt="请使用`write_plan`工具制定一个计划，计划数量必须是3个，然后依次执行这些计划用`finish_sub_plan`工具更新计划。最终确保所有计划的状态都为done",
+        system_prompt="Please use the `write_plan` tool to specify a plan, and the number of plans must be 3. Then execute these plans one by one using the `finish_sub_plan` tool to update the plan status. Finally, make sure that the status of all plans is `done`",
     )
 
-    result = agent.invoke({"messages": [HumanMessage(content="请开始执行吧")]})
+    result = agent.invoke(
+        {"messages": [HumanMessage(content="Please start executing")]}
+    )
 
     assert result["plan"]
     assert len(result["plan"]) == 3

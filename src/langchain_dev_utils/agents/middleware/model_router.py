@@ -1,8 +1,15 @@
-from typing import Awaitable, Callable, Optional, cast
+from typing import Any, Awaitable, Callable, NotRequired, Optional, cast
 
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 from langchain.agents.middleware.types import ModelCallResult
-from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
+from langchain_core.messages import (
+    AIMessage,
+    AnyMessage,
+    HumanMessage,
+    SystemMessage,
+    ToolMessage,
+)
+from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 
@@ -13,6 +20,7 @@ from langchain_dev_utils.message_convert import format_sequence
 class ModelDict(TypedDict):
     model_name: str
     model_description: str
+    tools: NotRequired[list[BaseTool | dict[str, Any]]]
 
 
 class SelectModel(BaseModel):
@@ -79,7 +87,8 @@ class ModelRouterMiddleware(AgentMiddleware):
             },
             {
                 "model_name": "openrouter:qwen/qwen3-coder-plus",
-                "model_description": "For code generation tasks"
+                "model_description": "For code generation tasks",
+                "tools": [run_python_code]
             }
         ]
 
@@ -147,11 +156,43 @@ class ModelRouterMiddleware(AgentMiddleware):
         self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelCallResult:
         messages = request.state.get("messages")
-        # when the last message is human message, we will use router model to select model
-        if len(messages) > 0 and isinstance(messages[-1], HumanMessage):
-            model_name = self._select_model(messages)
-            if model_name is not None:
-                request.model = load_chat_model(model_name)
+        # when the last message is human message or system message, we will use router model to select model
+        if len(messages) > 0:
+            if isinstance(messages[-1], HumanMessage) or isinstance(
+                messages[-1], SystemMessage
+            ):
+                model_name = self._select_model(messages)
+                model_tool_dict = {
+                    item["model_name"]: item.get("tools", [])
+                    for item in self.model_list
+                }
+                if model_name is not None and model_name in model_tool_dict:
+                    request.model = load_chat_model(model_name)
+                    if len(model_tool_dict[model_name]) > 0:
+                        request.tools = model_tool_dict[model_name]
+            elif isinstance(messages[-1], ToolMessage) or isinstance(
+                messages[-1], AIMessage
+            ):
+                if isinstance(messages[-1], ToolMessage):
+                    for msg in reversed(messages):
+                        if isinstance(msg, AIMessage):
+                            last_ai_message = msg
+                            break
+                else:
+                    last_ai_message = messages[-1]
+
+                if isinstance(last_ai_message, AIMessage):
+                    model_name = last_ai_message.response_metadata.get("model_name")
+                else:
+                    model_name = None
+
+                if model_name is not None:
+                    for item in self.model_list:
+                        if item["model_name"].endswith(model_name):
+                            request.model = load_chat_model(item["model_name"])
+                            if len(item.get("tools", [])) > 0:
+                                request.tools = item.get("tools", [])
+                            break
 
         return handler(request)
 
@@ -161,10 +202,43 @@ class ModelRouterMiddleware(AgentMiddleware):
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
         messages = request.state.get("messages")
-        # when the last message is human message, we will use router model to select model
-        if len(messages) > 0 and isinstance(messages[-1], HumanMessage):
-            model_name = await self._aselect_model(messages)
-            if model_name is not None:
-                request.model = load_chat_model(model_name)
+        # when the last message is human message or system message, we will use router model to select model
+        if len(messages) > 0:
+            if isinstance(messages[-1], HumanMessage) or isinstance(
+                messages[-1], SystemMessage
+            ):
+                model_name = await self._aselect_model(messages)
+                model_tool_dict = {
+                    item["model_name"]: item.get("tools", [])
+                    for item in self.model_list
+                }
+                if model_name is not None and model_name in model_tool_dict:
+                    request.model = load_chat_model(model_name)
+                    if len(model_tool_dict[model_name]) > 0:
+                        request.tools = model_tool_dict[model_name]
+
+            elif isinstance(messages[-1], ToolMessage) or isinstance(
+                messages[-1], AIMessage
+            ):
+                if isinstance(messages[-1], ToolMessage):
+                    for msg in reversed(messages):
+                        if isinstance(msg, AIMessage):
+                            last_ai_message = msg
+                            break
+                else:
+                    last_ai_message = messages[-1]
+
+                if isinstance(last_ai_message, AIMessage):
+                    model_name = last_ai_message.response_metadata.get("model_name")
+                else:
+                    model_name = None
+
+                if model_name is not None:
+                    for item in self.model_list:
+                        if item["model_name"].endswith(model_name):
+                            request.model = load_chat_model(item["model_name"])
+                            if len(item.get("tools", [])) > 0:
+                                request.tools = item.get("tools", [])
+                            break
 
         return await handler(request)
