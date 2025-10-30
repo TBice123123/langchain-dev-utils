@@ -2,5 +2,6 @@
   "python.testing.pytestArgs": ["tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-  "search.useIgnoreFiles": true
+  "search.useIgnoreFiles": true,
+  "python.analysis.typeCheckingMode": "off"
 }

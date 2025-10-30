@@ -1,11 +1,11 @@
+from dotenv import load_dotenv
 from langchain.tools import tool
+from langchain_community.chat_models import ChatTongyi
 from langchain_core.messages import HumanMessage, ToolMessage
 
 from langchain_dev_utils.agents import create_agent
 from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
 from langchain_dev_utils.chat_models import batch_register_model_provider
-from dotenv import load_dotenv
-from langchain_community.chat_models import ChatTongyi
 
 load_dotenv()
 

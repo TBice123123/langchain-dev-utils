@@ -324,36 +324,44 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         parallel_tool_calls: bool | None = None,
         **kwargs: Any,
     ) -> Runnable[LanguageModelInput, AIMessage]:
-        support_tool_choice = False
-        if tool_choice is not None and isinstance(tool_choice, str):
-            if (
-                tool_choice in ["auto", "none", "any", "required"]
-                and tool_choice in self._supported_tool_choice
-            ):
-                support_tool_choice = True
+        if parallel_tool_calls is not None:
+            kwargs["parallel_tool_calls"] = parallel_tool_calls
+        formatted_tools = [
+            convert_to_openai_tool(tool, strict=strict) for tool in tools
+        ]
 
-            elif "specific" in self._supported_tool_choice:
-                formatted_tools = [
-                    convert_to_openai_tool(tool, strict=strict) for tool in tools
-                ]
-                tool_names = []
-                for tool in formatted_tools:
-                    if "function" in tool:
-                        tool_names.append(tool["function"]["name"])
-                    elif "name" in tool:
-                        tool_names.append(tool["name"])
-                    else:
-                        pass
-                if tool_choice in tool_names:
+        tool_names = []
+        for tool in formatted_tools:
+            if "function" in tool:
+                tool_names.append(tool["function"]["name"])
+            elif "name" in tool:
+                tool_names.append(tool["name"])
+            else:
+                pass
+
+        support_tool_choice = False
+        if tool_choice is not None:
+            if isinstance(tool_choice, bool):
+                tool_choice = "required"
+            if isinstance(tool_choice, str):
+                if (
+                    tool_choice in ["auto", "none", "any", "required"]
+                    and tool_choice in self._supported_tool_choice
+                ):
                     support_tool_choice = True
-        tool_choice = tool_choice if support_tool_choice else None
-        return super().bind_tools(
-            tools,
-            tool_choice=tool_choice,
-            strict=strict,
-            parallel_tool_calls=parallel_tool_calls,
-            **kwargs,
-        )
+
+                elif "specific" in self._supported_tool_choice:
+                    if tool_choice in tool_names:
+                        support_tool_choice = True
+                        tool_choice = {
+                            "type": "function",
+                            "function": {"name": tool_choice},
+                        }
+            tool_choice = tool_choice if support_tool_choice else None
+        if tool_choice:
+            kwargs["tool_choice"] = tool_choice
+        print(kwargs)
+        return super().bind(tools=formatted_tools, **kwargs)
 
     def with_structured_output(
         self,

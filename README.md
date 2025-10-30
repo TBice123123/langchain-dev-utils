@@ -1,8 +1,10 @@
-# langchain-dev-utils
+# 🦜️🔗 langchain-dev-utils
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg)](https://pypi.org/project/langchain-dev-utils/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/your-username/langchain-dev-utils/blob/main/LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-1CA020)](https://www.python.org/downloads/)
+[![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
+[![Documentation](https://img.shields.io/badge/docs-github-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/en/)
 
 **langchain-dev-utils** is a practical utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions that not only reduce repetitive code writing but also improve code consistency and readability. By streamlining development workflows, this library helps you prototype faster, iterate more smoothly, and create clearer, more reliable LLM-based AI applications.
 
@@ -182,14 +184,13 @@ Middleware Usage:
 ```python
 from langchain_dev_utils.agents.middleware import (
     SummarizationMiddleware,
-    LLMToolSelectorMiddleware,
     PlanMiddleware,
 )
 
 agent=create_agent(
     "vllm:qwen3-4b",
     name="plan-agent",
-    middleware=[PlanMiddleware(), SummarizationMiddleware(model="vllm:qwen3-4b"), LLMToolSelectorMiddleware(model="vllm:qwen3-4b")]
+    middleware=[PlanMiddleware(), SummarizationMiddleware(model="vllm:qwen3-4b")]
 )
 response = agent.invoke({"messages": [{"role": "user", "content": "Give me a travel plan to New York"}]}))
 print(response)
