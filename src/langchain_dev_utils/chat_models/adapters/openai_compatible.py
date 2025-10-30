@@ -360,7 +360,6 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             tool_choice = tool_choice if support_tool_choice else None
         if tool_choice:
             kwargs["tool_choice"] = tool_choice
-        print(kwargs)
         return super().bind(tools=formatted_tools, **kwargs)
 
     def with_structured_output(
