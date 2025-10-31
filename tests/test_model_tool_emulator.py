@@ -29,7 +29,6 @@ def test_model_tool_emulator():
     response = agent.invoke(
         {"messages": [HumanMessage("What's the weather in New York?")]}
     )
-    print(response)
 
     message = response["messages"][-2]
     assert isinstance(message, ToolMessage)

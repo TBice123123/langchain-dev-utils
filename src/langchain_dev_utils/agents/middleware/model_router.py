@@ -1,15 +1,12 @@
 from typing import Any, Awaitable, Callable, NotRequired, Optional, cast
 
+from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 from langchain.agents.middleware.types import ModelCallResult
-from langchain_core.messages import (
-    AIMessage,
-    AnyMessage,
-    HumanMessage,
-    SystemMessage,
-    ToolMessage,
-)
+from langchain_core.language_models import BaseChatModel
+from langchain_core.messages import AnyMessage, SystemMessage
 from langchain_core.tools import BaseTool
+from langgraph.runtime import Runtime
 from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 
@@ -21,6 +18,7 @@ class ModelDict(TypedDict):
     model_name: str
     model_description: str
     tools: NotRequired[list[BaseTool | dict[str, Any]]]
+    model_kwargs: NotRequired[dict[str, Any]]
 
 
 class SelectModel(BaseModel):
@@ -64,12 +62,16 @@ Strictly adhere to tool call requirements!
 """
 
 
+class ModelRouterState(AgentState):
+    router_model_selection: str
+
+
 class ModelRouterMiddleware(AgentMiddleware):
     """Model routing middleware that automatically selects the most suitable model based on input content.
 
     Args:
-        router_model: Model identifier used for routing selection
-        model_list: List of available routing models, each containing name and description
+        router_model: Model identifier used for routing selection, it can be a model name or a BaseChatModel instance
+        model_list: List of available routing models, each containing model_name, model_description, tools(Optional), model_kwargs(Optional)
         router_prompt: Routing prompt template, uses default template if None
 
     Examples:
@@ -99,16 +101,21 @@ class ModelRouterMiddleware(AgentMiddleware):
         ```
     """
 
+    state_schema = ModelRouterState
+
     def __init__(
         self,
-        router_model: str,
+        router_model: str | BaseChatModel,
         model_list: list[ModelDict],
         router_prompt: Optional[str] = None,
     ) -> None:
         super().__init__()
-        self.router_model = load_chat_model(router_model).with_structured_output(
-            SelectModel
-        )
+        if isinstance(router_model, BaseChatModel):
+            self.router_model = router_model.with_structured_output(SelectModel)
+        else:
+            self.router_model = load_chat_model(router_model).with_structured_output(
+                SelectModel
+            )
         self.model_list = model_list
 
         if router_prompt is None:
@@ -125,75 +132,57 @@ class ModelRouterMiddleware(AgentMiddleware):
         self.router_prompt = router_prompt
 
     def _select_model(self, messages: list[AnyMessage]):
-        try:
-            response = cast(
-                SelectModel,
-                self.router_model.invoke(
-                    [SystemMessage(content=self.router_prompt), *messages]
-                ),
-            )
-        except Exception:
-            return None
-        if response is None:
-            return None
-        return response.model_name
+        response = cast(
+            SelectModel,
+            self.router_model.invoke(
+                [SystemMessage(content=self.router_prompt), *messages]
+            ),
+        )
+        return response.model_name if response is not None else "default-model"
 
     async def _aselect_model(self, messages: list[AnyMessage]):
-        try:
-            response = cast(
-                SelectModel,
-                await self.router_model.ainvoke(
-                    [SystemMessage(content=self.router_prompt), *messages]
-                ),
-            )
-        except Exception:
-            return None
-        if response is None:
-            return None
-        return response.model_name
+        response = cast(
+            SelectModel,
+            await self.router_model.ainvoke(
+                [SystemMessage(content=self.router_prompt), *messages]
+            ),
+        )
+        return response.model_name if response is not None else "default-model"
+
+    def before_agent(
+        self, state: ModelRouterState, runtime: Runtime
+    ) -> dict[str, Any] | None:
+        model_name = self._select_model(state["messages"])
+        return {"router_model_selection": model_name}
+
+    async def abefore_agent(
+        self, state: ModelRouterState, runtime: Runtime
+    ) -> dict[str, Any] | None:
+        model_name = await self._aselect_model(state["messages"])
+        return {"router_model_selection": model_name}
 
     def wrap_model_call(
         self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelCallResult:
-        messages = request.state.get("messages")
-        # when the last message is human message or system message, we will use router model to select model
-        if len(messages) > 0:
-            if isinstance(messages[-1], HumanMessage) or isinstance(
-                messages[-1], SystemMessage
-            ):
-                model_name = self._select_model(messages)
-                model_tool_dict = {
-                    item["model_name"]: item.get("tools", [])
-                    for item in self.model_list
-                }
-                if model_name is not None and model_name in model_tool_dict:
-                    request.model = load_chat_model(model_name)
-                    if len(model_tool_dict[model_name]) > 0:
-                        request.tools = model_tool_dict[model_name]
-            elif isinstance(messages[-1], ToolMessage) or isinstance(
-                messages[-1], AIMessage
-            ):
-                if isinstance(messages[-1], ToolMessage):
-                    for msg in reversed(messages):
-                        if isinstance(msg, AIMessage):
-                            last_ai_message = msg
-                            break
+        model_dict = {
+            item["model_name"]: {
+                "tools": item.get("tools", []),
+                "kwargs": item.get("model_kwargs", None),
+            }
+            for item in self.model_list
+        }
+        select_model_name = request.state.get("router_model_selection", "default-model")
+        if select_model_name != "default-model":
+            if select_model_name in model_dict:
+                model_values = model_dict.get(select_model_name, {})
+                if model_values["kwargs"] is not None:
+                    request.model = load_chat_model(
+                        select_model_name, **model_values["kwargs"]
+                    )
                 else:
-                    last_ai_message = messages[-1]
-
-                if isinstance(last_ai_message, AIMessage):
-                    model_name = last_ai_message.response_metadata.get("model_name")
-                else:
-                    model_name = None
-
-                if model_name is not None:
-                    for item in self.model_list:
-                        if item["model_name"].endswith(model_name):
-                            request.model = load_chat_model(item["model_name"])
-                            if len(item.get("tools", [])) > 0:
-                                request.tools = item.get("tools", [])
-                            break
-
+                    request.model = load_chat_model(select_model_name)
+                if len(model_values["tools"]) > 0:
+                    request.tools = model_values["tools"]
         return handler(request)
 
     async def awrap_model_call(
@@ -201,44 +190,24 @@ class ModelRouterMiddleware(AgentMiddleware):
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        messages = request.state.get("messages")
-        # when the last message is human message or system message, we will use router model to select model
-        if len(messages) > 0:
-            if isinstance(messages[-1], HumanMessage) or isinstance(
-                messages[-1], SystemMessage
-            ):
-                model_name = await self._aselect_model(messages)
-                model_tool_dict = {
-                    item["model_name"]: item.get("tools", [])
-                    for item in self.model_list
-                }
-                if model_name is not None and model_name in model_tool_dict:
-                    request.model = load_chat_model(model_name)
-                    if len(model_tool_dict[model_name]) > 0:
-                        request.tools = model_tool_dict[model_name]
-
-            elif isinstance(messages[-1], ToolMessage) or isinstance(
-                messages[-1], AIMessage
-            ):
-                if isinstance(messages[-1], ToolMessage):
-                    for msg in reversed(messages):
-                        if isinstance(msg, AIMessage):
-                            last_ai_message = msg
-                            break
+        model_dict = {
+            item["model_name"]: {
+                "tools": item.get("tools", []),
+                "kwargs": item.get("model_kwargs", None),
+            }
+            for item in self.model_list
+        }
+        select_model_name = request.state.get("router_model_selection", "default-model")
+        if select_model_name != "default-model":
+            if select_model_name in model_dict:
+                model_values = model_dict.get(select_model_name, {})
+                if model_values["kwargs"] is not None:
+                    request.model = load_chat_model(
+                        select_model_name, **model_values["kwargs"]
+                    )
                 else:
-                    last_ai_message = messages[-1]
-
-                if isinstance(last_ai_message, AIMessage):
-                    model_name = last_ai_message.response_metadata.get("model_name")
-                else:
-                    model_name = None
-
-                if model_name is not None:
-                    for item in self.model_list:
-                        if item["model_name"].endswith(model_name):
-                            request.model = load_chat_model(item["model_name"])
-                            if len(item.get("tools", [])) > 0:
-                                request.tools = item.get("tools", [])
-                            break
+                    request.model = load_chat_model(select_model_name)
+                if len(model_values["tools"]) > 0:
+                    request.tools = model_values["tools"]
 
         return await handler(request)

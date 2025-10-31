@@ -40,14 +40,16 @@ def test_plan_tool():
 def test_plan_middleware():
     plan_middleware = PlanMiddleware()
 
-    agent = create_agent(
-        model="zai:glm-4.5",
-        middleware=[plan_middleware],
-        system_prompt="Please use the `write_plan` tool to specify a plan, and the number of plans must be 3. Then execute these plans one by one using the `finish_sub_plan` tool to update the plan status. Finally, make sure that the status of all plans is `done`",
-    )
+    agent = create_agent(model="zai:glm-4.5", middleware=[plan_middleware])
 
     result = agent.invoke(
-        {"messages": [HumanMessage(content="Please start executing")]}
+        {
+            "messages": [
+                HumanMessage(
+                    content="Please use the `write_plan` tool to specify a plan, and the number of plans must be 3. Then execute these plans one by one using the `finish_sub_plan` tool to update the plan status. Finally, make sure that the status of all plans is `done`"
+                )
+            ]
+        }
     )
 
     assert result["plan"]
