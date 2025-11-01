@@ -42,6 +42,13 @@ def test_model_router_middleware():
                         "model_name": "zai:glm-4.5",
                         "model_description": "The model with the strongest coding performance",
                         "tools": [run_python_code],
+                        "model_kwargs": {
+                            "extra_body": {
+                                "thinking": {
+                                    "type": "enabled",
+                                },
+                            }
+                        },
                     },
                 ],
             )
@@ -77,6 +84,13 @@ async def test_model_router_middleware_async():
                         "model_name": "zai:glm-4.5",
                         "model_description": "The model with the strongest coding performance",
                         "tools": [run_python_code],
+                        "model_kwargs": {
+                            "extra_body": {
+                                "thinking": {
+                                    "type": "enabled",
+                                },
+                            }
+                        },
                     },
                 ],
             )

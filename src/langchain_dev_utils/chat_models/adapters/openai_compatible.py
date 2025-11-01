@@ -165,6 +165,11 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         if not isinstance(response, openai.BaseModel):
             return rtn
 
+        for generation in rtn.generations:
+            if generation.message.response_metadata is None:
+                generation.message.response_metadata = {}
+            generation.message.response_metadata["model_provider"] = "openai-compatible"
+
         choices = getattr(response, "choices", None)
         if choices and hasattr(choices[0].message, "reasoning_content"):
             rtn.generations[0].message.additional_kwargs["reasoning_content"] = choices[
@@ -178,10 +183,6 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 rtn.generations[0].message.additional_kwargs["reasoning_content"] = (
                     reasoning
                 )
-
-        if rtn.llm_output and rtn.llm_output.get("model_provider") == "openai":
-            # Remove model_provider=openai from dict to ensure default content_blocks parsing is used instead of openai's.
-            rtn.llm_output.pop("model_provider", None)
 
         return rtn
 
@@ -213,6 +214,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         if (choices := chunk.get("choices")) and generation_chunk:
             top = choices[0]
             if isinstance(generation_chunk.message, AIMessageChunk):
+                generation_chunk.message.response_metadata = {
+                    **generation_chunk.message.response_metadata,
+                    "model_provider": "openai-compatible",
+                }
                 if (
                     reasoning_content := top.get("delta", {}).get("reasoning_content")
                 ) is not None:
@@ -223,15 +228,6 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                     generation_chunk.message.additional_kwargs["reasoning_content"] = (
                         reasoning
                     )
-        if not generation_chunk:
-            return generation_chunk
-        message_chunk = generation_chunk.message
-        if (
-            message_chunk.response_metadata
-            and message_chunk.response_metadata.get("model_provider") == "openai"
-        ):
-            # Remove model_provider=openai from dict to ensure default content_blocks parsing is used instead of openai's.
-            message_chunk.response_metadata.pop("model_provider", None)
 
         return generation_chunk
 

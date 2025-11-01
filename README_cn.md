@@ -1,10 +1,14 @@
-# 🦜️🔗 langchain-dev-utils
+# 🦜️🧰 langchain-dev-utils
 
-[![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg)](https://pypi.org/project/langchain-dev-utils/)
+<p align="center">
+    <em>用于 LangChain 和 LangGraph 开发的实用工具库。</em>
+</p>
+
+[![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-1CA020)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
-[![Documentation](https://img.shields.io/badge/docs-github-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
 
 > 当前为中文版，英文版请访问[English Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README.md)
 
@@ -28,24 +32,31 @@ pip install -U langchain-dev-utils[standard]
 
 ### 1. **模型管理**
 
-在 `langchain` 中，`init_chat_model` 函数可用于初始化对话模型实例，但其支持的模型提供商较为有限。本模块提供了一个注册函数（`register_model_provider`/`register_embeddings_provider`），方便注册任意模型提供商，以便后续使用 `load_chat_model` / `load_embeddings` 进行模型加载。
+在 `langchain` 中，`init_chat_model`/`init_embeddings` 函数可用于初始化对话模型实例/嵌入模型实例，但其支持的模型提供商较为有限。本模块提供了一个注册函数（`register_model_provider`/`register_embeddings_provider`），方便注册任意模型提供商，以便后续使用 `load_chat_model` / `load_embeddings` 进行模型加载。
+
+#### 1.1 对话模型管理
+
+主要有以下两个函数：
+
+- `register_model_provider`：注册对话模型提供商
+- `load_chat_model`：加载对话模型
 
 `register_model_provider` 参数说明：
 
 - `provider_name`：模型提供商名称，作为后续模型加载的标识
 - `chat_model`：对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址
+- `base_url`：模型提供商的 API 地址（可选，当 `chat_model` 为字符串时有效）
+- `tool_choice`：模型提供商支持的所有的 tool_choice 列表（可选，当 `chat_model` 为字符串时有效）
 
-`register_embeddings_provider` 参数说明：
+`load_chat_model` 参数说明：
 
-- `provider_name`：嵌入模型提供商名称，作为后续模型加载的标识
-- `embeddings_model`：嵌入模型，可以是 Embeddings 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址
+- `model`：对话模型名称，类型为 str
+- `model_provider`：对话模型提供商名称，类型为 str，可选
+- `kwargs`：传递给对话模型类的额外的参数，例如 temperature、top_p 等
 
-使用示例：
+假设接入使用`vllm`部署的 qwen3-4b 模型，则参考代码如下：
 
 ```python
-# 对话模型管理
 from langchain_dev_utils.chat_models import (
     register_model_provider,
     load_chat_model,
@@ -63,22 +74,44 @@ model = load_chat_model("vllm:qwen3-4b")
 print(model.invoke("Hello"))
 ```
 
-嵌入模型使用：
+#### 1.2 嵌入模型管理
+
+主要有以下两个函数：
+
+- `register_embeddings_provider`：注册嵌入模型提供商
+- `load_embeddings`：加载嵌入模型
+
+`register_embeddings_provider` 参数说明：
+
+- `provider_name`：嵌入模型提供商名称，作为后续模型加载的标识
+- `embeddings_model`：嵌入模型，可以是 Embeddings 或字符串（目前支持 "openai-compatible"）
+- `base_url`：模型提供商的 API 地址（可选，当 `embeddings_model` 为字符串时有效）
+
+`load_embeddings` 参数说明：
+
+- `model`：嵌入模型名称，类型为 str
+- `provider`：嵌入模型提供商名称，类型为 str，可选
+- `kwargs`：其它额外的参数
+
+假设接入使用`vllm`部署的 qwen3-embedding-4b 模型，则参考代码如下：
 
 ```python
 from langchain_dev_utils.embeddings import register_embeddings_provider, load_embeddings
 
+# 注册嵌入模型提供商
 register_embeddings_provider(
     provider_name="vllm",
     embeddings_model="openai-compatible",
     base_url="http://localhost:8000/v1",
 )
+
+# 加载嵌入模型
 embeddings = load_embeddings("vllm:qwen3-embedding-4b")
 emb = embeddings.embed_query("Hello")
 print(emb)
 ```
 
-**了解更多**: [对话模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/chat.html)、[嵌入模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/embedding.html)
+**对于更多关于模型管理的相关介绍，请参考**: [对话模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/chat.html)、[嵌入模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/embedding.html)
 
 ### 2. **消息转换**
 
@@ -88,36 +121,31 @@ print(emb)
 - 流式内容合并
 - 内容格式化工具
 
-将思维链内容合并到最终响应：
+#### 2.1 流式内容合并
 
-```python
-from langchain_dev_utils.message_convert import (
-    convert_reasoning_content_for_ai_message,
-    convert_reasoning_content_for_chunk_iterator,
-    merge_ai_message_chunk,
-    format_sequence
-)
+对于使用`stream()`和`astream()`所获得的流式响应，可以使用`merge_ai_message_chunk`进行合并为一个最终的 AIMessage。
 
-response = model.invoke("Hello")
+`merge_ai_message_chunk` 参数说明：
 
-cleaned = convert_reasoning_content_for_ai_message(
-    response, think_tag=("<think>", "</think>")
-)
-
-for chunk in convert_reasoning_content_for_chunk_iterator(
-    model.stream("Hello")
-):
-    print(chunk.content, end="", flush=True)
-```
-
-合并流式响应：
+- `chunks`：AIMessageChunk 列表
 
 ```python
 chunks = list(model.stream("Hello"))
 merged = merge_ai_message_chunk(chunks)
 ```
 
-格式化序列：
+#### 2.2 格式化列表内容
+
+对于一个列表，可以使用`format_sequence`进行格式化。
+
+`format_sequence` 参数说明：
+
+- `inputs`：包含以下任意类型的列表：
+  - langchain_core.messages：HumanMessage、AIMessage、SystemMessage、ToolMessage
+  - langchain_core.documents.Document
+  - str
+- `separator`：用于连接内容的字符串，默认为 "-"。
+- `with_num`：如果为 True，为每个项目添加数字前缀（例如 "1. 你好"），默认为 False。
 
 ```python
 text = format_sequence([
@@ -127,7 +155,7 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**了解更多**: [模型处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/message.html),[格式化列表内容](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/format.html)
+**对于更多关于消息转换的相关介绍，请参考**: [消息处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/message.html),[格式化列表内容](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/format.html)
 
 ### 3. **工具调用**
 
@@ -136,16 +164,27 @@ text = format_sequence([
 - 检查和解析工具调用
 - 添加人机交互功能
 
-使用示例：
+#### 3.1 检查和解析工具调用
+
+`has_tool_calling`和`parse_tool_calling`用于检查和解析工具调用。
+
+`has_tool_calling` 参数说明：
+
+- `message`：AIMessage 对象
+
+`parse_tool_calling` 参数说明：
+
+- `message`：AIMessage 对象
+- `first_tool_call_only`：是否只检查第一个工具调用
 
 ```python
 import datetime
 from langchain_core.tools import tool
-from langchain_dev_utils.tool_calling import has_tool_calling, parse_tool_calling, human_in_the_loop
+from langchain_dev_utils.tool_calling import has_tool_calling, parse_tool_calling
 from langchain_core.messages import AIMessage
 from typing import cast
 
-@human_in_the_loop
+
 def get_current_time() -> str:
     """获取当前时间戳"""
     return str(datetime.datetime.now().timestamp())
@@ -159,7 +198,26 @@ if has_tool_calling(cast(AIMessage, response)):
     print(name, args)
 ```
 
-**了解更多**: [添加人在回路支持](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/human-in-loop.html),[工具调用处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/tool.html)
+#### 3.2 添加人机交互功能
+
+- `human_in_the_loop`：用于同步工具函数
+- `human_in_the_loop_async`：用于异步工具函数
+
+其中都可以传递`handler`参数，用于自定义断点返回和响应处理逻辑。
+
+```python
+from langchain_dev_utils import human_in_the_loop
+from langchain_core.tools import tool
+import datetime
+
+@human_in_the_loop
+@tool
+def get_current_time() -> str:
+    """获取当前时间戳"""
+    return str(datetime.datetime.now().timestamp())
+```
+
+**对于更多关于工具调用的相关介绍，请参考**: [添加人在回路支持](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/human-in-loop.html),[工具调用处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/tool.html)
 
 ### 4. **智能体开发**
 
@@ -167,6 +225,10 @@ if has_tool_calling(cast(AIMessage, response)):
 
 - 预设的智能体工厂函数
 - 常用的中间件组件
+
+#### 4.1 智能体工厂函数
+
+`create_agent`用于创建智能体。提供了与官方`create_agent`一致的接口和功能。但是其中第一个参数 model 参数只能传递字符串。
 
 使用示例：
 
@@ -179,7 +241,13 @@ response = agent.invoke({"messages": [{"role": "user", "content": "现在几点�
 print(response)
 ```
 
-中间件使用：
+#### 4.2 中间件
+
+提供了一些常用的中间件组件。下面以`SummarizationMiddleware`和`PlanMiddleware`为例。
+
+`SummarizationMiddleware`用于智能体的总结。
+
+`PlanMiddleware`用于智能体的计划。
 
 ```python
 from langchain_dev_utils.agents.middleware import (
@@ -196,7 +264,7 @@ response = agent.invoke({"messages": [{"role": "user", "content": "给我一个�
 print(response)
 ```
 
-**了解更多**: [预构建智能体函数](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/prebuilt.html),[中间件](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/middleware.html)
+**对于更多关于智能体开发以及所有的内置中间件的相关介绍，请参考**: [预构建智能体函数](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/prebuilt.html),[中间件](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/middleware.html)
 
 ### 5. **状态图编排**
 
@@ -205,7 +273,20 @@ print(response)
 - 顺序图编排
 - 并行图编排
 
+#### 5.1 顺序图编排
+
 顺序图编排：
+采用`sequential_pipeline`，支持的参数如下:
+
+- `sub_graphs`: 要组合的状态图列表（必须是 StateGraph 实例）
+- `state_schema`: 最终生成图的 State Schema
+- `graph_name`: 最终生成图的名称（可选）
+- `context_schema`: 最终生成图的 Context Schema（可选）
+- `input_schema`: 最终生成图的输入 Schema（可选）
+- `output_schema`: 最终生成图的输出 Schema（可选）
+- `checkpoint`: LangGraph 的持久化 Checkpoint（可选）
+- `store`: LangGraph 的持久化 Store（可选）
+- `cache`: LangGraph 的 Cache（可选）
 
 ```python
 from langchain.agents import AgentState
@@ -249,7 +330,21 @@ response = graph.invoke({"messages": [HumanMessage("你好")]})
 print(response)
 ```
 
+#### 5.2 并行图编排
+
 并行图编排：
+采用`parallel_pipeline`，支持的参数如下:
+
+- `sub_graphs`: 要组合的状态图列表
+- `state_schema`: 最终生成图的 State Schema
+- `branches_fn`: 并行分支函数，返回 Send 对象列表控制并行执行
+- `graph_name`: 最终生成图的名称（可选）
+- `context_schema`: 最终生成图的 Context Schema（可选）
+- `input_schema`: 最终生成图的输入 Schema（可选）
+- `output_schema`: 最终生成图的输出 Schema（可选）
+- `checkpoint`: LangGraph 的持久化 Checkpoint（可选）
+- `store`: LangGraph 的持久化 Store（可选）
+- `cache`: LangGraph 的 Cache（可选）
 
 ```python
 from langchain_dev_utils.pipeline import parallel_pipeline
@@ -282,10 +377,10 @@ response = graph.invoke({"messages": [HumanMessage("你好")]})
 print(response)
 ```
 
-**了解更多**: [状态图编排管道](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration/pipeline.html)
+**对于更多关于状态图编排的相关介绍，请参考**: [状态图编排管道](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration/pipeline.html)
 
 ## 💬 加入社区
 
-- 🐙 [GitHub 仓库](https://github.com/TBice123123/langchain-dev-utils) — 浏览源代码，提交 Pull Request
-- 🐞 [问题追踪](https://github.com/TBice123123/langchain-dev-utils/issues) — 报告 Bug 或提出改进建议
-- 💡 我们欢迎各种形式的贡献 —— 无论是代码、文档还是使用示例。让我们一起构建一个更强大、更实用的 LangChain 开发生态系统！
+- [GitHub 仓库](https://github.com/TBice123123/langchain-dev-utils) — 浏览源代码，提交 Pull Request
+- [问题追踪](https://github.com/TBice123123/langchain-dev-utils/issues) — 报告 Bug 或提出改进建议
+- 我们欢迎各种形式的贡献 —— 无论是代码、文档还是使用示例。让我们一起构建一个更强大、更实用的 LangChain 开发生态系统！
