@@ -19,6 +19,7 @@ class ModelDict(TypedDict):
     model_description: str
     tools: NotRequired[list[BaseTool | dict[str, Any]]]
     model_kwargs: NotRequired[dict[str, Any]]
+    model_system_prompt: NotRequired[str]
 
 
 class SelectModel(BaseModel):
@@ -71,7 +72,7 @@ class ModelRouterMiddleware(AgentMiddleware):
 
     Args:
         router_model: Model identifier used for routing selection, it can be a model name or a BaseChatModel instance
-        model_list: List of available routing models, each containing model_name, model_description, tools(Optional), model_kwargs(Optional)
+        model_list: List of available routing models, each containing model_name, model_description, tools(Optional), model_kwargs(Optional), model_system_prompt(Optional)
         router_prompt: Routing prompt template, uses default template if None
 
     Examples:
@@ -168,6 +169,7 @@ class ModelRouterMiddleware(AgentMiddleware):
             item["model_name"]: {
                 "tools": item.get("tools", []),
                 "kwargs": item.get("model_kwargs", None),
+                "system_prompt": item.get("model_system_prompt", None),
             }
             for item in self.model_list
         }
@@ -183,6 +185,8 @@ class ModelRouterMiddleware(AgentMiddleware):
                     request.model = load_chat_model(select_model_name)
                 if len(model_values["tools"]) > 0:
                     request.tools = model_values["tools"]
+                if model_values["system_prompt"] is not None:
+                    request.system_prompt = model_values["system_prompt"]
         return handler(request)
 
     async def awrap_model_call(
@@ -194,6 +198,7 @@ class ModelRouterMiddleware(AgentMiddleware):
             item["model_name"]: {
                 "tools": item.get("tools", []),
                 "kwargs": item.get("model_kwargs", None),
+                "system_prompt": item.get("model_system_prompt", None),
             }
             for item in self.model_list
         }
@@ -209,5 +214,6 @@ class ModelRouterMiddleware(AgentMiddleware):
                     request.model = load_chat_model(select_model_name)
                 if len(model_values["tools"]) > 0:
                     request.tools = model_values["tools"]
-
+                if model_values["system_prompt"] is not None:
+                    request.system_prompt = model_values["system_prompt"]
         return await handler(request)

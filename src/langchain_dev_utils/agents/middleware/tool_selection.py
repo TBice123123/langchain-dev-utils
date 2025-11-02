@@ -8,26 +8,54 @@ from langchain_dev_utils.chat_models.base import load_chat_model
 
 
 class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
-    """Uses an LLM to select relevant tools before calling the main model.
+    """Intelligent tool selection middleware using LLM to filter relevant tools.
 
-    When an agent has many tools available, this middleware filters them down
-    to only the most relevant ones for the user's query. This reduces token usage
-    and helps the main model focus on the right tools.
+    This middleware leverages a language model to analyze user queries and select
+    only the most relevant tools from a potentially large toolset. This optimization
+    reduces token consumption and improves model performance by focusing on appropriate tools.
+
+    The selection process analyzes the user's request and matches it against available
+    tool descriptions to determine relevance.
 
     Args:
-        model: Model to use for selection. Only string identifiers are supported.
-        system_prompt: Instructions for the selection model.
-        max_tools: Maximum number of tools to select. If the model selects more,
-            only the first max_tools will be used. No limit if not specified.
-        always_include: Tool names to always include regardless of selection.
-            These do not count against the max_tools limit.
+        model: String identifier for the model to use for tool selection.
+            Must be a valid model identifier that can be loaded by load_chat_model().
+        system_prompt: Custom instructions for the selection model. If not provided,
+            uses the default selection prompt from the parent class.
+        max_tools: Maximum number of tools to select and pass to the main model.
+            If the LLM selects more tools than this limit, only the first max_tools
+            tools will be used. If None, no limit is applied.
+        always_include: List of tool names that must always be included in the
+            selection regardless of the LLM's decision. These tools do not count
+            against the max_tools limit.
 
     Examples:
-        Limit to 3 tools:
+        Basic usage with tool limit:
         ```python
         from langchain_dev_utils.agents.middleware import LLMToolSelectorMiddleware
 
-        middleware = LLMToolSelectorMiddleware(model="vllm:qwen3-4b", max_tools=3)
+        middleware = LLMToolSelectorMiddleware(
+            model="vllm:qwen3-4b",
+            max_tools=3
+        )
+        ```
+
+        With always-included tools:
+        ```python
+        middleware = LLMToolSelectorMiddleware(
+            model="openai:gpt-4",
+            max_tools=5,
+            always_include=["search", "calculator"]
+        )
+        ```
+
+        With custom system prompt:
+        ```python
+        custom_prompt = "Select tools that can help answer user questions about data."
+        middleware = LLMToolSelectorMiddleware(
+            model="anthropic:claude-3",
+            system_prompt=custom_prompt
+        )
         ```
     """
 
