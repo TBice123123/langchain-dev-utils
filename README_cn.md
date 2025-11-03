@@ -217,7 +217,7 @@ def get_current_time() -> str:
     return str(datetime.datetime.now().timestamp())
 ```
 
-**对于更多关于工具调用的相关介绍，请参考**: [添加人在回路支持](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/human-in-loop.html),[工具调用处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/tool.html)
+**对于更多关于工具调用的相关介绍，请参考**: [添加人在回路支持](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/human-in-the-loop.html),[工具调用处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/tool.html)
 
 ### 4. **智能体开发**
 

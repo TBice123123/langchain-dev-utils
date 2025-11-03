@@ -10,8 +10,11 @@ from langgraph.types import interrupt
 import pytest
 from typing_extensions import TypedDict
 
-from langchain_dev_utils.tool_calling import human_in_the_loop, human_in_the_loop_async
-from langchain_dev_utils.tool_calling.human_in_loop import InterruptParams
+from langchain_dev_utils.tool_calling import (
+    human_in_the_loop,
+    human_in_the_loop_async,
+    InterruptParams,
+)
 
 
 def handler(params: InterruptParams):

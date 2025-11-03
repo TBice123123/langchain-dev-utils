@@ -86,7 +86,8 @@ class ModelRouterMiddleware(AgentMiddleware):
             },
             {
                 "model_name": "openrouter:qwen/qwen3-vl-32b-instruct",
-                "model_description": "For visual tasks"
+                "model_description": "For visual tasks",
+                "tools": []
             },
             {
                 "model_name": "openrouter:qwen/qwen3-coder-plus",
@@ -167,7 +168,7 @@ class ModelRouterMiddleware(AgentMiddleware):
     ) -> ModelCallResult:
         model_dict = {
             item["model_name"]: {
-                "tools": item.get("tools", []),
+                "tools": item.get("tools", None),
                 "kwargs": item.get("model_kwargs", None),
                 "system_prompt": item.get("model_system_prompt", None),
             }
@@ -183,7 +184,7 @@ class ModelRouterMiddleware(AgentMiddleware):
                     )
                 else:
                     request.model = load_chat_model(select_model_name)
-                if len(model_values["tools"]) > 0:
+                if model_values["tools"] is not None:
                     request.tools = model_values["tools"]
                 if model_values["system_prompt"] is not None:
                     request.system_prompt = model_values["system_prompt"]
@@ -212,7 +213,7 @@ class ModelRouterMiddleware(AgentMiddleware):
                     )
                 else:
                     request.model = load_chat_model(select_model_name)
-                if len(model_values["tools"]) > 0:
+                if model_values["tools"] is not None:
                     request.tools = model_values["tools"]
                 if model_values["system_prompt"] is not None:
                     request.system_prompt = model_values["system_prompt"]

@@ -217,7 +217,7 @@ def get_current_time() -> str:
     return str(datetime.datetime.now().timestamp())
 ```
 
-**For more details on tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-loop.html), [Tool Call Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
+**For more details on tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-the-loop.html), [Tool Call Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
 
 ### 4. **Agent Development**
 
