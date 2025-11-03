@@ -181,19 +181,17 @@ text = format_sequence([
 import datetime
 from langchain_core.tools import tool
 from langchain_dev_utils.tool_calling import has_tool_calling, parse_tool_calling
-from langchain_core.messages import AIMessage
-from typing import cast
 
-
+@tool
 def get_current_time() -> str:
     """获取当前时间戳"""
     return str(datetime.datetime.now().timestamp())
 
 response = model.bind_tools([get_current_time]).invoke("现在几点了？")
 
-if has_tool_calling(cast(AIMessage, response)):
+if has_tool_calling(response):
     name, args = parse_tool_calling(
-        cast(AIMessage, response), first_tool_call_only=True
+        response, first_tool_call_only=True
     )
     print(name, args)
 ```
