@@ -197,7 +197,7 @@ class ModelRouterMiddleware(AgentMiddleware):
     ) -> ModelCallResult:
         model_dict = {
             item["model_name"]: {
-                "tools": item.get("tools", []),
+                "tools": item.get("tools", None),
                 "kwargs": item.get("model_kwargs", None),
                 "system_prompt": item.get("model_system_prompt", None),
             }
