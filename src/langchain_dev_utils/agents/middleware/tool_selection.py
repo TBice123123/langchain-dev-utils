@@ -43,7 +43,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         With always-included tools:
         ```python
         middleware = LLMToolSelectorMiddleware(
-            model="openai:gpt-4",
+            model="vllm:qwen3-4b",
             max_tools=5,
             always_include=["search", "calculator"]
         )
@@ -53,7 +53,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         ```python
         custom_prompt = "Select tools that can help answer user questions about data."
         middleware = LLMToolSelectorMiddleware(
-            model="anthropic:claude-3",
+            model="vllm:qwen3-4b",
             system_prompt=custom_prompt
         )
         ```

@@ -96,7 +96,7 @@ def default_handler(params: InterruptParams) -> Any:
 
 async def default_handler_async(params: InterruptParams) -> Any:
     request = _get_human_in_the_loop_request(params)
-    response = await interrupt(request)
+    response = interrupt(request)
 
     if response["type"] == "accept":
         return await params["tool"].ainvoke(params["tool_call_args"])

@@ -43,8 +43,8 @@ def create_agent(  # noqa: PLR0915
     Args:
         model: Model identifier string that can be loaded by `load_chat_model`.
                Can be specified as "provider:model-name" format.
-        *: All other parameters are the same as in langgraph.prebuilt.create_react_agent.
-           See langgraph.prebuilt.create_react_agent for documentation on available parameters.
+        *: All other parameters are the same as in langchain.agents.create_agent.
+           See langchain.agents.create_agent for documentation on available parameters.
 
     Returns:
         CompiledStateGraph: A compiled state graph representing the agent.

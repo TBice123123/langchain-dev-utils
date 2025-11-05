@@ -127,16 +127,6 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             self.async_client = self.root_async_client.chat.completions
         return self
 
-    def _get_request_payload(
-        self,
-        input_: LanguageModelInput,
-        *,
-        stop: Optional[list[str]] = None,
-        **kwargs: Any,
-    ) -> dict:
-        payload = super()._get_request_payload(input_, stop=stop, **kwargs)
-        return payload
-
     def _create_chat_result(
         self,
         response: Union[dict, openai.BaseModel],
