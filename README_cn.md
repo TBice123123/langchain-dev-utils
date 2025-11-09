@@ -4,6 +4,11 @@
     <em>用于 LangChain 和 LangGraph 开发的实用工具库。</em>
 </p>
 
+<p align="center">
+  📚 <a href="https://tbice123123.github.io/langchain-dev-utils-docs/en/">English</a> • 
+  <a href="https://tbice123123.github.io/langchain-dev-utils-docs/zh/">中文</a>
+</p>
+
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
@@ -226,7 +231,7 @@ def get_current_time() -> str:
 
 #### 4.1 智能体工厂函数
 
-`create_agent`用于创建智能体。提供了与官方`create_agent`一致的接口和功能。但是其中第一个参数 model 参数只能传递字符串。
+LangChain v1 版本中，官方提供的 `create_agent` 函数可以用于创建单智能体，其中 model 参数支持传入 BaseChatModel 实例或特定字符串（当传入字符串时，仅限于 `init_chat_model` 支持的模型）。为扩展字符串指定模型的灵活性，本库提供了功能相同的 `create_agent` 函数，使您能直接使用 `load_chat_model` 支持的模型（需要提取注册）。
 
 使用示例：
 

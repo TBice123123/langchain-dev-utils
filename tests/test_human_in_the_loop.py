@@ -84,17 +84,18 @@ def test_human_in_loop(tool: BaseTool, expected: Any):
         timestamp = tool.invoke({})
         return {"timestamp": timestamp, "messages": state["messages"]}
 
-    graph1 = StateGraph(State)
-    graph1.add_node("tool", run_tool)
-    graph1.add_edge("__start__", "tool")
+    graph = StateGraph(State)
+    graph.add_node("tool", run_tool)
+    graph.add_edge("__start__", "tool")
 
-    graph1 = graph1.compile()
+    graph = graph.compile()
 
-    for msg in graph1.stream(
+    for msg in graph.stream(
         {
             "timestamp": "",
             "messages": [HumanMessage("1")],
-        }
+        },
+        config={"configurable": {"thread_id": "1"}},
     ):
         assert "__interrupt__" in msg
         assert cast(tuple, msg.get("__interrupt__"))[0].value == expected
@@ -140,7 +141,8 @@ async def test_human_in_loop_async(tool: BaseTool, expected: Any):
         {
             "timestamp": "",
             "messages": [HumanMessage("1")],
-        }
+        },
+        config={"configurable": {"thread_id": "1"}},
     ):
         assert "__interrupt__" in msg
         assert cast(tuple, msg.get("__interrupt__"))[0].value == expected

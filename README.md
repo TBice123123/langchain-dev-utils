@@ -4,6 +4,11 @@
     <em>A utility library for LangChain and LangGraph development.</em>
 </p>
 
+<p align="center">
+  📚 <a href="https://tbice123123.github.io/langchain-dev-utils-docs/en/">English</a> • 
+  <a href="https://tbice123123.github.io/langchain-dev-utils-docs/zh/">中文</a>
+</p>
+
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
@@ -13,11 +18,6 @@
 > This is the English version. For the Chinese version, please see the [Chinese Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README_cn.md)
 
 **langchain-dev-utils** is a practical utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions that can both reduce repetitive code writing and improve code consistency and readability. By simplifying development workflows, this library helps you prototype faster, iterate more smoothly, and create clearer, more reliable LLM-based AI applications.
-
-## 📚 Documentation
-
-- [English Documentation](https://tbice123123.github.io/langchain-dev-utils-docs/en/)
-- [中文文档](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
 
 ## 🚀 Installation
 
@@ -226,7 +226,7 @@ Includes the following features:
 
 #### 4.1 Agent Factory Functions
 
-`create_agent` is used to create agents. It provides an interface and functionality consistent with the official `create_agent`. However, the first parameter, model, can only be a string.
+In LangChain v1, the officially provided `create_agent` function can be used to create a single agent, where the `model` parameter supports passing either a BaseChatModel instance or specific strings (when passing strings, limited to models supported by `init_chat_model`). To extend the flexibility of specifying models via strings, this library provides a functionally identical `create_agent` function that enables you to directly use models supported by `load_chat_model` (requires prior registration).
 
 Usage example:
 
