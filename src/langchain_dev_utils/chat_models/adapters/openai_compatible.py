@@ -24,7 +24,8 @@ from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool
 from langchain_core.utils import from_env, secret_from_env
 from langchain_core.utils.function_calling import convert_to_openai_tool
-from langchain_openai.chat_models.base import BaseChatOpenAI
+from langchain_openai.chat_models.base import BaseChatOpenAI, _convert_message_to_dict
+from langchain_openai.chat_models._compat import _convert_from_v1_to_chat_completions
 import openai
 from pydantic import (
     BaseModel,
@@ -78,6 +79,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
     _provider: str = PrivateAttr(default="openai-compatible")
     _supported_tool_choice: list[str] = PrivateAttr(default=[])
+    _keep_reasoning_content: bool = PrivateAttr(default=False)
 
     @property
     def _llm_type(self) -> str:
@@ -95,6 +97,39 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         ls_params = super()._get_ls_params(stop=stop, **kwargs)
         ls_params["ls_provider"] = self._provider
         return ls_params
+
+    def _get_request_payload(
+        self,
+        input_: LanguageModelInput,
+        *,
+        stop: list[str] | None = None,
+        **kwargs: Any,
+    ) -> dict:
+        messages = self._convert_input(input_).to_messages()
+        if stop is not None:
+            kwargs["stop"] = stop
+
+        payload = {**self._default_params, **kwargs}
+
+        payload_messages = []
+
+        for m in messages:
+            if isinstance(m, AIMessage):
+                msg_dict = _convert_message_to_dict(
+                    _convert_from_v1_to_chat_completions(m)
+                )
+                if self._keep_reasoning_content and m.additional_kwargs.get(
+                    "reasoning_content"
+                ):
+                    msg_dict["reasoning_content"] = m.additional_kwargs.get(
+                        "reasoning_content"
+                    )
+                payload_messages.append(msg_dict)
+            else:
+                payload_messages.append(_convert_message_to_dict(m))
+
+        payload["messages"] = payload_messages
+        return payload
 
     @model_validator(mode="after")
     def validate_environment(self) -> Self:
@@ -396,6 +431,7 @@ def _create_openai_compatible_model(
     tool_choice: Optional[
         list[Literal["auto", "none", "any", "required", "specific"]]
     ] = None,
+    keep_reasoning_content: bool = False,
 ) -> Type[_BaseChatOpenAICompatible]:
     """Factory function for creating provider-specific OpenAI-compatible model classes.
 
@@ -405,6 +441,8 @@ def _create_openai_compatible_model(
     Args:
         provider: Provider identifier (e.g., `vllm`)
         base_url: Default API base URL for the provider
+        tool_choice: List of tool choices for the model (e.g., ["auto", "none", "any", "required", "specific"])
+        keep_reasoning_content: Whether to keep reasoning content in the messages
 
     Returns:
         Configured model class ready for instantiation with provider-specific settings
@@ -435,5 +473,9 @@ def _create_openai_compatible_model(
         _supported_tool_choice=(
             list[str],
             PrivateAttr(default=tool_choice if tool_choice else []),
+        ),
+        _keep_reasoning_content=(
+            bool,
+            PrivateAttr(default=keep_reasoning_content),
         ),
     )

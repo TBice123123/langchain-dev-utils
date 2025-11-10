@@ -52,6 +52,7 @@ pip install -U langchain-dev-utils[standard]
 - `chat_model`：对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"）
 - `base_url`：模型提供商的 API 地址（可选，当 `chat_model` 为字符串时有效）
 - `tool_choice`：模型提供商支持的所有的 tool_choice 列表（可选，当 `chat_model` 为字符串时有效）
+- `keep_reasoning_content`：是否保留模型推理内容（`reasoning_content`）在后续 messages 中，默认 `False`，仅针对推理模型（可选，当 `chat_model` 为字符串时有效）
 
 `load_chat_model` 参数说明：
 

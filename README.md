@@ -47,6 +47,7 @@ Primarily consists of the following two functions:
 - `chat_model`: The chat model, which can be a ChatModel or a string (currently supports "openai-compatible")
 - `base_url`: The API address of the model provider (optional, valid when `chat_model` is a string)
 - `tool_choice`: List of all tool_choices supported by the model provider (optional, valid when `chat_model` is a string)
+- `keep_reasoning_content`: whether to retain the model's reasoning content in subsequent messages, defaults to `False`, only for reasoning models (optional, valid when `chat_model` is a string)
 
 `load_chat_model` parameter description:
 
