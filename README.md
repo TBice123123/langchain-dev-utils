@@ -117,7 +117,7 @@ print(emb)
 
 Includes the following features:
 
-- Merge chain-of-thought content into the final response
+- Merge reasoning content into the final response
 - Stream content merging
 - Content formatting tools
 
