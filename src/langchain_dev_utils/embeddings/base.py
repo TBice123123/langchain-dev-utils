@@ -9,7 +9,7 @@ EmbeddingsType = Union[type[Embeddings], Literal["openai-compatible"]]
 
 
 class EmbeddingProvider(TypedDict):
-    provider: str
+    provider_name: str
     embeddings_model: EmbeddingsType
     base_url: NotRequired[str]
 
@@ -113,7 +113,7 @@ def batch_register_embeddings_provider(
 
     Args:
         providers: List of EmbeddingProvider dictionaries, each containing:
-            - provider: str - Provider name
+            - provider_name: str - Provider name
             - embeddings_model: Union[Type[Embeddings], str] - Model class or provider string
             - base_url: Optional[str] - Base URL for API endpoints
 
@@ -127,8 +127,8 @@ def batch_register_embeddings_provider(
         >>>
         >>> batch_register_embeddings_provider(
         ...     [
-        ...         {"provider": "fakeembeddings", "embeddings_model": FakeEmbeddings},
-        ...         {"provider": "vllm", "embeddings_model": "openai-compatible", "base_url": "http://localhost:8000/v1"},
+        ...         {"provider_name": "fakeembeddings", "embeddings_model": FakeEmbeddings},
+        ...         {"provider_name": "vllm", "embeddings_model": "openai-compatible", "base_url": "http://localhost:8000/v1"},
         ...     ]
         ... )
         >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
@@ -138,7 +138,9 @@ def batch_register_embeddings_provider(
     """
     for provider in providers:
         register_embeddings_provider(
-            provider["provider"], provider["embeddings_model"], provider.get("base_url")
+            provider["provider_name"],
+            provider["embeddings_model"],
+            provider.get("base_url"),
         )
 
 

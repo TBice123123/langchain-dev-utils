@@ -12,10 +12,10 @@ load_dotenv()
 batch_register_model_provider(
     [
         {
-            "provider": "dashscope",
+            "provider_name": "dashscope",
             "chat_model": ChatTongyi,
         },
-        {"provider": "zai", "chat_model": "openai-compatible"},
+        {"provider_name": "zai", "chat_model": "openai-compatible"},
     ]
 )
 

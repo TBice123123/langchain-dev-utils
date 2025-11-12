@@ -19,11 +19,6 @@
 
 **langchain-dev-utils** 是一个专注于提升 LangChain 和 LangGraph 开发体验的实用工具库。它提供了一系列开箱即用的工具函数，既能减少重复代码编写，又能提高代码的一致性和可读性。通过简化开发工作流程，这个库可以帮助你更快地构建原型、更顺畅地进行迭代，并创建更清晰、更可靠的基于大语言模型的 AI 应用。
 
-## 📚 文档
-
-- [English Documentation](https://tbice123123.github.io/langchain-dev-utils-docs/en/)
-- [中文文档](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
-
 ## 🚀 安装
 
 ```bash
@@ -50,9 +45,8 @@ pip install -U langchain-dev-utils[standard]
 
 - `provider_name`：模型提供商名称，作为后续模型加载的标识
 - `chat_model`：对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址（可选，当 `chat_model` 为字符串时有效）
-- `tool_choice`：模型提供商支持的所有的 tool_choice 列表（可选，当 `chat_model` 为字符串时有效）
-- `keep_reasoning_content`：是否保留模型推理内容（`reasoning_content`）在后续 messages 中，默认 `False`，仅针对推理模型（可选，当 `chat_model` 为字符串时有效）
+- `base_url`：模型提供商的 API 地址（可选，当 `chat_model` 为字符串且是"openai-compatible"时有效）
+- `provider_config`：模型提供商的相关配置（可选，当 `chat_model` 为字符串且是 "openai-compatible" 时有效），可以配置一些提供商的相关参数，例如是否支持 json_mode 的结构化输出方式、支持的 tool_choice 列表等
 
 `load_chat_model` 参数说明：
 
@@ -91,7 +85,7 @@ print(model.invoke("Hello"))
 
 - `provider_name`：嵌入模型提供商名称，作为后续模型加载的标识
 - `embeddings_model`：嵌入模型，可以是 Embeddings 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址（可选，当 `embeddings_model` 为字符串时有效）
+- `base_url`：模型提供商的 API 地址（可选，当 `embeddings_model` 为字符串且是"openai-compatible"时有效）
 
 `load_embeddings` 参数说明：
 

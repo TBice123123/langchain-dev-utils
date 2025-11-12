@@ -24,8 +24,8 @@ from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool
 from langchain_core.utils import from_env, secret_from_env
 from langchain_core.utils.function_calling import convert_to_openai_tool
-from langchain_openai.chat_models.base import BaseChatOpenAI, _convert_message_to_dict
 from langchain_openai.chat_models._compat import _convert_from_v1_to_chat_completions
+from langchain_openai.chat_models.base import BaseChatOpenAI, _convert_message_to_dict
 import openai
 from pydantic import (
     BaseModel,
@@ -38,10 +38,17 @@ from pydantic import (
 )
 from typing_extensions import Self
 
+from ..types import ToolChoiceType
 
 _BM = TypeVar("_BM", bound=BaseModel)
 _DictOrPydanticClass = Union[dict[str, Any], type[_BM], type]
 _DictOrPydantic = Union[dict, _BM]
+
+
+class _ModelProviderConfigType(BaseModel):
+    supported_tool_choice: ToolChoiceType = Field(default=[])
+    keep_reasoning_content: bool = Field(default=False)
+    support_json_mode: bool = Field(default=False)
 
 
 class _BaseChatOpenAICompatible(BaseChatOpenAI):
@@ -78,8 +85,22 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     model_config = ConfigDict(populate_by_name=True)
 
     _provider: str = PrivateAttr(default="openai-compatible")
-    _supported_tool_choice: list[str] = PrivateAttr(default=[])
-    _keep_reasoning_content: bool = PrivateAttr(default=False)
+
+    provider_config: _ModelProviderConfigType = Field(
+        default_factory=lambda: _ModelProviderConfigType(),
+    )
+
+    @property
+    def _supported_tool_choice(self) -> ToolChoiceType:
+        return self.provider_config.supported_tool_choice
+
+    @property
+    def _keep_reasoning_content(self) -> bool:
+        return self.provider_config.keep_reasoning_content
+
+    @property
+    def _support_json_mode(self) -> bool:
+        return self.provider_config.support_json_mode
 
     @property
     def _llm_type(self) -> str:
@@ -366,7 +387,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 tool_choice = "required"
             if isinstance(tool_choice, str):
                 if (
-                    tool_choice in ["auto", "none", "any", "required"]
+                    tool_choice in ["auto", "none", "required"]
                     and tool_choice in self._supported_tool_choice
                 ):
                     support_tool_choice = True
@@ -416,6 +437,9 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         # Many providers do not support json_schema method, so fallback to function_calling
         if method == "json_schema":
             method = "function_calling"
+        if method == "json_mode" and not self._support_json_mode:
+            method = "function_calling"
+
         return super().with_structured_output(
             schema,
             method=method,
@@ -426,12 +450,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
 
 def _create_openai_compatible_model(
-    provider: str,
-    base_url: str,
-    tool_choice: Optional[
-        list[Literal["auto", "none", "any", "required", "specific"]]
-    ] = None,
-    keep_reasoning_content: bool = False,
+    provider: str, base_url: str
 ) -> Type[_BaseChatOpenAICompatible]:
     """Factory function for creating provider-specific OpenAI-compatible model classes.
 
@@ -469,13 +488,5 @@ def _create_openai_compatible_model(
         _provider=(
             str,
             PrivateAttr(default=provider),
-        ),
-        _supported_tool_choice=(
-            list[str],
-            PrivateAttr(default=tool_choice if tool_choice else []),
-        ),
-        _keep_reasoning_content=(
-            bool,
-            PrivateAttr(default=keep_reasoning_content),
         ),
     )

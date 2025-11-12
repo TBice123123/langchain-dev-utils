@@ -1,24 +1,25 @@
 import os
-from typing import Any, Literal, NotRequired, Optional, TypedDict, Union, cast
+from typing import Any, NotRequired, Optional, TypedDict, cast
 
 from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
 from langchain_core.language_models.chat_models import BaseChatModel
 
+from .types import ChatModelType, ToolChoiceType
+
 _MODEL_PROVIDERS_DICT = {}
 
 
-ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
-
-
-ToolChoiceType = list[Literal["auto", "none", "any", "required", "specific"]]
+class ProviderConfig(TypedDict):
+    supported_tool_choice: NotRequired[ToolChoiceType]
+    keep_reasoning_content: NotRequired[bool]
+    support_json_mode: NotRequired[bool]
 
 
 class ChatModelProvider(TypedDict):
-    provider: str
+    provider_name: str
     chat_model: ChatModelType
     base_url: NotRequired[str]
-    tool_choice: NotRequired[ToolChoiceType]
-    keep_reasoning_content: NotRequired[bool]
+    provider_config: NotRequired[ProviderConfig]
 
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
@@ -66,6 +67,10 @@ def _load_chat_model_helper(
     model, model_provider = _parse_model(model, model_provider)
     if model_provider in _MODEL_PROVIDERS_DICT.keys():
         chat_model = _MODEL_PROVIDERS_DICT[model_provider]["chat_model"]
+        if provider_config := _MODEL_PROVIDERS_DICT[model_provider].get(
+            "provider_config"
+        ):
+            kwargs.update({"provider_config": provider_config})
         return chat_model(model=model, **kwargs)
 
     return _init_chat_model_helper(model, model_provider=model_provider, **kwargs)
@@ -75,8 +80,7 @@ def register_model_provider(
     provider_name: str,
     chat_model: ChatModelType,
     base_url: Optional[str] = None,
-    tool_choice: Optional[ToolChoiceType] = None,
-    keep_reasoning_content: bool = False,
+    provider_config: Optional[ProviderConfig] = None,
 ):
     """Register a new model provider.
 
@@ -87,11 +91,9 @@ def register_model_provider(
     Args:
         provider_name: Name of the provider to register
         chat_model: Either a BaseChatModel class or a string identifier for a supported provider
-        base_url: Optional base URL for API endpoints (Optional parameter; effective only when `chat_model` is a string.)
-        tool_choice: Optional tool choice for the model.
-            It is a list of unique values representing **auto**, **none**, **any**, **required**, and **specific**. (Optional parameter; effective only when `chat_model` is a string.)
-        keep_reasoning_content: whether to retain the model's reasoning content in subsequent messages, defaults to `False`, only for reasoning models (optional parameter;effective only when `chat_model` is a string.)
-
+        base_url: Optional base URL for API endpoints (Optional parameter;effective only when `chat_model` is a string and is "openai-compatible".)
+        provider_config: The configuration of the model provider (Optional parameter;effective only when `chat_model` is a string and is "openai-compatible".)
+           It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
                    or if chat_model string is not in supported providers
@@ -130,9 +132,17 @@ def register_model_provider(
                 "when chat_model is a string, the value must be 'openai-compatible'"
             )
         chat_model = _create_openai_compatible_model(
-            provider_name, base_url, tool_choice, keep_reasoning_content
+            provider_name,
+            base_url,
         )
-        _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
+        _MODEL_PROVIDERS_DICT.update(
+            {
+                provider_name: {
+                    "chat_model": chat_model,
+                    "provider_config": provider_config,
+                }
+            }
+        )
     else:
         _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
 
@@ -147,12 +157,11 @@ def batch_register_model_provider(
 
     Args:
         providers: List of ChatModelProvider dictionaries, each containing:
-            - provider: str - Provider name
-            - chat_model: Union[Type[BaseChatModel], str] - Model class or provider string
-            - base_url: Optional base URL for API endpoints (Optional parameter; effective only when `chat_model` is a string.)
-            - tool_choice: Optional tool choice for the model.
-                It is a list of unique values representing **auto**, **none**, **any**, **required**, and **specific**. (Optional parameter; effective only when `chat_model` is a string.)
-            - keep_reasoning_content: whether to retain the model's reasoning content in subsequent messages, defaults to `False`, only for reasoning models (optional parameter;effective only when `chat_model` is a string.)
+            - provider_name: Name of the provider to register
+            - chat_model: Either a BaseChatModel class or a string identifier for a supported provider
+            - base_url: Optional base URL for API endpoints(Optional parameter; effective only when `chat_model` is a string and is "openai-compatible".)
+            - provider_config: The configuration of the model provider(Optional parameter; effective only when `chat_model` is a string and is "openai-compatible".)
+                It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
 
     Raises:
         ValueError: If any of the providers are invalid
@@ -164,11 +173,11 @@ def batch_register_model_provider(
         >>>
         >>> batch_register_model_provider([
         ...     {
-        ...         "provider": "fakechat",
+        ...         "provider_name": "fakechat",
         ...         "chat_model": FakeChatModel,
         ...     },
         ...     {
-        ...         "provider": "vllm",
+        ...         "provider_name": "vllm",
         ...         "chat_model": "openai-compatible",
         ...         "base_url": "http://localhost:8000/v1",
         ...     },
@@ -181,11 +190,10 @@ def batch_register_model_provider(
 
     for provider in providers:
         register_model_provider(
-            provider["provider"],
+            provider["provider_name"],
             provider["chat_model"],
             provider.get("base_url"),
-            tool_choice=provider.get("tool_choice"),
-            keep_reasoning_content=provider.get("keep_reasoning_content", False),
+            provider_config=provider.get("provider_config"),
         )
 
 

@@ -13,11 +13,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/en/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
 
-> This is the English version. For the Chinese version, please see the [Chinese Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README_cn.md)
+> This is the Chinese version. For the English version, please visit [English Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README.md)
 
-**langchain-dev-utils** is a practical utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions that can both reduce repetitive code writing and improve code consistency and readability. By simplifying development workflows, this library helps you prototype faster, iterate more smoothly, and create clearer, more reliable LLM-based AI applications.
+**langchain-dev-utils** is a utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions that can both reduce repetitive code writing and improve code consistency and readability. By simplifying development workflows, this library helps you prototype faster, iterate more smoothly, and create clearer, more reliable LLM-based AI applications.
 
 ## 🚀 Installation
 
@@ -32,27 +32,26 @@ pip install -U langchain-dev-utils[standard]
 
 ### 1. **Model Management**
 
-In `langchain`, the `init_chat_model`/`init_embeddings` functions can be used to initialize chat model instances/embedding model instances, but the model providers they support are relatively limited. This module provides a registration function (`register_model_provider`/`register_embeddings_provider`) to easily register any model provider for subsequent use with `load_chat_model` / `load_embeddings` for model loading.
+In `langchain`, the `init_chat_model`/`init_embeddings` functions can be used to initialize chat model instances/embedding model instances, but the model providers they support are relatively limited. This module provides a registration function (`register_model_provider`/`register_embeddings_provider`) to register any model provider for subsequent model loading using `load_chat_model` / `load_embeddings`.
 
 #### 1.1 Chat Model Management
 
-Primarily consists of the following two functions:
+Mainly consists of the following two functions:
 
 - `register_model_provider`: Register a chat model provider
 - `load_chat_model`: Load a chat model
 
 `register_model_provider` parameter description:
 
-- `provider_name`: The model provider name, used as an identifier for subsequent model loading
-- `chat_model`: The chat model, which can be a ChatModel or a string (currently supports "openai-compatible")
-- `base_url`: The API address of the model provider (optional, valid when `chat_model` is a string)
-- `tool_choice`: List of all tool_choices supported by the model provider (optional, valid when `chat_model` is a string)
-- `keep_reasoning_content`: whether to retain the model's reasoning content in subsequent messages, defaults to `False`, only for reasoning models (optional, valid when `chat_model` is a string)
+- `provider_name`: Model provider name, used as an identifier for subsequent model loading
+- `chat_model`: Chat model, can be a ChatModel or a string (currently supports "openai-compatible")
+- `base_url`: API address of the model provider (optional, valid when `chat_model` is a string and is "openai-compatible")
+- `provider_config`: Relevant configuration for the model provider (optional, valid when `chat_model` is a string and is "openai-compatible"), can configure some provider-related parameters, such as whether to support structured output in json_mode, list of supported tool_choices, etc.
 
 `load_chat_model` parameter description:
 
-- `model`: The chat model name, type is str
-- `model_provider`: The chat model provider name, type is str, optional
+- `model`: Chat model name, type str
+- `model_provider`: Chat model provider name, type str, optional
 - `kwargs`: Additional parameters passed to the chat model class, e.g., temperature, top_p, etc.
 
 Example for integrating a qwen3-4b model deployed using `vllm`:
@@ -63,35 +62,35 @@ from langchain_dev_utils.chat_models import (
     load_chat_model,
 )
 
-# Register the model provider
+# Register model provider
 register_model_provider(
     provider_name="vllm",
     chat_model="openai-compatible",
     base_url="http://localhost:8000/v1",
 )
 
-# Load the model
+# Load model
 model = load_chat_model("vllm:qwen3-4b")
 print(model.invoke("Hello"))
 ```
 
 #### 1.2 Embedding Model Management
 
-Primarily consists of the following two functions:
+Mainly consists of the following two functions:
 
 - `register_embeddings_provider`: Register an embedding model provider
 - `load_embeddings`: Load an embedding model
 
 `register_embeddings_provider` parameter description:
 
-- `provider_name`: The embedding model provider name, used as an identifier for subsequent model loading
-- `embeddings_model`: The embedding model, which can be an Embeddings or a string (currently supports "openai-compatible")
-- `base_url`: The API address of the model provider (optional, valid when `embeddings_model` is a string)
+- `provider_name`: Embedding model provider name, used as an identifier for subsequent model loading
+- `embeddings_model`: Embedding model, can be Embeddings or a string (currently supports "openai-compatible")
+- `base_url`: API address of the model provider (optional, valid when `embeddings_model` is a string and is "openai-compatible")
 
 `load_embeddings` parameter description:
 
-- `model`: The embedding model name, type is str
-- `provider`: The embedding model provider name, type is str, optional
+- `model`: Embedding model name, type str
+- `provider`: Embedding model provider name, type str, optional
 - `kwargs`: Other additional parameters
 
 Example for integrating a qwen3-embedding-4b model deployed using `vllm`:
@@ -99,26 +98,26 @@ Example for integrating a qwen3-embedding-4b model deployed using `vllm`:
 ```python
 from langchain_dev_utils.embeddings import register_embeddings_provider, load_embeddings
 
-# Register the embedding model provider
+# Register embedding model provider
 register_embeddings_provider(
     provider_name="vllm",
     embeddings_model="openai-compatible",
     base_url="http://localhost:8000/v1",
 )
 
-# Load the embedding model
+# Load embedding model
 embeddings = load_embeddings("vllm:qwen3-embedding-4b")
 emb = embeddings.embed_query("Hello")
 print(emb)
 ```
 
-**For more details on model management, please refer to**: [Chat Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/chat.html), [Embedding Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/embedding.html)
+**For more information about model management, please refer to**: [Chat Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/chat.html), [Embedding Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/embedding.html)
 
 ### 2. **Message Conversion**
 
 Includes the following features:
 
-- Merge reasoning content into the final response
+- Merge chain-of-thought content into the final response
 - Stream content merging
 - Content formatting tools
 
@@ -146,7 +145,7 @@ For a list, you can use `format_sequence` to format it.
   - langchain_core.documents.Document
   - str
 - `separator`: String used to join the content, defaults to "-".
-- `with_num`: If True, adds a number prefix to each item (e.g., "1. Hello"), defaults to False.
+- `with_num`: If True, add a numeric prefix to each item (e.g., "1. Hello"), defaults to False.
 
 ```python
 text = format_sequence([
@@ -156,7 +155,7 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**For more details on message conversion, please refer to**: [Message Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/message.html), [Format List Content](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/format.html)
+**For more information about message conversion, please refer to**: [Message Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/message.html), [Format List Content](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/format.html)
 
 ### 3. **Tool Calling**
 
@@ -202,7 +201,7 @@ if has_tool_calling(response):
 - `human_in_the_loop`: For synchronous tool functions
 - `human_in_the_loop_async`: For asynchronous tool functions
 
-Both can accept a `handler` parameter for customizing breakpoint return and response handling logic.
+Both can accept a `handler` parameter for custom breakpoint return and response handling logic.
 
 ```python
 from langchain_dev_utils import human_in_the_loop
@@ -216,7 +215,7 @@ def get_current_time() -> str:
     return str(datetime.datetime.now().timestamp())
 ```
 
-**For more details on tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-the-loop.html), [Tool Call Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
+**For more information about tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-the-loop.html), [Tool Call Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
 
 ### 4. **Agent Development**
 
@@ -227,7 +226,7 @@ Includes the following features:
 
 #### 4.1 Agent Factory Functions
 
-In LangChain v1, the officially provided `create_agent` function can be used to create a single agent, where the `model` parameter supports passing either a BaseChatModel instance or specific strings (when passing strings, limited to models supported by `init_chat_model`). To extend the flexibility of specifying models via strings, this library provides a functionally identical `create_agent` function that enables you to directly use models supported by `load_chat_model` (requires prior registration).
+In LangChain v1, the officially provided `create_agent` function can be used to create a single agent, where the model parameter supports passing a BaseChatModel instance or a specific string (when passing a string, it is limited to the models supported by `init_chat_model`). To extend the flexibility of specifying models via strings, this library provides a functionally identical `create_agent` function, allowing you to directly use models supported by `load_chat_model` (requires prior registration).
 
 Usage example:
 
@@ -242,7 +241,7 @@ print(response)
 
 #### 4.2 Middleware
 
-Provides some common middleware components. Below are examples using `SummarizationMiddleware` and `PlanMiddleware`.
+Provides some commonly used middleware components. Below are examples of `SummarizationMiddleware` and `PlanMiddleware`.
 
 `SummarizationMiddleware` is used for agent summarization.
 
@@ -263,7 +262,7 @@ response = agent.invoke({"messages": [{"role": "user", "content": "Give me a tra
 print(response)
 ```
 
-**For more details on agent development and all built-in middleware, please refer to**: [Prebuilt Agent Functions](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/prebuilt.html), [Middleware](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/middleware.html)
+**For more information about agent development and all built-in middleware, please refer to**: [Prebuilt Agent Functions](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/prebuilt.html), [Middleware](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/middleware.html)
 
 ### 5. **State Graph Orchestration**
 
@@ -275,14 +274,14 @@ Includes the following features:
 #### 5.1 Sequential Graph Orchestration
 
 Sequential graph orchestration:
-Uses `sequential_pipeline`. Supported parameters:
+Uses `sequential_pipeline`, supported parameters:
 
 - `sub_graphs`: List of state graphs to combine (must be StateGraph instances)
-- `state_schema`: The State Schema for the final generated graph
-- `graph_name`: The name of the final generated graph (optional)
-- `context_schema`: The Context Schema for the final generated graph (optional)
-- `input_schema`: The input Schema for the final generated graph (optional)
-- `output_schema`: The output Schema for the final generated graph (optional)
+- `state_schema`: State Schema for the final generated graph
+- `graph_name`: Name of the final generated graph (optional)
+- `context_schema`: Context Schema for the final generated graph (optional)
+- `input_schema`: Input Schema for the final generated graph (optional)
+- `output_schema`: Output Schema for the final generated graph (optional)
 - `checkpoint`: LangGraph persistence Checkpoint (optional)
 - `store`: LangGraph persistence Store (optional)
 - `cache`: LangGraph Cache (optional)
@@ -300,25 +299,25 @@ register_model_provider(
     base_url="http://localhost:8000/v1",
 )
 
-# Build a sequential pipeline (all sub-graphs execute in order)
+# Build sequential pipeline (all sub-graphs execute sequentially)
 graph = sequential_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_time],
-            system_prompt="You are a time query assistant. You can only answer the current time. If the question is unrelated to time, please directly respond that you cannot answer.",
+            system_prompt="You are a time query assistant, can only answer the current time. If the question is unrelated to time, please directly answer that you cannot answer.",
             name="time_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_weather],
-            system_prompt="You are a weather query assistant. You can only answer the current weather. If the question is unrelated to weather, please directly respond that you cannot answer.",
+            system_prompt="You are a weather query assistant, can only answer the current weather. If the question is unrelated to weather, please directly answer that you cannot answer.",
             name="weather_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_user],
-            system_prompt="You are a user query assistant. You can only answer the current user. If the question is unrelated to users, please directly respond that you cannot answer.",
+            system_prompt="You are a user query assistant, can only answer the current user. If the question is unrelated to user, please directly answer that you cannot answer.",
             name="user_agent",
         ),
     ],
@@ -332,15 +331,15 @@ print(response)
 #### 5.2 Parallel Graph Orchestration
 
 Parallel graph orchestration:
-Uses `parallel_pipeline`. Supported parameters:
+Uses `parallel_pipeline`, supported parameters:
 
 - `sub_graphs`: List of state graphs to combine
-- `state_schema`: The State Schema for the final generated graph
+- `state_schema`: State Schema for the final generated graph
 - `branches_fn`: Parallel branch function, returns a list of Send objects to control parallel execution
-- `graph_name`: The name of the final generated graph (optional)
-- `context_schema`: The Context Schema for the final generated graph (optional)
-- `input_schema`: The input Schema for the final generated graph (optional)
-- `output_schema`: The output Schema for the final generated graph (optional)
+- `graph_name`: Name of the final generated graph (optional)
+- `context_schema`: Context Schema for the final generated graph (optional)
+- `input_schema`: Input Schema for the final generated graph (optional)
+- `output_schema`: Output Schema for the final generated graph (optional)
 - `checkpoint`: LangGraph persistence Checkpoint (optional)
 - `store`: LangGraph persistence Store (optional)
 - `cache`: LangGraph Cache (optional)
@@ -348,25 +347,25 @@ Uses `parallel_pipeline`. Supported parameters:
 ```python
 from langchain_dev_utils.pipeline import parallel_pipeline
 
-# Build a parallel pipeline (all sub-graphs execute in parallel)
+# Build parallel pipeline (all sub-graphs execute in parallel)
 graph = parallel_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_time],
-            system_prompt="You are a time query assistant. You can only answer the current time. If the question is unrelated to time, please directly respond that you cannot answer.",
+            system_prompt="You are a time query assistant, can only answer the current time. If the question is unrelated to time, please directly answer that you cannot answer.",
             name="time_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_weather],
-            system_prompt="You are a weather query assistant. You can only answer the current weather. If the question is unrelated to weather, please directly respond that you cannot answer.",
+            system_prompt="You are a weather query assistant, can only answer the current weather. If the question is unrelated to weather, please directly answer that you cannot answer.",
             name="weather_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_user],
-            system_prompt="You are a user query assistant. You can only answer the current user. If the question is unrelated to users, please directly respond that you cannot answer.",
+            system_prompt="You are a user query assistant, can only answer the current user. If the question is unrelated to user, please directly answer that you cannot answer.",
             name="user_agent",
         ),
     ],
@@ -376,10 +375,10 @@ response = graph.invoke({"messages": [HumanMessage("Hello")]})
 print(response)
 ```
 
-**For more details on state graph orchestration, please refer to**: [State Graph Orchestration Pipeline](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration/pipeline.html)
+**For more information about state graph orchestration, please refer to**: [State Graph Orchestration Pipeline](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration/pipeline.html)
 
 ## 💬 Join the Community
 
 - [GitHub Repository](https://github.com/TBice123123/langchain-dev-utils) — Browse source code, submit Pull Requests
 - [Issue Tracker](https://github.com/TBice123123/langchain-dev-utils/issues) — Report bugs or suggest improvements
-- We welcome all forms of contribution — whether it's code, documentation, or usage examples. Let's build a more powerful and practical LangChain development ecosystem together!
+- We welcome contributions in all forms — whether code, documentation, or usage examples. Let's build a more powerful and practical LangChain development ecosystem together!
