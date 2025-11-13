@@ -1,7 +1,22 @@
 from functools import reduce
 from typing import AsyncIterator, Iterator, Sequence, Tuple, cast
 
-from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessageChunk
+from langchain_core.messages import AIMessage, AIMessageChunk
+
+
+def _get_reasoning_content(model_response: AIMessage | AIMessageChunk) -> str | None:
+    reasoning_content = None
+
+    reasoning_content_block = [
+        block for block in model_response.content_blocks if block["type"] == "reasoning"
+    ]
+    if reasoning_content_block:
+        reasoning_content = reasoning_content_block[0].get("reasoning")
+
+    if not reasoning_content:
+        reasoning_content = model_response.additional_kwargs.get("reasoning_content")
+
+    return reasoning_content
 
 
 def convert_reasoning_content_for_ai_message(
@@ -33,15 +48,20 @@ def convert_reasoning_content_for_ai_message(
         ... )
         >>> response.content
     """
-    if "reasoning_content" in model_response.additional_kwargs:
-        model_response.content = f"{think_tag[0]}{model_response.additional_kwargs['reasoning_content']}{think_tag[1]}{model_response.content}"
+
+    reasoning_content = _get_reasoning_content(model_response)
+
+    if reasoning_content:
+        model_response.content = (
+            f"{think_tag[0]}{reasoning_content}{think_tag[1]}{model_response.content}"
+        )
     return model_response
 
 
 def convert_reasoning_content_for_chunk_iterator(
-    model_response: Iterator[BaseMessageChunk],
+    model_response: Iterator[AIMessageChunk | AIMessage],
     think_tag: Tuple[str, str] = ("<think>", "</think>"),
-) -> Iterator[BaseMessageChunk]:
+) -> Iterator[AIMessageChunk | AIMessage]:
     """Convert reasoning content for streaming response chunks.
 
     This function processes streaming response chunks and merges reasoning content
@@ -75,32 +95,24 @@ def convert_reasoning_content_for_chunk_iterator(
     isend = True
 
     for chunk in model_response:
-        if (
-            isinstance(chunk, AIMessageChunk)
-            and "reasoning_content" in chunk.additional_kwargs
-        ):
-            if isfirst:
-                chunk.content = (
-                    f"{think_tag[0]}{chunk.additional_kwargs['reasoning_content']}"
-                )
-                isfirst = False
-            else:
-                chunk.content = chunk.additional_kwargs["reasoning_content"]
-        elif (
-            isinstance(chunk, AIMessageChunk)
-            and "reasoning_content" not in chunk.additional_kwargs
-            and chunk.content
-            and isend
-        ):
-            chunk.content = f"{think_tag[1]}{chunk.content}"
-            isend = False
+        if isinstance(chunk, AIMessageChunk):
+            reasoning_content = _get_reasoning_content(chunk)
+            if reasoning_content:
+                if isfirst:
+                    chunk.content = f"{think_tag[0]}{reasoning_content}"
+                    isfirst = False
+                else:
+                    chunk.content = reasoning_content
+            elif chunk.content and isend and not isfirst:
+                chunk.content = f"{think_tag[1]}{chunk.content}"
+                isend = False
         yield chunk
 
 
 async def aconvert_reasoning_content_for_chunk_iterator(
-    model_response: AsyncIterator[BaseMessageChunk],
+    model_response: AsyncIterator[AIMessageChunk | AIMessage],
     think_tag: Tuple[str, str] = ("<think>", "</think>"),
-) -> AsyncIterator[BaseMessageChunk]:
+) -> AsyncIterator[AIMessageChunk | AIMessage]:
     """Async convert reasoning content for streaming response chunks.
 
     This is the async version of convert_reasoning_content_for_chunk_iterator.
@@ -133,25 +145,17 @@ async def aconvert_reasoning_content_for_chunk_iterator(
     isend = True
 
     async for chunk in model_response:
-        if (
-            isinstance(chunk, AIMessageChunk)
-            and "reasoning_content" in chunk.additional_kwargs
-        ):
-            if isfirst:
-                chunk.content = (
-                    f"{think_tag[0]}{chunk.additional_kwargs['reasoning_content']}"
-                )
-                isfirst = False
-            else:
-                chunk.content = chunk.additional_kwargs["reasoning_content"]
-        elif (
-            isinstance(chunk, AIMessageChunk)
-            and "reasoning_content" not in chunk.additional_kwargs
-            and chunk.content
-            and isend
-        ):
-            chunk.content = f"{think_tag[1]}{chunk.content}"
-            isend = False
+        if isinstance(chunk, AIMessageChunk):
+            reasoning_content = _get_reasoning_content(chunk)
+            if reasoning_content:
+                if isfirst:
+                    chunk.content = f"{think_tag[0]}{reasoning_content}"
+                    isfirst = False
+                else:
+                    chunk.content = reasoning_content
+            elif chunk.content and isend and not isfirst:
+                chunk.content = f"{think_tag[1]}{chunk.content}"
+                isend = False
         yield chunk
 
 

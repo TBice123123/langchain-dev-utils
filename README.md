@@ -15,7 +15,7 @@
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
 [![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
 
-> This is the Chinese version. For the English version, please visit [English Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README.md)
+> This is the English version. For the Chinese version, please visit [Chinese Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README_cn.md)
 
 **langchain-dev-utils** is a utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions that can both reduce repetitive code writing and improve code consistency and readability. By simplifying development workflows, this library helps you prototype faster, iterate more smoothly, and create clearer, more reliable LLM-based AI applications.
 

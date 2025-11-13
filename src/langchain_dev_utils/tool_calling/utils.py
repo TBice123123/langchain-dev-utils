@@ -22,6 +22,9 @@ def has_tool_calling(message: AIMessage) -> bool:
         >>> if has_tool_calling(response):
         ...     print("Tool calls found in response")
     """
+
+    if any([block for block in message.content_blocks if block["type"] == "tool_call"]):
+        return True
     if (
         isinstance(message, AIMessage)
         and hasattr(message, "tool_calls")
@@ -59,6 +62,20 @@ def parse_tool_calling(
         ...     tool_calls = parse_tool_calling(response)
     """
 
+    tool_call = None
+
+    tool_call_blocks = [
+        block for block in message.content_blocks if block["type"] == "tool_call"
+    ]
+    if tool_call_blocks:
+        tool_call = tool_call_blocks
+
+    if not tool_call:
+        tool_call = message.tool_calls
+
+    if not tool_call:
+        raise ValueError("No tool call found in message")
+
     if first_tool_call_only:
-        return (message.tool_calls[0]["name"], message.tool_calls[0]["args"])
-    return [(tool_call["name"], tool_call["args"]) for tool_call in message.tool_calls]
+        return (tool_call[0]["name"], tool_call[0]["args"])
+    return [(tool_call["name"], tool_call["args"]) for tool_call in tool_call]
