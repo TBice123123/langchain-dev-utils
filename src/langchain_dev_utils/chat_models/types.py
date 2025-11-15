@@ -1,4 +1,5 @@
 from typing import Literal, Union
+
 from langchain_core.language_models.chat_models import BaseChatModel
 
 

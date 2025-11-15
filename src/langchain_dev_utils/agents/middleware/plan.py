@@ -13,138 +13,82 @@ from langchain_core.messages import ToolMessage
 from langgraph.types import Command
 from typing_extensions import TypedDict
 
-_DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION = """
-This tool is used to **create a new plan list ** or **modify an existing plan**.
+_DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION = """Use this tool to create and manage a structured task list for complex or multi-step work. It helps you stay organized, track progress, and demonstrate to the user that you’re handling tasks systematically.
 
-Parameters:
-`plan`: A list of strings representing the plans to be executed. The first plan in the list will automatically be set to the "in_progress" status, and all remaining plans will be set to the "pending" status. Internally, each string is converted into a dictionary containing "content" and "status" keys, where "content" corresponds to each string value in the list, and the "status" is assigned according to the rule: the first plan is "in_progress", and all others are "pending".
-When modifying a plan, only provide the plans that need to be executed next. For example, if the current plan is ['Plan 1', 'Plan 2', 'Plan 3'], and Plan 1 is completed, but you determine that Plan 2 and Plan 3 are no longer suitable and should be replaced with ['Plan 4', 'Plan 5'], then only pass ['Plan 4', 'Plan 5'].
+## When to Use This Tool  
+Use this tool in the following scenarios:
 
-## Tool Functionality
+1. **Complex multi-step tasks** — when a task requires three or more distinct steps or actions.  
+2. **Non-trivial and complex tasks** — tasks that require careful planning or involve multiple operations.  
+3. **User explicitly requests a to-do list** — when the user directly asks you to use the to-do list feature.  
+4. **User provides multiple tasks** — when the user supplies a list of items to be done (e.g., numbered or comma-separated).  
+5. **The plan needs adjustment based on current execution** — when ongoing progress indicates the plan should be revised.
 
-This tool is used to **create a new plan list** or **modify an existing plan list**.
+## How to Use This Tool  
+1. **When starting a task** — before actually beginning work, invoke this tool with a task list (a list of strings). The first task will automatically be set to `in_progress`, and all others to `pending`.  
+2. **When updating the task list** — for example, after completing some tasks, if you find certain tasks are no longer needed, remove them; if new necessary tasks emerge, add them. However, **do not modify** tasks already marked as completed. In such cases, simply call this tool again with the updated task list.
 
-- **Primary Use**: Create a new plan list.
-- **Secondary Use**: Modify the plan when problems are identified with the existing one.
-- **Not For**: Marking plans as completed.
+## When NOT to Use This Tool  
+Avoid using this tool in the following situations:  
+1. The task is a **single, straightforward action**.  
+2. The task is **too trivial**, and tracking it provides no benefit.  
+3. The task can be completed in **fewer than three simple steps**.  
+4. The current task list has been fully completed — in this case, use `finish_sub_plan()` to finalize.
 
-## Plan Statuses
+## How It Works  
+- **Input**: A parameter named `plan` containing a list of strings representing the tasks (e.g., `["Task 1", "Task 2", "Task 3"]`).  
+- **Automatic status assignment**:  
+  → First task: `in_progress`  
+  → Remaining tasks: `pending`  
+- When updating the plan, provide only the **next set of tasks to execute**. For example, if the next phase requires `["Task 4", "Task 5"]`, call this tool with `plan=["Task 4", "Task 5"]`.
 
-Use the following statuses to track progress:
+## Task States  
+- `pending`: Ready to start, awaiting execution  
+- `in_progress`: Currently being worked on  
+- `done`: Completed  
 
-- `pending`: Plan has not yet started.
-- `in_progress`: Currently being worked on.
-- `done`: Plan has been completed.
+## Best Practices  
+- Break large tasks into clear, actionable steps.  
+- Use specific and descriptive task names.  
+- Update the plan immediately if priorities shift or blockers arise.  
+- Never leave the plan empty — as long as unfinished tasks remain, at least one must be marked `in_progress`.  
+- Do not batch completions — mark each task as done immediately after finishing it.  
+- Remove irrelevant tasks entirely instead of leaving them in `pending` state.
 
-## Usage Guidelines
-
-### Creating a Plan (Primary Use)
-
-Call this tool to create a structured plan when dealing with complex tasks:
-
-- Complex multi-step tasks (≥3 steps).
-- Non-trivial tasks requiring careful planning.
-- The user explicitly requests a plan list.
-
-### Modifying a Plan (Special Cases)
-
-Modify an existing plan only under the following circumstances:
-
-- The current plan structure is found to be problematic.
-- The plan structure or content needs adjustment.
-- The existing plan cannot be executed effectively.
-
-**Important Update Behavior**: When updating a plan, only pass the list of plans that need to be executed next. The tool automatically handles status assignment – the first plan is set to `in_progress`, and the rest are set to `pending`.
-
-### Plan Completion
-
-**Important Note**: When completing a plan, call the `finish_sub_plan()` function to update the plan status. **Do not use this tool**.
-
-## When to Use
-
-**Appropriate Scenarios**:
-
-- When starting a new complex work session.
-- When needing to reorganize the plan structure.
-- When the current plan needs revision based on new information.
-
-**Scenarios to Avoid**:
-
-- Simple tasks (<3 steps).
-- When only needing to mark a plan as complete.
-- Purely informational queries or conversation.
-- Trivial tasks that can be completed directly.
-
-## Best Practices
-
-1. When creating a plan, the first plan is automatically set to `in_progress`.
-2. Ensure sub-plans within the plan are specific and actionable.
-3. Break down complex sub-plans into smaller steps.
-4. Always keep at least one plan in the `in_progress` status unless all plans are completed.
-5. When modifying a plan, only provide the sub-plans that need to be executed next.
-6. Use clear, descriptive names for sub-plans.
-
-## Internal Processing Logic
-
-The tool automatically converts the input strings into a structured format:
-
-- Input: `["Sub-plan 1", "Sub-plan 2", "Sub-plan 3"]`
-- Internal Representation:
-```json
-  [
-  {"content": "Sub-plan 1", "status": "in_progress"},
-  {"content": "Sub-plan 2", "status": "pending"},
-  {"content": "Sub-plan 3", "status": "pending"}
-  ]
-```
-
-Please remember:
-
-- For simple plans, execute them directly; there is no need to call this tool.
-- Use the `finish_sub_plan()` function to mark sub-plans as completed.
-- When modifying a plan, only provide the sub-plans that need to be executed next.
+**Remember**: If a task is simple, just do it. This tool is meant to provide structure — not overhead.
 """
 
-_DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION = """
-This tool is used to mark the completion status of a sub-plan in an existing plan.
+_DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION = """This tool is used to mark the currently in-progress task in an existing task list as completed.
 
-Functionality:
-- Marks the sub-plan with status 'in_progress' as 'done'
-- Sets the first sub-plan with status 'pending' to 'in_progress' (if one exists)
+## Functionality  
+- Marks the current task with status `in_progress` as `done`, and automatically sets the next task (previously `pending`) to `in_progress`.
 
-## Tool Purpose
-Specifically designed to **mark the current sub-plan as completed** in an existing plan.
+## When to Use  
+Use only when you have confirmed that the current task is truly finished.
 
-### When to Use
-Use only when the current sub-plan is confirmed complete.
-
-### Automatic Status Management
-- `in_progress` → `done`
-- First `pending` → `in_progress` (if any)
-
-## Usage Example
-Current plan status:
+## Example  
+Before calling:
 ```json
 [
-    {"content": "Research market trends", "status": "done"},
-    {"content": "Analyze competitor data", "status": "in_progress"},
-    {"content": "Prepare summary report", "status": "pending"}
+    {"content": "Task 1", "status": "done"},
+    {"content": "Task 2", "status": "in_progress"},
+    {"content": "Task 3", "status": "pending"}
 ]
 ```
 
-After calling finish_sub_plan():
+After calling `finish_sub_plan()`:
 ```json
 [
-    {"content": "Research market trends", "status": "done"},
-    {"content": "Analyze competitor data", "status": "done"},
-    {"content": "Prepare summary report", "status": "in_progress"}
+    {"content": "Task 1", "status": "done"},
+    {"content": "Task 2", "status": "done"},
+    {"content": "Task 3", "status": "in_progress"}
 ]
 ```
 
-Remember:
-- Only for marking completion—do not use to create or modify plans (use write_plan instead)
-- Ensure the sub-plan is truly complete before calling
-- No parameters needed; status transitions are handled automatically
+**Note**:  
+- This tool is **only** for marking completion — do **not** use it to create or modify plans (use `write_plan` instead).  
+- Ensure the task is genuinely complete before invoking this function.  
+- No parameters are required — status updates are handled automatically.
 """
 
 _DEFAULT_READ_PLAN_TOOL_DESCRIPTION = """
@@ -298,67 +242,26 @@ def create_read_plan_tool(
     return read_plan
 
 
-_READ_PLAN_SYSTEM_PROMPT = """### 3. read_plan: View Current Plan
-- **Purpose**: Retrieve the full current plan list with statuses, especially when you forget which sub-plan you're supposed to execute next.
-- **No parameters required**—returns a complete snapshot of the active plan.
+_PLAN_SYSTEM_PROMPT_NOT_READ_PLAN = """You can manage task plans using two simple tools:
+
+1. **write_plan**
+- Use it to break complex tasks (3+ steps) into a clear, actionable list. Only include next steps to execute — the first becomes `"in_progress"`, the rest `"pending"`. Don’t use it for simple tasks (<3 steps).
+2. **finish_sub_plan**
+- Call it **only when the current task is 100% done**. It automatically marks it `"done"` and promotes the next `"pending"` task to `"in_progress"`. No parameters needed. Never use it mid-task or if anything’s incomplete.
+Keep plans lean, update immediately, and never batch completions.
 """
-_PLAN_MIDDLEWARE_SYSTEM_PROMPT = """
-You can manage task plans using the following {num} tools:
 
-## 1. write_plan: Create or Replace a Plan
-- **Primary Purpose**: Generate a structured execution framework for complex tasks, or completely replace the remaining plan sequence when the current plan is no longer valid.
-- **When to Use**:
-  - The task requires 3 or more distinct, actionable steps
-  - The user explicitly requests a plan list or "to-do plan"
-  - The user provides multiple plans (e.g., numbered list, comma-separated items)
-  - Execution reveals fundamental flaws in the current plan, requiring a new direction
-- **Input Format**: A list of plan description strings, e.g., ["Analyze user needs", "Design system architecture", "Implement core module"]
-- **Automatic Status Assignment**:
-  - First plan → `"in_progress"`
-  - All subsequent plans → `"pending"`
-- **Plan Replacement Rule**: Provide **only the new plans that should be executed next**. Do not include completed, obsolete, or irrelevant plans.
-- **Plan Quality Requirements**:
-  - Plans must be specific, actionable, and verifiable
-  - Break work into logical phases (chronological or dependency-based)
-  - Define clear milestones and deliverable standards
-  - Avoid vague, ambiguous, or non-executable descriptions
-- **Do NOT Use When**:
-  - The task is simple (<3 steps)
-  - The request is conversational, informational, or a one-off query
-  - You only need to mark a plan as complete (use `finish_sub_plan` instead)
+_PLAN_SYSTEM_PROMPT = """You can manage task plans using three simple tools:
 
-## 2. finish_sub_plan: Mark Current Plan as Complete
-- **Primary Purpose**: Confirm the current `"in_progress"` plan is fully done, mark it as `"done"`, and automatically promote the first `"pending"` plan to `"in_progress"`.
-- **Call Only If ALL Conditions Are Met**:
-  - The sub-plan has been **fully executed**
-  - All specified requirements have been satisfied
-  - There are no unresolved errors, omissions, or blockers
-  - The output meets quality standards and has been verified
-- **Automatic Behavior**:
-  - No parameters needed—status transitions are handled internally
-  - If no `"pending"` plans remain, the plan ends naturally
-- **Never Call If**:
-  - The plan is partially complete
-  - Known issues or defects remain
-  - Execution was blocked due to missing resources or dependencies
-  - The result fails to meet expected quality
+## write_plan
+- Use it to break complex tasks (3+ steps) into a clear, actionable list. Only include next steps to execute — the first becomes `"in_progress"`, the rest `"pending"`. Don’t use it for simple tasks (<3 steps).
 
-{read_plan_system_prompt}
+## finish_sub_plan
+- Call it **only when the current task is 100% done**. It automatically marks it `"done"` and promotes the next `"pending"` task to `"in_progress"`. No parameters needed. Never use it mid-task or if anything’s incomplete.
 
-## Plan Status Rules (Only These Three Are Valid)
-- **`"pending"`**: Plan not yet started
-- **`"in_progress"`**: Currently being executed (exactly one allowed at any time)
-- **`"done"`**: Fully completed and verified  
-> ⚠️ No other status values (e.g., "completed", "failed", "blocked") are permitted.
-
-## General Usage Principles
-1. **Execute simple plans directly**: If a request can be fulfilled in 1–2 steps, do not create a plan—just complete it.
-2. **Decompose thoughtfully**: Break complex work into clear, independent, trackable sub-plans.
-3. **Manage status rigorously**:
-   - Always maintain exactly one `"in_progress"` plan while work is ongoing
-   - Call `finish_sub_plan` immediately after plan completion—never delay
-4. **Plan modification = full replacement**: Never edit individual plans. To adjust the plan, use `write_plan` with a new list of remaining plans.
-5. **Respect user intent**: If the user explicitly asks for a plan—even for a simpler task—honor the request and create one.
+## read_plan
+- Retrieve the full current plan list with statuses, especially when you forget which sub-plan you're supposed to execute next.
+- No parameters required—returns a current plan list with statuses.
 """
 
 
@@ -397,41 +300,40 @@ class PlanMiddleware(AgentMiddleware):
         self,
         *,
         system_prompt: Optional[str] = None,
-        tools: Optional[list[BaseTool]] = None,
+        write_plan_tool_description: Optional[str] = None,
+        finish_sub_plan_tool_description: Optional[str] = None,
+        read_plan_tool_description: Optional[str] = None,
+        use_read_plan_tool: bool = True,
     ) -> None:
         super().__init__()
 
-        if tools is None:
-            tools = [
-                create_write_plan_tool(),
-                create_finish_sub_plan_tool(),
-                create_read_plan_tool(),
-            ]
-
-        # Check if required tools exist
-        has_write_plan = any(tool_obj.name == "write_plan" for tool_obj in tools)
-        has_finish_sub_plan = any(
-            tool_obj.name == "finish_sub_plan" for tool_obj in tools
+        write_plan_tool_description = (
+            write_plan_tool_description or _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION
+        )
+        finish_sub_plan_tool_description = (
+            finish_sub_plan_tool_description
+            or _DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION
+        )
+        read_plan_tool_description = (
+            read_plan_tool_description or _DEFAULT_READ_PLAN_TOOL_DESCRIPTION
         )
 
-        if not (has_write_plan and has_finish_sub_plan):
-            raise ValueError(
-                "PlanMiddleware requires exactly two tools: write_plan and finish_sub_plan."
-            )
+        tools = [
+            create_write_plan_tool(description=write_plan_tool_description),
+            create_finish_sub_plan_tool(description=finish_sub_plan_tool_description),
+        ]
 
-        self.tools = tools
+        if use_read_plan_tool:
+            tools.append(create_read_plan_tool(description=read_plan_tool_description))
 
         if system_prompt is None:
-            num = len(self.tools)
-            read_plan_system = (
-                _READ_PLAN_SYSTEM_PROMPT if num == 3 else ""
-            )  # if read_plan tool is not provided, do not include it in the system prompt
-
-            system_prompt = _PLAN_MIDDLEWARE_SYSTEM_PROMPT.format(
-                num=num, read_plan_system_prompt=read_plan_system
-            )
+            if use_read_plan_tool:
+                system_prompt = _PLAN_SYSTEM_PROMPT
+            else:
+                system_prompt = _PLAN_SYSTEM_PROMPT_NOT_READ_PLAN
 
         self.system_prompt = system_prompt
+        self.tools = tools
 
     def wrap_model_call(
         self,

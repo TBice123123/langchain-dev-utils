@@ -126,11 +126,14 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         stop: list[str] | None = None,
         **kwargs: Any,
     ) -> dict:
+        payload = {**self._default_params, **kwargs}
+
+        if self._use_responses_api(payload):
+            return super()._get_request_payload(input_, stop=stop, **kwargs)
+
         messages = self._convert_input(input_).to_messages()
         if stop is not None:
             kwargs["stop"] = stop
-
-        payload = {**self._default_params, **kwargs}
 
         payload_messages = []
 

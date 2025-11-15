@@ -235,6 +235,10 @@ def load_chat_model(
         ... )
         >>> model.invoke("Hello, how are you?")
     """
+    if "provider_config" in kwargs:
+        raise ValueError(
+            "provider_config is not a valid parameter in load_chat_model ,you can only set it when register model provider"
+        )
     return _load_chat_model_helper(
         cast(str, model),
         model_provider=model_provider,
