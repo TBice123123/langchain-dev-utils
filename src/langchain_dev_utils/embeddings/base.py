@@ -1,7 +1,8 @@
-import os
 from typing import Any, Literal, NotRequired, Optional, TypedDict, Union
 
 from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
+from langchain_core.utils import from_env, secret_from_env
+from pydantic import BaseModel
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
 
@@ -12,6 +13,34 @@ class EmbeddingProvider(TypedDict):
     provider_name: str
     embeddings_model: EmbeddingsType
     base_url: NotRequired[str]
+
+
+def _get_base_url_field_name(model_cls: type[BaseModel]) -> str | None:
+    """
+    Return 'base_url' if the model has a field named or aliased as 'base_url',
+    else return 'api_base' if it has a field named or aliased as 'api_base',
+    else return None.
+    The return value is always either 'base_url', 'api_base', or None.
+    """
+    model_fields = model_cls.model_fields
+
+    # try model_fields first
+    if "base_url" in model_fields:
+        return "base_url"
+
+    if "api_base" in model_fields:
+        return "api_base"
+
+    # then try aliases
+    for field_info in model_fields.values():
+        if field_info.alias == "base_url":
+            return "base_url"
+
+    for field_info in model_fields.values():
+        if field_info.alias == "api_base":
+            return "api_base"
+
+    return None
 
 
 def _parse_model_string(model_name: str) -> tuple[str, str]:
@@ -56,7 +85,7 @@ def register_embeddings_provider(
     Args:
         provider_name: Name of the provider to register
         embeddings_model: Either an Embeddings class or a string identifier for a supported provider
-        base_url: Optional base URL for API endpoints (required when embeddings_model is a string)
+        base_url: The API address of the Embedding model provider (optional, valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible")
 
     Raises:
         ValueError: If base_url is not provided when embeddings_model is a string
@@ -77,8 +106,9 @@ def register_embeddings_provider(
         >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
     """
+
+    base_url = base_url or from_env(f"{provider_name.upper()}_API_BASE", default=None)()
     if isinstance(embeddings_model, str):
-        base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
         if base_url is None:
             raise ValueError(
                 f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when embeddings_model is a string"
@@ -98,9 +128,19 @@ def register_embeddings_provider(
             }
         )
     else:
-        _EMBEDDINGS_PROVIDERS_DICT.update(
-            {provider_name: {"embeddings_model": embeddings_model}}
-        )
+        if base_url is not None:
+            _EMBEDDINGS_PROVIDERS_DICT.update(
+                {
+                    provider_name: {
+                        "embeddings_model": embeddings_model,
+                        "base_url": base_url,
+                    }
+                }
+            )
+        else:
+            _EMBEDDINGS_PROVIDERS_DICT.update(
+                {provider_name: {"embeddings_model": embeddings_model}}
+            )
 
 
 def batch_register_embeddings_provider(
@@ -115,7 +155,7 @@ def batch_register_embeddings_provider(
         providers: List of EmbeddingProvider dictionaries, each containing:
             - provider_name: str - Provider name
             - embeddings_model: Union[Type[Embeddings], str] - Model class or provider string
-            - base_url: Optional[str] - Base URL for API endpoints
+            - base_url: The API address of the Embedding model provider (optional, valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible")
 
     Raises:
         ValueError: If any of the providers are invalid
@@ -186,7 +226,7 @@ def load_embeddings(
     embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]
     if isinstance(embeddings, str):
         if not (api_key := kwargs.get("api_key")):
-            api_key = os.getenv(f"{provider.upper()}_API_KEY")
+            api_key = secret_from_env(f"{provider.upper()}_API_KEY", default=None)()
             if not api_key:
                 raise ValueError(
                     f"API key for {provider} not found. Please set it in the environment."
@@ -203,4 +243,8 @@ def load_embeddings(
             **kwargs,
         )
     else:
+        if base_url := _EMBEDDINGS_PROVIDERS_DICT[provider].get("base_url"):
+            url_key = _get_base_url_field_name(embeddings)
+            if url_key is not None:
+                kwargs.update({url_key: base_url})
         return embeddings(model=model, **kwargs)

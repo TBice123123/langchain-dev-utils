@@ -46,7 +46,7 @@ _DictOrPydantic = Union[dict, _BM]
 
 
 class _ModelProviderConfigType(BaseModel):
-    supported_tool_choice: ToolChoiceType = Field(default=[])
+    supported_tool_choice: ToolChoiceType = Field(default_factory=list)
     keep_reasoning_content: bool = Field(default=False)
     support_json_mode: bool = Field(default=False)
 

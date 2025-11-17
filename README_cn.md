@@ -45,7 +45,7 @@ pip install -U langchain-dev-utils[standard]
 
 - `provider_name`：模型提供商名称，作为后续模型加载的标识
 - `chat_model`：对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址（可选，当 `chat_model` 为字符串且是"openai-compatible"时有效）
+- `base_url`：模型提供商的 API 地址（可选，对于`chat_model`的两种类型情况都有效，但是主要用于`chat_model`为字符串且是"openai-compatible"的情况）
 - `provider_config`：模型提供商的相关配置（可选，当 `chat_model` 为字符串且是 "openai-compatible" 时有效），可以配置一些提供商的相关参数，例如是否支持 json_mode 的结构化输出方式、支持的 tool_choice 列表等
 
 `load_chat_model` 参数说明：
@@ -85,7 +85,7 @@ print(model.invoke("Hello"))
 
 - `provider_name`：嵌入模型提供商名称，作为后续模型加载的标识
 - `embeddings_model`：嵌入模型，可以是 Embeddings 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址（可选，当 `embeddings_model` 为字符串且是"openai-compatible"时有效）
+- `base_url`：嵌入模型提供商的 API 地址（可选，对于`embeddings_model`的两种类型情况都有效，但是主要用于`embeddings_model`为字符串且是"openai-compatible"的情况）
 
 `load_embeddings` 参数说明：
 

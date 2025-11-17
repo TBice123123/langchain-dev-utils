@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from langchain.tools import tool
-from langchain_community.chat_models import ChatTongyi
+from langchain_qwq import ChatQwen
 from langchain_core.messages import HumanMessage, ToolMessage
 
 from langchain_dev_utils.agents import create_agent
@@ -13,7 +13,7 @@ batch_register_model_provider(
     [
         {
             "provider_name": "dashscope",
-            "chat_model": ChatTongyi,
+            "chat_model": ChatQwen,
         },
         {"provider_name": "zai", "chat_model": "openai-compatible"},
     ]

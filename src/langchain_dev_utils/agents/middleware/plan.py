@@ -244,9 +244,10 @@ def create_read_plan_tool(
 
 _PLAN_SYSTEM_PROMPT_NOT_READ_PLAN = """You can manage task plans using two simple tools:
 
-1. **write_plan**
+## write_plan
 - Use it to break complex tasks (3+ steps) into a clear, actionable list. Only include next steps to execute — the first becomes `"in_progress"`, the rest `"pending"`. Don’t use it for simple tasks (<3 steps).
-2. **finish_sub_plan**
+
+## finish_sub_plan
 - Call it **only when the current task is 100% done**. It automatically marks it `"done"` and promotes the next `"pending"` task to `"in_progress"`. No parameters needed. Never use it mid-task or if anything’s incomplete.
 Keep plans lean, update immediately, and never batch completions.
 """
@@ -277,9 +278,15 @@ class PlanMiddleware(AgentMiddleware):
 
     Args:
         system_prompt: Custom system prompt to guide the agent on using the plan tool.
-            If not provided, uses the default `_PLAN_MIDDLEWARE_SYSTEM_PROMPT`.
-        tools: List of tools to be added to the agent. The tools must be created by `create_write_plan_tool`, `create_finish_sub_plan_tool`, and `create_read_plan_tool`(optional).
-
+            If not provided, uses the default `_PLAN_SYSTEM_PROMPT` or `_PLAN_SYSTEM_PROMPT_NOT_READ_PLAN` based on the `use_read_plan_tool` parameter.
+        write_plan_tool_description: Description of the `write_plan` tool.
+            If not provided, uses the default `_DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION`.
+        finish_sub_plan_tool_description: Description of the `finish_sub_plan` tool.
+            If not provided, uses the default `_DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION`.
+        read_plan_tool_description: Description of the `read_plan` tool.
+            If not provided, uses the default `_DEFAULT_READ_PLAN_TOOL_DESCRIPTION`.
+        use_read_plan_tool: Whether to use the `read_plan` tool.
+            If not provided, uses the default `True`.
     Example:
         ```python
         from langchain_dev_utils.agents.middleware.plan import PlanMiddleware
@@ -304,6 +311,7 @@ class PlanMiddleware(AgentMiddleware):
         finish_sub_plan_tool_description: Optional[str] = None,
         read_plan_tool_description: Optional[str] = None,
         use_read_plan_tool: bool = True,
+        message_key: Optional[str] = None,
     ) -> None:
         super().__init__()
 
@@ -319,8 +327,12 @@ class PlanMiddleware(AgentMiddleware):
         )
 
         tools = [
-            create_write_plan_tool(description=write_plan_tool_description),
-            create_finish_sub_plan_tool(description=finish_sub_plan_tool_description),
+            create_write_plan_tool(
+                description=write_plan_tool_description, message_key=message_key
+            ),
+            create_finish_sub_plan_tool(
+                description=finish_sub_plan_tool_description, message_key=message_key
+            ),
         ]
 
         if use_read_plan_tool:

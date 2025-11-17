@@ -1,10 +1,11 @@
-import os
 from typing import Any, NotRequired, Optional, TypedDict, cast
 
 from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.utils import from_env
 
 from .types import ChatModelType, ToolChoiceType
+from pydantic import BaseModel
 
 _MODEL_PROVIDERS_DICT = {}
 
@@ -20,6 +21,34 @@ class ChatModelProvider(TypedDict):
     chat_model: ChatModelType
     base_url: NotRequired[str]
     provider_config: NotRequired[ProviderConfig]
+
+
+def _get_base_url_field_name(model_cls: type[BaseModel]) -> str | None:
+    """
+    Return 'base_url' if the model has a field named or aliased as 'base_url',
+    else return 'api_base' if it has a field named or aliased as 'api_base',
+    else return None.
+    The return value is always either 'base_url', 'api_base', or None.
+    """
+    model_fields = model_cls.model_fields
+
+    # try model_fields first
+    if "base_url" in model_fields:
+        return "base_url"
+
+    if "api_base" in model_fields:
+        return "api_base"
+
+    # then try aliases
+    for field_info in model_fields.values():
+        if field_info.alias == "base_url":
+            return "base_url"
+
+    for field_info in model_fields.values():
+        if field_info.alias == "api_base":
+            return "api_base"
+
+    return None
 
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
@@ -71,6 +100,11 @@ def _load_chat_model_helper(
             "provider_config"
         ):
             kwargs.update({"provider_config": provider_config})
+
+        if base_url := _MODEL_PROVIDERS_DICT[model_provider].get("base_url"):
+            url_key = _get_base_url_field_name(chat_model)
+            if url_key:
+                kwargs.update({url_key: base_url})
         return chat_model(model=model, **kwargs)
 
     return _init_chat_model_helper(model, model_provider=model_provider, **kwargs)
@@ -91,7 +125,7 @@ def register_model_provider(
     Args:
         provider_name: Name of the provider to register
         chat_model: Either a BaseChatModel class or a string identifier for a supported provider
-        base_url: Optional base URL for API endpoints (Optional parameter;effective only when `chat_model` is a string and is "openai-compatible".)
+        base_url: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
         provider_config: The configuration of the model provider (Optional parameter;effective only when `chat_model` is a string and is "openai-compatible".)
            It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
     Raises:
@@ -113,6 +147,7 @@ def register_model_provider(
         >>> model = load_chat_model(model="vllm:qwen3-4b")
         >>> model.invoke("Hello")
     """
+    base_url = base_url or from_env(f"{provider_name.upper()}_API_BASE", default=None)()
     if isinstance(chat_model, str):
         try:
             from .adapters.openai_compatible import _create_openai_compatible_model
@@ -120,8 +155,6 @@ def register_model_provider(
             raise ImportError(
                 "Please install langchain_dev_utils[standard],when chat_model is a 'openai-compatible'"
             )
-
-        base_url = base_url or os.getenv(f"{provider_name.upper()}_API_BASE")
         if base_url is None:
             raise ValueError(
                 f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when chat_model is a string"
@@ -140,11 +173,17 @@ def register_model_provider(
                 provider_name: {
                     "chat_model": chat_model,
                     "provider_config": provider_config,
+                    "base_url": base_url,
                 }
             }
         )
     else:
-        _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
+        if base_url is not None:
+            _MODEL_PROVIDERS_DICT.update(
+                {provider_name: {"chat_model": chat_model, "base_url": base_url}}
+            )
+        else:
+            _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
 
 
 def batch_register_model_provider(
@@ -159,7 +198,7 @@ def batch_register_model_provider(
         providers: List of ChatModelProvider dictionaries, each containing:
             - provider_name: Name of the provider to register
             - chat_model: Either a BaseChatModel class or a string identifier for a supported provider
-            - base_url: Optional base URL for API endpoints(Optional parameter; effective only when `chat_model` is a string and is "openai-compatible".)
+            - base_url: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
             - provider_config: The configuration of the model provider(Optional parameter; effective only when `chat_model` is a string and is "openai-compatible".)
                 It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
 

@@ -45,7 +45,7 @@ Mainly consists of the following two functions:
 
 - `provider_name`: Model provider name, used as an identifier for subsequent model loading
 - `chat_model`: Chat model, can be a ChatModel or a string (currently supports "openai-compatible")
-- `base_url`: API address of the model provider (optional, valid when `chat_model` is a string and is "openai-compatible")
+- `base_url`: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
 - `provider_config`: Relevant configuration for the model provider (optional, valid when `chat_model` is a string and is "openai-compatible"), can configure some provider-related parameters, such as whether to support structured output in json_mode, list of supported tool_choices, etc.
 
 `load_chat_model` parameter description:
@@ -85,7 +85,7 @@ Mainly consists of the following two functions:
 
 - `provider_name`: Embedding model provider name, used as an identifier for subsequent model loading
 - `embeddings_model`: Embedding model, can be Embeddings or a string (currently supports "openai-compatible")
-- `base_url`: API address of the model provider (optional, valid when `embeddings_model` is a string and is "openai-compatible")
+- `base_url`: The API address of the Embedding model provider (optional, valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible")
 
 `load_embeddings` parameter description:
 
