@@ -3,9 +3,9 @@ from typing import Any, NotRequired, Optional, TypedDict, cast
 from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.utils import from_env
+from pydantic import BaseModel
 
 from .types import ChatModelType, ToolChoiceType
-from pydantic import BaseModel
 
 _MODEL_PROVIDERS_DICT = {}
 

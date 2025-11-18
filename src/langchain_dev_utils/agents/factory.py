@@ -1,9 +1,14 @@
 from typing import Any, Sequence
-from typing import Callable, cast
+from typing import Callable
 
-from langchain.agents import AgentState, create_agent as _create_agent
-from langchain.agents.factory import ResponseT
-from langchain.agents.middleware import AgentMiddleware
+from langchain.agents import create_agent as _create_agent
+from langchain.agents.middleware.types import (
+    AgentMiddleware,
+    AgentState,
+    ResponseT,
+    _InputAgentState,
+    _OutputAgentState,
+)
 from langchain.agents.structured_output import ResponseFormat
 from langchain_core.tools import BaseTool
 from langgraph.cache.base import BaseCache
@@ -31,7 +36,9 @@ def create_agent(  # noqa: PLR0915
     debug: bool = False,
     name: str | None = None,
     cache: BaseCache | None = None,
-) -> CompiledStateGraph:
+) -> CompiledStateGraph[
+    AgentState[ResponseT], ContextT, _InputAgentState, _OutputAgentState[ResponseT]
+]:
     """
     Create a prebuilt agent with string-based model specification.
 
@@ -80,22 +87,19 @@ def create_agent(  # noqa: PLR0915
         ... })
         >>> response
     """
-    return cast(
-        CompiledStateGraph,
-        _create_agent(
-            model=load_chat_model(model),
-            tools=tools,
-            system_prompt=system_prompt,
-            middleware=middleware,
-            response_format=response_format,
-            state_schema=state_schema,
-            context_schema=context_schema,
-            checkpointer=checkpointer,
-            store=store,
-            interrupt_before=interrupt_before,
-            interrupt_after=interrupt_after,
-            debug=debug,
-            name=name,
-            cache=cache,
-        ),
+    return _create_agent(
+        model=load_chat_model(model),
+        tools=tools,
+        system_prompt=system_prompt,
+        middleware=middleware,
+        response_format=response_format,
+        state_schema=state_schema,
+        context_schema=context_schema,
+        checkpointer=checkpointer,
+        store=store,
+        interrupt_before=interrupt_before,
+        interrupt_after=interrupt_after,
+        debug=debug,
+        name=name,
+        cache=cache,
     )

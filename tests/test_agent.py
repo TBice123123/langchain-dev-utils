@@ -33,6 +33,7 @@ def test_prebuilt_agent():
     response = agent.invoke(
         {"messages": [HumanMessage("What's the weather in New York?")]}
     )
+
     assert len(response["messages"]) == 4
 
     assert response["messages"][1].tool_calls[0]["name"] == "get_current_weather"
