@@ -223,6 +223,9 @@ def load_embeddings(
     ):
         raise ValueError(f"Provider {provider} not registered")
 
+    if provider in _SUPPORTED_PROVIDERS:
+        return init_embeddings(model, provider=provider, **kwargs)
+
     embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]
     if isinstance(embeddings, str):
         if not (api_key := kwargs.get("api_key")):
