@@ -274,7 +274,7 @@ print(response)
 #### 5.1 顺序图编排
 
 顺序图编排：
-采用`sequential_pipeline`，支持的参数如下:
+采用`create_sequential_pipeline`，支持的参数如下:
 
 - `sub_graphs`: 要组合的状态图列表（必须是 StateGraph 实例）
 - `state_schema`: 最终生成图的 State Schema
@@ -290,7 +290,7 @@ print(response)
 from langchain.agents import AgentState
 from langchain_core.messages import HumanMessage
 from langchain_dev_utils.agents import create_agent
-from langchain_dev_utils.pipeline import sequential_pipeline
+from langchain_dev_utils.pipeline import create_sequential_pipeline
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -300,7 +300,7 @@ register_model_provider(
 )
 
 # 构建顺序管道（所有子图顺序执行）
-graph = sequential_pipeline(
+graph = create_sequential_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
@@ -331,7 +331,7 @@ print(response)
 #### 5.2 并行图编排
 
 并行图编排：
-采用`parallel_pipeline`，支持的参数如下:
+采用`create_parallel_pipeline`，支持的参数如下:
 
 - `sub_graphs`: 要组合的状态图列表
 - `state_schema`: 最终生成图的 State Schema
@@ -345,10 +345,10 @@ print(response)
 - `cache`: LangGraph 的 Cache（可选）
 
 ```python
-from langchain_dev_utils.pipeline import parallel_pipeline
+from langchain_dev_utils.pipeline import create_parallel_pipeline
 
 # 构建并行管道（所有子图并行执行）
-graph = parallel_pipeline(
+graph = create_parallel_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",

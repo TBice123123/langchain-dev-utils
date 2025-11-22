@@ -1,5 +1,5 @@
 {
-  "python.testing.pytestArgs": ["tests"],
+  "python.testing.pytestArgs": ["tests", "-s"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "search.useIgnoreFiles": true,

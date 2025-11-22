@@ -3,7 +3,10 @@ from typing import Annotated, TypedDict
 from langgraph.graph import StateGraph
 from langgraph.types import Send
 
-from langchain_dev_utils.pipeline import parallel_pipeline, sequential_pipeline
+from langchain_dev_utils.pipeline import (
+    create_parallel_pipeline,
+    create_sequential_pipeline,
+)
 
 
 def replace(a: int, b: int):
@@ -33,7 +36,7 @@ def make_graph(name: str):
 
 
 def test_sequential_graph():
-    graph = sequential_pipeline(
+    graph = create_sequential_pipeline(
         sub_graphs=[
             make_graph("graph1"),
             make_graph("graph2"),
@@ -46,7 +49,7 @@ def test_sequential_graph():
 
 
 def test_parallel_graph():
-    graph = parallel_pipeline(
+    graph = create_parallel_pipeline(
         sub_graphs=[
             make_graph("graph1"),
             make_graph("graph2"),
@@ -59,7 +62,7 @@ def test_parallel_graph():
 
 
 def test_parallel_graph_with_branches_fn():
-    graph = parallel_pipeline(
+    graph = create_parallel_pipeline(
         sub_graphs=[
             make_graph("graph1"),
             make_graph("graph2"),

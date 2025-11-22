@@ -1,20 +1,25 @@
 import datetime
-from typing import Annotated, Any
+from typing import Any
 from typing import cast
 
-from langchain_core.messages import BaseMessage, HumanMessage
+from dotenv import load_dotenv
+from langchain.agents import create_agent
+from langchain_core.messages import HumanMessage
 from langchain_core.tools import BaseTool
-from langgraph.graph.message import add_messages
-from langgraph.graph.state import StateGraph
+from langchain_qwq import ChatQwen
+from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import interrupt
 import pytest
-from typing_extensions import TypedDict
 
+from langchain_dev_utils.chat_models import load_chat_model, register_model_provider
 from langchain_dev_utils.tool_calling import (
+    InterruptParams,
     human_in_the_loop,
     human_in_the_loop_async,
-    InterruptParams,
 )
+
+load_dotenv()
+register_model_provider(provider_name="dashscope", chat_model=ChatQwen)
 
 
 def handler(params: InterruptParams):
@@ -76,29 +81,20 @@ async def get_current_time_with_handler_async() -> str:
     ],
 )
 def test_human_in_loop(tool: BaseTool, expected: Any):
-    class State(TypedDict):
-        timestamp: str
-        messages: Annotated[list[BaseMessage], add_messages]
+    model = load_chat_model("dashscope:qwen-flash")
 
-    def run_tool(state: State) -> State:
-        timestamp = tool.invoke({})
-        return {"timestamp": timestamp, "messages": state["messages"]}
+    agent = create_agent(
+        model=model,
+        tools=[tool],
+        checkpointer=InMemorySaver(),
+    )
 
-    graph = StateGraph(State)
-    graph.add_node("tool", run_tool)
-    graph.add_edge("__start__", "tool")
-
-    graph = graph.compile()
-
-    for msg in graph.stream(
-        {
-            "timestamp": "",
-            "messages": [HumanMessage("1")],
-        },
+    response = agent.invoke(
+        {"messages": [HumanMessage("what's the time")]},
         config={"configurable": {"thread_id": "1"}},
-    ):
-        assert "__interrupt__" in msg
-        assert cast(tuple, msg.get("__interrupt__"))[0].value == expected
+    )
+    assert "__interrupt__" in response
+    assert cast(tuple, response.get("__interrupt__"))[0].value == expected
 
 
 @pytest.mark.parametrize(
@@ -123,26 +119,17 @@ def test_human_in_loop(tool: BaseTool, expected: Any):
     ],
 )
 async def test_human_in_loop_async(tool: BaseTool, expected: Any):
-    class State(TypedDict):
-        timestamp: str
-        messages: Annotated[list[BaseMessage], add_messages]
+    model = load_chat_model("dashscope:qwen-flash")
 
-    async def run_tool(state: State) -> State:
-        timestamp = await tool.ainvoke({})
-        return {"timestamp": timestamp, "messages": state["messages"]}
+    agent = create_agent(
+        model=model,
+        tools=[tool],
+        checkpointer=InMemorySaver(),
+    )
 
-    graph = StateGraph(State)
-    graph.add_node("tool", run_tool)
-    graph.add_edge("__start__", "tool")
-
-    graph = graph.compile()
-
-    async for msg in graph.astream(
-        {
-            "timestamp": "",
-            "messages": [HumanMessage("1")],
-        },
+    response = await agent.ainvoke(
+        {"messages": [HumanMessage("what's the time")]},
         config={"configurable": {"thread_id": "1"}},
-    ):
-        assert "__interrupt__" in msg
-        assert cast(tuple, msg.get("__interrupt__"))[0].value == expected
+    )
+    assert "__interrupt__" in response
+    assert cast(tuple, response.get("__interrupt__"))[0].value == expected

@@ -274,7 +274,7 @@ Includes the following features:
 #### 5.1 Sequential Graph Orchestration
 
 Sequential graph orchestration:
-Uses `sequential_pipeline`, supported parameters:
+Uses `create_sequential_pipeline`, supported parameters:
 
 - `sub_graphs`: List of state graphs to combine (must be StateGraph instances)
 - `state_schema`: State Schema for the final generated graph
@@ -290,7 +290,7 @@ Uses `sequential_pipeline`, supported parameters:
 from langchain.agents import AgentState
 from langchain_core.messages import HumanMessage
 from langchain_dev_utils.agents import create_agent
-from langchain_dev_utils.pipeline import sequential_pipeline
+from langchain_dev_utils.pipeline import create_sequential_pipeline
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -300,7 +300,7 @@ register_model_provider(
 )
 
 # Build sequential pipeline (all sub-graphs execute sequentially)
-graph = sequential_pipeline(
+graph = create_sequential_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
@@ -331,7 +331,7 @@ print(response)
 #### 5.2 Parallel Graph Orchestration
 
 Parallel graph orchestration:
-Uses `parallel_pipeline`, supported parameters:
+Uses `create_parallel_pipeline`, supported parameters:
 
 - `sub_graphs`: List of state graphs to combine
 - `state_schema`: State Schema for the final generated graph
@@ -345,10 +345,10 @@ Uses `parallel_pipeline`, supported parameters:
 - `cache`: LangGraph Cache (optional)
 
 ```python
-from langchain_dev_utils.pipeline import parallel_pipeline
+from langchain_dev_utils.pipeline import create_parallel_pipeline
 
 # Build parallel pipeline (all sub-graphs execute in parallel)
-graph = parallel_pipeline(
+graph = create_parallel_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",

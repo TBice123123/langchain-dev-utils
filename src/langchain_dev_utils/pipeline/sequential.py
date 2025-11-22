@@ -10,7 +10,7 @@ from langgraph.typing import ContextT, InputT, OutputT, StateT
 from .types import SubGraph
 
 
-def sequential_pipeline(
+def create_sequential_pipeline(
     sub_graphs: list[SubGraph],
     state_schema: type[StateT],
     graph_name: Optional[str] = None,
@@ -44,12 +44,9 @@ def sequential_pipeline(
 
     Example:
         Basic sequential pipeline with multiple specialized agents:
-        >>> from langchain_dev_utils.pipeline import sequential_pipeline
-        >>> from src.graph import create_agent
-        >>> from src.state import AgentState
-        >>> from langchain_core.messages import HumanMessage
+        >>> from langchain_dev_utils.pipeline import create_sequential_pipeline
         >>>
-        >>> graph = sequential_pipeline(
+        >>> graph = create_sequential_pipeline(
         ...     sub_graphs=[
         ...         create_agent(
         ...             model="vllm:qwen3-4b",

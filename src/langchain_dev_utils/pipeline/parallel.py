@@ -10,7 +10,7 @@ from langgraph.typing import ContextT, InputT, OutputT, StateT
 from .types import SubGraph
 
 
-def parallel_pipeline(
+def create_parallel_pipeline(
     sub_graphs: list[SubGraph],
     state_schema: type[StateT],
     graph_name: Optional[str] = None,
@@ -51,12 +51,9 @@ def parallel_pipeline(
 
     Example:
         Basic parallel pipeline with multiple specialized agents:
-        >>> from langchain_dev_utils.pipeline import parallel_pipeline
-        >>> from src.graph import create_agent
-        >>> from src.state import AgentState
-        >>> from langchain_core.messages import HumanMessage
+        >>> from langchain_dev_utils.pipeline import create_parallel_pipeline
         >>>
-        >>> graph = parallel_pipeline(
+        >>> graph = create_parallel_pipeline(
         ...     sub_graphs=[
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
@@ -84,7 +81,7 @@ def parallel_pipeline(
         >>> response = graph.invoke({"messages": [HumanMessage("Hello")]})
 
         set branch_fn:
-        >>> graph = parallel_pipeline(
+        >>> graph = create_parallel_pipeline(
         ...     sub_graphs=[
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
