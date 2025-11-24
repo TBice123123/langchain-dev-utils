@@ -5,15 +5,9 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.utils import from_env
 from pydantic import BaseModel
 
-from .types import ChatModelType, ToolChoiceType
+from .types import ChatModelType, ProviderConfig
 
 _MODEL_PROVIDERS_DICT = {}
-
-
-class ProviderConfig(TypedDict):
-    supported_tool_choice: NotRequired[ToolChoiceType]
-    keep_reasoning_content: NotRequired[bool]
-    support_json_mode: NotRequired[bool]
 
 
 class ChatModelProvider(TypedDict):
@@ -96,11 +90,6 @@ def _load_chat_model_helper(
     model, model_provider = _parse_model(model, model_provider)
     if model_provider in _MODEL_PROVIDERS_DICT.keys():
         chat_model = _MODEL_PROVIDERS_DICT[model_provider]["chat_model"]
-        if provider_config := _MODEL_PROVIDERS_DICT[model_provider].get(
-            "provider_config"
-        ):
-            kwargs.update({"provider_config": provider_config})
-
         if base_url := _MODEL_PROVIDERS_DICT[model_provider].get("base_url"):
             url_key = _get_base_url_field_name(chat_model)
             if url_key:
@@ -167,6 +156,7 @@ def register_model_provider(
         chat_model = _create_openai_compatible_model(
             provider_name,
             base_url,
+            provider_config=provider_config,
         )
         _MODEL_PROVIDERS_DICT.update(
             {
@@ -274,10 +264,6 @@ def load_chat_model(
         ... )
         >>> model.invoke("Hello, how are you?")
     """
-    if "provider_config" in kwargs:
-        raise ValueError(
-            "provider_config is not a valid parameter in load_chat_model ,you can only set it when register model provider"
-        )
     return _load_chat_model_helper(
         cast(str, model),
         model_provider=model_provider,

@@ -38,37 +38,33 @@ from pydantic import (
 )
 from typing_extensions import Self
 
-from ..types import ToolChoiceType
+from ..types import ProviderConfig, ToolChoiceType
 
 _BM = TypeVar("_BM", bound=BaseModel)
 _DictOrPydanticClass = Union[dict[str, Any], type[_BM], type]
 _DictOrPydantic = Union[dict, _BM]
 
 
-class _ModelProviderConfigType(BaseModel):
-    supported_tool_choice: ToolChoiceType = Field(default_factory=list)
-    keep_reasoning_content: bool = Field(default=False)
-    support_json_mode: bool = Field(default=False)
-
-
 class _BaseChatOpenAICompatible(BaseChatOpenAI):
     """
     Base template class for OpenAI-compatible chat model implementations.
 
-    This class provides a foundation for integrating various LLM providers that offer
-    OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot, and many others).
+    This class provides a foundation for integrating various LLM providers that offer OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot, and many others).
     It enhances the base OpenAI functionality by:
-    1. Supporting `reasoning_content` generation and parsing.
-    2. Modifying the default implementation method for structured outputs to ensure broader compatibility.
-    3. Improving error messages when API responses are invalid.
 
-    Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class extends
-    capabilities to better support diverse OpenAI-compatible model providers while
-    maintaining full compatibility with LangChain's chat model interface.
+    **1.Supports output of more types of reasoning content (reasoning_content)**
+    ChatOpenAI can only output reasoning content natively supported by official OpenAI models, while OpenAICompatibleChatModel can output reasoning content from other model providers (e.g., OpenRouter).
+
+    **2.Optimizes default behavior for structured output**
+    When calling with_structured_output, the default value of the method parameter is adjusted to "function_calling" (instead of the default "json_schema" in ChatOpenAI), providing better compatibility with other models.
+
+    **3.Supports configuration of related parameters**
+    For cases where parameters differ from the official OpenAI API, this library provides the provider_config parameter to address this issue. For example, when different model providers have inconsistent support for tool_choice, you can adapt by setting supported_tool_choice in provider_config.
+
+    Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class extends capabilities to better support diverse OpenAI-compatible model providers while maintaining full compatibility with LangChain's chat model interface.
 
     Note: This is a template class and should not be exported or instantiated directly.
-    Instead, use it as a base class and provide the specific provider name through
-    inheritance or the factory function `_create_openai_compatible_model()`.
+    Instead, use it as a base class and provide the specific provider name through inheritance or the factory function `_create_openai_compatible_model()`.
     """
 
     model_name: str = Field(alias="model", default="openai compatible model")
@@ -86,21 +82,21 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
     _provider: str = PrivateAttr(default="openai-compatible")
 
-    provider_config: _ModelProviderConfigType = Field(
-        default_factory=lambda: _ModelProviderConfigType(),
-    )
+    supported_tool_choice: ToolChoiceType = Field(default_factory=list)
+    keep_reasoning_content: bool = Field(default=False)
+    support_json_mode: bool = Field(default=False)
 
     @property
     def _supported_tool_choice(self) -> ToolChoiceType:
-        return self.provider_config.supported_tool_choice
+        return self.supported_tool_choice
 
     @property
     def _keep_reasoning_content(self) -> bool:
-        return self.provider_config.keep_reasoning_content
+        return self.keep_reasoning_content
 
     @property
     def _support_json_mode(self) -> bool:
-        return self.provider_config.support_json_mode
+        return self.support_json_mode
 
     @property
     def _llm_type(self) -> str:
@@ -453,7 +449,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
 
 def _create_openai_compatible_model(
-    provider: str, base_url: str
+    provider: str,
+    base_url: str,
+    provider_config: Optional[ProviderConfig] = None,
+    chat_model_cls_name: Optional[str] = None,
 ) -> Type[_BaseChatOpenAICompatible]:
     """Factory function for creating provider-specific OpenAI-compatible model classes.
 
@@ -461,16 +460,20 @@ def _create_openai_compatible_model(
     configuring environment variable mappings and default base URLs specific to each provider.
 
     Args:
-        provider: Provider identifier (e.g., `vllm`)
+        provider: Provider identifier (e.g., `vllm`,`openrouter`)
         base_url: Default API base URL for the provider
-        tool_choice: List of tool choices for the model (e.g., ["auto", "none", "any", "required", "specific"])
-        keep_reasoning_content: Whether to keep reasoning content in the messages
+        provider_config: Optional configuration for the provider
+        chat_model_cls_name: Optional custom name for the chat model class
 
     Returns:
         Configured model class ready for instantiation with provider-specific settings
     """
+    chat_model_cls_name = chat_model_cls_name or f"Chat{provider.title()}"
+
+    if provider_config is None:
+        provider_config = {}
     return create_model(
-        f"Chat{provider.title()}",
+        chat_model_cls_name,
         __base__=_BaseChatOpenAICompatible,
         api_base=(
             str,
@@ -491,5 +494,17 @@ def _create_openai_compatible_model(
         _provider=(
             str,
             PrivateAttr(default=provider),
+        ),
+        supported_tool_choice=(
+            ToolChoiceType,
+            Field(default=provider_config.get("supported_tool_choice", ["auto"])),
+        ),
+        keep_reasoning_content=(
+            bool,
+            Field(default=provider_config.get("keep_reasoning_content", False)),
+        ),
+        support_json_mode=(
+            bool,
+            Field(default=provider_config.get("support_json_mode", False)),
         ),
     )

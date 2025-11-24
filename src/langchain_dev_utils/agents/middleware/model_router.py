@@ -175,20 +175,23 @@ class ModelRouterMiddleware(AgentMiddleware):
             for item in self.model_list
         }
         select_model_name = request.state.get("router_model_selection", "default-model")
+
+        override_kwargs = {}
         if select_model_name != "default-model":
             if select_model_name in model_dict:
                 model_values = model_dict.get(select_model_name, {})
                 if model_values["kwargs"] is not None:
-                    request.model = load_chat_model(
-                        select_model_name, **model_values["kwargs"]
-                    )
+                    model = load_chat_model(select_model_name, **model_values["kwargs"])
                 else:
-                    request.model = load_chat_model(select_model_name)
+                    model = load_chat_model(select_model_name)
+                override_kwargs["model"] = model
                 if model_values["tools"] is not None:
-                    request.tools = model_values["tools"]
+                    override_kwargs["tools"] = model_values["tools"]
                 if model_values["system_prompt"] is not None:
-                    request.system_prompt = model_values["system_prompt"]
-        return handler(request)
+                    override_kwargs["system_message"] = SystemMessage(
+                        content=model_values["system_prompt"]
+                    )
+        return handler(request.override(**override_kwargs))
 
     async def awrap_model_call(
         self,
@@ -204,17 +207,19 @@ class ModelRouterMiddleware(AgentMiddleware):
             for item in self.model_list
         }
         select_model_name = request.state.get("router_model_selection", "default-model")
+        override_kwargs = {}
         if select_model_name != "default-model":
             if select_model_name in model_dict:
                 model_values = model_dict.get(select_model_name, {})
                 if model_values["kwargs"] is not None:
-                    request.model = load_chat_model(
-                        select_model_name, **model_values["kwargs"]
-                    )
+                    model = load_chat_model(select_model_name, **model_values["kwargs"])
                 else:
-                    request.model = load_chat_model(select_model_name)
+                    model = load_chat_model(select_model_name)
+                override_kwargs["model"] = model
                 if model_values["tools"] is not None:
-                    request.tools = model_values["tools"]
+                    override_kwargs["tools"] = model_values["tools"]
                 if model_values["system_prompt"] is not None:
-                    request.system_prompt = model_values["system_prompt"]
-        return await handler(request)
+                    override_kwargs["system_message"] = SystemMessage(
+                        content=model_values["system_prompt"]
+                    )
+        return await handler(request.override(**override_kwargs))

@@ -1,5 +1,5 @@
 import json
-from typing import Awaitable, Callable, Literal, Optional
+from typing import Awaitable, Callable, Literal, Optional, cast
 from typing import NotRequired
 
 from langchain.agents.middleware import ModelRequest, ModelResponse
@@ -9,7 +9,7 @@ from langchain.agents.middleware.types import (
     ModelCallResult,
 )
 from langchain.tools import BaseTool, ToolRuntime, tool
-from langchain_core.messages import ToolMessage
+from langchain_core.messages import SystemMessage, ToolMessage
 from langgraph.types import Command
 from typing_extensions import TypedDict
 
@@ -353,21 +353,33 @@ class PlanMiddleware(AgentMiddleware):
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse],
     ) -> ModelCallResult:
-        request.system_prompt = (
-            request.system_prompt + "\n\n" + self.system_prompt
-            if request.system_prompt
-            else self.system_prompt
+        """Update the system message to include the plan system prompt."""
+        if request.system_message is not None:
+            new_system_content = [
+                *request.system_message.content_blocks,
+                {"type": "text", "text": f"\n\n{self.system_prompt}"},
+            ]
+        else:
+            new_system_content = [{"type": "text", "text": self.system_prompt}]
+        new_system_message = SystemMessage(
+            content=cast("list[str | dict[str, str]]", new_system_content)
         )
-        return handler(request)
+        return handler(request.override(system_message=new_system_message))
 
     async def awrap_model_call(
         self,
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        request.system_prompt = (
-            request.system_prompt + "\n\n" + self.system_prompt
-            if request.system_prompt
-            else self.system_prompt
+        """Update the system message to include the plan system prompt."""
+        if request.system_message is not None:
+            new_system_content = [
+                *request.system_message.content_blocks,
+                {"type": "text", "text": f"\n\n{self.system_prompt}"},
+            ]
+        else:
+            new_system_content = [{"type": "text", "text": self.system_prompt}]
+        new_system_message = SystemMessage(
+            content=cast("list[str | dict[str, str]]", new_system_content)
         )
-        return await handler(request)
+        return await handler(request.override(system_message=new_system_message))
