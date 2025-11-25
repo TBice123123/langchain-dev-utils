@@ -182,6 +182,13 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             self.async_client = self.root_async_client.chat.completions
         return self
 
+    @model_validator(mode="after")
+    def _set_model_profile(self) -> Self:
+        """Set model profile if not overridden."""
+        if self.profile is None:
+            self.profile = {}
+        return self
+
     def _create_chat_result(
         self,
         response: Union[dict, openai.BaseModel],
