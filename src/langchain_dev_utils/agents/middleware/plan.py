@@ -250,6 +250,8 @@ _PLAN_SYSTEM_PROMPT_NOT_READ_PLAN = """You can manage task plans using two simpl
 ## finish_sub_plan
 - Call it **only when the current task is 100% done**. It automatically marks it `"done"` and promotes the next `"pending"` task to `"in_progress"`. No parameters needed. Never use it mid-task or if anything’s incomplete.
 Keep plans lean, update immediately, and never batch completions.
+
+**Note**: Make sure that all tasks end up with the status `"done"`.
 """
 
 _PLAN_SYSTEM_PROMPT = """You can manage task plans using three simple tools:
@@ -263,6 +265,8 @@ _PLAN_SYSTEM_PROMPT = """You can manage task plans using three simple tools:
 ## read_plan
 - Retrieve the full current plan list with statuses, especially when you forget which sub-plan you're supposed to execute next.
 - No parameters required—returns a current plan list with statuses.
+
+**Note**: Make sure that all tasks end up with the status `"done"`.
 """
 
 
@@ -290,7 +294,7 @@ class PlanMiddleware(AgentMiddleware):
         message_key: The key of the message to be updated. Defaults to "messages".
     Example:
         ```python
-        from langchain_dev_utils.agents.middleware.plan import PlanMiddleware
+        from langchain_dev_utils.agents.middleware import PlanMiddleware
         from langchain_dev_utils.agents import create_agent
 
         agent = create_agent("vllm:qwen3-4b", middleware=[PlanMiddleware()])

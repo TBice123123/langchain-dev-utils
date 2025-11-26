@@ -155,7 +155,7 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**For more information about message conversion, please refer to**: [Message Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/message.html), [Format List Content](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/format.html)
+**For more information about message conversion, please refer to**: [Message Process](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/message.html), [Formatting List Content](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/format.html)
 
 ### 3. **Tool Calling**
 
@@ -215,7 +215,7 @@ def get_current_time() -> str:
     return str(datetime.datetime.now().timestamp())
 ```
 
-**For more information about tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-the-loop.html), [Tool Call Processing](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
+**For more information about tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-the-loop.html), [Tool Call Handling](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
 
 ### 4. **Agent Development**
 
@@ -262,7 +262,7 @@ response = agent.invoke({"messages": [{"role": "user", "content": "Give me a tra
 print(response)
 ```
 
-**For more information about agent development and all built-in middleware, please refer to**: [Prebuilt Agent Functions](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/prebuilt.html), [Middleware](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/middleware.html)
+**For more information about agent development and all built-in middleware, please refer to**: [Pre-built Agent Functions](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/prebuilt.html), [Middleware](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/middleware.html)
 
 ### 5. **State Graph Orchestration**
 
@@ -375,7 +375,7 @@ response = graph.invoke({"messages": [HumanMessage("Hello")]})
 print(response)
 ```
 
-**For more information about state graph orchestration, please refer to**: [State Graph Orchestration Pipeline](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration/pipeline.html)
+**For more information about state graph orchestration, please refer to**: [State Graph Orchestration](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration/pipeline.html)
 
 ## 💬 Join the Community
 

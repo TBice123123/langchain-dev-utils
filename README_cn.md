@@ -375,7 +375,7 @@ response = graph.invoke({"messages": [HumanMessage("你好")]})
 print(response)
 ```
 
-**对于更多关于状态图编排的相关介绍，请参考**: [状态图编排管道](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration/pipeline.html)
+**对于更多关于状态图编排的相关介绍，请参考**: [状态图编排](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration/pipeline.html)
 
 ## 💬 加入社区
 

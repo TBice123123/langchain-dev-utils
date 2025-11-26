@@ -17,7 +17,7 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
 
     Example:
         ```python
-        from langchain_dev_utils.agents.middleware.model_fallback import ModelFallbackMiddleware
+        from langchain_dev_utils.agents.middleware import ModelFallbackMiddleware
         from langchain_dev_utils.agents import create_agent
 
         fallback = ModelFallbackMiddleware(
