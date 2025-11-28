@@ -10,6 +10,7 @@ from langchain.agents.middleware.types import (
     _OutputAgentState,
 )
 from langchain.agents.structured_output import ResponseFormat
+from langchain_core.messages import SystemMessage
 from langchain_core.tools import BaseTool
 from langgraph.cache.base import BaseCache
 from langgraph.graph.state import CompiledStateGraph
@@ -24,7 +25,7 @@ def create_agent(  # noqa: PLR0915
     model: str,
     tools: Sequence[BaseTool | Callable | dict[str, Any]] | None = None,
     *,
-    system_prompt: str | None = None,
+    system_prompt: str | SystemMessage | None = None,
     middleware: Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] = (),
     response_format: ResponseFormat[ResponseT] | type[ResponseT] | None = None,
     state_schema: type[AgentState[ResponseT]] | None = None,

@@ -1,21 +1,10 @@
 from typing import Any, cast
 
-from dotenv import load_dotenv
 from langchain_core.language_models import BaseChatModel
 from langchain_tests.integration_tests.chat_models import ChatModelIntegrationTests
 import pytest
 
-from langchain_dev_utils.chat_models.base import (
-    load_chat_model,
-    register_model_provider,
-)
-
-load_dotenv()
-
-register_model_provider(
-    provider_name="zai",
-    chat_model="openai-compatible",
-)
+from langchain_dev_utils.chat_models.base import load_chat_model
 
 
 class TestStandard(ChatModelIntegrationTests):

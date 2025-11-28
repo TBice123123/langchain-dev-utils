@@ -41,19 +41,23 @@ Mainly consists of the following two functions:
 - `register_model_provider`: Register a chat model provider
 - `load_chat_model`: Load a chat model
 
-`register_model_provider` parameter description:
+**`register_model_provider` Parameters:**
 
-- `provider_name`: Model provider name, used as an identifier for subsequent model loading
-- `chat_model`: Chat model, can be a ChatModel or a string (currently supports "openai-compatible")
-- `base_url`: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
-- `provider_profile`: Model provider's model configuration file (optional, valid for both types of `chat_model`); finally, it will read the corresponding model configuration parameters based on `model_name` and set them to `model.profile`.
-- `provider_config`: Relevant configuration for the model provider (optional, valid when `chat_model` is a string and is "openai-compatible"), can configure some provider-related parameters, such as whether to support structured output in json_mode, list of supported tool_choices, etc.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `provider_name` | str | Yes | - | The name of the model provider, used as an identifier for loading models later. |
+| `chat_model` | ChatModel \| str | Yes | - | The chat model, which can be either a `ChatModel` instance or a string (currently only `"openai-compatible"` is supported). |
+| `base_url` | str | No | - | The API endpoint URL of the model provider (applicable to both `chat_model` types, but primarily used when `chat_model` is a string with value `"openai-compatible"`). |
+| `model_profiles` | dict | No | - | Declares the capabilities and parameters supported by each model provided by this provider. The configuration corresponding to the `model_name` will be loaded and assigned to `model.profile` (e.g., fields such as `max_input_tokens`, `tool_calling` etc.). |
+| `compatibility_options` | dict | No | - | Compatibility options for the model provider (only effective when `chat_model` is a string with value `"openai-compatible"`). Used to declare support for OpenAI-compatible features (e.g., `tool_choice` strategies, JSON mode, etc.) to ensure correct functional adaptation. |
 
-`load_chat_model` parameter description:
+**`load_chat_model` Parameters:**
 
-- `model`: Chat model name, type str
-- `model_provider`: Chat model provider name, type str, optional
-- `kwargs`: Additional parameters passed to the chat model class, e.g., temperature, top_p, etc.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `model` | str | Yes | - | Chat model name |
+| `model_provider` | str | No | - | Chat model provider name |
+| `kwargs` | dict | No | - | Additional parameters passed to the chat model class, e.g., temperature, top_p, etc. |
 
 Example for integrating a qwen3-4b model deployed using `vllm`:
 
@@ -82,17 +86,21 @@ Mainly consists of the following two functions:
 - `register_embeddings_provider`: Register an embedding model provider
 - `load_embeddings`: Load an embedding model
 
-`register_embeddings_provider` parameter description:
+**`register_embeddings_provider` Parameters:**
 
-- `provider_name`: Embedding model provider name, used as an identifier for subsequent model loading
-- `embeddings_model`: Embedding model, can be Embeddings or a string (currently supports "openai-compatible")
-- `base_url`: The API address of the Embedding model provider (optional, valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible")
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `provider_name` | str | Yes | - | Embedding model provider name, used as an identifier for subsequent model loading |
+| `embeddings_model` | Embeddings \| str | Yes | - | Embedding model, can be Embeddings or a string (currently supports "openai-compatible") |
+| `base_url` | str | No | - | The API address of the Embedding model provider (valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible") |
 
-`load_embeddings` parameter description:
+**`load_embeddings` Parameters:**
 
-- `model`: Embedding model name, type str
-- `provider`: Embedding model provider name, type str, optional
-- `kwargs`: Other additional parameters
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `model` | str | Yes | - | Embedding model name |
+| `provider` | str | No | - | Embedding model provider name |
+| `kwargs` | dict | No | - | Other additional parameters |
 
 Example for integrating a qwen3-embedding-4b model deployed using `vllm`:
 
@@ -126,9 +134,11 @@ Includes the following features:
 
 For stream responses obtained using `stream()` and `astream()`, you can use `merge_ai_message_chunk` to merge them into a final AIMessage.
 
-`merge_ai_message_chunk` parameter description:
+**`merge_ai_message_chunk` Parameters:**
 
-- `chunks`: List of AIMessageChunk
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `chunks` | List[AIMessageChunk] | Yes | - | List of AIMessageChunk objects |
 
 ```python
 chunks = list(model.stream("Hello"))
@@ -139,14 +149,13 @@ merged = merge_ai_message_chunk(chunks)
 
 For a list, you can use `format_sequence` to format it.
 
-`format_sequence` parameter description:
+**`format_sequence` Parameters:**
 
-- `inputs`: A list containing any of the following types:
-  - langchain_core.messages: HumanMessage, AIMessage, SystemMessage, ToolMessage
-  - langchain_core.documents.Document
-  - str
-- `separator`: String used to join the content, defaults to "-".
-- `with_num`: If True, add a numeric prefix to each item (e.g., "1. Hello"), defaults to False.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `inputs` | List | Yes | - | A list containing any of the following types: langchain_core.messages, langchain_core.documents.Document, str |
+| `separator` | str | No | "-" | String used to join the content |
+| `with_num` | bool | No | False | If True, add a numeric prefix to each item (e.g., "1. Hello") |
 
 ```python
 text = format_sequence([
@@ -169,14 +178,18 @@ Includes the following features:
 
 `has_tool_calling` and `parse_tool_calling` are used to check and parse tool calls.
 
-`has_tool_calling` parameter description:
+**`has_tool_calling` Parameters:**
 
-- `message`: AIMessage object
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `message` | AIMessage | Yes | - | AIMessage object |
 
-`parse_tool_calling` parameter description:
+**`parse_tool_calling` Parameters:**
 
-- `message`: AIMessage object
-- `first_tool_call_only`: Whether to only check the first tool call
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `message` | AIMessage | Yes | - | AIMessage object |
+| `first_tool_call_only` | bool | No | False | Whether to only check the first tool call |
 
 ```python
 import datetime
@@ -229,6 +242,13 @@ Includes the following features:
 
 In LangChain v1, the officially provided `create_agent` function can be used to create a single agent, where the model parameter supports passing a BaseChatModel instance or a specific string (when passing a string, it is limited to the models supported by `init_chat_model`). To extend the flexibility of specifying models via strings, this library provides a functionally identical `create_agent` function, allowing you to directly use models supported by `load_chat_model` (requires prior registration).
 
+**`create_agent` Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `model` | str \| BaseChatModel | Yes | - | Model name or model instance. Can be a string identifier for a model registered with `register_model_provider` or a BaseChatModel instance. |
+| Other parameters | Various | No | - | All other parameters are the same as in `langchain.agents.create_agent` |
+
 Usage example:
 
 ```python
@@ -277,15 +297,19 @@ Includes the following features:
 Sequential graph orchestration:
 Uses `create_sequential_pipeline`, supported parameters:
 
-- `sub_graphs`: List of state graphs to combine (must be StateGraph instances)
-- `state_schema`: State Schema for the final generated graph
-- `graph_name`: Name of the final generated graph (optional)
-- `context_schema`: Context Schema for the final generated graph (optional)
-- `input_schema`: Input Schema for the final generated graph (optional)
-- `output_schema`: Output Schema for the final generated graph (optional)
-- `checkpoint`: LangGraph persistence Checkpoint (optional)
-- `store`: LangGraph persistence Store (optional)
-- `cache`: LangGraph Cache (optional)
+**`create_sequential_pipeline` Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `sub_graphs` | List[StateGraph] | Yes | - | List of state graphs to combine (must be StateGraph instances) |
+| `state_schema` | type | Yes | - | State Schema for the final generated graph |
+| `graph_name` | str | No | - | Name of the final generated graph |
+| `context_schema` | type | No | - | Context Schema for the final generated graph |
+| `input_schema` | type | No | - | Input Schema for the final generated graph |
+| `output_schema` | type | No | - | Output Schema for the final generated graph |
+| `checkpoint` | BaseCheckpointSaver | No | - | LangGraph persistence Checkpoint |
+| `store` | BaseStore | No | - | LangGraph persistence Store |
+| `cache` | BaseCache | No | - | LangGraph Cache |
 
 ```python
 from langchain.agents import AgentState
@@ -334,16 +358,20 @@ print(response)
 Parallel graph orchestration:
 Uses `create_parallel_pipeline`, supported parameters:
 
-- `sub_graphs`: List of state graphs to combine
-- `state_schema`: State Schema for the final generated graph
-- `branches_fn`: Parallel branch function, returns a list of Send objects to control parallel execution
-- `graph_name`: Name of the final generated graph (optional)
-- `context_schema`: Context Schema for the final generated graph (optional)
-- `input_schema`: Input Schema for the final generated graph (optional)
-- `output_schema`: Output Schema for the final generated graph (optional)
-- `checkpoint`: LangGraph persistence Checkpoint (optional)
-- `store`: LangGraph persistence Store (optional)
-- `cache`: LangGraph Cache (optional)
+**`create_parallel_pipeline` Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `sub_graphs` | List[StateGraph] | Yes | - | List of state graphs to combine |
+| `state_schema` | type | Yes | - | State Schema for the final generated graph |
+| `branches_fn` | Callable | Yes | - | Parallel branch function, returns a list of Send objects to control parallel execution |
+| `graph_name` | str | No | - | Name of the final generated graph |
+| `context_schema` | type | No | - | Context Schema for the final generated graph |
+| `input_schema` | type | No | - | Input Schema for the final generated graph |
+| `output_schema` | type | No | - | Output Schema for the final generated graph |
+| `checkpoint` | BaseCheckpointSaver | No | - | LangGraph persistence Checkpoint |
+| `store` | BaseStore | No | - | LangGraph persistence Store |
+| `cache` | BaseCache | No | - | LangGraph Cache |
 
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline

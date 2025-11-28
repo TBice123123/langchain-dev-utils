@@ -1,25 +1,7 @@
-from dotenv import load_dotenv
-from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_core.embeddings import Embeddings
 import pytest
 
-from langchain_dev_utils.embeddings import (
-    batch_register_embeddings_provider,
-    load_embeddings,
-)
-
-load_dotenv()
-
-
-batch_register_embeddings_provider(
-    [
-        {
-            "provider_name": "siliconflow",
-            "embeddings_model": "openai-compatible",
-        },
-        {"provider_name": "dashscope", "embeddings_model": DashScopeEmbeddings},
-    ]
-)
+from langchain_dev_utils.embeddings import load_embeddings
 
 
 @pytest.fixture(

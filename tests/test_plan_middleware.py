@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from langchain_core.messages import AIMessage, HumanMessage
 
 from langchain_dev_utils.agents import create_agent
@@ -8,11 +7,7 @@ from langchain_dev_utils.agents.middleware.plan import (
     create_read_plan_tool,
     create_write_plan_tool,
 )
-from langchain_dev_utils.chat_models import register_model_provider
 from langchain_dev_utils.tool_calling.utils import has_tool_calling, parse_tool_calling
-
-load_dotenv()
-register_model_provider(provider_name="zai", chat_model="openai-compatible")
 
 
 def test_plan_tool():

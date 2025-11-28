@@ -41,20 +41,23 @@ pip install -U langchain-dev-utils[standard]
 - `register_model_provider`：注册对话模型提供商
 - `load_chat_model`：加载对话模型
 
-`register_model_provider` 参数说明：
+**`register_model_provider` 参数说明：**
 
-- `provider_name`：模型提供商名称，作为后续模型加载的标识
-- `chat_model`：对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"）
-- `base_url`：模型提供商的 API 地址（可选，对于`chat_model`的两种类型情况都有效，但是主要用于`chat_model`为字符串且是"openai-compatible"的情况）
-- `provider_profile`：模型提供商的模型配置文件（可选，对于`chat_model`的两种类型情况都有效）；最终将根据 `model_name` 读取对应的模型配置参数，并将其设置到 `model.profile` 中。
-- `provider_config`：模型提供商的相关配置（可选，当 `chat_model` 为字符串且是 "openai-compatible" 时有效），可以配置一些提供商的相关参数，例如是否支持 json_mode 的结构化输出方式、支持的 tool_choice 列表等
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `provider_name` | str | 是 | - | 模型提供商名称，作为后续模型加载的标识 |
+| `chat_model` | ChatModel \| str | 是 | - | 对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"） |
+| `base_url` | str | 否 | - | 模型提供商的 API 地址（可选，对于`chat_model`的两种类型情况都有效，但是主要用于`chat_model`为字符串且是"openai-compatible"的情况） |
+| `model_profiles` | dict | 否 | - | 声明该模型提供商提供的各模型支持的特性与相关参数（可选，适用于 `chat_model` 的两种类型）。最终会依据 `model_name` 读取对应配置并写入 `model.profile`（例如包含 `max_input_tokens`、`tool_calling`等字段）。 |
+| `compatibility_options` | dict | 否 | - | 模型提供商兼容性选项（可选，当 `chat_model` 为字符串且值为 `"openai-compatible"` 时有效），用于声明该提供商对 OpenAI 兼容特性（如 `tool_choice` 策略、JSON Mode等）的支持情况，以确保功能正确适配。 |
 
+**`load_chat_model` 参数说明：**
 
-`load_chat_model` 参数说明：
-
-- `model`：对话模型名称，类型为 str
-- `model_provider`：对话模型提供商名称，类型为 str，可选
-- `kwargs`：传递给对话模型类的额外的参数，例如 temperature、top_p 等
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `model` | str | 是 | - | 对话模型名称 |
+| `model_provider` | str | 否 | - | 对话模型提供商名称 |
+| `kwargs` | dict | 否 | - | 传递给对话模型类的额外的参数，例如 temperature、top_p 等 |
 
 假设接入使用`vllm`部署的 qwen3-4b 模型，则参考代码如下：
 
@@ -83,17 +86,21 @@ print(model.invoke("Hello"))
 - `register_embeddings_provider`：注册嵌入模型提供商
 - `load_embeddings`：加载嵌入模型
 
-`register_embeddings_provider` 参数说明：
+**`register_embeddings_provider` 参数说明：**
 
-- `provider_name`：嵌入模型提供商名称，作为后续模型加载的标识
-- `embeddings_model`：嵌入模型，可以是 Embeddings 或字符串（目前支持 "openai-compatible"）
-- `base_url`：嵌入模型提供商的 API 地址（可选，对于`embeddings_model`的两种类型情况都有效，但是主要用于`embeddings_model`为字符串且是"openai-compatible"的情况）
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `provider_name` | str | 是 | - | 嵌入模型提供商名称，作为后续模型加载的标识 |
+| `embeddings_model` | Embeddings \| str | 是 | - | 嵌入模型，可以是 Embeddings 或字符串（目前支持 "openai-compatible"） |
+| `base_url` | str | 否 | - | 嵌入模型提供商的 API 地址（可选，对于`embeddings_model`的两种类型情况都有效，但是主要用于`embeddings_model`为字符串且是"openai-compatible"的情况） |
 
-`load_embeddings` 参数说明：
+**`load_embeddings` 参数说明：**
 
-- `model`：嵌入模型名称，类型为 str
-- `provider`：嵌入模型提供商名称，类型为 str，可选
-- `kwargs`：其它额外的参数
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `model` | str | 是 | - | 嵌入模型名称 |
+| `provider` | str | 否 | - | 嵌入模型提供商名称 |
+| `kwargs` | dict | 否 | - | 其它额外的参数 |
 
 假设接入使用`vllm`部署的 qwen3-embedding-4b 模型，则参考代码如下：
 
@@ -127,9 +134,11 @@ print(emb)
 
 对于使用`stream()`和`astream()`所获得的流式响应，可以使用`merge_ai_message_chunk`进行合并为一个最终的 AIMessage。
 
-`merge_ai_message_chunk` 参数说明：
+**`merge_ai_message_chunk` 参数说明：**
 
-- `chunks`：AIMessageChunk 列表
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `chunks` | List[AIMessageChunk] | 是 | - | AIMessageChunk 列表 |
 
 ```python
 chunks = list(model.stream("Hello"))
@@ -140,14 +149,13 @@ merged = merge_ai_message_chunk(chunks)
 
 对于一个列表，可以使用`format_sequence`进行格式化。
 
-`format_sequence` 参数说明：
+**`format_sequence` 参数说明：**
 
-- `inputs`：包含以下任意类型的列表：
-  - langchain_core.messages：HumanMessage、AIMessage、SystemMessage、ToolMessage
-  - langchain_core.documents.Document
-  - str
-- `separator`：用于连接内容的字符串，默认为 "-"。
-- `with_num`：如果为 True，为每个项目添加数字前缀（例如 "1. 你好"），默认为 False。
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `inputs` | List | 是 | - | 包含以下任意类型的列表：langchain_core.messages、langchain_core.documents.Document、str |
+| `separator` | str | 否 | "-" | 用于连接内容的字符串 |
+| `with_num` | bool | 否 | False | 如果为 True，为每个项目添加数字前缀（例如 "1. 你好"） |
 
 ```python
 text = format_sequence([
@@ -170,14 +178,18 @@ text = format_sequence([
 
 `has_tool_calling`和`parse_tool_calling`用于检查和解析工具调用。
 
-`has_tool_calling` 参数说明：
+**`has_tool_calling` 参数说明：**
 
-- `message`：AIMessage 对象
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `message` | AIMessage | 是 | - | AIMessage 对象 |
 
-`parse_tool_calling` 参数说明：
+**`parse_tool_calling` 参数说明：**
 
-- `message`：AIMessage 对象
-- `first_tool_call_only`：是否只检查第一个工具调用
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `message` | AIMessage | 是 | - | AIMessage 对象 |
+| `first_tool_call_only` | bool | 否 | False | 是否只检查第一个工具调用 |
 
 ```python
 import datetime
@@ -230,6 +242,14 @@ def get_current_time() -> str:
 
 LangChain v1 版本中，官方提供的 `create_agent` 函数可以用于创建单智能体，其中 model 参数支持传入 BaseChatModel 实例或特定字符串（当传入字符串时，仅限于 `init_chat_model` 支持的模型）。为扩展字符串指定模型的灵活性，本库提供了功能相同的 `create_agent` 函数，使您能直接使用 `load_chat_model` 支持的模型（需要提取注册）。
 
+**`create_agent` 参数说明：**
+
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `model` | str \| BaseChatModel | 是 | - | 模型名称或模型实例 |
+
+**其余参数与 `langchain.agents.create_agent` 函数相同。**
+
 使用示例：
 
 ```python
@@ -278,15 +298,19 @@ print(response)
 顺序图编排：
 采用`create_sequential_pipeline`，支持的参数如下:
 
-- `sub_graphs`: 要组合的状态图列表（必须是 StateGraph 实例）
-- `state_schema`: 最终生成图的 State Schema
-- `graph_name`: 最终生成图的名称（可选）
-- `context_schema`: 最终生成图的 Context Schema（可选）
-- `input_schema`: 最终生成图的输入 Schema（可选）
-- `output_schema`: 最终生成图的输出 Schema（可选）
-- `checkpoint`: LangGraph 的持久化 Checkpoint（可选）
-- `store`: LangGraph 的持久化 Store（可选）
-- `cache`: LangGraph 的 Cache（可选）
+**`create_sequential_pipeline` 参数说明：**
+
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `sub_graphs` | List[StateGraph] | 是 | - | 要组合的状态图列表（必须是 StateGraph 实例） |
+| `state_schema` | type | 是 | - | 最终生成图的 State Schema |
+| `graph_name` | str | 否 | - | 最终生成图的名称 |
+| `context_schema` | type | 否 | - | 最终生成图的 Context Schema |
+| `input_schema` | type | 否 | - | 最终生成图的输入 Schema |
+| `output_schema` | type | 否 | - | 最终生成图的输出 Schema |
+| `checkpoint` | BaseCheckpointSaver | 否 | - | LangGraph 的持久化 Checkpoint |
+| `store` | BaseStore | 否 | - | LangGraph 的持久化 Store |
+| `cache` | BaseCache | 否 | - | LangGraph 的 Cache |
 
 ```python
 from langchain.agents import AgentState
@@ -335,16 +359,20 @@ print(response)
 并行图编排：
 采用`create_parallel_pipeline`，支持的参数如下:
 
-- `sub_graphs`: 要组合的状态图列表
-- `state_schema`: 最终生成图的 State Schema
-- `branches_fn`: 并行分支函数，返回 Send 对象列表控制并行执行
-- `graph_name`: 最终生成图的名称（可选）
-- `context_schema`: 最终生成图的 Context Schema（可选）
-- `input_schema`: 最终生成图的输入 Schema（可选）
-- `output_schema`: 最终生成图的输出 Schema（可选）
-- `checkpoint`: LangGraph 的持久化 Checkpoint（可选）
-- `store`: LangGraph 的持久化 Store（可选）
-- `cache`: LangGraph 的 Cache（可选）
+**`create_parallel_pipeline` 参数说明：**
+
+| 参数名 | 类型 | 必填 | 默认值 | 描述 |
+|--------|------|------|--------|------|
+| `sub_graphs` | List[StateGraph] | 是 | - | 要组合的状态图列表 |
+| `state_schema` | type | 是 | - | 最终生成图的 State Schema |
+| `branches_fn` | Callable | 是 | - | 并行分支函数，返回 Send 对象列表控制并行执行 |
+| `graph_name` | str | 否 | - | 最终生成图的名称 |
+| `context_schema` | type | 否 | - | 最终生成图的 Context Schema |
+| `input_schema` | type | 否 | - | 最终生成图的输入 Schema |
+| `output_schema` | type | 否 | - | 最终生成图的输出 Schema |
+| `checkpoint` | BaseCheckpointSaver | 否 | - | LangGraph 的持久化 Checkpoint |
+| `store` | BaseStore | 否 | - | LangGraph 的持久化 Store |
+| `cache` | BaseCache | 否 | - | LangGraph 的 Cache |
 
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline

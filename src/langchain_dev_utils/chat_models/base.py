@@ -5,7 +5,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.utils import from_env
 from pydantic import BaseModel
 
-from .types import ChatModelType, ProviderConfig
+from .types import ChatModelType, CompatibilityOptions
 
 _MODEL_PROVIDERS_DICT = {}
 
@@ -14,8 +14,8 @@ class ChatModelProvider(TypedDict):
     provider_name: str
     chat_model: ChatModelType
     base_url: NotRequired[str]
-    provider_profile: NotRequired[dict[str, dict[str, Any]]]
-    provider_config: NotRequired[ProviderConfig]
+    model_profiles: NotRequired[dict[str, dict[str, Any]]]
+    compatibility_options: NotRequired[CompatibilityOptions]
 
 
 def _get_base_url_field_name(model_cls: type[BaseModel]) -> str | None:
@@ -95,11 +95,11 @@ def _load_chat_model_helper(
             url_key = _get_base_url_field_name(chat_model)
             if url_key:
                 kwargs.update({url_key: base_url})
-        if provider_profile := _MODEL_PROVIDERS_DICT[model_provider].get(
-            "provider_profile"
+        if model_profiles := _MODEL_PROVIDERS_DICT[model_provider].get(
+            "model_profiles"
         ):
-            if model in provider_profile:
-                kwargs.update({"profile": provider_profile[model]})
+            if model in model_profiles:
+                kwargs.update({"profile": model_profiles[model]})
         return chat_model(model=model, **kwargs)
 
     return _init_chat_model_helper(model, model_provider=model_provider, **kwargs)
@@ -109,8 +109,8 @@ def register_model_provider(
     provider_name: str,
     chat_model: ChatModelType,
     base_url: Optional[str] = None,
-    provider_profile: Optional[dict[str, dict[str, Any]]] = None,
-    provider_config: Optional[ProviderConfig] = None,
+    model_profiles: Optional[dict[str, dict[str, Any]]] = None,
+    compatibility_options: Optional[CompatibilityOptions] = None,
 ):
     """Register a new model provider.
 
@@ -119,12 +119,11 @@ def register_model_provider(
     string identifiers for supported providers.
 
     Args:
-        provider_name: Name of the provider to register
-        chat_model: Either a BaseChatModel class or a string identifier for a supported provider
-        base_url: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
-        provider_profile: Model provider's model configuration file (optional, valid for both types of `chat_model`); finally, it will read the corresponding model configuration parameters based on `model_name` and set them to `model.profile`.
-        provider_config: The configuration of the model provider (Optional parameter;effective only when `chat_model` is a string and is "openai-compatible".)
-           It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
+        provider_name: The name of the model provider, used as an identifier for loading models later.
+        chat_model: The chat model, which can be either a `ChatModel` instance or a string (currently only `"openai-compatible"` is supported).
+        base_url: The API endpoint URL of the model provider (optional; applicable to both `chat_model` types, but primarily used when `chat_model` is a string with value `"openai-compatible"`).
+        model_profiles: Declares the capabilities and parameters supported by each model provided by this provider (optional; applicable to both `chat_model` types). The configuration corresponding to the `model_name` will be loaded and assigned to `model.profile` (e.g., fields such as `max_input_tokens`, `tool_calling`etc.).
+        compatibility_options: Compatibility options for the model provider (optional; only effective when `chat_model` is a string with value `"openai-compatible"`). Used to declare support for OpenAI-compatible features (e.g., `tool_choice` strategies, JSON mode, etc.) to ensure correct functional adaptation.
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
                    or if chat_model string is not in supported providers
@@ -164,15 +163,15 @@ def register_model_provider(
         chat_model = _create_openai_compatible_model(
             provider_name,
             base_url,
-            provider_config=provider_config,
+            compatibility_options=compatibility_options,
         )
         _MODEL_PROVIDERS_DICT.update(
             {
                 provider_name: {
                     "chat_model": chat_model,
-                    "provider_config": provider_config,
+                    "compatibility_options": compatibility_options,
                     "base_url": base_url,
-                    "provider_profile": provider_profile,
+                    "model_profiles": model_profiles,
                 }
             }
         )
@@ -183,7 +182,7 @@ def register_model_provider(
                     provider_name: {
                         "chat_model": chat_model,
                         "base_url": base_url,
-                        "provider_profile": provider_profile,
+                        "model_profiles": model_profiles,
                     }
                 }
             )
@@ -192,7 +191,7 @@ def register_model_provider(
                 {
                     provider_name: {
                         "chat_model": chat_model,
-                        "provider_profile": provider_profile,
+                        "model_profiles": model_profiles,
                     }
                 }
             )
@@ -208,36 +207,50 @@ def batch_register_model_provider(
 
     Args:
         providers: List of ChatModelProvider dictionaries, each containing:
-            - provider_name: Name of the provider to register
-            - chat_model: Either a BaseChatModel class or a string identifier for a supported provider
-            - base_url: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
-            - provider_profile: Model provider's model configuration file (optional, valid for both types of `chat_model`); finally, it will read the corresponding model configuration parameters based on `model_name` and set them to `model.profile`.
-            - provider_config: The configuration of the model provider(Optional parameter; effective only when `chat_model` is a string and is "openai-compatible".)
-                It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
+            - provider_name (str): The name of the model provider, used as an
+              identifier for loading models later.
+            - chat_model (ChatModel | str): The chat model, which can be either
+              a `ChatModel` instance or a string (currently only `"openai-compatible"`
+              is supported).
+            - base_url (str, optional): The API endpoint URL of the model provider.
+              Applicable to both `chat_model` types, but primarily used when `chat_model`
+              is `"openai-compatible"`.
+            - model_profiles (dict, optional): Declares the capabilities and parameters
+              supported by each model. The configuration will be loaded and assigned to
+              `model.profile` (e.g., `max_input_tokens`, `tool_calling`, etc.).
+            - compatibility_options (CompatibilityOptions, optional): Compatibility
+              options for the model provider. Only effective when `chat_model` is
+              `"openai-compatible"`. Used to declare support for OpenAI-compatible features
+              (e.g., `tool_choice` strategies, JSON mode, etc.).
 
     Raises:
         ValueError: If any of the providers are invalid
 
     Example:
-        Register multiple providers at once:
-        >>> from langchain_dev_utils.chat_models import batch_register_model_provider, load_chat_model
-        >>> from langchain_core.language_models.fake_chat_models import FakeChatModel
-        >>>
-        >>> batch_register_model_provider([
-        ...     {
-        ...         "provider_name": "fakechat",
-        ...         "chat_model": FakeChatModel,
-        ...     },
-        ...     {
-        ...         "provider_name": "vllm",
-        ...         "chat_model": "openai-compatible",
-        ...         "base_url": "http://localhost:8000/v1",
-        ...     },
-        ... ])
-        >>> model = load_chat_model(model="fakechat:fake-model")
-        >>> model.invoke("Hello")
-        >>> model = load_chat_model(model="vllm:qwen3-4b")
-        >>> model.invoke("Hello")
+        Register multiple providers at once::
+
+            >>> from langchain_dev_utils.chat_models import batch_register_model_provider, load_chat_model
+            >>> from langchain_core.language_models.fake_chat_models import FakeChatModel
+            >>>
+            >>> # Register multiple providers
+            >>> batch_register_model_provider([
+            ...     {
+            ...         "provider_name": "fakechat",
+            ...         "chat_model": FakeChatModel,
+            ...     },
+            ...     {
+            ...         "provider_name": "vllm",
+            ...         "chat_model": "openai-compatible",
+            ...         "base_url": "http://localhost:8000/v1",
+            ...     },
+            ... ])
+            >>>
+            >>> # Use registered providers
+            >>> model = load_chat_model("fakechat:fake-model")
+            >>> model.invoke("Hello")
+            >>>
+            >>> model = load_chat_model("vllm:qwen3-4b")
+            >>> model.invoke("Hello")
     """
 
     for provider in providers:
@@ -245,8 +258,8 @@ def batch_register_model_provider(
             provider["provider_name"],
             provider["chat_model"],
             provider.get("base_url"),
-            provider_profile=provider.get("provider_profile"),
-            provider_config=provider.get("provider_config"),
+            model_profiles=provider.get("model_profiles"),
+            compatibility_options=provider.get("compatibility_options"),
         )
 
 

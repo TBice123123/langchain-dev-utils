@@ -2,24 +2,19 @@ import datetime
 from typing import Any
 from typing import cast
 
-from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import BaseTool
-from langchain_qwq import ChatQwen
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import interrupt
 import pytest
 
-from langchain_dev_utils.chat_models import load_chat_model, register_model_provider
+from langchain_dev_utils.chat_models import load_chat_model
 from langchain_dev_utils.tool_calling import (
     InterruptParams,
     human_in_the_loop,
     human_in_the_loop_async,
 )
-
-load_dotenv()
-register_model_provider(provider_name="dashscope", chat_model=ChatQwen)
 
 
 def handler(params: InterruptParams):

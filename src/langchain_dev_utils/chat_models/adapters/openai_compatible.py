@@ -38,7 +38,7 @@ from pydantic import (
 )
 from typing_extensions import Self
 
-from ..types import ProviderConfig, ToolChoiceType
+from ..types import CompatibilityOptions, ToolChoiceType
 
 _BM = TypeVar("_BM", bound=BaseModel)
 _DictOrPydanticClass = Union[dict[str, Any], type[_BM], type]
@@ -59,7 +59,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     When calling with_structured_output, the default value of the method parameter is adjusted to "function_calling" (instead of the default "json_schema" in ChatOpenAI), providing better compatibility with other models.
 
     **3.Supports configuration of related parameters**
-    For cases where parameters differ from the official OpenAI API, this library provides the provider_config parameter to address this issue. For example, when different model providers have inconsistent support for tool_choice, you can adapt by setting supported_tool_choice in provider_config.
+    For cases where parameters differ from the official OpenAI API, this library provides the compatibility_options parameter to address this issue. For example, when different model providers have inconsistent support for tool_choice, you can adapt by setting supported_tool_choice in compatibility_options.
 
     Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class extends capabilities to better support diverse OpenAI-compatible model providers while maintaining full compatibility with LangChain's chat model interface.
 
@@ -82,9 +82,15 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
     _provider: str = PrivateAttr(default="openai-compatible")
 
+    """Provider Compatibility Options"""
     supported_tool_choice: ToolChoiceType = Field(default_factory=list)
+    """Supported tool choice"""
     keep_reasoning_content: bool = Field(default=False)
+    """Whether to keep reasoning content in the messages"""
     support_json_mode: bool = Field(default=False)
+    """Whether to support JSON mode"""
+    include_usage: bool = Field(default=True)
+    """Whether to include usage information in the output"""
 
     @property
     def _supported_tool_choice(self) -> ToolChoiceType:
@@ -290,7 +296,8 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> Iterator[ChatGenerationChunk]:
-        kwargs["stream_options"] = {"include_usage": True}
+        if self.include_usage:
+            kwargs["stream_options"] = {"include_usage": True}
         try:
             for chunk in super()._stream(
                 messages, stop=stop, run_manager=run_manager, **kwargs
@@ -311,7 +318,8 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[AsyncCallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> AsyncIterator[ChatGenerationChunk]:
-        kwargs["stream_options"] = {"include_usage": True}
+        if self.include_usage:
+            kwargs["stream_options"] = {"include_usage": True}
         try:
             async for chunk in super()._astream(
                 messages, stop=stop, run_manager=run_manager, **kwargs
@@ -458,8 +466,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 def _create_openai_compatible_model(
     provider: str,
     base_url: str,
-    provider_config: Optional[ProviderConfig] = None,
-    chat_model_cls_name: Optional[str] = None,
+    compatibility_options: Optional[CompatibilityOptions] = None,
 ) -> Type[_BaseChatOpenAICompatible]:
     """Factory function for creating provider-specific OpenAI-compatible model classes.
 
@@ -469,16 +476,15 @@ def _create_openai_compatible_model(
     Args:
         provider: Provider identifier (e.g., `vllm`,`openrouter`)
         base_url: Default API base URL for the provider
-        provider_config: Optional configuration for the provider
-        chat_model_cls_name: Optional custom name for the chat model class
+        compatibility_options: Optional configuration for the provider
 
     Returns:
         Configured model class ready for instantiation with provider-specific settings
     """
-    chat_model_cls_name = chat_model_cls_name or f"Chat{provider.title()}"
+    chat_model_cls_name = f"Chat{provider.title()}"
 
-    if provider_config is None:
-        provider_config = {}
+    compatibility_options = compatibility_options or {}
+
     return create_model(
         chat_model_cls_name,
         __base__=_BaseChatOpenAICompatible,
@@ -504,14 +510,18 @@ def _create_openai_compatible_model(
         ),
         supported_tool_choice=(
             ToolChoiceType,
-            Field(default=provider_config.get("supported_tool_choice", ["auto"])),
+            Field(default=compatibility_options.get("supported_tool_choice", ["auto"])),
         ),
         keep_reasoning_content=(
             bool,
-            Field(default=provider_config.get("keep_reasoning_content", False)),
+            Field(default=compatibility_options.get("keep_reasoning_content", False)),
         ),
         support_json_mode=(
             bool,
-            Field(default=provider_config.get("support_json_mode", False)),
+            Field(default=compatibility_options.get("support_json_mode", False)),
+        ),
+        include_usage=(
+            bool,
+            Field(default=compatibility_options.get("include_usage", True)),
         ),
     )

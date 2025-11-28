@@ -9,7 +9,8 @@ ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
 ToolChoiceType = list[Literal["auto", "none", "required", "specific"]]
 
 
-class ProviderConfig(TypedDict):
+class CompatibilityOptions(TypedDict):
     supported_tool_choice: NotRequired[ToolChoiceType]
     keep_reasoning_content: NotRequired[bool]
     support_json_mode: NotRequired[bool]
+    include_usage: NotRequired[bool]

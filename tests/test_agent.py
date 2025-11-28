@@ -1,24 +1,9 @@
-from dotenv import load_dotenv
 from langchain.agents.structured_output import ToolStrategy
-from langchain_qwq import ChatQwen
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, Field
 import pytest
 
 from langchain_dev_utils.agents import create_agent
-from langchain_dev_utils.chat_models import batch_register_model_provider
-
-load_dotenv()
-
-batch_register_model_provider(
-    [
-        {
-            "provider_name": "dashscope",
-            "chat_model": ChatQwen,
-        },
-        {"provider_name": "zai", "chat_model": "openai-compatible"},
-    ]
-)
 
 
 def test_prebuilt_agent():

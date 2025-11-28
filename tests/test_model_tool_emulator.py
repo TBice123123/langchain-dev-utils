@@ -1,18 +1,9 @@
 from langchain.tools import tool
-from langchain_qwq import ChatQwen
 from langchain_core.messages import HumanMessage, ToolMessage
 import pytest
 
 from langchain_dev_utils.agents import create_agent
 from langchain_dev_utils.agents.middleware import LLMToolEmulator
-from langchain_dev_utils.chat_models import register_model_provider
-from dotenv import load_dotenv
-
-load_dotenv()
-register_model_provider(
-    "dashscope",
-    ChatQwen,
-)
 
 
 def test_model_tool_emulator():

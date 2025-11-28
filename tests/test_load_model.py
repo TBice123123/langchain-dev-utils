@@ -1,31 +1,9 @@
-from dotenv import load_dotenv
 from langchain_core.language_models import BaseChatModel
-from langchain_qwq import ChatQwen
 import pytest
 
-from langchain_dev_utils.chat_models import (
-    batch_register_model_provider,
-    load_chat_model,
-)
 from data.alibaba._profiles import _PROFILES as ALI_PROFILES
 from data.zhipuai._profiles import _PROFILES as ZAI_PROFILES
-
-load_dotenv()
-
-batch_register_model_provider(
-    [
-        {
-            "provider_name": "dashscope",
-            "chat_model": ChatQwen,
-            "provider_profile": ALI_PROFILES,
-        },
-        {
-            "provider_name": "zai",
-            "chat_model": "openai-compatible",
-            "provider_profile": ZAI_PROFILES,
-        },
-    ]
-)
+from langchain_dev_utils.chat_models import load_chat_model
 
 
 @pytest.fixture(
