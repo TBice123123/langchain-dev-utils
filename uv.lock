@@ -418,11 +418,10 @@ wheels = [
 
 [[package]]
 name = "langchain-dev-utils"
-version = "1.2.1"
+version = "1.2.3"
 source = { editable = "." }
 dependencies = [
     { name = "langchain" },
-    { name = "langchain-deepseek" },
     { name = "langgraph" },
 ]
 
@@ -433,6 +432,7 @@ standard = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "langchain-model-profiles" },
     { name = "ruff" },
 ]
 tests = [
@@ -445,21 +445,36 @@ tests = [
 
 [package.metadata]
 requires-dist = [
-    { name = "langchain", specifier = ">=1.0.0" },
-    { name = "langchain-deepseek", specifier = ">=1.0.1" },
+    { name = "langchain", specifier = ">=1.1.0" },
     { name = "langchain-openai", marker = "extra == 'standard'" },
     { name = "langgraph", specifier = ">=1.0.0" },
 ]
 provides-extras = ["standard"]
 
 [package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.14.5" }]
+dev = [
+    { name = "langchain-model-profiles", specifier = ">=0.0.5" },
+    { name = "ruff", specifier = ">=0.14.5" },
+]
 tests = [
     { name = "langchain-deepseek", specifier = ">=1.0.0" },
     { name = "langchain-ollama", specifier = ">=1.0.0" },
     { name = "langchain-qwq", specifier = ">=0.3.0" },
     { name = "langchain-tests", specifier = ">=1.0.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
+]
+
+[[package]]
+name = "langchain-model-profiles"
+version = "0.0.5"
+source = { registry = "https://pypi.mirrors.ustc.edu.cn/simple/" }
+dependencies = [
+    { name = "httpx" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/43/96/359105e3fb0161b5ba2e23daccc9c8b1c7cfe1dff1a05724e52a176ef3d1/langchain_model_profiles-0.0.5.tar.gz", hash = "sha256:21a4dfaa04e2200a2f52b00312bdfc62236579e396ebde2d483ca02127cc4f5c", size = 123467, upload-time = "2025-11-21T21:13:49.66Z" }
+wheels = [
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/6a/7f/1a537c74c6ed8794c8f6ebd2fadbeed48a2911acee14efc636791a1ecb08/langchain_model_profiles-0.0.5-py3-none-any.whl", hash = "sha256:f90826c70904783ffc0450835f5dcd419d4d0d4633c4efa5bb92d49296e85524", size = 6182, upload-time = "2025-11-21T21:13:48.671Z" },
 ]
 
 [[package]]
@@ -527,7 +542,7 @@ wheels = [
 
 [[package]]
 name = "langgraph"
-version = "1.0.3"
+version = "1.0.4"
 source = { registry = "https://pypi.mirrors.ustc.edu.cn/simple/" }
 dependencies = [
     { name = "langchain-core" },
@@ -537,9 +552,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "xxhash" },
 ]
-sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/a7/55/70f2d11d33b0310d3e48d8e049825b4a34a1c822d48f6448ae548d2cd0f8/langgraph-1.0.3.tar.gz", hash = "sha256:873a6aae6be054ef52a05c463be363a46da9711405b1b14454d595f543b68335", size = 483302, upload-time = "2025-11-10T17:41:45.425Z" }
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/d6/3c/af87902d300c1f467165558c8966d8b1e1f896dace271d3f35a410a5c26a/langgraph-1.0.4.tar.gz", hash = "sha256:86d08e25d7244340f59c5200fa69fdd11066aa999b3164b531e2a20036fac156", size = 484397, upload-time = "2025-11-25T20:31:48.608Z" }
 wheels = [
-    { url = "https://mirrors.ustc.edu.cn/pypi/packages/84/a3/fdf6ecd0e44cb02d20afe7d0fb64c748a749f4b2e011bf9a785a32642367/langgraph-1.0.3-py3-none-any.whl", hash = "sha256:4a75146f09bd0d127a724876f4244f460c4c66353a993641bd641ed710cd010f", size = 156845, upload-time = "2025-11-10T17:41:43.868Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/14/52/4eb25a3f60399da34ba34adff1b3e324cf0d87eb7a08cebf1882a9b5e0d5/langgraph-1.0.4-py3-none-any.whl", hash = "sha256:b1a835ceb0a8d69b9db48075e1939e28b1ad70ee23fa3fa8f90149904778bacf", size = 157271, upload-time = "2025-11-25T20:31:47.518Z" },
 ]
 
 [[package]]
@@ -570,20 +585,20 @@ wheels = [
 
 [[package]]
 name = "langgraph-sdk"
-version = "0.2.9"
+version = "0.2.10"
 source = { registry = "https://pypi.mirrors.ustc.edu.cn/simple/" }
 dependencies = [
     { name = "httpx" },
     { name = "orjson" },
 ]
-sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/23/d8/40e01190a73c564a4744e29a6c902f78d34d43dad9b652a363a92a67059c/langgraph_sdk-0.2.9.tar.gz", hash = "sha256:b3bd04c6be4fa382996cd2be8fbc1e7cc94857d2bc6b6f4599a7f2a245975303", size = 99802, upload-time = "2025-09-20T18:49:14.734Z" }
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/cb/0f/88772be3301cc5ad495e77705538edbcbf7f2ccf38d21555fa26131203aa/langgraph_sdk-0.2.10.tar.gz", hash = "sha256:ab58331504fbea28e6322037aa362929799b4e9106663ac1dbd7c5ac44558933", size = 113432, upload-time = "2025-11-24T21:31:57.268Z" }
 wheels = [
-    { url = "https://mirrors.ustc.edu.cn/pypi/packages/66/05/b2d34e16638241e6f27a6946d28160d4b8b641383787646d41a3727e0896/langgraph_sdk-0.2.9-py3-none-any.whl", hash = "sha256:fbf302edadbf0fb343596f91c597794e936ef68eebc0d3e1d358b6f9f72a1429", size = 56752, upload-time = "2025-09-20T18:49:13.346Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/8b/cc/ff4ba17253d31981b047f4be52cc51a19fa28dd2dd16a880c0c595bd66bd/langgraph_sdk-0.2.10-py3-none-any.whl", hash = "sha256:9aef403663726085de6851e4e50459df9562069bd316dd0261eb359f776fd0ef", size = 58430, upload-time = "2025-11-24T21:31:56.052Z" },
 ]
 
 [[package]]
 name = "langsmith"
-version = "0.4.47"
+version = "0.4.49"
 source = { registry = "https://pypi.mirrors.ustc.edu.cn/simple/" }
 dependencies = [
     { name = "httpx" },
@@ -594,9 +609,9 @@ dependencies = [
     { name = "requests-toolbelt" },
     { name = "zstandard" },
 ]
-sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/ec/dd/d69922b79fb692b9736206574e5ba69b6354080cf1cc9796449d9fe61f9a/langsmith-0.4.47.tar.gz", hash = "sha256:6a576405696ee97147ccb96c9ae5c9437430500a5d118bd447ec2d1f8cf26de1", size = 986584, upload-time = "2025-11-24T16:02:00.914Z" }
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/2d/69/85ae805ecbc1300d486136329b3cb1702483c0afdaf81da95947dd83884a/langsmith-0.4.49.tar.gz", hash = "sha256:4a16ef6f3a9b20c5471884991a12ff37d81f2c13a50660cfe27fa79a7ca2c1b0", size = 987017, upload-time = "2025-11-26T21:45:16.338Z" }
 wheels = [
-    { url = "https://mirrors.ustc.edu.cn/pypi/packages/80/1a/0c84f7096d41d64425d29db549c8d6fe075f925a5f2022e8087d01d862c2/langsmith-0.4.47-py3-none-any.whl", hash = "sha256:b9e514611d4e1570e33595d33ccb1fe6eda9f96c5f961095a138651f746c1ef5", size = 411207, upload-time = "2025-11-24T16:01:59.123Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/31/79/59ecf7dceafd655ed20270a0f595d9e8e13895231cebcfbff9b6eec51fc4/langsmith-0.4.49-py3-none-any.whl", hash = "sha256:95f84edcd8e74ed658e4a3eb7355b530f35cb08a9a8865dbfde6740e4b18323c", size = 410905, upload-time = "2025-11-26T21:45:14.606Z" },
 ]
 
 [[package]]
@@ -1102,7 +1117,7 @@ wheels = [
 
 [[package]]
 name = "pydantic"
-version = "2.12.4"
+version = "2.12.5"
 source = { registry = "https://pypi.mirrors.ustc.edu.cn/simple/" }
 dependencies = [
     { name = "annotated-types" },
@@ -1110,9 +1125,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/96/ad/a17bc283d7d81837c061c49e3eaa27a45991759a1b7eae1031921c6bd924/pydantic-2.12.4.tar.gz", hash = "sha256:0f8cb9555000a4b5b617f66bfd2566264c4984b27589d3b845685983e8ea85ac", size = 821038, upload-time = "2025-11-05T10:50:08.59Z" }
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/69/44/36f1a6e523abc58ae5f928898e4aca2e0ea509b5aa6f6f392a5d882be928/pydantic-2.12.5.tar.gz", hash = "sha256:4d351024c75c0f085a9febbb665ce8c0c6ec5d30e903bdb6394b7ede26aebb49", size = 821591, upload-time = "2025-11-26T15:11:46.471Z" }
 wheels = [
-    { url = "https://mirrors.ustc.edu.cn/pypi/packages/82/2f/e68750da9b04856e2a7ec56fc6f034a5a79775e9b9a81882252789873798/pydantic-2.12.4-py3-none-any.whl", hash = "sha256:92d3d202a745d46f9be6df459ac5a064fdaa3c1c4cd8adcfa332ccf3c05f871e", size = 463400, upload-time = "2025-11-05T10:50:06.732Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl", hash = "sha256:e561593fccf61e8a20fc46dfc2dfe075b8be7d0188df33f221ad1f0139180f9d", size = 463580, upload-time = "2025-11-26T15:11:44.605Z" },
 ]
 
 [[package]]

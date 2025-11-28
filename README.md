@@ -46,6 +46,7 @@ Mainly consists of the following two functions:
 - `provider_name`: Model provider name, used as an identifier for subsequent model loading
 - `chat_model`: Chat model, can be a ChatModel or a string (currently supports "openai-compatible")
 - `base_url`: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
+- `provider_profile`: Model provider's model configuration file (optional, valid for both types of `chat_model`); finally, it will read the corresponding model configuration parameters based on `model_name` and set them to `model.profile`.
 - `provider_config`: Relevant configuration for the model provider (optional, valid when `chat_model` is a string and is "openai-compatible"), can configure some provider-related parameters, such as whether to support structured output in json_mode, list of supported tool_choices, etc.
 
 `load_chat_model` parameter description:

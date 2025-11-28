@@ -14,6 +14,7 @@ class ChatModelProvider(TypedDict):
     provider_name: str
     chat_model: ChatModelType
     base_url: NotRequired[str]
+    provider_profile: NotRequired[dict[str, dict[str, Any]]]
     provider_config: NotRequired[ProviderConfig]
 
 
@@ -94,6 +95,11 @@ def _load_chat_model_helper(
             url_key = _get_base_url_field_name(chat_model)
             if url_key:
                 kwargs.update({url_key: base_url})
+        if provider_profile := _MODEL_PROVIDERS_DICT[model_provider].get(
+            "provider_profile"
+        ):
+            if model in provider_profile:
+                kwargs.update({"profile": provider_profile[model]})
         return chat_model(model=model, **kwargs)
 
     return _init_chat_model_helper(model, model_provider=model_provider, **kwargs)
@@ -103,6 +109,7 @@ def register_model_provider(
     provider_name: str,
     chat_model: ChatModelType,
     base_url: Optional[str] = None,
+    provider_profile: Optional[dict[str, dict[str, Any]]] = None,
     provider_config: Optional[ProviderConfig] = None,
 ):
     """Register a new model provider.
@@ -115,6 +122,7 @@ def register_model_provider(
         provider_name: Name of the provider to register
         chat_model: Either a BaseChatModel class or a string identifier for a supported provider
         base_url: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
+        provider_profile: Model provider's model configuration file (optional, valid for both types of `chat_model`); finally, it will read the corresponding model configuration parameters based on `model_name` and set them to `model.profile`.
         provider_config: The configuration of the model provider (Optional parameter;effective only when `chat_model` is a string and is "openai-compatible".)
            It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
     Raises:
@@ -164,16 +172,30 @@ def register_model_provider(
                     "chat_model": chat_model,
                     "provider_config": provider_config,
                     "base_url": base_url,
+                    "provider_profile": provider_profile,
                 }
             }
         )
     else:
         if base_url is not None:
             _MODEL_PROVIDERS_DICT.update(
-                {provider_name: {"chat_model": chat_model, "base_url": base_url}}
+                {
+                    provider_name: {
+                        "chat_model": chat_model,
+                        "base_url": base_url,
+                        "provider_profile": provider_profile,
+                    }
+                }
             )
         else:
-            _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
+            _MODEL_PROVIDERS_DICT.update(
+                {
+                    provider_name: {
+                        "chat_model": chat_model,
+                        "provider_profile": provider_profile,
+                    }
+                }
+            )
 
 
 def batch_register_model_provider(
@@ -189,6 +211,7 @@ def batch_register_model_provider(
             - provider_name: Name of the provider to register
             - chat_model: Either a BaseChatModel class or a string identifier for a supported provider
             - base_url: The API address of the model provider (optional, valid for both types of `chat_model`, but mainly used when `chat_model` is a string and is "openai-compatible")
+            - provider_profile: Model provider's model configuration file (optional, valid for both types of `chat_model`); finally, it will read the corresponding model configuration parameters based on `model_name` and set them to `model.profile`.
             - provider_config: The configuration of the model provider(Optional parameter; effective only when `chat_model` is a string and is "openai-compatible".)
                 It can be configured to configure some related parameters of the provider, such as whether to support json_mode structured output mode, the list of supported tool_choice
 
@@ -222,6 +245,7 @@ def batch_register_model_provider(
             provider["provider_name"],
             provider["chat_model"],
             provider.get("base_url"),
+            provider_profile=provider.get("provider_profile"),
             provider_config=provider.get("provider_config"),
         )
 

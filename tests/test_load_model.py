@@ -7,6 +7,8 @@ from langchain_dev_utils.chat_models import (
     batch_register_model_provider,
     load_chat_model,
 )
+from data.alibaba._profiles import _PROFILES as ALI_PROFILES
+from data.zhipuai._profiles import _PROFILES as ZAI_PROFILES
 
 load_dotenv()
 
@@ -15,8 +17,13 @@ batch_register_model_provider(
         {
             "provider_name": "dashscope",
             "chat_model": ChatQwen,
+            "provider_profile": ALI_PROFILES,
         },
-        {"provider_name": "zai", "chat_model": "openai-compatible"},
+        {
+            "provider_name": "zai",
+            "chat_model": "openai-compatible",
+            "provider_profile": ZAI_PROFILES,
+        },
     ]
 )
 
@@ -98,5 +105,22 @@ def test_model_with_reasoning(reasoning_model: BaseChatModel):
 
 @pytest.mark.asyncio
 async def test_model_with_reasoning_async(reasoning_model: BaseChatModel):
-    response = await reasoning_model.ainvoke("hello?")
+    response = await reasoning_model.ainvoke("hello？")
     assert response.additional_kwargs.get("reasoning_content")
+
+
+def test_model_profile():
+    model = load_chat_model("dashscope:qwen-flash")
+    assert model.profile == ALI_PROFILES["qwen-flash"]
+
+    model = load_chat_model("dashscope:qwen-max")
+    assert model.profile == ALI_PROFILES["qwen-max"]
+
+    model = load_chat_model("dashscope:qwen3-vl-235b-a22b")
+    assert model.profile == ALI_PROFILES["qwen3-vl-235b-a22b"]
+
+    model = load_chat_model("zai:glm-4.6")
+    assert model.profile == ZAI_PROFILES["glm-4.6"]
+
+    model = load_chat_model("zai:glm-4.5v")
+    assert model.profile == ZAI_PROFILES["glm-4.5v"]

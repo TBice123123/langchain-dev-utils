@@ -46,7 +46,9 @@ pip install -U langchain-dev-utils[standard]
 - `provider_name`：模型提供商名称，作为后续模型加载的标识
 - `chat_model`：对话模型，可以是 ChatModel 或字符串（目前支持 "openai-compatible"）
 - `base_url`：模型提供商的 API 地址（可选，对于`chat_model`的两种类型情况都有效，但是主要用于`chat_model`为字符串且是"openai-compatible"的情况）
+- `provider_profile`：模型提供商的模型配置文件（可选，对于`chat_model`的两种类型情况都有效）；最终将根据 `model_name` 读取对应的模型配置参数，并将其设置到 `model.profile` 中。
 - `provider_config`：模型提供商的相关配置（可选，当 `chat_model` 为字符串且是 "openai-compatible" 时有效），可以配置一些提供商的相关参数，例如是否支持 json_mode 的结构化输出方式、支持的 tool_choice 列表等
+
 
 `load_chat_model` 参数说明：
 
