@@ -78,24 +78,6 @@ class ModelRouterMiddleware(AgentMiddleware):
     Examples:
         ```python
         from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
-
-        model_list = [
-            {
-                "model_name": "vllm:qwen3-8b",
-                "model_description": "Suitable for general conversation and text generation tasks"
-            },
-            {
-                "model_name": "openrouter:qwen/qwen3-vl-32b-instruct",
-                "model_description": "For visual tasks",
-                "tools": []
-            },
-            {
-                "model_name": "openrouter:qwen/qwen3-coder-plus",
-                "model_description": "For code generation tasks",
-                "tools": [run_python_code]
-            }
-        ]
-
         middleware = ModelRouterMiddleware(
             router_model="vllm:qwen3-4b",
             model_list=model_list

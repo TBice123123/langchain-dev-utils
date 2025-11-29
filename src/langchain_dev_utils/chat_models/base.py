@@ -169,7 +169,6 @@ def register_model_provider(
             {
                 provider_name: {
                     "chat_model": chat_model,
-                    "compatibility_options": compatibility_options,
                     "base_url": base_url,
                     "model_profiles": model_profiles,
                 }

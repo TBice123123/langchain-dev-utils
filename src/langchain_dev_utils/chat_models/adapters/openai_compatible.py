@@ -105,6 +105,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         return self.support_json_mode
 
     @property
+    def _include_usage(self) -> bool:
+        return self.include_usage
+
+    @property
     def _llm_type(self) -> str:
         return f"chat-{self._provider}"
 
@@ -296,7 +300,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> Iterator[ChatGenerationChunk]:
-        if self.include_usage:
+        if self._include_usage:
             kwargs["stream_options"] = {"include_usage": True}
         try:
             for chunk in super()._stream(
@@ -318,7 +322,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[AsyncCallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> AsyncIterator[ChatGenerationChunk]:
-        if self.include_usage:
+        if self._include_usage:
             kwargs["stream_options"] = {"include_usage": True}
         try:
             async for chunk in super()._astream(
