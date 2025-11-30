@@ -133,7 +133,7 @@ def human_in_the_loop(
         If `func` is None, returns a decorator that will decorate the target function.
 
     Example:
-        Basic usage with default handler:
+        # Basic usage with default handler:
         >>> from langchain_dev_utils.tool_calling import human_in_the_loop
         >>> from langchain_core.tools import tool
         >>> import datetime
@@ -144,11 +144,10 @@ def human_in_the_loop(
         ...     \"\"\"Get current timestamp\"\"\"
         ...     return str(datetime.datetime.now().timestamp())
 
-        Usage with custom handler:
+        # Usage with custom handler:
         >>> def custom_handler(params: InterruptParams) -> Any:
         ...     response = interrupt(
-        ...         f"I am about to invoke tool '{params['tool_call_name']}'
-        ...           with arguments {params['tool_call_args']}. Please confirm whether to proceed."
+        ...        # Please add your custom interrupt response content here
         ...     )
         ...     if response["type"] == "accept":
         ...         return params["tool"].invoke(params["tool_call_args"])
@@ -220,7 +219,7 @@ def human_in_the_loop_async(
         If `func` is None, returns a decorator that will decorate the target function.
 
     Example:
-        Basic usage with default handler:
+        # Basic usage with default handler:
         >>> from langchain_dev_utils.tool_calling import human_in_the_loop_async
         >>> from langchain_core.tools import tool
         >>> import asyncio
@@ -233,11 +232,10 @@ def human_in_the_loop_async(
         ...     await asyncio.sleep(1)
         ...     return str(datetime.datetime.now().timestamp())
 
-        Usage with custom handler:
+        # Usage with custom handler:
         >>> async def custom_handler(params: InterruptParams) -> Any:
         ...     response = interrupt(
-        ...         f"I am about to invoke tool '{params['tool_call_name']}'
-        ...           with arguments {params['tool_call_args']}. Please confirm whether to proceed."
+        ...         ... # Please add your custom interrupt response content here
         ...     )
         ...     if response["type"] == "accept":
         ...         return await params["tool"].ainvoke(params["tool_call_args"])

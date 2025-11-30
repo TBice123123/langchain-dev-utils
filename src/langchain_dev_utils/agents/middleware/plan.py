@@ -296,6 +296,7 @@ class PlanMiddleware(AgentMiddleware):
         use_read_plan_tool: Whether to use the `read_plan` tool.
             If not provided, uses the default `True`.
         message_key: The key of the message to be updated. Defaults to "messages".
+
     Example:
         ```python
         from langchain_dev_utils.agents.middleware import PlanMiddleware

@@ -54,30 +54,18 @@ def wrap_agent_as_tool(
         BaseTool: The wrapped agent as a tool
 
     Example:
-        >>> import datetime
-        >>> from langchain_core.messages import HumanMessage
-        >>> from langchain_core.tools import tool
         >>> from langchain_dev_utils.agents import wrap_agent_as_tool, create_agent
-
-        >>> @tool
-        ... def get_current_time() -> str:
-        ...     "\"\"Get the current timestamp.\"\"\"
-        ...     return str(datetime.datetime.now().timestamp())
-
-        >>> # Define an agent for querying the time
-        >>> time_agent = create_agent(
-        ...     "vllm:qwen3-4b", tools=[get_current_time], name="time_agent"
+        >>>
+        >>> call_time_agent_tool = wrap_agent_as_tool(
+        ...     time_agent,
+        ...     tool_name="call_time_agent",
+        ...     tool_description="Used to invoke the time sub-agent to perform time-related tasks"
         ... )
-        >>> tool = wrap_agent_as_tool(
-        ...     time_agent, tool_name="call_time_agent", tool_description="Invoke the time agent"
-        ... )
-        >>> print(tool)
-
-        >>> # Use it as a tool
-        >>> agent = create_agent("vllm:qwen3-4b", tools=[tool], name="agent")
+        >>>
+        >>> agent = create_agent("vllm:qwen3-4b", tools=[call_time_agent_tool], name="agent")
 
         >>> response = agent.invoke({"messages": [HumanMessage(content="What time is it now?")]})
-        >>> print(response)
+        >>> response
     """
     if agent.name is None:
         raise ValueError("Agent name must not be None")

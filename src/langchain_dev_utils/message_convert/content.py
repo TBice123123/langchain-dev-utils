@@ -36,13 +36,13 @@ def convert_reasoning_content_for_ai_message(
         AIMessage: Modified AI message with reasoning content in visible content
 
     Example:
-        Basic usage with default tags:
+        # Basic usage with default tags:
         >>> from langchain_dev_utils.message_convert import convert_reasoning_content_for_ai_message
         >>> response = model.invoke("Explain quantum computing")
         >>> response = convert_reasoning_content_for_ai_message(response)
         >>> response.content
 
-        Custom tags for reasoning content:
+        # Custom tags for reasoning content:
         >>> response = convert_reasoning_content_for_ai_message(
         ...     response, think_tag=('<reasoning>', '</reasoning>')
         ... )
@@ -77,14 +77,14 @@ def convert_reasoning_content_for_chunk_iterator(
         BaseMessageChunk: Modified message chunks with reasoning content
 
     Example:
-        Process streaming response:
+        # Process streaming response:
         >>> from langchain_dev_utils.message_convert import convert_reasoning_content_for_chunk_iterator
         >>> for chunk in convert_reasoning_content_for_chunk_iterator(
         ...     model.stream("What is the capital of France?")
         ... ):
         ...     print(chunk.content, end="", flush=True)
 
-        Custom tags for streaming:
+        # Custom tags for streaming:
         >>> for chunk in convert_reasoning_content_for_chunk_iterator(
         ...     model.stream("Explain quantum computing"),
         ...     think_tag=('<reasoning>', '</reasoning>')
@@ -127,14 +127,14 @@ async def aconvert_reasoning_content_for_chunk_iterator(
         BaseMessageChunk: Modified message chunks with reasoning content
 
     Example:
-        Process async streaming response:
+        # Process async streaming response:
         >>> from langchain_dev_utils.message_convert import aconvert_reasoning_content_for_chunk_iterator
         >>> async for chunk in aconvert_reasoning_content_for_chunk_iterator(
         ...     model.astream("What is the capital of France?")
         ... ):
         ...     print(chunk.content, end="", flush=True)
 
-        Custom tags for async streaming:
+        # Custom tags for async streaming:
         >>> async for chunk in aconvert_reasoning_content_for_chunk_iterator(
         ...     model.astream("Explain quantum computing"),
         ...     think_tag=('<reasoning>', '</reasoning>')
@@ -172,12 +172,9 @@ def merge_ai_message_chunk(chunks: Sequence[AIMessageChunk]) -> AIMessage:
         AIMessage: Merged AIMessage
 
     Example:
-        Merge streaming chunks:
+        # Merge streaming chunks:
         >>> from langchain_dev_utils.message_convert import merge_ai_message_chunk
-        >>> chunks = []
-        >>> for chunk in model.stream("What is the capital of France?"):
-        ...     chunks.append(chunk)
-        >>> merged_message = merge_ai_message_chunk(chunks)
+        >>> merged_message = merge_ai_message_chunk(list(model.stream("What is the capital of France?")))
         >>> merged_message.content
     """
     ai_message_chunk = cast(AIMessageChunk, reduce(lambda x, y: x + y, chunks))

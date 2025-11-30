@@ -26,7 +26,7 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
         )
 
         agent = create_agent(
-            model="vllm:qwen3-4b",#Primary model
+            model="vllm:qwen3-4b", #Primary model
             middleware=[fallback],
         )
 

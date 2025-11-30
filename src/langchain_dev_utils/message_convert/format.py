@@ -34,7 +34,7 @@ def format_sequence(
         A formatted string composed of the input contents, joined by `separator`.
 
     Example:
-        Format messages with default separator:
+        # Format messages with default separator:
         >>> from langchain_dev_utils.message_convert import format_sequence
         >>> from langchain_core.messages import HumanMessage, AIMessage
         >>> messages = [
@@ -44,7 +44,7 @@ def format_sequence(
         >>> formatted = format_sequence(messages)
         >>> formatted
 
-        Format with custom separator and numbering:
+        # Format with custom separator and numbering:
         >>> formatted = format_sequence(messages, separator="---", with_num=True)
         >>> formatted
     """

@@ -53,38 +53,12 @@ def create_parallel_pipeline(
             graph of the pipeline.
 
     Example:
-        Basic parallel pipeline with multiple specialized agents:
+        # Basic parallel pipeline: multiple specialized agents run concurrently
         >>> from langchain_dev_utils.pipeline import create_parallel_pipeline
         >>>
         >>> graph = create_parallel_pipeline(
         ...     sub_graphs=[
-        ...         create_agent(
-        ...             model="vllm:qwen3-4b",
-        ...             tools=[get_current_time],
-        ...             system_prompt="You are a time query assistant. You can only
-        ...                 answer questions about current time. If the question is
-        ...                 unrelated to time, please directly respond with
-        ...                 'I cannot answer that'.",
-        ...             name="time_agent",
-        ...         ),
-        ...         create_agent(
-        ...             model="vllm:qwen3-4b",
-        ...             tools=[get_current_weather],
-        ...             system_prompt="You are a weather query assistant. You can
-        ...                 only answer questions about current weather. If the
-        ...                 question is unrelated to weather, please directly
-        ...                 respond with 'I cannot answer that'.",
-        ...             name="weather_agent",
-        ...         ),
-        ...         create_agent(
-        ...             model="vllm:qwen3-4b",
-        ...             tools=[get_current_user],
-        ...             system_prompt="You are a user query assistant. You can only
-        ...                 answer questions about current user. If the question is
-        ...                 unrelated to user information, please directly respond
-        ...                 with 'I cannot answer that'.",
-        ...             name="user_agent",
-        ...         ),
+        ...        time_agent, weather_agent, user_agent
         ...     ],
         ...     state_schema=AgentState,
         ...     graph_name="parallel_agents_pipeline",
@@ -92,36 +66,10 @@ def create_parallel_pipeline(
         >>>
         >>> response = graph.invoke({"messages": [HumanMessage("Hello")]})
 
-        set branch_fn:
+        # Dynamic parallel pipeline: decide which agents to run based on conditional branches
         >>> graph = create_parallel_pipeline(
         ...     sub_graphs=[
-        ...         create_agent(
-        ...             model="vllm:qwen3-4b",
-        ...             tools=[get_current_time],
-        ...             system_prompt="You are a time query assistant. You can only
-        ...                 answer questions about current time. If the question is
-        ...                 unrelated to time, please directly respond with
-        ...                 'I cannot answer that'.",
-        ...             name="time_agent",
-        ...         ),
-        ...         create_agent(
-        ...             model="vllm:qwen3-4b",
-        ...             tools=[get_current_weather],
-        ...             system_prompt="You are a weather query assistant. You can
-        ...                 only answer questions about current weather. If the
-        ...                 question is unrelated to weather, please directly
-        ...                 respond with 'I cannot answer that'.",
-        ...             name="weather_agent",
-        ...         ),
-        ...         create_agent(
-        ...             model="vllm:qwen3-4b",
-        ...             tools=[get_current_user],
-        ...             system_prompt="You are a user query assistant. You can only
-        ...                 answer questions about current user. If the question is
-        ...                 unrelated to user information, please directly respond
-        ...                 with 'I cannot answer that'.",
-        ...             name="user_agent",
-        ...         ),
+        ...         time_agent, weather_agent, user_agent
         ...     ],
         ...     state_schema=AgentState,
         ...     branches_fn=lambda state: [

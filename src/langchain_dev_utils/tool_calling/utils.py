@@ -16,7 +16,7 @@ def has_tool_calling(message: AIMessage) -> bool:
         bool: True if message is an AIMessage with tool calls, False otherwise
 
     Example:
-        Check for tool calls in response:
+        # Check for tool calls in response:
         >>> from langchain_dev_utils.tool_calling import has_tool_calling, parse_tool_calling
         >>> response = model.invoke("What time is it now?")
         >>> if has_tool_calling(response):
@@ -50,14 +50,14 @@ def parse_tool_calling(
         Union[tuple[str, dict], list[tuple[str, dict]]]: The tool call name and args
 
     Example:
-        Parse single tool call:
+        # Parse single tool call:
         >>> from langchain_dev_utils.tool_calling import has_tool_calling, parse_tool_calling
         >>> response = model.invoke("What time is it now?")
         >>> response
         >>> if has_tool_calling(response):
         ...     tool_name, tool_args = parse_tool_calling(response, first_tool_call_only=True)
 
-        Parse multiple tool calls:
+        # Parse multiple tool calls:
         >>> if has_tool_calling(response):
         ...     tool_calls = parse_tool_calling(response)
     """

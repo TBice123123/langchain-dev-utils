@@ -95,21 +95,21 @@ def register_model_provider(
     string identifiers for supported providers.
 
     Args:
-        provider_name: The name of the model provider, used as an identifier for 
+        provider_name: The name of the model provider, used as an identifier for
             loading models later.
-        chat_model: The chat model, which can be either a `ChatModel` instance or 
+        chat_model: The chat model, which can be either a `ChatModel` instance or
             a string (currently only `"openai-compatible"` is supported).
-        base_url: The API endpoint URL of the model provider (optional; applicable 
-            to both `chat_model` types, but primarily used when `chat_model` is a 
+        base_url: The API endpoint URL of the model provider (optional; applicable
+            to both `chat_model` types, but primarily used when `chat_model` is a
             string with value `"openai-compatible"`).
-        model_profiles: Declares the capabilities and parameters supported by each 
-            model provided by this provider (optional; applicable to both `chat_model` 
-            types). The configuration corresponding to the `model_name` will be loaded 
-            and assigned to `model.profile` (e.g., fields such as `max_input_tokens`, 
+        model_profiles: Declares the capabilities and parameters supported by each
+            model provided by this provider (optional; applicable to both `chat_model`
+            types). The configuration corresponding to the `model_name` will be loaded
+            and assigned to `model.profile` (e.g., fields such as `max_input_tokens`,
             `tool_calling`etc.).
-        compatibility_options: Compatibility options for the model provider (optional; 
-            only effective when `chat_model` is a string with value `"openai-compatible"`). 
-            Used to declare support for OpenAI-compatible features (e.g., `tool_choice` 
+        compatibility_options: Compatibility options for the model provider (optional;
+            only effective when `chat_model` is a string with value `"openai-compatible"`).
+            Used to declare support for OpenAI-compatible features (e.g., `tool_choice`
             strategies, JSON mode, etc.) to ensure correct functional adaptation.
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
@@ -120,13 +120,17 @@ def register_model_provider(
         >>> from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
         >>> from langchain_core.language_models.fake_chat_models import FakeChatModel
         >>>
-        >>> # Register custom model provider
+        # Register custom model provider
         >>> register_model_provider("fakechat", FakeChatModel)
         >>> model = load_chat_model(model="fakechat:fake-model")
         >>> model.invoke("Hello")
         >>>
-        >>> # Using with OpenAI-compatible API:
-        >>> register_model_provider("vllm","openai-compatible",base_url="http://localhost:8000/v1")
+        # Using with OpenAI-compatible API:
+        >>> register_model_provider(
+        ...     provider_name="vllm",
+        ...     chat_model="openai-compatible",
+        ...     base_url="http://localhost:8000/v1",
+        ... )
         >>> model = load_chat_model(model="vllm:qwen3-4b")
         >>> model.invoke("Hello")
     """
@@ -215,7 +219,7 @@ def batch_register_model_provider(
             >>> from langchain_dev_utils.chat_models import batch_register_model_provider, load_chat_model
             >>> from langchain_core.language_models.fake_chat_models import FakeChatModel
             >>>
-            >>> # Register multiple providers
+            # Register multiple providers
             >>> batch_register_model_provider([
             ...     {
             ...         "provider_name": "fakechat",
@@ -228,7 +232,7 @@ def batch_register_model_provider(
             ...     },
             ... ])
             >>>
-            >>> # Use registered providers
+            # Use registered providers
             >>> model = load_chat_model("fakechat:fake-model")
             >>> model.invoke("Hello")
             >>>
@@ -268,16 +272,16 @@ def load_chat_model(
         BaseChatModel: Initialized chat model instance
 
     Example:
-        Load model with provider prefix:
+        # Load model with provider prefix:
         >>> from langchain_dev_utils.chat_models import load_chat_model
         >>> model = load_chat_model("vllm:qwen3-4b")
         >>> model.invoke("hello")
 
-        Load model with separate provider parameter:
+        # Load model with separate provider parameter:
         >>> model = load_chat_model("qwen3-4b", model_provider="vllm")
         >>> model.invoke("hello")
 
-        Load model with additional parameters:
+        # Load model with additional parameters:
         >>> model = load_chat_model(
         ...     "vllm:qwen3-4b",
         ...     temperature=0.7

@@ -70,7 +70,7 @@ def register_embeddings_provider(
         ValueError: If base_url is not provided when embeddings_model is a string
 
     Example:
-        Register with custom model class:
+        # Register with custom model class:
         >>> from langchain_dev_utils.embeddings import register_embeddings_provider, load_embeddings
         >>> from langchain_core.embeddings.fake import FakeEmbeddings
         >>>
@@ -78,9 +78,11 @@ def register_embeddings_provider(
         >>> embeddings = load_embeddings("fakeembeddings:fake-embeddings",size=1024)
         >>> embeddings.embed_query("hello world")
 
-        Register with OpenAI-compatible API:
+        # Register with OpenAI-compatible API:
         >>> register_embeddings_provider(
-        ...     "vllm", "openai-compatible", base_url="http://localhost:8000/v1"
+        ...     "vllm",
+        ...     "openai-compatible",
+        ...     base_url="http://localhost:8000/v1"
         ... )
         >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
@@ -147,19 +149,26 @@ def batch_register_embeddings_provider(
         ValueError: If any of the providers are invalid
 
     Example:
-        Register multiple providers at once:
+        # Register multiple providers at once:
         >>> from langchain_dev_utils.embeddings import batch_register_embeddings_provider, load_embeddings
         >>> from langchain_core.embeddings.fake import FakeEmbeddings
         >>>
         >>> batch_register_embeddings_provider(
         ...     [
-        ...         {"provider_name": "fakeembeddings", "embeddings_model": FakeEmbeddings},
-        ...         {"provider_name": "vllm", "embeddings_model": "openai-compatible", "base_url": "http://localhost:8000/v1"},
+        ...         {
+        ...             "provider_name": "fakeembeddings",
+        ...             "embeddings_model": FakeEmbeddings,
+        ...         },
+        ...         {
+        ...             "provider_name": "vllm",
+        ...             "embeddings_model": "openai-compatible",
+        ...             "base_url": "http://localhost:8000/v1"
+        ...         },
         ...     ]
         ... )
         >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
-        >>> embeddings = load_embeddings("fakeembeddings:fake-embeddings",size=1024)
+        >>> embeddings = load_embeddings("fakeembeddings:fake-embeddings", size=1024)
         >>> embeddings.embed_query("hello world")
     """
     for provider in providers:
@@ -193,12 +202,12 @@ def load_embeddings(
         ValueError: If provider is not registered or API key is not found
 
     Example:
-        Load model with provider prefix:
+        # Load model with provider prefix:
         >>> from langchain_dev_utils.embeddings import load_embeddings
         >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
 
-        Load model with separate provider parameter:
+        # Load model with separate provider parameter:
         >>> embeddings = load_embeddings("qwen3-embedding-4b", provider="vllm")
         >>> embeddings.embed_query("hello world")
     """

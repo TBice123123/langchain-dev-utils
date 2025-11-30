@@ -62,20 +62,13 @@ def create_agent(  # noqa: PLR0915
     Example:
         >>> from langchain_dev_utils.chat_models import register_model_provider
         >>> from langchain_dev_utils.agents import create_agent
-        >>> from langchain_core.tools import tool
-        >>> import datetime
         >>>
-        >>> # Register a model provider
+        # Register a model provider, must be done before creating the agent
         >>> register_model_provider(
         ...     provider_name="vllm",
         ...     chat_model="openai-compatible",
         ...     base_url="http://localhost:8000/v1",
         ... )
-        >>>
-        >>> @tool
-        ... def get_current_time() -> str:
-        ...     \"\"\"Get current time.\"\"\"
-        ...     return str(datetime.datetime.now().timestamp())
         >>>
         >>> agent = create_agent(
         ...     "vllm:qwen3-4b",

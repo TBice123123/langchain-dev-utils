@@ -30,7 +30,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
             against the max_tools limit.
 
     Examples:
-        Basic usage with tool limit:
+        # Basic usage with tool limit:
         ```python
         from langchain_dev_utils.agents.middleware import LLMToolSelectorMiddleware
 
@@ -40,7 +40,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         )
         ```
 
-        With always-included tools:
+        # With always-included tools:
         ```python
         middleware = LLMToolSelectorMiddleware(
             model="vllm:qwen3-4b",
@@ -49,7 +49,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         )
         ```
 
-        With custom system prompt:
+        # With custom system prompt:
         ```python
         custom_prompt = "Select tools that can help answer user questions about data."
         middleware = LLMToolSelectorMiddleware(
