@@ -141,6 +141,7 @@ print(emb)
 | `chunks` | List[AIMessageChunk] | 是 | - | AIMessageChunk 列表 |
 
 ```python
+from langchain_dev_utils.message_convert import merge_ai_message_chunk
 chunks = list(model.stream("Hello"))
 merged = merge_ai_message_chunk(chunks)
 ```
@@ -158,6 +159,7 @@ merged = merge_ai_message_chunk(chunks)
 | `with_num` | bool | 否 | False | 如果为 True，为每个项目添加数字前缀（例如 "1. 你好"） |
 
 ```python
+from langchain_dev_utils.message_convert import format_sequence
 text = format_sequence([
     "str1",
     "str2",
@@ -189,7 +191,7 @@ text = format_sequence([
 | 参数名 | 类型 | 必填 | 默认值 | 描述 |
 |--------|------|------|--------|------|
 | `message` | AIMessage | 是 | - | AIMessage 对象 |
-| `first_tool_call_only` | bool | 否 | False | 是否只检查第一个工具调用 |
+| `first_tool_call_only` | bool | 否 | False | 是否只解析第一个工具调用 |
 
 ```python
 import datetime
@@ -218,7 +220,7 @@ if has_tool_calling(response):
 其中都可以传递`handler`参数，用于自定义断点返回和响应处理逻辑。
 
 ```python
-from langchain_dev_utils import human_in_the_loop
+from langchain_dev_utils.tool_calling import human_in_the_loop
 from langchain_core.tools import tool
 import datetime
 
@@ -246,9 +248,9 @@ LangChain v1 版本中，官方提供的 `create_agent` 函数可以用于创建
 
 | 参数名 | 类型 | 必填 | 默认值 | 描述 |
 |--------|------|------|--------|------|
-| `model` | str \| BaseChatModel | 是 | - | 模型名称或模型实例 |
+| `model` | str  | 是 | - | 模型名称|
+| 其余参数 | Various | No | - | 其余参数与 `langchain.agents.create_agent` 函数相同|
 
-**其余参数与 `langchain.agents.create_agent` 函数相同。**
 
 使用示例：
 
@@ -302,7 +304,7 @@ print(response)
 
 | 参数名 | 类型 | 必填 | 默认值 | 描述 |
 |--------|------|------|--------|------|
-| `sub_graphs` | List[StateGraph] | 是 | - | 要组合的状态图列表（必须是 StateGraph 实例） |
+| `sub_graphs` | List[StateGraph\|CompiledStateGraph] | 是 | - | 要组合的状态图列表（必须是 StateGraph 实例 或 CompiledStateGraph 实例） |
 | `state_schema` | type | 是 | - | 最终生成图的 State Schema |
 | `graph_name` | str | 否 | - | 最终生成图的名称 |
 | `context_schema` | type | 否 | - | 最终生成图的 Context Schema |
@@ -363,7 +365,7 @@ print(response)
 
 | 参数名 | 类型 | 必填 | 默认值 | 描述 |
 |--------|------|------|--------|------|
-| `sub_graphs` | List[StateGraph] | 是 | - | 要组合的状态图列表 |
+| `sub_graphs` | List[StateGraph\|CompiledStateGraph] | 是 | - | 要组合的状态图列表（必须是 StateGraph 实例 或 CompiledStateGraph 实例） |
 | `state_schema` | type | 是 | - | 最终生成图的 State Schema |
 | `branches_fn` | Callable | 是 | - | 并行分支函数，返回 Send 对象列表控制并行执行 |
 | `graph_name` | str | 否 | - | 最终生成图的名称 |

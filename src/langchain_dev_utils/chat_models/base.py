@@ -3,7 +3,11 @@ from typing import Any, NotRequired, Optional, TypedDict, cast
 from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.utils import from_env
-from pydantic import BaseModel
+
+from langchain_dev_utils._utils import (
+    _check_langchain_openai_install,
+    _get_base_url_field_name,
+)
 
 from .types import ChatModelType, CompatibilityOptions
 
@@ -16,34 +20,6 @@ class ChatModelProvider(TypedDict):
     base_url: NotRequired[str]
     model_profiles: NotRequired[dict[str, dict[str, Any]]]
     compatibility_options: NotRequired[CompatibilityOptions]
-
-
-def _get_base_url_field_name(model_cls: type[BaseModel]) -> str | None:
-    """
-    Return 'base_url' if the model has a field named or aliased as 'base_url',
-    else return 'api_base' if it has a field named or aliased as 'api_base',
-    else return None.
-    The return value is always either 'base_url', 'api_base', or None.
-    """
-    model_fields = model_cls.model_fields
-
-    # try model_fields first
-    if "base_url" in model_fields:
-        return "base_url"
-
-    if "api_base" in model_fields:
-        return "api_base"
-
-    # then try aliases
-    for field_info in model_fields.values():
-        if field_info.alias == "base_url":
-            return "base_url"
-
-    for field_info in model_fields.values():
-        if field_info.alias == "api_base":
-            return "api_base"
-
-    return None
 
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
@@ -89,7 +65,7 @@ def _load_chat_model_helper(
         BaseChatModel: Initialized chat model instance
     """
     model, model_provider = _parse_model(model, model_provider)
-    if model_provider in _MODEL_PROVIDERS_DICT.keys():
+    if model_provider in _MODEL_PROVIDERS_DICT:
         chat_model = _MODEL_PROVIDERS_DICT[model_provider]["chat_model"]
         if base_url := _MODEL_PROVIDERS_DICT[model_provider].get("base_url"):
             url_key = _get_base_url_field_name(chat_model)
@@ -98,7 +74,7 @@ def _load_chat_model_helper(
         if model_profiles := _MODEL_PROVIDERS_DICT[model_provider].get(
             "model_profiles"
         ):
-            if model in model_profiles:
+            if model in model_profiles and "profile" not in kwargs:
                 kwargs.update({"profile": model_profiles[model]})
         return chat_model(model=model, **kwargs)
 
@@ -145,12 +121,9 @@ def register_model_provider(
     """
     base_url = base_url or from_env(f"{provider_name.upper()}_API_BASE", default=None)()
     if isinstance(chat_model, str):
-        try:
-            from .adapters.openai_compatible import _create_openai_compatible_model
-        except ImportError:
-            raise ImportError(
-                "Please install langchain_dev_utils[standard],when chat_model is a 'openai-compatible'"
-            )
+        _check_langchain_openai_install()
+        from .adapters.openai_compatible import _create_openai_compatible_model
+
         if base_url is None:
             raise ValueError(
                 f"base_url must be provided or set {provider_name.upper()}_API_BASE environment variable when chat_model is a string"

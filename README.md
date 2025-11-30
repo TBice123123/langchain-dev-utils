@@ -141,6 +141,8 @@ For stream responses obtained using `stream()` and `astream()`, you can use `mer
 | `chunks` | List[AIMessageChunk] | Yes | - | List of AIMessageChunk objects |
 
 ```python
+from langchain_dev_utils.message_convert import merge_ai_message_chunk
+
 chunks = list(model.stream("Hello"))
 merged = merge_ai_message_chunk(chunks)
 ```
@@ -158,6 +160,7 @@ For a list, you can use `format_sequence` to format it.
 | `with_num` | bool | No | False | If True, add a numeric prefix to each item (e.g., "1. Hello") |
 
 ```python
+from langchain_dev_utils.message_convert import format_sequence
 text = format_sequence([
     "str1",
     "str2",
@@ -189,7 +192,7 @@ Includes the following features:
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `message` | AIMessage | Yes | - | AIMessage object |
-| `first_tool_call_only` | bool | No | False | Whether to only check the first tool call |
+| `first_tool_call_only` | bool | No | False | Whether to only parse the first tool call |
 
 ```python
 import datetime
@@ -218,7 +221,7 @@ if has_tool_calling(response):
 Both can accept a `handler` parameter for custom breakpoint return and response handling logic.
 
 ```python
-from langchain_dev_utils import human_in_the_loop
+from langchain_dev_utils.tool_calling import human_in_the_loop
 from langchain_core.tools import tool
 import datetime
 
@@ -246,7 +249,7 @@ In LangChain v1, the officially provided `create_agent` function can be used to 
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `model` | str \| BaseChatModel | Yes | - | Model name or model instance. Can be a string identifier for a model registered with `register_model_provider` or a BaseChatModel instance. |
+| `model` | str  | Yes | - | Model name or model instance. Can be a string identifier for a model registered with `register_model_provider` or a BaseChatModel instance. |
 | Other parameters | Various | No | - | All other parameters are the same as in `langchain.agents.create_agent` |
 
 Usage example:
@@ -301,7 +304,7 @@ Uses `create_sequential_pipeline`, supported parameters:
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `sub_graphs` | List[StateGraph] | Yes | - | List of state graphs to combine (must be StateGraph instances) |
+| `sub_graphs` | List[StateGraph\|CompiledStateGraph] | Yes | - | List of state graphs to combine (must be StateGraph instances or CompiledStateGraph instances) |
 | `state_schema` | type | Yes | - | State Schema for the final generated graph |
 | `graph_name` | str | No | - | Name of the final generated graph |
 | `context_schema` | type | No | - | Context Schema for the final generated graph |
@@ -362,7 +365,7 @@ Uses `create_parallel_pipeline`, supported parameters:
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `sub_graphs` | List[StateGraph] | Yes | - | List of state graphs to combine |
+| `sub_graphs` | List[StateGraph\|CompiledStateGraph] | Yes | - | List of state graphs to combine (must be StateGraph instances or CompiledStateGraph instances) |
 | `state_schema` | type | Yes | - | State Schema for the final generated graph |
 | `branches_fn` | Callable | Yes | - | Parallel branch function, returns a list of Send objects to control parallel execution |
 | `graph_name` | str | No | - | Name of the final generated graph |

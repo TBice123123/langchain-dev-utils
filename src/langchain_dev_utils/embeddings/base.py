@@ -2,7 +2,11 @@ from typing import Any, Literal, NotRequired, Optional, TypedDict, Union
 
 from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
 from langchain_core.utils import from_env, secret_from_env
-from pydantic import BaseModel
+
+from langchain_dev_utils._utils import (
+    _check_langchain_openai_install,
+    _get_base_url_field_name,
+)
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
 
@@ -13,34 +17,6 @@ class EmbeddingProvider(TypedDict):
     provider_name: str
     embeddings_model: EmbeddingsType
     base_url: NotRequired[str]
-
-
-def _get_base_url_field_name(model_cls: type[BaseModel]) -> str | None:
-    """
-    Return 'base_url' if the model has a field named or aliased as 'base_url',
-    else return 'api_base' if it has a field named or aliased as 'api_base',
-    else return None.
-    The return value is always either 'base_url', 'api_base', or None.
-    """
-    model_fields = model_cls.model_fields
-
-    # try model_fields first
-    if "base_url" in model_fields:
-        return "base_url"
-
-    if "api_base" in model_fields:
-        return "api_base"
-
-    # then try aliases
-    for field_info in model_fields.values():
-        if field_info.alias == "base_url":
-            return "base_url"
-
-    for field_info in model_fields.values():
-        if field_info.alias == "api_base":
-            return "api_base"
-
-    return None
 
 
 def _parse_model_string(model_name: str) -> tuple[str, str]:
@@ -118,6 +94,8 @@ def register_embeddings_provider(
             raise ValueError(
                 "when embeddings_model is a string, the value must be 'openai-compatible'"
             )
+
+        _check_langchain_openai_install()
 
         _EMBEDDINGS_PROVIDERS_DICT.update(
             {
@@ -238,7 +216,6 @@ def load_embeddings(
             if embeddings == "openai-compatible":
                 kwargs["check_embedding_ctx_length"] = False
                 embeddings = "openai"
-
         return init_embeddings(
             model=model,
             provider=embeddings,
