@@ -1,8 +1,8 @@
 from typing import Any, cast
 
+import pytest
 from langchain_core.language_models import BaseChatModel
 from langchain_tests.integration_tests.chat_models import ChatModelIntegrationTests
-import pytest
 
 from langchain_dev_utils.chat_models.base import load_chat_model
 

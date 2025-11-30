@@ -1,5 +1,4 @@
-from typing import Any, Sequence
-from typing import Callable
+from typing import Any, Callable, Sequence
 
 from langchain.agents import create_agent as _create_agent
 from langchain.agents.middleware.types import (

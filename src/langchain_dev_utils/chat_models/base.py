@@ -95,11 +95,22 @@ def register_model_provider(
     string identifiers for supported providers.
 
     Args:
-        provider_name: The name of the model provider, used as an identifier for loading models later.
-        chat_model: The chat model, which can be either a `ChatModel` instance or a string (currently only `"openai-compatible"` is supported).
-        base_url: The API endpoint URL of the model provider (optional; applicable to both `chat_model` types, but primarily used when `chat_model` is a string with value `"openai-compatible"`).
-        model_profiles: Declares the capabilities and parameters supported by each model provided by this provider (optional; applicable to both `chat_model` types). The configuration corresponding to the `model_name` will be loaded and assigned to `model.profile` (e.g., fields such as `max_input_tokens`, `tool_calling`etc.).
-        compatibility_options: Compatibility options for the model provider (optional; only effective when `chat_model` is a string with value `"openai-compatible"`). Used to declare support for OpenAI-compatible features (e.g., `tool_choice` strategies, JSON mode, etc.) to ensure correct functional adaptation.
+        provider_name: The name of the model provider, used as an identifier for 
+            loading models later.
+        chat_model: The chat model, which can be either a `ChatModel` instance or 
+            a string (currently only `"openai-compatible"` is supported).
+        base_url: The API endpoint URL of the model provider (optional; applicable 
+            to both `chat_model` types, but primarily used when `chat_model` is a 
+            string with value `"openai-compatible"`).
+        model_profiles: Declares the capabilities and parameters supported by each 
+            model provided by this provider (optional; applicable to both `chat_model` 
+            types). The configuration corresponding to the `model_name` will be loaded 
+            and assigned to `model.profile` (e.g., fields such as `max_input_tokens`, 
+            `tool_calling`etc.).
+        compatibility_options: Compatibility options for the model provider (optional; 
+            only effective when `chat_model` is a string with value `"openai-compatible"`). 
+            Used to declare support for OpenAI-compatible features (e.g., `tool_choice` 
+            strategies, JSON mode, etc.) to ensure correct functional adaptation.
     Raises:
         ValueError: If base_url is not provided when chat_model is a string,
                    or if chat_model string is not in supported providers

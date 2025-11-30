@@ -147,7 +147,8 @@ def human_in_the_loop(
         Usage with custom handler:
         >>> def custom_handler(params: InterruptParams) -> Any:
         ...     response = interrupt(
-        ...         f"I am about to invoke tool '{params['tool_call_name']}' with arguments {params['tool_call_args']}. Please confirm whether to proceed."
+        ...         f"I am about to invoke tool '{params['tool_call_name']}'
+        ...           with arguments {params['tool_call_args']}. Please confirm whether to proceed."
         ...     )
         ...     if response["type"] == "accept":
         ...         return params["tool"].invoke(params["tool_call_args"])
@@ -235,7 +236,8 @@ def human_in_the_loop_async(
         Usage with custom handler:
         >>> async def custom_handler(params: InterruptParams) -> Any:
         ...     response = interrupt(
-        ...         f"I am about to invoke tool '{params['tool_call_name']}' with arguments {params['tool_call_args']}. Please confirm whether to proceed."
+        ...         f"I am about to invoke tool '{params['tool_call_name']}'
+        ...           with arguments {params['tool_call_args']}. Please confirm whether to proceed."
         ...     )
         ...     if response["type"] == "accept":
         ...         return await params["tool"].ainvoke(params["tool_call_args"])

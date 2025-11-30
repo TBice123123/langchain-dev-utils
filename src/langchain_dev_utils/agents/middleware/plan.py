@@ -1,6 +1,5 @@
 import json
-from typing import Awaitable, Callable, Literal, Optional, cast
-from typing import NotRequired
+from typing import Awaitable, Callable, Literal, NotRequired, Optional, cast
 
 from langchain.agents.middleware import ModelRequest, ModelResponse
 from langchain.agents.middleware.types import (
@@ -160,7 +159,8 @@ def create_finish_sub_plan_tool(
 ) -> BaseTool:
     """Create a tool for finishing sub-plan tasks.
 
-    This function creates a tool that allows agents to update the status of sub-plans in a plan. Sub-plans can be marked as "done" to track progress.
+    This function creates a tool that allows agents to update the status of sub-plans in a plan.
+    Sub-plans can be marked as "done" to track progress.
 
     Args:
         description: The description of the tool. Uses default description if not provided.
@@ -273,16 +273,20 @@ _PLAN_SYSTEM_PROMPT = """You can manage task plans using three simple tools:
 class PlanMiddleware(AgentMiddleware):
     """Middleware that provides plan management capabilities to agents.
 
-    This middleware adds a `write_plan` and `finish_sub_plan` (and `read_plan` optional) tool that allows agents to create and manage
-    structured plan lists for complex multi-step operations. It's designed to help
-    agents track progress, organize complex tasks, and provide users with visibility
-    into task completion status.
+    This middleware adds a `write_plan` and `finish_sub_plan` (and `read_plan`
+    optional) tool that allows agents to create and manage structured plan lists
+    for complex multi-step operations. It's designed to help agents track progress,
+    organize complex tasks, and provide users with visibility into task completion
+    status.
 
-    The middleware automatically injects system prompts that guide the agent on how to use the plan functionality effectively.
+    The middleware automatically injects system prompts that guide the agent on
+    how to use the plan functionality effectively.
 
     Args:
-        system_prompt: Custom system prompt to guide the agent on using the plan tool.
-            If not provided, uses the default `_PLAN_SYSTEM_PROMPT` or `_PLAN_SYSTEM_PROMPT_NOT_READ_PLAN` based on the `use_read_plan_tool` parameter.
+        system_prompt: Custom system prompt to guide the agent on using the plan
+            tool. If not provided, uses the default `_PLAN_SYSTEM_PROMPT` or
+            `_PLAN_SYSTEM_PROMPT_NOT_READ_PLAN` based on the `use_read_plan_tool`
+            parameter.
         write_plan_tool_description: Description of the `write_plan` tool.
             If not provided, uses the default `_DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION`.
         finish_sub_plan_tool_description: Description of the `finish_sub_plan` tool.

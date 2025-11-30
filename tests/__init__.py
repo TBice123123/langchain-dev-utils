@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from langchain_community.embeddings.dashscope import DashScopeEmbeddings
 from langchain_qwq import ChatQwen
 
@@ -5,7 +6,6 @@ from data.alibaba._profiles import _PROFILES as ALI_PROFILES
 from data.zhipuai._profiles import _PROFILES as ZAI_PROFILES
 from langchain_dev_utils.chat_models import batch_register_model_provider
 from langchain_dev_utils.embeddings import batch_register_embeddings_provider
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -34,5 +34,3 @@ batch_register_embeddings_provider(
         {"provider_name": "dashscope", "embeddings_model": DashScopeEmbeddings},
     ]
 )
-
-print("register!!")

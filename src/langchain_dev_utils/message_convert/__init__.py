@@ -6,7 +6,6 @@ from .content import (
 )
 from .format import format_sequence
 
-
 __all__ = [
     "convert_reasoning_content_for_ai_message",
     "convert_reasoning_content_for_chunk_iterator",

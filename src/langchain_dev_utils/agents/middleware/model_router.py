@@ -68,11 +68,15 @@ class ModelRouterState(AgentState):
 
 
 class ModelRouterMiddleware(AgentMiddleware):
-    """Model routing middleware that automatically selects the most suitable model based on input content.
+    """Model routing middleware that automatically selects the most suitable model
+    based on input content.
 
     Args:
-        router_model: Model identifier used for routing selection, it can be a model name or a BaseChatModel instance
-        model_list: List of available routing models, each containing model_name, model_description, tools(Optional), model_kwargs(Optional), model_system_prompt(Optional)
+        router_model: Model identifier used for routing selection, it can be a
+            model name or a BaseChatModel instance
+        model_list: List of available routing models, each containing model_name,
+            model_description, tools(Optional), model_kwargs(Optional),
+            model_system_prompt(Optional)
         router_prompt: Routing prompt template, uses default template if None
 
     Examples:

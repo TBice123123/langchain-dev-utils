@@ -1,5 +1,5 @@
-from langchain_core.embeddings import Embeddings
 import pytest
+from langchain_core.embeddings import Embeddings
 
 from langchain_dev_utils.embeddings import load_embeddings
 

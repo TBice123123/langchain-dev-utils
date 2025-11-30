@@ -1,6 +1,6 @@
 from typing import Any, Literal, NotRequired, Optional, TypedDict, Union
 
-from langchain.embeddings.base import Embeddings, _SUPPORTED_PROVIDERS, init_embeddings
+from langchain.embeddings.base import _SUPPORTED_PROVIDERS, Embeddings, init_embeddings
 from langchain_core.utils import from_env, secret_from_env
 
 from langchain_dev_utils._utils import (
@@ -60,8 +60,11 @@ def register_embeddings_provider(
 
     Args:
         provider_name: Name of the provider to register
-        embeddings_model: Either an Embeddings class or a string identifier for a supported provider
-        base_url: The API address of the Embedding model provider (optional, valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible")
+        embeddings_model: Either an Embeddings class or a string identifier
+            for a supported provider
+        base_url: The API address of the Embedding model provider (optional,
+            valid for both types of `embeddings_model`, but mainly used when
+            `embeddings_model` is a string and is "openai-compatible")
 
     Raises:
         ValueError: If base_url is not provided when embeddings_model is a string
@@ -126,14 +129,19 @@ def batch_register_embeddings_provider(
 ):
     """Batch register embeddings providers.
 
-    This function allows you to register multiple embeddings providers at once, which is
-    useful when setting up applications that need to work with multiple embedding services.
+    This function allows you to register multiple embeddings providers at once,
+    which is useful when setting up applications that need to work with multiple
+    embedding services.
 
     Args:
         providers: List of EmbeddingProvider dictionaries, each containing:
             - provider_name: str - Provider name
-            - embeddings_model: Union[Type[Embeddings], str] - Model class or provider string
-            - base_url: The API address of the Embedding model provider (optional, valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible")
+            - embeddings_model: Union[Type[Embeddings], str] - Model class or
+                provider string
+            - base_url: The API address of the Embedding model provider
+                (optional, valid for both types of `embeddings_model`, but
+                mainly used when `embeddings_model` is a string and is
+                "openai-compatible")
 
     Raises:
         ValueError: If any of the providers are invalid

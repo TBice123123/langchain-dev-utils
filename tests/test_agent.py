@@ -1,7 +1,7 @@
+import pytest
 from langchain.agents.structured_output import ToolStrategy
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, Field
-import pytest
 
 from langchain_dev_utils.agents import create_agent
 

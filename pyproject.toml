@@ -38,3 +38,8 @@ tests = [
     "langchain-qwq>=0.3.0",
     "langchain-ollama>=1.0.0",
 ]
+
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "PGH003", "T201"]
+ignore = ["E501"]

@@ -38,16 +38,19 @@ def create_parallel_pipeline(
         sub_graphs: List of sub-graphs to execute in parallel
         state_schema: state schema of the final constructed graph
         graph_name: Name of the final constructed graph
-        branches_fn: Optional function to determine which sub-graphs to execute in parallel
+        branches_fn: Optional function to determine which sub-graphs to execute
+            in parallel
         context_schema: context schema of the final constructed graph
         input_schema: input schema of the final constructed graph
         output_schema: output schema of the final constructed graph
-        checkpointer: Optional LangGraph checkpointer for the final constructed graph
+        checkpointer: Optional LangGraph checkpointer for the final constructed
+            graph
         store: Optional LangGraph store for the final constructed graph
         cache: Optional LangGraph cache for the final constructed graph
 
     Returns:
-        CompiledStateGraph[StateT, ContextT, InputT, OutputT]: Compiled state graph of the pipeline.
+        CompiledStateGraph[StateT, ContextT, InputT, OutputT]: Compiled state
+            graph of the pipeline.
 
     Example:
         Basic parallel pipeline with multiple specialized agents:
@@ -58,19 +61,28 @@ def create_parallel_pipeline(
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
         ...             tools=[get_current_time],
-        ...             system_prompt="You are a time query assistant. You can only answer questions about current time. If the question is unrelated to time, please directly respond with 'I cannot answer that'.",
+        ...             system_prompt="You are a time query assistant. You can only
+        ...                 answer questions about current time. If the question is
+        ...                 unrelated to time, please directly respond with
+        ...                 'I cannot answer that'.",
         ...             name="time_agent",
         ...         ),
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
         ...             tools=[get_current_weather],
-        ...             system_prompt="You are a weather query assistant. You can only answer questions about current weather. If the question is unrelated to weather, please directly respond with 'I cannot answer that'.",
+        ...             system_prompt="You are a weather query assistant. You can
+        ...                 only answer questions about current weather. If the
+        ...                 question is unrelated to weather, please directly
+        ...                 respond with 'I cannot answer that'.",
         ...             name="weather_agent",
         ...         ),
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
         ...             tools=[get_current_user],
-        ...             system_prompt="You are a user query assistant. You can only answer questions about current user. If the question is unrelated to user information, please directly respond with 'I cannot answer that'.",
+        ...             system_prompt="You are a user query assistant. You can only
+        ...                 answer questions about current user. If the question is
+        ...                 unrelated to user information, please directly respond
+        ...                 with 'I cannot answer that'.",
         ...             name="user_agent",
         ...         ),
         ...     ],
@@ -86,19 +98,28 @@ def create_parallel_pipeline(
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
         ...             tools=[get_current_time],
-        ...             system_prompt="You are a time query assistant. You can only answer questions about current time. If the question is unrelated to time, please directly respond with 'I cannot answer that'.",
+        ...             system_prompt="You are a time query assistant. You can only
+        ...                 answer questions about current time. If the question is
+        ...                 unrelated to time, please directly respond with
+        ...                 'I cannot answer that'.",
         ...             name="time_agent",
         ...         ),
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
         ...             tools=[get_current_weather],
-        ...             system_prompt="You are a weather query assistant. You can only answer questions about current weather. If the question is unrelated to weather, please directly respond with 'I cannot answer that'.",
+        ...             system_prompt="You are a weather query assistant. You can
+        ...                 only answer questions about current weather. If the
+        ...                 question is unrelated to weather, please directly
+        ...                 respond with 'I cannot answer that'.",
         ...             name="weather_agent",
         ...         ),
         ...         create_agent(
         ...             model="vllm:qwen3-4b",
         ...             tools=[get_current_user],
-        ...             system_prompt="You are a user query assistant. You can only answer questions about current user. If the question is unrelated to user information, please directly respond with 'I cannot answer that'.",
+        ...             system_prompt="You are a user query assistant. You can only
+        ...                 answer questions about current user. If the question is
+        ...                 unrelated to user information, please directly respond
+        ...                 with 'I cannot answer that'.",
         ...             name="user_agent",
         ...         ),
         ...     ],

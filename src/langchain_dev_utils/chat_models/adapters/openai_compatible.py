@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from collections.abc import AsyncIterator, Iterator
 from json import JSONDecodeError
 from typing import (
@@ -13,6 +14,7 @@ from typing import (
     Union,
 )
 
+import openai
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
@@ -26,7 +28,6 @@ from langchain_core.utils import from_env, secret_from_env
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_openai.chat_models._compat import _convert_from_v1_to_chat_completions
 from langchain_openai.chat_models.base import BaseChatOpenAI, _convert_message_to_dict
-import openai
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -49,22 +50,37 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     """
     Base template class for OpenAI-compatible chat model implementations.
 
-    This class provides a foundation for integrating various LLM providers that offer OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot, and many others).
-    It enhances the base OpenAI functionality by:
+    This class provides a foundation for integrating various LLM providers that 
+    offer OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot, 
+    and many others). It enhances the base OpenAI functionality by:
 
-    **1.Supports output of more types of reasoning content (reasoning_content)**
-    ChatOpenAI can only output reasoning content natively supported by official OpenAI models, while OpenAICompatibleChatModel can output reasoning content from other model providers (e.g., OpenRouter).
+    **1. Supports output of more types of reasoning content (reasoning_content)**
+    ChatOpenAI can only output reasoning content natively supported by official 
+    OpenAI models, while OpenAICompatibleChatModel can output reasoning content 
+    from other model providers (e.g., OpenRouter).
 
-    **2.Optimizes default behavior for structured output**
-    When calling with_structured_output, the default value of the method parameter is adjusted to "function_calling" (instead of the default "json_schema" in ChatOpenAI), providing better compatibility with other models.
+    **2. Optimizes default behavior for structured output**
+    When calling with_structured_output, the default value of the method 
+    parameter is adjusted to "function_calling" (instead of the default 
+    "json_schema" in ChatOpenAI), providing better compatibility with other 
+    models.
 
-    **3.Supports configuration of related parameters**
-    For cases where parameters differ from the official OpenAI API, this library provides the compatibility_options parameter to address this issue. For example, when different model providers have inconsistent support for tool_choice, you can adapt by setting supported_tool_choice in compatibility_options.
+    **3. Supports configuration of related parameters**
+    For cases where parameters differ from the official OpenAI API, this library 
+    provides the compatibility_options parameter to address this issue. For 
+    example, when different model providers have inconsistent support for 
+    tool_choice, you can adapt by setting supported_tool_choice in 
+    compatibility_options.
 
-    Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class extends capabilities to better support diverse OpenAI-compatible model providers while maintaining full compatibility with LangChain's chat model interface.
+    Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class 
+    extends capabilities to better support diverse OpenAI-compatible model 
+    providers while maintaining full compatibility with LangChain's chat model 
+    interface.
 
-    Note: This is a template class and should not be exported or instantiated directly.
-    Instead, use it as a base class and provide the specific provider name through inheritance or the factory function `_create_openai_compatible_model()`.
+    Note: This is a template class and should not be exported or instantiated 
+    directly. Instead, use it as a base class and provide the specific provider 
+    name through inheritance or the factory function 
+    `_create_openai_compatible_model()`.
     """
 
     model_name: str = Field(alias="model", default="openai compatible model")

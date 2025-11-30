@@ -1,5 +1,5 @@
-from langchain_core.language_models import BaseChatModel
 import pytest
+from langchain_core.language_models import BaseChatModel
 
 from data.alibaba._profiles import _PROFILES as ALI_PROFILES
 from data.zhipuai._profiles import _PROFILES as ZAI_PROFILES

@@ -1,13 +1,12 @@
 import datetime
-from typing import Any
-from typing import cast
+from typing import Any, cast
 
+import pytest
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import BaseTool
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import interrupt
-import pytest
 
 from langchain_dev_utils.chat_models import load_chat_model
 from langchain_dev_utils.tool_calling import (
