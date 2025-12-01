@@ -20,7 +20,7 @@ from langchain_core.callbacks import (
     CallbackManagerForLLMRun,
 )
 from langchain_core.language_models import LangSmithParams, LanguageModelInput
-from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage
+from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, HumanMessage
 from langchain_core.outputs import ChatGenerationChunk, ChatResult
 from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool
@@ -46,40 +46,48 @@ _DictOrPydanticClass = Union[dict[str, Any], type[_BM], type]
 _DictOrPydantic = Union[dict, _BM]
 
 
+def _get_last_human_message_index(messages: list[BaseMessage]):
+    last_index = -1
+    for i, msg in enumerate(messages):
+        if isinstance(msg, HumanMessage):
+            last_index = i
+    return last_index
+
+
 class _BaseChatOpenAICompatible(BaseChatOpenAI):
     """
     Base template class for OpenAI-compatible chat model implementations.
 
-    This class provides a foundation for integrating various LLM providers that 
-    offer OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot, 
+    This class provides a foundation for integrating various LLM providers that
+    offer OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot,
     and many others). It enhances the base OpenAI functionality by:
 
     **1. Supports output of more types of reasoning content (reasoning_content)**
-    ChatOpenAI can only output reasoning content natively supported by official 
-    OpenAI models, while OpenAICompatibleChatModel can output reasoning content 
+    ChatOpenAI can only output reasoning content natively supported by official
+    OpenAI models, while OpenAICompatibleChatModel can output reasoning content
     from other model providers (e.g., OpenRouter).
 
     **2. Optimizes default behavior for structured output**
-    When calling with_structured_output, the default value of the method 
-    parameter is adjusted to "function_calling" (instead of the default 
-    "json_schema" in ChatOpenAI), providing better compatibility with other 
+    When calling with_structured_output, the default value of the method
+    parameter is adjusted to "function_calling" (instead of the default
+    "json_schema" in ChatOpenAI), providing better compatibility with other
     models.
 
     **3. Supports configuration of related parameters**
-    For cases where parameters differ from the official OpenAI API, this library 
-    provides the compatibility_options parameter to address this issue. For 
-    example, when different model providers have inconsistent support for 
-    tool_choice, you can adapt by setting supported_tool_choice in 
+    For cases where parameters differ from the official OpenAI API, this library
+    provides the compatibility_options parameter to address this issue. For
+    example, when different model providers have inconsistent support for
+    tool_choice, you can adapt by setting supported_tool_choice in
     compatibility_options.
 
-    Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class 
-    extends capabilities to better support diverse OpenAI-compatible model 
-    providers while maintaining full compatibility with LangChain's chat model 
+    Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class
+    extends capabilities to better support diverse OpenAI-compatible model
+    providers while maintaining full compatibility with LangChain's chat model
     interface.
 
-    Note: This is a template class and should not be exported or instantiated 
-    directly. Instead, use it as a base class and provide the specific provider 
-    name through inheritance or the factory function 
+    Note: This is a template class and should not be exported or instantiated
+    directly. Instead, use it as a base class and provide the specific provider
+    name through inheritance or the factory function
     `_create_openai_compatible_model()`.
     """
 
@@ -101,28 +109,14 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     """Provider Compatibility Options"""
     supported_tool_choice: ToolChoiceType = Field(default_factory=list)
     """Supported tool choice"""
-    keep_reasoning_content: bool = Field(default=False)
-    """Whether to keep reasoning content in the messages"""
+    reasoning_content_keep_type: Literal["discard", "temp", "retain"] = Field(
+        default="discard"
+    )
+    """How to keep reasoning content in the messages"""
     support_json_mode: bool = Field(default=False)
     """Whether to support JSON mode"""
     include_usage: bool = Field(default=True)
     """Whether to include usage information in the output"""
-
-    @property
-    def _supported_tool_choice(self) -> ToolChoiceType:
-        return self.supported_tool_choice
-
-    @property
-    def _keep_reasoning_content(self) -> bool:
-        return self.keep_reasoning_content
-
-    @property
-    def _support_json_mode(self) -> bool:
-        return self.support_json_mode
-
-    @property
-    def _include_usage(self) -> bool:
-        return self.include_usage
 
     @property
     def _llm_type(self) -> str:
@@ -159,13 +153,24 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
         payload_messages = []
 
-        for m in messages:
+        last_human_index = _get_last_human_message_index(messages)
+
+        for index, m in enumerate(messages):
             if isinstance(m, AIMessage):
                 msg_dict = _convert_message_to_dict(
                     _convert_from_v1_to_chat_completions(m)
                 )
-                if self._keep_reasoning_content and m.additional_kwargs.get(
-                    "reasoning_content"
+                if (
+                    self.reasoning_content_keep_type == "retain"
+                    and m.additional_kwargs.get("reasoning_content")
+                ):
+                    msg_dict["reasoning_content"] = m.additional_kwargs.get(
+                        "reasoning_content"
+                    )
+                elif (
+                    self.reasoning_content_keep_type == "temp"
+                    and index > last_human_index
+                    and m.additional_kwargs.get("reasoning_content")
                 ):
                     msg_dict["reasoning_content"] = m.additional_kwargs.get(
                         "reasoning_content"
@@ -316,7 +321,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> Iterator[ChatGenerationChunk]:
-        if self._include_usage:
+        if self.include_usage:
             kwargs["stream_options"] = {"include_usage": True}
         try:
             for chunk in super()._stream(
@@ -338,7 +343,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[AsyncCallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> AsyncIterator[ChatGenerationChunk]:
-        if self._include_usage:
+        if self.include_usage:
             kwargs["stream_options"] = {"include_usage": True}
         try:
             async for chunk in super()._astream(
@@ -422,11 +427,11 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             if isinstance(tool_choice, str):
                 if (
                     tool_choice in ["auto", "none", "required"]
-                    and tool_choice in self._supported_tool_choice
+                    and tool_choice in self.supported_tool_choice
                 ):
                     support_tool_choice = True
 
-                elif "specific" in self._supported_tool_choice:
+                elif "specific" in self.supported_tool_choice:
                     if tool_choice in tool_names:
                         support_tool_choice = True
                         tool_choice = {
@@ -471,7 +476,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         # Many providers do not support json_schema method, so fallback to function_calling
         if method == "json_schema":
             method = "function_calling"
-        if method == "json_mode" and not self._support_json_mode:
+        if method == "json_mode" and not self.support_json_mode:
             method = "function_calling"
 
         return super().with_structured_output(
@@ -502,8 +507,8 @@ def _create_openai_compatible_model(
         Configured model class ready for instantiation with provider-specific settings
     """
     chat_model_cls_name = f"Chat{provider.title()}"
-
-    compatibility_options = compatibility_options or {}
+    if compatibility_options is None:
+        compatibility_options = {}
 
     return create_model(
         chat_model_cls_name,
@@ -532,9 +537,13 @@ def _create_openai_compatible_model(
             ToolChoiceType,
             Field(default=compatibility_options.get("supported_tool_choice", ["auto"])),
         ),
-        keep_reasoning_content=(
-            bool,
-            Field(default=compatibility_options.get("keep_reasoning_content", False)),
+        reasoning_content_keep_type=(
+            Literal["discard", "temp", "retain"],
+            Field(
+                default=compatibility_options.get(
+                    "reasoning_content_keep_type", "discard"
+                )
+            ),
         ),
         support_json_mode=(
             bool,

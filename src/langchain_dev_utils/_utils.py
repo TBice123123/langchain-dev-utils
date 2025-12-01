@@ -8,9 +8,10 @@ def _check_pkg_install(
     pkg: Literal["langchain_openai", "json_repair"],
 ) -> None:
     if not util.find_spec(pkg):
-        msg = (
-            "Please install langchain_dev_utils[standard],when use 'openai-compatible'"
-        )
+        if pkg == "langchain_openai":
+            msg = "Please install langchain_dev_utils[standard],when use 'openai-compatible'"
+        else:
+            msg = "Please install langchain_dev_utils[standard] to use ToolCallRepairMiddleware."
         raise ImportError(msg)
 
 

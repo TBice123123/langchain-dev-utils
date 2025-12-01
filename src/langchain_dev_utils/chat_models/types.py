@@ -10,6 +10,6 @@ ToolChoiceType = list[Literal["auto", "none", "required", "specific"]]
 
 class CompatibilityOptions(TypedDict):
     supported_tool_choice: NotRequired[ToolChoiceType]
-    keep_reasoning_content: NotRequired[bool]
+    reasoning_content_keep_type: NotRequired[Literal["discard", "temp", "retain"]]
     support_json_mode: NotRequired[bool]
     include_usage: NotRequired[bool]
