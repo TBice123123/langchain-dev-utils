@@ -41,24 +41,6 @@ Mainly consists of the following two functions:
 - `register_model_provider`: Register a chat model provider
 - `load_chat_model`: Load a chat model
 
-**`register_model_provider` Parameters:**
-
-| Parameter               | Type             | Required | Default | Description                                                                                                                                                                                                                                                                     |
-| ----------------------- | ---------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `provider_name`         | str              | Yes      | -       | The name of the model provider, used as an identifier for loading models later.                                                                                                                                                                                                 |
-| `chat_model`            | ChatModel \| str | Yes      | -       | The chat model, which can be either a `ChatModel` instance or a string (currently only `"openai-compatible"` is supported).                                                                                                                                                     |
-| `base_url`              | str              | No       | -       | The API endpoint URL of the model provider (applicable to both `chat_model` types, but primarily used when `chat_model` is a string with value `"openai-compatible"`).                                                                                                          |
-| `model_profiles`        | dict             | No       | -       | Declares the capabilities and parameters supported by each model provided by this provider. The configuration corresponding to the `model_name` will be loaded and assigned to `model.profile` (e.g., fields such as `max_input_tokens`, `tool_calling` etc.).                  |
-| `compatibility_options` | dict             | No       | -       | Compatibility options for the model provider (only effective when `chat_model` is a string with value `"openai-compatible"`). Used to declare support for OpenAI-compatible features (e.g., `tool_choice` strategies, JSON mode, etc.) to ensure correct functional adaptation. |
-
-**`load_chat_model` Parameters:**
-
-| Parameter        | Type | Required | Default | Description                                                                          |
-| ---------------- | ---- | -------- | ------- | ------------------------------------------------------------------------------------ |
-| `model`          | str  | Yes      | -       | Chat model name                                                                      |
-| `model_provider` | str  | No       | -       | Chat model provider name                                                             |
-| `kwargs`         | dict | No       | -       | Additional parameters passed to the chat model class, e.g., temperature, top_p, etc. |
-
 Example for integrating a qwen3-4b model deployed using `vllm`:
 
 ```python
@@ -85,22 +67,6 @@ Mainly consists of the following two functions:
 
 - `register_embeddings_provider`: Register an embedding model provider
 - `load_embeddings`: Load an embedding model
-
-**`register_embeddings_provider` Parameters:**
-
-| Parameter          | Type              | Required | Default | Description                                                                                                                                                                  |
-| ------------------ | ----------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `provider_name`    | str               | Yes      | -       | Embedding model provider name, used as an identifier for subsequent model loading                                                                                            |
-| `embeddings_model` | Embeddings \| str | Yes      | -       | Embedding model, can be Embeddings or a string (currently supports "openai-compatible")                                                                                      |
-| `base_url`         | str               | No       | -       | The API address of the Embedding model provider (valid for both types of `embeddings_model`, but mainly used when `embeddings_model` is a string and is "openai-compatible") |
-
-**`load_embeddings` Parameters:**
-
-| Parameter  | Type | Required | Default | Description                   |
-| ---------- | ---- | -------- | ------- | ----------------------------- |
-| `model`    | str  | Yes      | -       | Embedding model name          |
-| `provider` | str  | No       | -       | Embedding model provider name |
-| `kwargs`   | dict | No       | -       | Other additional parameters   |
 
 Example for integrating a qwen3-embedding-4b model deployed using `vllm`:
 
@@ -134,12 +100,6 @@ Includes the following features:
 
 For stream responses obtained using `stream()` and `astream()`, you can use `merge_ai_message_chunk` to merge them into a final AIMessage.
 
-**`merge_ai_message_chunk` Parameters:**
-
-| Parameter | Type                 | Required | Default | Description                    |
-| --------- | -------------------- | -------- | ------- | ------------------------------ |
-| `chunks`  | List[AIMessageChunk] | Yes      | -       | List of AIMessageChunk objects |
-
 ```python
 from langchain_dev_utils.message_convert import merge_ai_message_chunk
 
@@ -150,14 +110,6 @@ merged = merge_ai_message_chunk(chunks)
 #### 2.2 Format List Content
 
 For a list, you can use `format_sequence` to format it.
-
-**`format_sequence` Parameters:**
-
-| Parameter   | Type | Required | Default | Description                                                                                                   |
-| ----------- | ---- | -------- | ------- | ------------------------------------------------------------------------------------------------------------- |
-| `inputs`    | List | Yes      | -       | A list containing any of the following types: langchain_core.messages, langchain_core.documents.Document, str |
-| `separator` | str  | No       | "-"     | String used to join the content                                                                               |
-| `with_num`  | bool | No       | False   | If True, add a numeric prefix to each item (e.g., "1. Hello")                                                 |
 
 ```python
 from langchain_dev_utils.message_convert import format_sequence
@@ -180,19 +132,6 @@ Includes the following features:
 #### 3.1 Check and Parse Tool Calls
 
 `has_tool_calling` and `parse_tool_calling` are used to check and parse tool calls.
-
-**`has_tool_calling` Parameters:**
-
-| Parameter | Type      | Required | Default | Description      |
-| --------- | --------- | -------- | ------- | ---------------- |
-| `message` | AIMessage | Yes      | -       | AIMessage object |
-
-**`parse_tool_calling` Parameters:**
-
-| Parameter              | Type      | Required | Default | Description                               |
-| ---------------------- | --------- | -------- | ------- | ----------------------------------------- |
-| `message`              | AIMessage | Yes      | -       | AIMessage object                          |
-| `first_tool_call_only` | bool      | No       | False   | Whether to only parse the first tool call |
 
 ```python
 import datetime
@@ -243,14 +182,7 @@ Includes the following features:
 
 #### 4.1 Agent Factory Functions
 
-In LangChain v1, the officially provided `create_agent` function can be used to create a single agent, where the model parameter supports passing a BaseChatModel instance or a specific string (when passing a string, it is limited to the models supported by `init_chat_model`). To extend the flexibility of specifying models via strings, this library provides a functionally identical `create_agent` function, allowing you to directly use models supported by `load_chat_model` (requires prior registration).
-
-**`create_agent` Parameters:**
-
-| Parameter        | Type    | Required | Default | Description                                                                                                                                 |
-| ---------------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `model`          | str     | Yes      | -       | Model name or model instance. Can be a string identifier for a model registered with `register_model_provider` or a BaseChatModel instance. |
-| Other parameters | Various | No       | -       | All other parameters are the same as in `langchain.agents.create_agent`                                                                     |
+In LangChain v1, the official `create_agent` function can be used to create a single agent; its `model` parameter accepts either a BaseChatModel instance or a specific string (when a string is provided, only models supported by `init_chat_model` are allowed). To extend the flexibility of specifying models via string, this library provides an equivalent `create_agent` function that lets you designate any model supported by `load_chat_model` (registration required beforehand).
 
 Usage example:
 
@@ -265,24 +197,26 @@ print(response)
 
 #### 4.2 Middleware
 
-Provides some commonly used middleware components. Below are examples of `SummarizationMiddleware` and `PlanMiddleware`.
+Provides some commonly used middleware components. Below, we illustrate with `ToolCallRepairMiddleware` and `PlanMiddleware`.
 
-`SummarizationMiddleware` is used for agent summarization.
+`ToolCallRepairMiddleware` is used to repair `invalid_tool_calls` generated by large language models.
 
 `PlanMiddleware` is used for agent planning.
 
 ```python
 from langchain_dev_utils.agents.middleware import (
-    SummarizationMiddleware,
+    ToolcallRepairMiddleware,
     PlanMiddleware,
 )
 
-agent=create_agent(
+agent = create_agent(
     "vllm:qwen3-4b",
     name="plan-agent",
-    middleware=[PlanMiddleware(), SummarizationMiddleware(model="vllm:qwen3-4b")]
+    middleware=[ToolCallRepairMiddleware(), PlanMiddleware(
+        use_read_plan_tool=False
+    )]
 )
-response = agent.invoke({"messages": [{"role": "user", "content": "Give me a travel plan to New York"}]}))
+response = agent.invoke({"messages": [{"role": "user", "content": "Give me a travel plan to New York"}]})
 print(response)
 ```
 
@@ -290,29 +224,14 @@ print(response)
 
 ### 5. **State Graph Orchestration**
 
-Includes the following features:
+Includes the following capabilities:
 
 - Sequential graph orchestration
 - Parallel graph orchestration
 
 #### 5.1 Sequential Graph Orchestration
 
-Sequential graph orchestration:
-Uses `create_sequential_pipeline`, supported parameters:
-
-**`create_sequential_pipeline` Parameters:**
-
-| Parameter        | Type                                 | Required | Default | Description                                                                                    |
-| ---------------- | ------------------------------------ | -------- | ------- | ---------------------------------------------------------------------------------------------- |
-| `sub_graphs`     | List[StateGraph\|CompiledStateGraph] | Yes      | -       | List of state graphs to combine (must be StateGraph instances or CompiledStateGraph instances) |
-| `state_schema`   | type[dict]                           | Yes      | -       | State Schema for the final generated graph                                                     |
-| `graph_name`     | str                                  | No       | -       | Name of the final generated graph                                                              |
-| `context_schema` | type[dict]                           | No       | -       | Context Schema for the final generated graph                                                   |
-| `input_schema`   | type[dict]                           | No       | -       | Input Schema for the final generated graph                                                     |
-| `output_schema`  | type[dict]                           | No       | -       | Output Schema for the final generated graph                                                    |
-| `checkpoint`     | BaseCheckpointSaver                  | No       | -       | LangGraph persistence Checkpoint                                                               |
-| `store`          | BaseStore                            | No       | -       | LangGraph persistence Store                                                                    |
-| `cache`          | BaseCache                            | No       | -       | LangGraph Cache                                                                                |
+Use `create_sequential_pipeline` to orchestrate multiple subgraphs in sequential order:
 
 ```python
 from langchain.agents import AgentState
@@ -327,25 +246,25 @@ register_model_provider(
     base_url="http://localhost:8000/v1",
 )
 
-# Build sequential pipeline (all sub-graphs execute sequentially)
+# Build a sequential pipeline (all subgraphs executed in order)
 graph = create_sequential_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_time],
-            system_prompt="You are a time query assistant, can only answer the current time. If the question is unrelated to time, please directly answer that you cannot answer.",
+            system_prompt="You are a time-query assistant. You can only answer questions about the current time. If the question is unrelated to time, respond with 'I cannot answer that.'",
             name="time_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_weather],
-            system_prompt="You are a weather query assistant, can only answer the current weather. If the question is unrelated to weather, please directly answer that you cannot answer.",
+            system_prompt="You are a weather-query assistant. You can only answer questions about the current weather. If the question is unrelated to weather, respond with 'I cannot answer that.'",
             name="weather_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_user],
-            system_prompt="You are a user query assistant, can only answer the current user. If the question is unrelated to user, please directly answer that you cannot answer.",
+            system_prompt="You are a user-query assistant. You can only answer questions about the current user. If the question is unrelated to the user, respond with 'I cannot answer that.'",
             name="user_agent",
         ),
     ],
@@ -358,51 +277,36 @@ print(response)
 
 #### 5.2 Parallel Graph Orchestration
 
-Parallel graph orchestration:
-Uses `create_parallel_pipeline`, supported parameters:
-
-**`create_parallel_pipeline` Parameters:**
-
-| Parameter        | Type                                 | Required | Default | Description                                                                                    |
-| ---------------- | ------------------------------------ | -------- | ------- | ---------------------------------------------------------------------------------------------- |
-| `sub_graphs`     | List[StateGraph\|CompiledStateGraph] | Yes      | -       | List of state graphs to combine (must be StateGraph instances or CompiledStateGraph instances) |
-| `state_schema`   | type[dict]                           | Yes      | -       | State Schema for the final generated graph                                                     |
-| `branches_fn`    | Callable                             | No       | -       | Parallel branch function, returns a list of Send objects to control parallel execution         |
-| `graph_name`     | str                                  | No       | -       | Name of the final generated graph                                                              |
-| `context_schema` | type[dict]                           | No       | -       | Context Schema for the final generated graph                                                   |
-| `input_schema`   | type[dict]                           | No       | -       | Input Schema for the final generated graph                                                     |
-| `output_schema`  | type[dict]                           | No       | -       | Output Schema for the final generated graph                                                    |
-| `checkpoint`     | BaseCheckpointSaver                  | No       | -       | LangGraph persistence Checkpoint                                                               |
-| `store`          | BaseStore                            | No       | -       | LangGraph persistence Store                                                                    |
-| `cache`          | BaseCache                            | No       | -       | LangGraph Cache                                                                                |
+Use `create_parallel_pipeline` to orchestrate multiple subgraphs in parallel:
 
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline
 
-# Build parallel pipeline (all sub-graphs execute in parallel)
+# Build a parallel pipeline (all subgraphs executed concurrently)
 graph = create_parallel_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_time],
-            system_prompt="You are a time query assistant, can only answer the current time. If the question is unrelated to time, please directly answer that you cannot answer.",
+            system_prompt="You are a time-query assistant. You can only answer questions about the current time. If the question is unrelated to time, respond with 'I cannot answer that.'",
             name="time_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_weather],
-            system_prompt="You are a weather query assistant, can only answer the current weather. If the question is unrelated to weather, please directly answer that you cannot answer.",
+            system_prompt="You are a weather-query assistant. You can only answer questions about the current weather. If the question is unrelated to weather, respond with 'I cannot answer that.'",
             name="weather_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_user],
-            system_prompt="You are a user query assistant, can only answer the current user. If the question is unrelated to user, please directly answer that you cannot answer.",
+            system_prompt="You are a user-query assistant. You can only answer questions about the current user. If the question is unrelated to the user, respond with 'I cannot answer that.'",
             name="user_agent",
         ),
     ],
     state_schema=AgentState,
 )
+
 response = graph.invoke({"messages": [HumanMessage("Hello")]})
 print(response)
 ```

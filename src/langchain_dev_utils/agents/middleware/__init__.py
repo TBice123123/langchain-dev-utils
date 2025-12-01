@@ -7,6 +7,7 @@ from .plan import (
     create_write_plan_tool,
 )
 from .summarization import SummarizationMiddleware
+from .tool_call_repair import ToolCallRepairMiddleware
 from .tool_emulator import LLMToolEmulator
 from .tool_selection import LLMToolSelectorMiddleware
 
@@ -20,4 +21,5 @@ __all__ = [
     "ModelFallbackMiddleware",
     "LLMToolEmulator",
     "ModelRouterMiddleware",
+    "ToolCallRepairMiddleware",
 ]

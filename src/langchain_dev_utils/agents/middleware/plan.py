@@ -295,7 +295,6 @@ class PlanMiddleware(AgentMiddleware):
             If not provided, uses the default `_DEFAULT_READ_PLAN_TOOL_DESCRIPTION`.
         use_read_plan_tool: Whether to use the `read_plan` tool.
             If not provided, uses the default `True`.
-        message_key: The key of the message to be updated. Defaults to "messages".
 
     Example:
         ```python
@@ -321,7 +320,6 @@ class PlanMiddleware(AgentMiddleware):
         finish_sub_plan_tool_description: Optional[str] = None,
         read_plan_tool_description: Optional[str] = None,
         use_read_plan_tool: bool = True,
-        message_key: Optional[str] = None,
     ) -> None:
         super().__init__()
 
@@ -337,12 +335,8 @@ class PlanMiddleware(AgentMiddleware):
         )
 
         tools = [
-            create_write_plan_tool(
-                description=write_plan_tool_description, message_key=message_key
-            ),
-            create_finish_sub_plan_tool(
-                description=finish_sub_plan_tool_description, message_key=message_key
-            ),
+            create_write_plan_tool(description=write_plan_tool_description),
+            create_finish_sub_plan_tool(description=finish_sub_plan_tool_description),
         ]
 
         if use_read_plan_tool:

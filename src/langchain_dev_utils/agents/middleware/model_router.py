@@ -149,9 +149,7 @@ class ModelRouterMiddleware(AgentMiddleware):
         model_name = await self._aselect_model(state["messages"])
         return {"router_model_selection": model_name}
 
-    def wrap_model_call(
-        self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
-    ) -> ModelCallResult:
+    def _get_override_kwargs(self, request: ModelRequest) -> dict[str, Any]:
         model_dict = {
             item["model_name"]: {
                 "tools": item.get("tools", None),
@@ -163,49 +161,38 @@ class ModelRouterMiddleware(AgentMiddleware):
         select_model_name = request.state.get("router_model_selection", "default-model")
 
         override_kwargs = {}
-        if select_model_name != "default-model":
-            if select_model_name in model_dict:
-                model_values = model_dict.get(select_model_name, {})
-                if model_values["kwargs"] is not None:
-                    model = load_chat_model(select_model_name, **model_values["kwargs"])
-                else:
-                    model = load_chat_model(select_model_name)
-                override_kwargs["model"] = model
-                if model_values["tools"] is not None:
-                    override_kwargs["tools"] = model_values["tools"]
-                if model_values["system_prompt"] is not None:
-                    override_kwargs["system_message"] = SystemMessage(
-                        content=model_values["system_prompt"]
-                    )
-        return handler(request.override(**override_kwargs))
+        if select_model_name != "default-model" and select_model_name in model_dict:
+            model_values = model_dict.get(select_model_name, {})
+            if model_values["kwargs"] is not None:
+                model = load_chat_model(select_model_name, **model_values["kwargs"])
+            else:
+                model = load_chat_model(select_model_name)
+            override_kwargs["model"] = model
+            if model_values["tools"] is not None:
+                override_kwargs["tools"] = model_values["tools"]
+            if model_values["system_prompt"] is not None:
+                override_kwargs["system_message"] = SystemMessage(
+                    content=model_values["system_prompt"]
+                )
+
+        return override_kwargs
+
+    def wrap_model_call(
+        self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
+    ) -> ModelCallResult:
+        override_kwargs = self._get_override_kwargs(request)
+        if override_kwargs:
+            return handler(request.override(**override_kwargs))
+        else:
+            return handler(request)
 
     async def awrap_model_call(
         self,
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        model_dict = {
-            item["model_name"]: {
-                "tools": item.get("tools", None),
-                "kwargs": item.get("model_kwargs", None),
-                "system_prompt": item.get("model_system_prompt", None),
-            }
-            for item in self.model_list
-        }
-        select_model_name = request.state.get("router_model_selection", "default-model")
-        override_kwargs = {}
-        if select_model_name != "default-model":
-            if select_model_name in model_dict:
-                model_values = model_dict.get(select_model_name, {})
-                if model_values["kwargs"] is not None:
-                    model = load_chat_model(select_model_name, **model_values["kwargs"])
-                else:
-                    model = load_chat_model(select_model_name)
-                override_kwargs["model"] = model
-                if model_values["tools"] is not None:
-                    override_kwargs["tools"] = model_values["tools"]
-                if model_values["system_prompt"] is not None:
-                    override_kwargs["system_message"] = SystemMessage(
-                        content=model_values["system_prompt"]
-                    )
-        return await handler(request.override(**override_kwargs))
+        override_kwargs = self._get_override_kwargs(request)
+        if override_kwargs:
+            return await handler(request.override(**override_kwargs))
+        else:
+            return await handler(request)

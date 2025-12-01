@@ -4,7 +4,7 @@ from langchain.embeddings.base import _SUPPORTED_PROVIDERS, Embeddings, init_emb
 from langchain_core.utils import from_env, secret_from_env
 
 from langchain_dev_utils._utils import (
-    _check_langchain_openai_install,
+    _check_pkg_install,
     _get_base_url_field_name,
 )
 
@@ -100,7 +100,7 @@ def register_embeddings_provider(
                 "when embeddings_model is a string, the value must be 'openai-compatible'"
             )
 
-        _check_langchain_openai_install()
+        _check_pkg_install("langchain_openai")
 
         _EMBEDDINGS_PROVIDERS_DICT.update(
             {
@@ -161,7 +161,7 @@ def batch_register_embeddings_provider(
         ...         },
         ...         {
         ...             "provider_name": "vllm",
-        ...             "embeddings_model": "openai-compatible",
+        ...             "embeddings_model":  "openai-compatible",
         ...             "base_url": "http://localhost:8000/v1"
         ...         },
         ...     ]

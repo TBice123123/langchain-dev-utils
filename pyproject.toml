@@ -1,6 +1,6 @@
 [project]
 name = "langchain-dev-utils"
-version = "1.2.6"
+version = "1.2.7"
 description = "A practical utility library for LangChain and LangGraph development"
 readme = "README.md"
 authors = [{ name = "tiebingice", email = "tiebingice123@outlook.com" }]
@@ -14,7 +14,7 @@ documentation = "https://tbice123123.github.io/langchain-dev-utils-docs/en/"
 
 
 [project.optional-dependencies]
-standard = ["langchain-openai"]
+standard = ["json-repair>=0.53.1", "langchain-openai"]
 
 [build-system]
 requires = ["hatchling"]
@@ -37,6 +37,7 @@ tests = [
     "langchain-deepseek>=1.0.0",
     "langchain-qwq>=0.3.0",
     "langchain-ollama>=1.0.0",
+    "langchain-community>=0.4.1",
 ]
 
 

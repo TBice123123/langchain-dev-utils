@@ -5,7 +5,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.utils import from_env
 
 from langchain_dev_utils._utils import (
-    _check_langchain_openai_install,
+    _check_pkg_install,
     _get_base_url_field_name,
 )
 
@@ -136,7 +136,7 @@ def register_model_provider(
     """
     base_url = base_url or from_env(f"{provider_name.upper()}_API_BASE", default=None)()
     if isinstance(chat_model, str):
-        _check_langchain_openai_install()
+        _check_pkg_install("langchain_openai")
         from .adapters.openai_compatible import _create_openai_compatible_model
 
         if base_url is None:

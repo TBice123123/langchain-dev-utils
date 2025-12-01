@@ -1,10 +1,13 @@
 from importlib import util
+from typing import Literal
 
 from pydantic import BaseModel
 
 
-def _check_langchain_openai_install() -> None:
-    if not util.find_spec("langchain_openai"):
+def _check_pkg_install(
+    pkg: Literal["langchain_openai", "json_repair"],
+) -> None:
+    if not util.find_spec(pkg):
         msg = (
             "Please install langchain_dev_utils[standard],when use 'openai-compatible'"
         )
