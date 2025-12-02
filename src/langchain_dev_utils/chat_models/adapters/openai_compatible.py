@@ -39,19 +39,28 @@ from pydantic import (
 )
 from typing_extensions import Self
 
-from ..types import CompatibilityOptions, ToolChoiceType
+from ..types import (
+    CompatibilityOptions,
+    ReasoningContentKeepType,
+    ResponseFormatType,
+    ToolChoiceType,
+)
 
 _BM = TypeVar("_BM", bound=BaseModel)
 _DictOrPydanticClass = Union[dict[str, Any], type[_BM], type]
 _DictOrPydantic = Union[dict, _BM]
 
 
-def _get_last_human_message_index(messages: list[BaseMessage]):
-    last_index = -1
-    for i, msg in enumerate(messages):
-        if isinstance(msg, HumanMessage):
-            last_index = i
-    return last_index
+def _get_last_human_message_index(messages: list[BaseMessage]) -> int:
+    """find the index of the last HumanMessage in the messages list, return -1 if not found."""
+    return next(
+        (
+            i
+            for i in range(len(messages) - 1, -1, -1)
+            if isinstance(messages[i], HumanMessage)
+        ),
+        -1,
+    )
 
 
 class _BaseChatOpenAICompatible(BaseChatOpenAI):
@@ -65,13 +74,12 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     **1. Supports output of more types of reasoning content (reasoning_content)**
     ChatOpenAI can only output reasoning content natively supported by official
     OpenAI models, while OpenAICompatibleChatModel can output reasoning content
-    from other model providers (e.g., OpenRouter).
+    from other model providers (e.g., OpenRouter, vLLM).
 
-    **2. Optimizes default behavior for structured output**
-    When calling with_structured_output, the default value of the method
-    parameter is adjusted to "function_calling" (instead of the default
-    "json_schema" in ChatOpenAI), providing better compatibility with other
-    models.
+    **2. Dynamically adapts to choose the most suitable structured-output method**
+    OpenAICompatibleChatModel adds method="auto" (default), which selects the best
+    structured-output method (function_calling or json_schema) based on the actual
+    capabilities of the model provider.
 
     **3. Supports configuration of related parameters**
     For cases where parameters differ from the official OpenAI API, this library
@@ -109,12 +117,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     """Provider Compatibility Options"""
     supported_tool_choice: ToolChoiceType = Field(default_factory=list)
     """Supported tool choice"""
-    reasoning_content_keep_type: Literal["discard", "temp", "retain"] = Field(
-        default="discard"
-    )
+    supported_response_format: ResponseFormatType = Field(default_factory=list)
+    """Supported response format"""
+    reasoning_content_keep_type: ReasoningContentKeepType = Field(default="discard")
     """How to keep reasoning content in the messages"""
-    support_json_mode: bool = Field(default=False)
-    """Whether to support JSON mode"""
     include_usage: bool = Field(default=True)
     """Whether to include usage information in the output"""
 
@@ -152,8 +158,9 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             kwargs["stop"] = stop
 
         payload_messages = []
-
-        last_human_index = _get_last_human_message_index(messages)
+        last_human_index = -1
+        if self.reasoning_content_keep_type == "temp":
+            last_human_index = _get_last_human_message_index(messages)
 
         for index, m in enumerate(messages):
             if isinstance(m, AIMessage):
@@ -448,10 +455,11 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         schema: Optional[_DictOrPydanticClass] = None,
         *,
         method: Literal[
+            "auto",
             "function_calling",
             "json_mode",
             "json_schema",
-        ] = "function_calling",
+        ] = "auto",
         include_raw: bool = False,
         strict: Optional[bool] = None,
         **kwargs: Any,
@@ -465,7 +473,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
         Args:
             schema: Output schema (Pydantic model class or dictionary definition)
-            method: Extraction method - defaults to function_calling for compatibility
+            method: Extraction method - defaults to auto,it will choice best method based on provider supported response format
             include_raw: Whether to include raw model response alongside parsed output
             strict: Schema enforcement strictness (provider-dependent)
             **kwargs: Additional structured output parameters
@@ -473,10 +481,23 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         Returns:
             Runnable configured for structured output extraction
         """
-        # Many providers do not support json_schema method, so fallback to function_calling
-        if method == "json_schema":
+        if method not in ["auto", "function_calling", "json_mode", "json_schema"]:
+            raise ValueError(
+                f"Unsupported method: {method}. Please choose from 'auto', 'function_calling', 'json_mode', 'json_schema'."
+            )
+        if method == "auto":
+            if "json_schema" in self.supported_response_format:
+                method = "json_schema"
+            else:
+                method = "function_calling"
+        elif (
+            method == "json_schema"
+            and "json_schema" not in self.supported_response_format
+        ):
             method = "function_calling"
-        if method == "json_mode" and not self.support_json_mode:
+        elif (
+            method == "json_mode" and "json_mode" not in self.supported_response_format
+        ):
             method = "function_calling"
 
         return super().with_structured_output(
@@ -538,16 +559,16 @@ def _create_openai_compatible_model(
             Field(default=compatibility_options.get("supported_tool_choice", ["auto"])),
         ),
         reasoning_content_keep_type=(
-            Literal["discard", "temp", "retain"],
+            ReasoningContentKeepType,
             Field(
                 default=compatibility_options.get(
                     "reasoning_content_keep_type", "discard"
                 )
             ),
         ),
-        support_json_mode=(
-            bool,
-            Field(default=compatibility_options.get("support_json_mode", False)),
+        supported_response_format=(
+            ResponseFormatType,
+            Field(default=compatibility_options.get("supported_response_format", [])),
         ),
         include_usage=(
             bool,
