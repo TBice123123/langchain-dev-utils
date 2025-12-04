@@ -9,11 +9,11 @@ ToolChoiceType = list[Literal["auto", "none", "required", "specific"]]
 
 ResponseFormatType = list[Literal["json_schema", "json_mode"]]
 
-ReasoningContentKeepType = Literal["discard", "temp", "retain"]
+ReasoningKeepPolicy = Literal["never", "current", "all"]
 
 
 class CompatibilityOptions(TypedDict):
     supported_tool_choice: NotRequired[ToolChoiceType]
     supported_response_format: NotRequired[ResponseFormatType]
-    reasoning_content_keep_type: NotRequired[ReasoningContentKeepType]
+    reasoning_keep_policy: NotRequired[ReasoningKeepPolicy]
     include_usage: NotRequired[bool]

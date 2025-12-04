@@ -218,30 +218,30 @@ def load_embeddings(
     ):
         raise ValueError(f"Provider {provider} not registered")
 
-    if provider in _SUPPORTED_PROVIDERS:
-        return init_embeddings(model, provider=provider, **kwargs)
-
-    embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]
-    if isinstance(embeddings, str):
-        if not (api_key := kwargs.get("api_key")):
-            api_key = secret_from_env(f"{provider.upper()}_API_KEY", default=None)()
-            if not api_key:
-                raise ValueError(
-                    f"API key for {provider} not found. Please set it in the environment."
-                )
-            kwargs["api_key"] = api_key
-            if embeddings == "openai-compatible":
-                kwargs["check_embedding_ctx_length"] = False
-                embeddings = "openai"
-        return init_embeddings(
-            model=model,
-            provider=embeddings,
-            base_url=_EMBEDDINGS_PROVIDERS_DICT[provider]["base_url"],
-            **kwargs,
-        )
+    if provider in _EMBEDDINGS_PROVIDERS_DICT:
+        embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]
+        if isinstance(embeddings, str):
+            if not (api_key := kwargs.get("api_key")):
+                api_key = secret_from_env(f"{provider.upper()}_API_KEY", default=None)()
+                if not api_key:
+                    raise ValueError(
+                        f"API key for {provider} not found. Please set it in the environment."
+                    )
+                kwargs["api_key"] = api_key
+                if embeddings == "openai-compatible":
+                    kwargs["check_embedding_ctx_length"] = False
+                    embeddings = "openai"
+            return init_embeddings(
+                model=model,
+                provider=embeddings,
+                base_url=_EMBEDDINGS_PROVIDERS_DICT[provider]["base_url"],
+                **kwargs,
+            )
+        else:
+            if base_url := _EMBEDDINGS_PROVIDERS_DICT[provider].get("base_url"):
+                url_key = _get_base_url_field_name(embeddings)
+                if url_key is not None:
+                    kwargs.update({url_key: base_url})
+            return embeddings(model=model, **kwargs)
     else:
-        if base_url := _EMBEDDINGS_PROVIDERS_DICT[provider].get("base_url"):
-            url_key = _get_base_url_field_name(embeddings)
-            if url_key is not None:
-                kwargs.update({url_key: base_url})
-        return embeddings(model=model, **kwargs)
+        return init_embeddings(model, provider=provider, **kwargs)

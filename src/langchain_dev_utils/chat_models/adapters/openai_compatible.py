@@ -41,7 +41,7 @@ from typing_extensions import Self
 
 from ..types import (
     CompatibilityOptions,
-    ReasoningContentKeepType,
+    ReasoningKeepPolicy,
     ResponseFormatType,
     ToolChoiceType,
 )
@@ -119,7 +119,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     """Supported tool choice"""
     supported_response_format: ResponseFormatType = Field(default_factory=list)
     """Supported response format"""
-    reasoning_content_keep_type: ReasoningContentKeepType = Field(default="discard")
+    reasoning_keep_policy: ReasoningKeepPolicy = Field(default="never")
     """How to keep reasoning content in the messages"""
     include_usage: bool = Field(default=True)
     """Whether to include usage information in the output"""
@@ -159,7 +159,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
         payload_messages = []
         last_human_index = -1
-        if self.reasoning_content_keep_type == "temp":
+        if self.reasoning_keep_policy == "current":
             last_human_index = _get_last_human_message_index(messages)
 
         for index, m in enumerate(messages):
@@ -167,15 +167,14 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 msg_dict = _convert_message_to_dict(
                     _convert_from_v1_to_chat_completions(m)
                 )
-                if (
-                    self.reasoning_content_keep_type == "retain"
-                    and m.additional_kwargs.get("reasoning_content")
+                if self.reasoning_keep_policy == "all" and m.additional_kwargs.get(
+                    "reasoning_content"
                 ):
                     msg_dict["reasoning_content"] = m.additional_kwargs.get(
                         "reasoning_content"
                     )
                 elif (
-                    self.reasoning_content_keep_type == "temp"
+                    self.reasoning_keep_policy == "current"
                     and index > last_human_index
                     and m.additional_kwargs.get("reasoning_content")
                 ):
@@ -558,13 +557,9 @@ def _create_openai_compatible_model(
             ToolChoiceType,
             Field(default=compatibility_options.get("supported_tool_choice", ["auto"])),
         ),
-        reasoning_content_keep_type=(
-            ReasoningContentKeepType,
-            Field(
-                default=compatibility_options.get(
-                    "reasoning_content_keep_type", "discard"
-                )
-            ),
+        reasoning_keep_policy=(
+            ReasoningKeepPolicy,
+            Field(default=compatibility_options.get("reasoning_keep_policy", "never")),
         ),
         supported_response_format=(
             ResponseFormatType,

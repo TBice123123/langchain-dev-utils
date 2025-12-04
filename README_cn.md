@@ -176,21 +176,32 @@ def get_current_time() -> str:
 
 包含以下功能：
 
-- 预设的智能体工厂函数
+- 多智能体构建
 - 常用的中间件组件
 
-#### 4.1 智能体工厂函数
+#### 4.1 多智能体构建
 
-LangChain v1 版本中，官方提供的 `create_agent` 函数可以用于创建单智能体，其中 model 参数支持传入 BaseChatModel 实例或特定字符串（当传入字符串时，仅限于 `init_chat_model` 支持的模型）。为扩展字符串指定模型的灵活性，本库提供了功能相同的 `create_agent` 函数，使您能够通过字符串指定 `load_chat_model` 支持的模型（需要提前注册）。
+将智能体封装为工具是多智能体系统中的一种常见实现模式，LangChain 官方文档对此有详细阐述。为此，本库提供了预构建函数`wrap_agent_as_tool` 来实现此模式，该函数能够将一个智能体实例封装成一个可供其它智能体调用的工具。
 
 使用示例：
 
 ```python
-from langchain_dev_utils.agents import create_agent
+import datetime
+from langchain_dev_utils.agents import create_agent, wrap_agent_as_tool
 from langchain.agents import AgentState
 
+
+@tool
+def get_current_time() -> str:
+    """获取当前时间"""
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
 agent = create_agent("vllm:qwen3-4b", tools=[get_current_time], name="time-agent")
-response = agent.invoke({"messages": [{"role": "user", "content": "现在几点了？"}]})
+call_time_agent_tool = wrap_agent_as_tool(agent)
+response = call_time_agent_tool.invoke(
+    {"messages": [{"role": "user", "content": "现在几点了？"}]}
+)
 print(response)
 ```
 
@@ -219,7 +230,7 @@ response = agent.invoke({"messages": [{"role": "user", "content": "给我一个�
 print(response)
 ```
 
-**对于更多关于智能体开发以及所有的内置中间件的相关介绍，请参考**: [预构建智能体函数](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/prebuilt.html),[中间件](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/middleware.html)
+**对于更多关于智能体开发以及所有的内置中间件的相关介绍，请参考**: [多智能体构建](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/multi-agent.html),[中间件](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/middleware.html)
 
 ### 5. **状态图编排**
 

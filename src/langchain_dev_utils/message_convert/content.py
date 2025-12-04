@@ -52,8 +52,10 @@ def convert_reasoning_content_for_ai_message(
     reasoning_content = _get_reasoning_content(model_response)
 
     if reasoning_content:
-        model_response.content = (
-            f"{think_tag[0]}{reasoning_content}{think_tag[1]}{model_response.content}"
+        return model_response.model_copy(
+            update={
+                "content": f"{think_tag[0]}{reasoning_content}{think_tag[1]}{model_response.content}"
+            }
         )
     return model_response
 
@@ -99,12 +101,16 @@ def convert_reasoning_content_for_chunk_iterator(
             reasoning_content = _get_reasoning_content(chunk)
             if reasoning_content:
                 if isfirst:
-                    chunk.content = f"{think_tag[0]}{reasoning_content}"
+                    chunk = chunk.model_copy(
+                        update={"content": f"{think_tag[0]}{reasoning_content}"}
+                    )
                     isfirst = False
                 else:
-                    chunk.content = reasoning_content
+                    chunk = chunk.model_copy(update={"content": reasoning_content})
             elif chunk.content and isend and not isfirst:
-                chunk.content = f"{think_tag[1]}{chunk.content}"
+                chunk = chunk.model_copy(
+                    update={"content": f"{think_tag[1]}{chunk.content}"}
+                )
                 isend = False
         yield chunk
 
@@ -149,12 +155,16 @@ async def aconvert_reasoning_content_for_chunk_iterator(
             reasoning_content = _get_reasoning_content(chunk)
             if reasoning_content:
                 if isfirst:
-                    chunk.content = f"{think_tag[0]}{reasoning_content}"
+                    chunk = chunk.model_copy(
+                        update={"content": f"{think_tag[0]}{reasoning_content}"}
+                    )
                     isfirst = False
                 else:
-                    chunk.content = reasoning_content
+                    chunk = chunk.model_copy(update={"content": reasoning_content})
             elif chunk.content and isend and not isfirst:
-                chunk.content = f"{think_tag[1]}{chunk.content}"
+                chunk = chunk.model_copy(
+                    update={"content": f"{think_tag[1]}{chunk.content}"}
+                )
                 isend = False
         yield chunk
 

@@ -62,20 +62,20 @@ def parse_tool_calling(
         ...     tool_calls = parse_tool_calling(response)
     """
 
-    tool_call = None
+    tool_calls = None
 
     tool_call_blocks = [
         block for block in message.content_blocks if block["type"] == "tool_call"
     ]
     if tool_call_blocks:
-        tool_call = tool_call_blocks
+        tool_calls = tool_call_blocks
 
-    if not tool_call:
-        tool_call = message.tool_calls
+    if not tool_calls:
+        tool_calls = message.tool_calls
 
-    if not tool_call:
+    if not tool_calls:
         raise ValueError("No tool call found in message")
 
     if first_tool_call_only:
-        return (tool_call[0]["name"], tool_call[0]["args"])
-    return [(tool_call["name"], tool_call["args"]) for tool_call in tool_call]
+        return (tool_calls[0]["name"], tool_calls[0]["args"])
+    return [(tool_call["name"], tool_call["args"]) for tool_call in tool_calls]
