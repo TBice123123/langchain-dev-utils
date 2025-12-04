@@ -197,9 +197,14 @@ def get_current_time() -> str:
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-agent = create_agent("vllm:qwen3-4b", tools=[get_current_time], name="time-agent")
-call_time_agent_tool = wrap_agent_as_tool(agent)
-response = call_time_agent_tool.invoke(
+time_agent = create_agent("vllm:qwen3-4b", tools=[get_current_time], name="time-agent")
+call_time_agent_tool = wrap_agent_as_tool(time_agent)   
+agent = create_agent(
+    "vllm:qwen3-4b",
+    name="time-agent",
+    tools=[call_time_agent_tool],
+)
+response = agent.invoke(
     {"messages": [{"role": "user", "content": "现在几点了？"}]}
 )
 print(response)
