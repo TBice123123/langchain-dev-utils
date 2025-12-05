@@ -7,7 +7,7 @@ from langchain_dev_utils.chat_models import load_chat_model
 
 
 @pytest.fixture(
-    params=["dashscope:qwen-flash", "zai:glm-4.6", "deepseek:deepseek-chat"]
+    params=["dashscope:qwen-flash", "zai:glm-4.6", "deepseek:deepseek-reasoner"]
 )
 def model(request: pytest.FixtureRequest):
     params = request.param

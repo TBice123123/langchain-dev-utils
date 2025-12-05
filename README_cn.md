@@ -190,18 +190,17 @@ import datetime
 from langchain_dev_utils.agents import create_agent, wrap_agent_as_tool
 from langchain.agents import AgentState
 
-
 @tool
 def get_current_time() -> str:
     """获取当前时间"""
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
 time_agent = create_agent("vllm:qwen3-4b", tools=[get_current_time], name="time-agent")
-call_time_agent_tool = wrap_agent_as_tool(time_agent)   
+call_time_agent_tool = wrap_agent_as_tool(time_agent)  
+
 agent = create_agent(
     "vllm:qwen3-4b",
-    name="time-agent",
+    name="agent",
     tools=[call_time_agent_tool],
 )
 response = agent.invoke(

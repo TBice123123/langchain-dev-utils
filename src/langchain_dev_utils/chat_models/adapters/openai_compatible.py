@@ -327,20 +327,26 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> Iterator[ChatGenerationChunk]:
-        if self.include_usage:
-            kwargs["stream_options"] = {"include_usage": True}
-        try:
-            for chunk in super()._stream(
+        if self._use_responses_api({**kwargs, **self.model_kwargs}):
+            for chunk in super()._stream_responses(
                 messages, stop=stop, run_manager=run_manager, **kwargs
             ):
                 yield chunk
-        except JSONDecodeError as e:
-            raise JSONDecodeError(
-                f"{self._provider.title()} API returned an invalid response. "
-                "Please check the API status and try again.",
-                e.doc,
-                e.pos,
-            ) from e
+        else:
+            if self.include_usage:
+                kwargs["stream_options"] = {"include_usage": True}
+            try:
+                for chunk in super()._stream(
+                    messages, stop=stop, run_manager=run_manager, **kwargs
+                ):
+                    yield chunk
+            except JSONDecodeError as e:
+                raise JSONDecodeError(
+                    f"{self._provider.title()} API returned an invalid response. "
+                    "Please check the API status and try again.",
+                    e.doc,
+                    e.pos,
+                ) from e
 
     async def _astream(
         self,
@@ -349,20 +355,26 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         run_manager: Optional[AsyncCallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> AsyncIterator[ChatGenerationChunk]:
-        if self.include_usage:
-            kwargs["stream_options"] = {"include_usage": True}
-        try:
-            async for chunk in super()._astream(
+        if self._use_responses_api({**kwargs, **self.model_kwargs}):
+            async for chunk in super()._astream_responses(
                 messages, stop=stop, run_manager=run_manager, **kwargs
             ):
                 yield chunk
-        except JSONDecodeError as e:
-            raise JSONDecodeError(
-                f"{self._provider.title()} API returned an invalid response. "
-                "Please check the API status and try again.",
-                e.doc,
-                e.pos,
-            ) from e
+        else:
+            if self.include_usage:
+                kwargs["stream_options"] = {"include_usage": True}
+            try:
+                async for chunk in super()._astream(
+                    messages, stop=stop, run_manager=run_manager, **kwargs
+                ):
+                    yield chunk
+            except JSONDecodeError as e:
+                raise JSONDecodeError(
+                    f"{self._provider.title()} API returned an invalid response. "
+                    "Please check the API status and try again.",
+                    e.doc,
+                    e.pos,
+                ) from e
 
     def _generate(
         self,
