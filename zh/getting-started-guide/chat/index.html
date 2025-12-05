@@ -1,0 +1,1643 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../installation/">
+      
+      
+        <link rel="next" href="../embedding/">
+      
+      
+        
+          <link rel="alternate" href="../../../getting-started-guide/chat/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>对话模型管理 - Langchain Dev Utils</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../" title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Langchain Dev Utils
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              对话模型管理
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../getting-started-guide/chat/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    tbice123123/langchain-dev-utils
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Langchain Dev Utils
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    tbice123123/langchain-dev-utils
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    对话模型管理
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    对话模型管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        注册模型提供商
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="注册模型提供商">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#langchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        已有 LangChain 对话模型类
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#langchain-openai-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        未有 LangChain 对话模型类，但模型提供商支持 OpenAI 兼容 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        批量注册
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载对话模型
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="加载对话模型">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模型方法和参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        兼容官方提供商
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入模型管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    格式化序列
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    消息处理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具调用处理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    高级指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    高级指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/multi-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多智能体构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/middleware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    中间件
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态图编排
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/human-in-the-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    为工具调用添加人工审核
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API 参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    智能体开发模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/chat_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    对话模型管理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入模型管理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/message_convert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    消息处理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/tool_calling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具调用处理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态图编排模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        注册模型提供商
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="注册模型提供商">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#langchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        已有 LangChain 对话模型类
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#langchain-openai-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        未有 LangChain 对话模型类，但模型提供商支持 OpenAI 兼容 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        批量注册
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载对话模型
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="加载对话模型">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模型方法和参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        兼容官方提供商
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="_1">对话模型管理</h1>
+<blockquote>
+<p><strong>功能概述</strong>：提供更高效、更便捷的对话模型管理，支持多种模型提供商。<br />
+<strong>前置要求</strong>：了解 LangChain <a href="https://docs.langchain.com/oss/python/langchain/models">对话模型</a>。<br />
+<strong>预计阅读时间</strong>：15 分钟。</p>
+</blockquote>
+<h2 id="_2">概述</h2>
+<p>LangChain 的 <code>init_chat_model</code> 函数仅支持有限的模型提供商。本库提供更灵活的对话模型管理方案，支持自定义模型提供商，特别适用于需要接入未内置支持的模型服务（如 vLLM、OpenRouter 等）的场景。</p>
+<h2 id="_3">注册模型提供商</h2>
+<p>注册对话模型提供商需调用 <code>register_model_provider</code>。对于不同的情况，注册步骤略有不同。</p>
+<h3 id="langchain">已有 LangChain 对话模型类</h3>
+<p>若模型提供商已有现成且合适的 LangChain 集成（详见<a href="https://docs.langchain.com/oss/python/integrations/chat">对话模型类集成</a>），请将相应的集成对话模型类作为 chat_model 参数传入。</p>
+<p>具体代码可参考如下：
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.fake_chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeChatModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+对于上述代码有以下几点补充：</p>
+<ul>
+<li><strong><code>FakeChatModel</code> 仅用于测试</strong>。实际使用中必须传入具备真实功能的 <code>ChatModel</code> 类。</li>
+<li><strong><code>provider_name</code> 代表模型提供商的名称</strong>，用于后续在 <code>load_chat_model</code> 中引用。名称可自定义，但不要包含":"、"-"等特殊字符。</li>
+</ul>
+<p>除此之外，本情况下，该函数还接收以下参数：</p>
+<ul>
+<li><strong>base_url</strong></li>
+</ul>
+<p><strong>此参数通常无需设置（因为模型类内部一般已定义默认的API 地址）</strong>，仅当需要覆盖模型类默认地址时才传入 <code>base_url</code>，且仅对字段名为 <code>api_base</code> 或 <code>base_url</code>（含别名）的属性生效。</p>
+<ul>
+<li><strong>model_profiles</strong></li>
+</ul>
+<p>如果你的 LangChain 集成对话模型类已全面支持 <code>profile</code> 参数（即可以通过 <code>model.profile</code> 直接访问模型的相关属性，例如 <code>max_input_tokens</code>、<code>tool_calling</code> 等），则无需额外设置 <code>model_profiles</code>。</p>
+<p>如果通过 <code>model.profile</code> 访问时返回的是一个空字典 <code>{}</code>，说明该 LangChain 对话模型类可能暂时未支持 <code>profile</code> 参数，此时可以手动提供 <code>model_profiles</code>。</p>
+<p><code>model_profiles</code> 是一个字典，其每一个键为模型名称，值为对应模型的 profile 配置:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;model_name_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">100_000</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;structured_output&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># ... 其他可选字段</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;model_name_2&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">32768</span><span class="p">,</span>
+        <span class="s2">&quot;image_inputs&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="c1"># ... 其他可选字段</span>
+    <span class="p">},</span>
+    <span class="c1"># 可以有任意多个模型配置</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>提示</strong>：推荐使用 <code>langchain-model-profiles</code> 库来获取你所用模型提供商的 profiles。</p>
+<h3 id="langchain-openai-api">未有 LangChain 对话模型类，但模型提供商支持 OpenAI 兼容 API</h3>
+<p>很多模型提供商都支持 <strong>OpenAI 兼容 API</strong> 的服务，例如：<a href="https://github.com/vllm-project/vllm">vLLM</a>、<a href="https://openrouter.ai/">OpenRouter</a>、<a href="https://www.together.ai/">Together AI</a>等。当你接入的模型提供商未有合适的 LangChain 对话模型类时，但提供商支持 OpenAI 兼容 API 时，可以考虑使用此情况。</p>
+<p>本库会根据用户的相关输入，使用内置 <code>BaseChatOpenAICompatible</code> 类构建对应于特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并增强以下能力：</p>
+<ul>
+<li><strong>支持更多格式的推理内容</strong>： 相较于<code>ChatOpenAI</code> 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如<code>vLLM</code>）。</li>
+<li><strong>动态适配并选择最合适的结构化输出方法</strong>：默认情况下，能够根据模型提供商的实际支持情况，自动选择最优的结构化输出方法（<code>function_calling</code> 或 <code>json_schema</code>）。  </li>
+<li><strong>通过 compatibility_options 精细适配差异</strong>： 通过配置提供商兼容性选项，解决<code>tool_choice</code>、<code>response_format</code> 等参数的支持差异。</li>
+</ul>
+<p><strong>注意</strong>：使用此情况时，必须安装 standard 版本的 <code>langchain-dev-utils</code> 库。具体可以参考安装部分的介绍。</p>
+<p>此情况下，除了要传入 <code>provider_name</code>以及<code>chat_model</code>（取值必须为<code>"openai-compatible"</code>）参数外，还需传入 <code>base_url</code> 参数。</p>
+<p>对于<code>base_url</code>参数，可通过以下任一方式提供：</p>
+<ul>
+<li><strong>显式传参</strong>：
+    <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
+<span class="p">)</span>
+</code></pre></div></li>
+<li><strong>通过环境变量</strong>（推荐用于配置管理）：
+    <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
+</code></pre></div>
+    代码中可省略 <code>base_url</code>：
+    <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span>
+    <span class="c1"># 自动读取 VLLM_API_BASE</span>
+<span class="p">)</span>
+</code></pre></div></li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>此情况下，模型提供商的 API 端点的环境变量的命名规则是<code>${PROVIDER_NAME}_API_BASE</code>（全大写，下划线分隔）。对应的 API_KEY 环境变量的命名规则是<code>${PROVIDER_NAME}_API_KEY</code>（全大写，下划线分隔）。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">补充</p>
+<p>vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API，例如本例子中的 Qwen3-4B：</p>
+<p><div class="highlight"><pre><span></span><code><span class="w">    </span>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--served-model-name<span class="w"> </span>qwen3-4b
+</code></pre></div>
+服务地址为 <code>http://localhost:8000/v1</code>。  </p>
+</div>
+<p>同时，本情况下，还可以设置以下两个可选参数：</p>
+<ul>
+<li><strong>model_profiles</strong></li>
+</ul>
+<p>这种情况下，若未手动设置 <code>model_profiles</code>，则 <code>model.profile</code> 将返回一个空字典 <code>{}</code>。因此，若需通过 <code>model.profile</code> 获取指定模型的配置信息，必须先显式设置 <code>model_profiles</code>。</p>
+<ul>
+<li><strong>compatibility_options</strong></li>
+</ul>
+<p>仅在此情况下有效。用于<strong>声明</strong>该提供商对<strong>OpenAI API</strong>的部分特性的支持情况，以提高兼容性和稳定性。
+目前支持以下配置项：</p>
+<ul>
+<li><code>supported_tool_choice</code>：支持的 <code>tool_choice</code> 策略列表，默认为<code>["auto"]</code>；</li>
+<li><code>supported_response_format</code>：支持的 <code>response_format</code> 格式列表(<code>json_schema</code>、<code>json_object</code>)，默认为 <code>[]</code>；</li>
+<li><code>reasoning_keep_policy</code>：传给模型的历史消息（messages）中 <code>reasoning_content</code> 字段的保留策略。可选值有<code>never</code>、<code>current</code>、<code>all</code>。默认为<code>never</code>。</li>
+<li><code>include_usage</code>：是否在最后一条流式返回结果中包含 <code>usage</code> 信息，默认为 <code>True</code>。</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">补充</p>
+<p>因为同一模型提供商的不同模型对于<code>tool_choice</code>、<code>response_format</code>等参数的支持情况有所差异。故该四个兼容性选项最终会作为该类的<strong>实例属性</strong>。注册时可传值作为全局默认值（代表该提供商的大部分模型支持的配置），加载时如需微调，在 <code>load_chat_model</code> 中覆盖同名参数即可。</p>
+</div>
+<p>对于这些配置项的介绍具体如下：</p>
+<p><strong>1.supported_tool_choice</strong></p>
+<p><code>tool_choice</code> 用于控制大模型在响应时是否以及调用哪个外部工具，以提升准确性、可靠性和可控性。常见的取值有：</p>
+<ul>
+<li><code>"auto"</code>：模型自主决定是否调用工具(默认行为)；</li>
+<li><code>"none"</code>：禁止调用工具；</li>
+<li><code>"required"</code>：强制调用至少一个工具；</li>
+<li>指定具体工具（在 OpenAI 兼容 API 中，具体为 <code>{"type": "function", "function": {"name": "xxx"}}</code>）。</li>
+</ul>
+<p>不同提供商支持范围不同。为避免错误，本库默认的<code>supported_tool_choice</code>为<code>["auto"]</code>，则在<code>bind_tools</code>时，<code>tool_choice</code>参数只能传递<code>auto</code>，如果传递其它取值均会被过滤。</p>
+<p>若需支持传递其它<code>tool_choice</code>取值，必须配置支持项。配置值为字符串列表，每个字符串的可选值：</p>
+<ul>
+<li><code>"auto"</code>, <code>"none"</code>, <code>"required"</code>：对应标准策略；</li>
+<li><code>"specific"</code>：本库特有标识，表示支持指定具体工具。</li>
+</ul>
+<p>例如 vLLM 支持全部策略：</p>
+<div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>如无特殊需求，可保持默认（即<code>["auto"]</code>）。若业务场景要求模型<strong>必须调用特定工具</strong>或从<strong>给定列表中任选其一</strong>，且模型提供商支持对应策略，再按需开启：</p>
+<ol>
+<li>
+<p>如果要求<strong>至少调用一个</strong>工具，且模型提供商支持<code>required</code>，则可以设为 <code>["required"]</code>  （同时在调用<code>bind_tools</code>时，需要显示传递<code>tool_choice="required"</code>）</p>
+</li>
+<li>
+<p>如果要求<strong>调用指定</strong>工具，且模型提供商支持指定某个具体的工具调用，则可以设为 <code>["specific"]</code>（在 <code>function_calling</code> 结构化输出中，此配置非常有用，可以确保模型调用指定的结构化输出工具，以保证结构化输出的稳定性。因为在 <code>with_structured_output</code> 方法中，其内部实现会在调用<code>bind_tools</code> 时传入<strong>能够强制调用指定工具的 <code>tool_choice</code> 取值</strong>，但如果 <code>supported_tool_choice</code> 中没有 <code>"specific"</code>，该参数将会被过滤。故如果想要保证能够正常传入 <code>tool_choice</code>，必须在 <code>supported_tool_choice</code> 中添加 <code>"specific"</code>。）</p>
+</li>
+</ol>
+<p>该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；推荐在 <code>register_model_provider</code> 中一次性声明该提供商的大多数模型的<code>tool_choice</code>支持情况，而对于部分支持情况不同的模型，则在 <code>load_chat_model</code> 中单独指定。</p>
+</div>
+<p><strong>2.supported_response_format</strong></p>
+<p>目前常见的结构化输出方法有三种。</p>
+<ul>
+<li><code>function_calling</code>：通过调用一个符合指定 schema 的工具来生成结构化输出。</li>
+<li><code>json_schema</code>：由模型提供商提供的专门用于生成结构化输出的功能，在OpenAI兼容API中，具体为<code>response_format={"type": "json_schema", "json_schema": {...}}</code>。</li>
+<li><code>json_mode</code>：是某些提供商在推出<code>json_schema</code>之前提供的一种功能，它能生成有效的 JSON，但 schema 必须在提示（prompt）中进行描述。在 OpenAI 兼容 API 中，具体为 <code>response_format={"type": "json_object"}</code>）。</li>
+</ul>
+<p>其中，<code>json_schema</code> 仅少数 OpenAI 兼容 API 提供商支持（如 <code>OpenRouter</code>、<code>TogetherAI</code>）；<code>json_mode</code> 支持度更高，多数提供商已兼容；而 <code>function_calling</code> 最为通用，只要模型支持工具调用即可使用。</p>
+<p>本参数用于声明模型提供商对于<code>response_format</code>的支持情况。默认情况下为<code>[]</code>，代表模型提供商既不支持<code>json_mode</code>也不支持<code>json_schema</code>。此时<code>with_structured_output</code>方法中的<code>method</code>参数只能传递<code>function_calling</code>(或者是<code>auto</code>,此时<code>auto</code>将被推断为<code>function_calling</code>），如果传递了<code>json_mode</code>或<code>json_schema</code>，则会自动被转化为<code>function_calling</code>。如果想要启用<code>json_mode</code>或者<code>json_schema</code>的结构化输出实现方式，则需要显示设置该参数。</p>
+<p>例如OpenRouter大多数模型同时支持<code>json_mode</code>和<code>json_schema</code>的<code>response_format</code>，则可以注册的时候进行声明：</p>
+<div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_mode&quot;</span><span class="p">,</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>通常一般情况下也无需配置。仅在需要使用<code>with_structured_output</code>方法时需要考虑进行配置，此时，如果模型提供商支持<code>json_schema</code>，则可以考虑配置本参数。以保证结构化输出的稳定性。对于<code>json_mode</code>，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置<code>response_format={"type":"json_object"}</code>时，才需要配置本参数包含<code>json_mode</code>。
+同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；推荐在 <code>register_model_provider</code> 中一次性声明该提供商的大多数模型的<code>response_format</code>支持情况，而对于部分支持情况不同的模型，则在 <code>load_chat_model</code> 中单独指定。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p>本参数目前仅影响<code>model.with_structured_output</code>方法。对于<code>create_agent</code>中的结构化输出，若需要使用<code>json_schema</code>的实现方式，你需要确保对应模型的<code>profile</code>中包含<code>structured_output</code>字段，且值为<code>True</code>。</p>
+</div>
+<p><strong>3.reasoning_keep_policy</strong></p>
+<p>用于控制历史消息（messages）中<code>reasoning_content</code> 字段的保留策略。</p>
+<p>支持以下取值：
+- <code>never</code>：在历史消息中<strong>不保留任何</strong>推理内容（默认）；
+- <code>current</code>：仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段；
+- <code>all</code>：保留<strong>所有对话</strong>中的 <code>reasoning_content</code> 字段。</p>
+<p>例如：
+例如，用户先提问“纽约天气如何？”，随后追问“伦敦天气如何？”，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
+<ul>
+<li>取值为<code>never</code>时</li>
+</ul>
+<p>当取值为<code>never</code>时，则最终传递给模型的 messages 中<strong>不会有任何</strong>的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：</p>
+<p><div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;多云 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;纽约今天天气为多云，7~13°C。&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查伦敦天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div>
+- 取值为<code>current</code>时</p>
+<p>当取值为<code>current</code>时，仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：
+<div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;多云 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;纽约今天天气为多云，7~13°C。&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查伦敦天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;查伦敦天气，需要直接调用天气工具。&quot;</span><span class="p">,</span>  <span class="c1"># 仅保留本轮对话的 reasoning_content</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div>
+- 取值为<code>all</code>时</p>
+<p>当取值为<code>all</code>时，保留<strong>所有</strong>对话中的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：
+<div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气，需要直接调用天气工具。&quot;</span><span class="p">,</span>  <span class="c1"># 保留 reasoning_content</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;多云 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;纽约今天天气为多云，7~13°C。&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;直接返回纽约天气结果。&quot;</span><span class="p">,</span>  <span class="c1"># 保留 reasoning_content</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查伦敦天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;查伦敦天气，需要直接调用天气工具。&quot;</span><span class="p">,</span>  <span class="c1"># 保留 reasoning_content</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<p><strong>注意</strong>：如果本轮对话不涉及工具调用，则<code>current</code>效果和<code>never</code>效果相同。</p>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>根据模型提供商对 <code>reasoning_content</code> 的保留要求灵活配置：</p>
+<ul>
+<li>若提供商要求<strong>全程保留</strong>推理内容，设为 <code>all</code>；  </li>
+<li>若仅要求在<strong>本轮工具调用</strong>中保留，设为 <code>current</code>；  </li>
+<li>若无特殊要求，保持默认 <code>never</code> 即可。  </li>
+</ul>
+<p>同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；若需要保留<code>reasoning_content</code>的情况的模型较少，推荐在 <code>load_chat_model</code> 中单独指定，此时<code>register_model_provider</code>无需设置。</p>
+</div>
+<p><strong>4.include_usage</strong></p>
+<p><code>include_usage</code> 是 OpenAI 兼容 API 中的一个参数，用于控制是否在流式响应的末尾附加一条包含 token 使用情况（如 <code>prompt_tokens</code> 和 <code>completion_tokens</code>）的消息。由于标准流式响应默认不返回用量信息，启用该选项后，客户端可直接获取完整的 token 消耗数据，便于计费、监控或日志记录。</p>
+<p>通常通过 <code>stream_options={"include_usage": true}</code> 启用。考虑到有些模型提供商不支持该参数，因此本库将其设为兼容性选项，默认值为 <code>True</code>，因为绝大多数模型提供商均支持该参数，如果不支持，则可以显式设为 <code>False</code>。</p>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>此参数一般无需设置，保持默认值即可。只有在模型提供商不支持时，才需要设置为 <code>False</code>。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p>尽管已提供上述兼容性配置，本库仍无法保证 100% 适配所有 OpenAI 兼容接口。若模型提供商已有官方或社区集成类，请优先采用该集成类。如遇到任何兼容性问题，欢迎在本库 GitHub 仓库提交 issue。</p>
+</div>
+<h2 id="_4">批量注册</h2>
+<p>若需注册多个提供商，可使用 <code>batch_register_model_provider</code> 避免重复调用。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">batch_register_model_provider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.fake_chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeChatModel</span>
+
+<span class="n">batch_register_model_provider</span><span class="p">(</span>
+    <span class="n">providers</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chat_model&quot;</span><span class="p">:</span> <span class="n">FakeChatModel</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chat_model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p>两个注册函数均基于全局字典实现。为避免多线程问题，<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册。  </p>
+</div>
+<h2 id="_5">加载对话模型</h2>
+<p>使用 <code>load_chat_model</code> 函数加载对话模型（初始化对话模型实例）。其中，参数的规则如下：</p>
+<ul>
+<li>若未传 <code>model_provider</code>，则 <code>model</code> 必须为 <code>provider_name:model_name</code> 格式；</li>
+<li>若传 <code>model_provider</code>，则 <code>model</code> 必须仅为 <code>model_name</code>。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 方式一</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+
+<span class="c1"># 方式二</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>虽然<code>vLLM</code> 不强制需要 API Key，但 LangChain 仍要求设置。可以在环境变量中设置：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm
+</code></pre></div>
+<h3 id="_6">模型方法和参数</h3>
+<p>对于<strong>情况一</strong>，其所有方法与参数均与该对应的对话模型类保持一致。<br />
+而对于<strong>情况二</strong>，则模型的方法和参数如下：</p>
+<ul>
+<li>支持<code>invoke</code>、<code>ainvoke</code>、<code>stream</code>、<code>astream</code>等方法。</li>
+<li>支持<code>bind_tools</code>方法，进行工具调用。</li>
+<li>支持<code>with_structured_output</code>方法，进行结构化输出。</li>
+<li>支持传递<code>BaseChatOpenAI</code>的参数，例如<code>temperature</code>、<code>top_p</code>、<code>max_tokens</code>等。</li>
+<li>支持传递多模态数据</li>
+<li>支持 OpenAI 最新的<code>responses api</code></li>
+<li>支持<code>model.profile</code>参数，获取模型的 profile。</li>
+</ul>
+<p><strong>普通调用</strong></p>
+<p>支持<code>invoke</code>进行简单的调用：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>同时也支持<code>ainvoke</code>进行异步调用：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">model</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>流式输出</strong></p>
+<p>支持<code>stream</code>进行流式输出：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</code></pre></div>
+<p>以及<code>astream</code>进行异步流式调用：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>工具调用</strong></p>
+<p>如果模型本身支持工具调用，那么可以直接使用<code>bind_tools</code>方法进行工具调用：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;获取当前时间戳&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;获取当前时间戳&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>结构化输出</strong></p>
+<p>支持结构化输出，默认的<code>method</code>取值为<code>auto</code>，此时将会根据模型提供商的<code>supported_response_format</code>参数自动选择合适的结构化输出方法。具体为如果其中取值包含<code>json_schema</code>，则会选择<code>json_schema</code>方法；否则，则会选择<code>function_calling</code>方法。</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;你好，我叫张三，今年25岁&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+相较于工具调用，<code>json_schema</code>能100%保证输出符合JSON Schema规范，避免工具调用可能产生的参数误差。故如果模型提供商支持<code>json_schema</code>，则默认会采用此方法。当模型提供商不支持时，才会回退到<code>function_calling</code>方法。
+对于<code>json_mode</code>，虽然支持度较高，但是由于其必须在提示词中引导模型输出指定Schema的JSON字符串，因此使用起来比较麻烦，故默认不采用此方法。如想要采用，则可以显示提供<code>method="json_mode"</code>（前提是注册或者实例化的时候保证<code>supported_response_format</code>取值中包含<code>json_mode</code>)。</p>
+<p><strong>传递模型参数</strong></p>
+<p>除此之外，由于该类继承了<code>BaseChatOpenAI</code>,因此支持传递<code>BaseChatOpenAI</code>的模型参数，例如<code>temperature</code>, <code>extra_body</code>等：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span><span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span> <span class="c1">#利用extra_body传递额外参数，这里是关闭思考模式</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>传递多模态数据</strong></p>
+<p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。例如：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://openrouter.ai/api/v1  &quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span>
+        <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/image.png  &quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;描述这张图片&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openrouter:qwen/qwen3-vl-8b-thinking&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>OpenAI 最新的<code>responses_api</code></strong></p>
+<p>该模型类也支持 OpenAI 最新的<code>responses_api</code>。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入<code>use_responses_api</code>参数为<code>True</code>。
+例如 vllm 支持<code>responses_api</code>，则可以这样使用：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="_7">兼容官方提供商</h3>
+<p>对于 LangChain 官方已支持的提供商（如 <code>openai</code>），可直接使用 <code>load_chat_model</code> 无需注册：</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">)</span>
+<span class="c1"># 或</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">最佳实践</p>
+<p>对于本模块的使用，可以根据下面三种情况进行选择：
+1. 若接入的所有模型提供商均被官方 <code>init_chat_model</code> 支持，请直接使用官方函数，以获得最佳兼容性和稳定性。</p>
+<ol>
+<li>
+<p>若接入的部分模型提供商为非官方支持，可使用本模块的功能，先利用<code>register_model_provider</code>注册模型提供商，然后使用<code>load_chat_model</code>加载模型。</p>
+</li>
+<li>
+<p>若接入的模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM、OpenRouter），则推荐使用本模块的功能，先利用<code>register_model_provider</code>注册模型提供商（chat_model传入<code>openai-compatible</code>），然后使用<code>load_chat_model</code>加载模型。</p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

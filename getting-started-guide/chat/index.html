@@ -1,0 +1,1606 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../installation/">
+      
+      
+        <link rel="next" href="../embedding/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../zh/getting-started-guide/chat/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Chat Model Management - Langchain Dev Utils</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chat-model-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Langchain Dev Utils
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chat Model Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../zh/getting-started-guide/chat/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tbice123123/langchain-dev-utils" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    tbice123123/langchain-dev-utils
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Langchain Dev Utils
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tbice123123/langchain-dev-utils" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    tbice123123/langchain-dev-utils
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Model Management
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Model Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-model-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a Model Provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batch-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Registration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-a-chat-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading a Chat Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading a Chat Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-methods-and-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Methods and Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compatibility-with-official-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility with Official Providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embedding Model Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Formatting Sequences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Message Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Calling Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/multi-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Agent Construction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/middleware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Middleware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State-Graph Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/human-in-the-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Add Human-in-the-Loop Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Development Module API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/chat_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Model Management Module API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embedding Model Management Module API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/message_convert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Message Handling Module API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/tool_calling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Calling Handling Module API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State-Graph Orchestration Module API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-model-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a Model Provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batch-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Registration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-a-chat-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading a Chat Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading a Chat Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-methods-and-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Methods and Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compatibility-with-official-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility with Official Providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chat-model-management">Chat Model Management</h1>
+<blockquote>
+<p>[!NOTE]<br />
+<strong>Feature Overview</strong>: Provides a more efficient and convenient way to manage chat models, supporting multiple model providers.<br />
+<strong>Prerequisites</strong>: Understanding of LangChain <a href="https://docs.langchain.com/oss/python/langchain/models">Chat Models</a>.<br />
+<strong>Estimated Reading Time</strong>: 15 minutes.</p>
+</blockquote>
+<h2 id="overview">Overview</h2>
+<p>LangChain's <code>init_chat_model</code> function only supports a limited number of model providers. This library offers a more flexible chat model management solution that supports custom model providers, making it particularly suitable for scenarios where you need to integrate with model services that are not natively supported (such as vLLM, OpenRouter, etc.).</p>
+<p>Using the chat model management feature of this library involves two steps:</p>
+<ol>
+<li><strong>Register a Model Provider</strong></li>
+</ol>
+<p>Use <code>register_model_provider</code> to register a model provider. Its parameters are defined as follows:
+<Params<br />name="provider_name"<br />type="string"<br />description="The name of the model provider, used as an identifier for subsequent model loading."<br />:required="true"<br />:default="null"<br />/><br />
+<Params<br />name="chat_model"<br />type="BaseChatModel | string"<br />description="The chat model, which can be a ChatModel class or a string (currently supports 'openai-compatible')."<br />:required="true"<br />:default="null"<br />/><br />
+<Params<br />name="base_url"<br />type="string"<br />description="The API address of the model provider (optional. Valid for both types of <code>chat_model</code>, but primarily used when <code>chat_model</code> is the string 'openai-compatible')."<br />:required="false"<br />:default="null"<br />/><br />
+<Params<br />name="model_profiles"<br />type="dict"<br />description="Declares the supported features and related parameters for each model offered by the provider (optional, valid for both <code>chat_model</code> types). The corresponding configuration will be read based on <code>model_name</code> and written to <code>model.profile</code> (e.g., containing fields like <code>max_input_tokens</code>, <code>tool_calling</code>, etc.)."<br />:required="false"<br />:default="null"<br />/>
+<Params<br />name="compatibility_options"<br />type="dict"<br />description="Compatibility options for the model provider (optional, valid only when <code>chat_model</code> is the string 'openai-compatible'). Used to declare the provider's support for OpenAI-compatible features (like <code>tool_choice</code> strategies, <code>response_format</code> types, etc.) to ensure correct functionality."<br />:required="false"<br />:default="null"<br />/></p>
+<ol>
+<li><strong>Load a Chat Model</strong></li>
+</ol>
+<p>Use <code>load_chat_model</code> to instantiate a specific model. Its parameters are defined as follows:</p>
+<p><Params<br />name="model"<br />type="string"<br />description="The name of the chat model."<br />:required="true"<br />:default="null"<br />/><br />
+<Params<br />name="model_provider"<br />type="string"<br />description="The name of the chat model provider."<br />:required="false"<br />:default="null"<br />/></p>
+<p><strong>Note</strong>: The <code>load_chat_model</code> function can also accept any number of keyword arguments, which can be used to pass additional parameters such as <code>temperature</code>, <code>max_tokens</code>, <code>extra_body</code>, etc.</p>
+<h2 id="registering-a-model-provider">Registering a Model Provider</h2>
+<p>To register a chat model provider, call <code>register_model_provider</code>. The registration steps vary slightly depending on the situation.</p>
+<p><CaseItem :step="1" content="Existing LangChain Chat Model Class"></CaseItem></p>
+<p>If the model provider already has a suitable and existing LangChain integration (see <a href="https://docs.langchain.com/oss/python/integrations/chat">Chat Model Integrations</a>), pass the corresponding integrated chat model class as the <code>chat_model</code> parameter.</p>
+<p>Refer to the following code for an example:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.fake_chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeChatModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+A few additional notes on the code above:</p>
+<ul>
+<li><strong><code>FakeChatModel</code> is for testing purposes only</strong>. In actual use, you must pass in a <code>ChatModel</code> class with real functionality.</li>
+<li><strong><code>provider_name</code> represents the name of the model provider</strong>. It is used for reference in <code>load_chat_model</code> later. The name can be customized but should not contain special characters like ":" or "-".</li>
+</ul>
+<p>Besides this, the function also accepts the following parameters in this case:</p>
+<ul>
+<li><strong>base_url</strong></li>
+</ul>
+<p><strong>This parameter usually does not need to be set (since the model class typically defines a default API address)</strong>. Only pass <code>base_url</code> when you need to override the model class's default address, and it only takes effect for attributes named <code>api_base</code> or <code>base_url</code> (including aliases).</p>
+<ul>
+<li><strong>model_profiles</strong></li>
+</ul>
+<p>If your LangChain integrated chat model class fully supports the <code>profile</code> parameter (i.e., you can access the model's properties like <code>max_input_tokens</code>, <code>tool_calling</code>, etc., directly via <code>model.profile</code>), there is no need to set <code>model_profiles</code> additionally.</p>
+<p>If <code>model.profile</code> returns an empty dictionary <code>{}</code>, it means the LangChain chat model class may not support the <code>profile</code> parameter yet. In this case, you can manually provide <code>model_profiles</code>.</p>
+<p><code>model_profiles</code> is a dictionary where each key is a model name, and the value is the profile configuration for that model:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;model_name_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">100_000</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;structured_output&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># ... other optional fields</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;model_name_2&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">32768</span><span class="p">,</span>
+        <span class="s2">&quot;image_inputs&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="c1"># ... other optional fields</span>
+    <span class="p">},</span>
+    <span class="c1"># You can have any number of model configurations</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Tip</strong>: It is recommended to use the <code>langchain-model-profiles</code> library to get profiles for your model provider.</p>
+<p><CaseItem :step="2" content="No LangChain Chat Model Class, but Provider has an OpenAI-Compatible API"></CaseItem></p>
+<p>Many model providers offer services with an <strong>OpenAI-compatible API</strong>, such as: <a href="https://github.com/vllm-project/vllm">vLLM</a>, <a href="https://openrouter.ai/">OpenRouter</a>, <a href="https://www.together.ai/">Together AI</a>, etc. When the model provider you are integrating does not have a suitable LangChain chat model class but offers an OpenAI-compatible API, you can consider this approach.</p>
+<p>This library will use the built-in <code>BaseChatOpenAICompatible</code> class to construct a chat model class specific to the provider based on user input. This class inherits from <code>langchain-openai</code>'s <code>BaseChatOpenAI</code> and enhances it with the following capabilities:</p>
+<ul>
+<li><strong>Support for more reasoning content formats</strong>: Compared to <code>ChatOpenAI</code>, which only outputs official reasoning content, this class also supports outputting reasoning content in more formats (e.g., from <code>vLLM</code>).</li>
+<li><strong>Dynamic adaptation and selection of the optimal structured output method</strong>: By default, it can automatically select the best structured output method (<code>function_calling</code> or <code>json_schema</code>) based on the actual support of the model provider.</li>
+<li><strong>Fine-grained adaptation of differences via <code>compatibility_options</code></strong>: By configuring provider compatibility options, it resolves support differences for parameters like <code>tool_choice</code> and <code>response_format</code>.</li>
+</ul>
+<p><strong>Note</strong>: When using this approach, you must install the <code>standard</code> version of the <code>langchain-dev-utils</code> library. For details, refer to <a href="../../installation/">Installation</a>.</p>
+<p>In this case, besides passing the <code>provider_name</code> and <code>chat_model</code> (which must be <code>"openai-compatible"</code>) parameters, you also need to pass the <code>base_url</code> parameter.</p>
+<p>For the <code>base_url</code> parameter, you can provide it in one of the following ways:</p>
+<ul>
+<li><strong>Explicitly as an argument</strong>:
+    <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
+<span class="p">)</span>
+</code></pre></div></li>
+<li><strong>Via environment variable</strong> (recommended for configuration management):
+    <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
+</code></pre></div>
+    The <code>base_url</code> can be omitted in the code:
+    <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span>
+    <span class="c1"># Automatically reads VLLM_API_BASE</span>
+<span class="p">)</span>
+</code></pre></div>
+    ::: info Tip
+    In this case, the naming convention for the environment variable of the provider's API endpoint is <code>${PROVIDER_NAME}_API_BASE</code> (all caps, underscore-separated). The corresponding API_KEY environment variable follows the convention <code>${PROVIDER_NAME}_API_KEY</code> (all caps, underscore-separated).
+    :::</li>
+</ul>
+<p>::: tip Additional Information</p>
+<p>vLLM is a popular large model inference framework that can deploy large models with an OpenAI-compatible API. For example, here is Qwen3-4B:</p>
+<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
+--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
+--enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
+--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+--served-model-name<span class="w"> </span>qwen3-4b
+</code></pre></div>
+<p>The service address is <code>http://localhost:8000/v1</code>.
+:::</p>
+<p>At the same time, in this case, you can also set the following two optional parameters:</p>
+<ul>
+<li><strong>model_profiles</strong></li>
+</ul>
+<p>In this situation, if <code>model_profiles</code> is not manually set, <code>model.profile</code> will return an empty dictionary <code>{}</code>. Therefore, if you need to get configuration information for a specific model via <code>model.profile</code>, you must explicitly set <code>model_profiles</code>.</p>
+<ul>
+<li><strong>compatibility_options</strong></li>
+</ul>
+<p>This is only valid in this case. It is used to <strong>declare</strong> the provider's support for certain <strong>OpenAI API</strong> features to improve compatibility and stability.
+Currently, the following configuration options are supported:</p>
+<ul>
+<li><code>supported_tool_choice</code>: List of supported <code>tool_choice</code> strategies, default is <code>["auto"]</code>.</li>
+<li><code>supported_response_format</code>: List of supported <code>response_format</code> types (<code>json_schema</code>, <code>json_object</code>), default is <code>[]</code>.</li>
+<li><code>reasoning_keep_policy</code>: Policy for keeping the <code>reasoning_content</code> field in historical messages passed to the model. Options are <code>never</code>, <code>current</code>, <code>all</code>. Default is <code>never</code>.</li>
+<li><code>include_usage</code>: Whether to include <code>usage</code> information in the last streaming response chunk. Default is <code>True</code>.</li>
+</ul>
+<p>::: info Note
+Since different models from the same provider may have varying support for parameters like <code>tool_choice</code> and <code>response_format</code>, these four compatibility options will ultimately become <strong>instance attributes</strong> of the class. Values passed during registration serve as global defaults (representing the configuration supported by most of the provider's models). If fine-tuning is needed during loading, you can override them with parameters of the same name in <code>load_chat_model</code>.
+:::</p>
+<p>::: details supported_tool_choice</p>
+<p><code>tool_choice</code> is used to control whether and which external tools the large model calls during a response, to improve accuracy, reliability, and controllability. Common values include:</p>
+<ul>
+<li><code>"auto"</code>: The model decides autonomously whether to call a tool (default behavior).</li>
+<li><code>"none"</code>: Prohibits calling tools.</li>
+<li><code>"required"</code>: Forces the call of at least one tool.</li>
+<li>A specific tool (in OpenAI-compatible APIs, specifically <code>{"type": "function", "function": {"name": "xxx"}}</code>).</li>
+</ul>
+<p>Different providers support different ranges. To avoid errors, this library defaults <code>supported_tool_choice</code> to <code>["auto"]</code>. This means that when using <code>bind_tools</code>, the <code>tool_choice</code> parameter can only be passed as <code>auto</code>; other values will be filtered out.</p>
+<p>If you need to support other <code>tool_choice</code> values, you must configure the supported items. The configuration value is a list of strings, with each optional value being:</p>
+<ul>
+<li><code>"auto"</code>, <code>"none"</code>, <code>"required"</code>: Correspond to standard strategies.</li>
+<li><code>"specific"</code>: A unique identifier for this library, indicating support for specifying a particular tool.</li>
+</ul>
+<p>For example, vLLM supports all strategies:</p>
+<div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>::: info Tip
+If there are no special requirements, you can keep the default (i.e., <code>["auto"]</code>). If your business scenario requires the model to <strong>call a specific tool</strong> or <strong>choose one from a given list</strong>, and the provider supports the corresponding strategy, you can enable it as needed:
+1. If you require <strong>at least one tool</strong> to be called and the provider supports <code>required</code>, you can set it to <code>["required"]</code> (and when calling <code>bind_tools</code>, you need to explicitly pass <code>tool_choice="required"</code>).
+2. If you require a <strong>specific tool</strong> to be called and the provider supports specifying a particular tool, you can set it to <code>["specific"]</code> (This configuration is very useful in <code>function_calling</code> structured output, as it ensures the model calls the specified structured output tool, guaranteeing the stability of the output. Because in the <code>with_structured_output</code> method, its internal implementation will pass a <code>tool_choice</code> value that forces the call to a specific tool when calling <code>bind_tools</code>. However, if <code>"specific"</code> is not in <code>supported_tool_choice</code>, this parameter will be filtered out. Therefore, to ensure <code>tool_choice</code> can be passed correctly, you must add <code>"specific"</code> to <code>supported_tool_choice</code>.)</p>
+<p>This parameter can be set once in <code>register_model_provider</code> for the provider or overridden dynamically for a single model in <code>load_chat_model</code>. It is recommended to declare the <code>tool_choice</code> support for most of the provider's models in <code>register_model_provider</code>, and for models with different support, specify it separately in <code>load_chat_model</code>.
+:::</p>
+<p>::: details supported_response_format</p>
+<p>Currently, there are three common methods for structured output.</p>
+<ul>
+<li><code>function_calling</code>: Generates structured output by calling a tool that conforms to a specified schema.</li>
+<li><code>json_schema</code>: A feature provided by the model provider specifically for generating structured output. In OpenAI-compatible APIs, this is <code>response_format={"type": "json_schema", "json_schema": {...}}</code>.</li>
+<li><code>json_mode</code>: A feature offered by some providers before <code>json_schema</code> was available. It can generate valid JSON, but the schema must be described in the prompt. In OpenAI-compatible APIs, this is <code>response_format={"type": "json_object"}</code>.</li>
+</ul>
+<p>Among these, <code>json_schema</code> is supported by only a few OpenAI-compatible API providers (e.g., <code>OpenRouter</code>, <code>TogetherAI</code>); <code>json_mode</code> has wider support and is compatible with most providers; while <code>function_calling</code> is the most universal, usable as long as the model supports tool calling.</p>
+<p>This parameter is used to declare the model provider's support for <code>response_format</code>. By default, it is <code>[]</code>, meaning the provider supports neither <code>json_mode</code> nor <code>json_schema</code>. In this case, the <code>method</code> parameter in the <code>with_structured_output</code> method can only be <code>function_calling</code> (or <code>auto</code>, which will be inferred as <code>function_calling</code>). If <code>json_mode</code> or <code>json_schema</code> is passed, it will be automatically converted to <code>function_calling</code>. If you want to enable the <code>json_mode</code> or <code>json_schema</code> implementation for structured output, you need to explicitly set this parameter.</p>
+<p>For example, if most models on OpenRouter support both <code>json_mode</code> and <code>json_schema</code> for <code>response_format</code>, you can declare this during registration:</p>
+<div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_mode&quot;</span><span class="p">,</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>::: info Tip
+Usually, there is no need to configure this. It only needs to be considered when using the <code>with_structured_output</code> method. If the model provider supports <code>json_schema</code>, you can consider configuring this parameter to ensure the stability of structured output. For <code>json_mode</code>, since it only guarantees JSON output, it is generally not necessary to set it. Only set this parameter to include <code>json_mode</code> when the model does not support tool calling and only supports setting <code>response_format={"type":"json_object"}</code>.</p>
+<p>Similarly, this parameter can be set globally in <code>register_model_provider</code> or overridden for a single model in <code>load_chat_model</code>. It is recommended to declare the <code>response_format</code> support for most of the provider's models in <code>register_model_provider</code>, and for models with different support, specify it separately in <code>load_chat_model</code>.
+::: warning Note
+This parameter currently only affects the <code>model.with_structured_output</code> method. For structured output in <code>create_agent</code>, if you need to use the <code>json_schema</code> implementation, you need to ensure the model's <code>profile</code> contains the <code>structured_output</code> field with a value of <code>True</code>.
+:::</p>
+<p>::: details reasoning_keep_policy</p>
+<p>Used to control the retention policy for the <code>reasoning_content</code> field in historical messages.</p>
+<p>The following values are supported:
+- <code>never</code>: <strong>Do not retain any</strong> reasoning content in historical messages (default).
+- <code>current</code>: Only retain the <code>reasoning_content</code> field from the <strong>current conversation turn</strong>.
+- <code>all</code>: Retain the <code>reasoning_content</code> field from <strong>all conversation turns</strong>.</p>
+<p>For example:
+A user first asks "What's the weather in New York?", then follows up with "What's the weather in London?". The current turn is the second conversation, and the final model call is about to be made.</p>
+<ul>
+<li>When the value is <code>never</code></li>
+</ul>
+<p>With <code>never</code>, the final <code>messages</code> passed to the model will <strong>not contain any</strong> <code>reasoning_content</code> fields. The final messages received by the model are:</p>
+<p><div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div>
+- When the value is <code>current</code></p>
+<p>With <code>current</code>, only the <code>reasoning_content</code> field from the <strong>current conversation turn</strong> is retained. The final messages received by the model are:
+<div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Only reasoning from this turn is kept</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div>
+- When the value is <code>all</code></p>
+<p>With <code>all</code>, the <code>reasoning_content</code> field from <strong>all conversation turns</strong> is retained. The final messages received by the model are:
+<div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check New York&#39;s weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Reasoning is kept</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Return the New York weather result directly.&quot;</span><span class="p">,</span>  <span class="c1"># Reasoning is kept</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Reasoning is kept</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<p><strong>Note</strong>: If the current conversation turn does not involve a tool call, the effect of <code>current</code> is the same as <code>never</code>.
+::: info Tip
+Configure this flexibly based on the provider's requirements for retaining <code>reasoning_content</code>:
+- If the provider requires reasoning content to be kept <strong>throughout</strong>, set it to <code>all</code>.
+- If it only needs to be kept for the <strong>current tool call</strong>, set it to <code>current</code>.
+- If there are no special requirements, keep the default <code>never</code>.</p>
+<p>Similarly, this parameter can be set globally in <code>register_model_provider</code> or overridden for a single model in <code>load_chat_model</code>. If only a few models require retaining <code>reasoning_content</code>, it is recommended to specify it separately in <code>load_chat_model</code>, in which case <code>register_model_provider</code> does not need to set it.
+:::</p>
+<p>::: details include_usage</p>
+<p><code>include_usage</code> is a parameter in OpenAI-compatible APIs that controls whether to append a final message containing token usage information (like <code>prompt_tokens</code> and <code>completion_tokens</code>) to a streaming response. Since standard streaming responses do not return usage information by default, enabling this option allows the client to directly obtain complete token consumption data, which is useful for billing, monitoring, or logging.</p>
+<p>It is typically enabled via <code>stream_options={"include_usage": true}</code>. Considering that some model providers do not support this parameter, this library makes it a compatibility option with a default value of <code>True</code>, as most providers support it. If a provider does not, you can explicitly set it to <code>False</code>.</p>
+<p>::: info Tip
+This parameter generally does not need to be set; keep the default value. Only set it to <code>False</code> if the model provider does not support it.
+:::</p>
+<p>::: warning Note
+Despite the compatibility configurations provided above, this library cannot guarantee 100% compatibility with all OpenAI-compatible interfaces. If a model provider has an official or community-supported integration class, please prioritize using that integration. If you encounter any compatibility issues, feel free to submit an issue in this library's GitHub repository.
+:::</p>
+<h2 id="batch-registration">Batch Registration</h2>
+<p>If you need to register multiple providers, you can use <code>batch_register_model_provider</code> to avoid repetitive calls.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">batch_register_model_provider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.fake_chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeChatModel</span>
+
+<span class="n">batch_register_model_provider</span><span class="p">(</span>
+    <span class="n">providers</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chat_model&quot;</span><span class="p">:</span> <span class="n">FakeChatModel</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chat_model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>::: warning Note<br />
+Both registration functions are implemented based on a global dictionary. To avoid multi-threading issues, <strong>all registrations must be completed during the application startup phase</strong>. Dynamic registration at runtime is prohibited.<br />
+:::</p>
+<h2 id="loading-a-chat-model">Loading a Chat Model</h2>
+<p>Use the <code>load_chat_model</code> function to load a chat model (initialize a chat model instance). The parameter rules are as follows:</p>
+<ul>
+<li>If <code>model_provider</code> is not passed, <code>model</code> must be in the format <code>provider_name:model_name</code>.</li>
+<li>If <code>model_provider</code> is passed, <code>model</code> must be just <code>model_name</code>.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Method 1</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+
+<span class="c1"># Method 2</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Although vLLM does not strictly require an API Key, LangChain still requires one to be set. You can set it in an environment variable:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm
+</code></pre></div>
+<h3 id="model-methods-and-parameters">Model Methods and Parameters</h3>
+<p>For <strong>Case 1</strong> (existing LangChain class), all its methods and parameters are consistent with the corresponding chat model class.<br />
+For <strong>Case 2</strong> (<code>openai-compatible</code>), the model's methods and parameters are as follows:</p>
+<ul>
+<li>Supports <code>invoke</code>, <code>ainvoke</code>, <code>stream</code>, <code>astream</code> and other methods.</li>
+<li>Supports the <code>bind_tools</code> method for tool calling.</li>
+<li>Supports the <code>with_structured_output</code> method for structured output.</li>
+<li>Supports passing parameters from <code>BaseChatOpenAI</code>, such as <code>temperature</code>, <code>top_p</code>, <code>max_tokens</code>, etc.</li>
+<li>Supports passing multimodal data.</li>
+<li>Supports OpenAI's latest <code>responses API</code>.</li>
+<li>Supports the <code>model.profile</code> parameter to get the model's profile.</li>
+</ul>
+<p>:::details Basic Invocation</p>
+<p>Supports <code>invoke</code> for simple calls:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>It also supports <code>ainvoke</code> for asynchronous calls:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">model</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<p>:::details Streaming Output</p>
+<p>Supports <code>stream</code> for streaming output:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</code></pre></div>
+<p>And <code>astream</code> for asynchronous streaming:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<p>:::details Tool Calling</p>
+<p>If the model itself supports tool calling, you can use the <code>bind_tools</code> method directly:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current timestamp&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Get the current timestamp&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<p>:::details Structured Output</p>
+<p>Supports structured output. The default <code>method</code> is <code>auto</code>, which will automatically select the appropriate structured output method based on the provider's <code>supported_response_format</code> parameter. Specifically, if <code>json_schema</code> is included in the values, the <code>json_schema</code> method will be chosen; otherwise, the <code>function_calling</code> method will be used.</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello, my name is Zhang San, I am 25 years old&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+Compared to tool calling, <code>json_schema</code> can 100% guarantee that the output conforms to the JSON Schema, avoiding potential parameter errors from tool calling. Therefore, if the model provider supports <code>json_schema</code>, it will be used by default. When the provider does not support it, it will fall back to the <code>function_calling</code> method.
+For <code>json_mode</code>, although it has wider support, it is more cumbersome to use because the schema must be described in the prompt to guide the model to output a JSON string. Therefore, it is not used by default. If you want to use it, you can explicitly provide <code>method="json_mode"</code> (provided that <code>supported_response_format</code> includes <code>json_mode</code> during registration or instantiation).
+:::</p>
+<p>:::details Passing Model Parameters</p>
+<p>Additionally, since this class inherits from <code>BaseChatOpenAI</code>, it supports passing model parameters from <code>BaseChatOpenAI</code>, such as <code>temperature</code>, <code>extra_body</code>, etc.:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span> <span class="c1"># Use extra_body to pass additional parameters, here to disable thinking mode</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<p>:::details Passing Multimodal Data</p>
+<p>Supports passing multimodal data. You can use the OpenAI-compatible multimodal data format or directly use <code>content_block</code> from <code>langchain</code>. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://openrouter.ai/api/v1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span>
+        <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image_url&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;image_url&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/image.png&quot;</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Describe this image&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openrouter:qwen/qwen3-vl-8b-thinking&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<p>:::details OpenAI's Latest <code>responses_api</code></p>
+<p>This model class also supports OpenAI's latest <code>responses_api</code>. However, currently only a few providers support this API style. If your model provider supports this API style, you can pass <code>use_responses_api=True</code>.
+For example, vLLM supports <code>responses_api</code>, so you can use it like this:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<p>:::details Getting Model Profile
+Taking OpenRouter as an example, you first need to install the <code>langchain-model-profiles</code> library:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>langchain-model-profiles
+</code></pre></div>
+<p>Then you can use the following command to get the model profiles supported by OpenRouter:</p>
+<div class="highlight"><pre><span></span><code>langchain-profiles<span class="w"> </span>refresh<span class="w"> </span>--provider<span class="w"> </span>openrouter<span class="w"> </span>--data-dir<span class="w"> </span>./data/openrouter
+</code></pre></div>
+<p>This will generate a <code>_profiles.py</code> file in the <code>./data/openrouter</code> folder in your project's root directory. This file contains a dictionary variable named <code>_PROFILES</code>.</p>
+<p>Next, you can refer to the following example for the code:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span><span class="p">,</span> <span class="n">register_model_provider</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">data.openrouter._profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PROFILES</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="n">model_profiles</span><span class="o">=</span><span class="n">_PROFILES</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openrouter:openai/gpt-5-mini&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+</code></pre></div>
+<p>:::</p>
+<h3 id="compatibility-with-official-providers">Compatibility with Official Providers</h3>
+<p>For providers officially supported by LangChain (like <code>openai</code>), you can use <code>load_chat_model</code> directly without registration:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">)</span>
+<span class="c1"># or</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><BestPractice>
+    <p>For using this module, you can choose based on the following three scenarios:</p>
+    <ol>
+        <li>If all model providers you are integrating are supported by the official <code>init_chat_model</code>, please use the official function directly for the best compatibility and stability.</li>
+        <li>If some of the model providers you are integrating are not officially supported, you can use this module's features. First, use <code>register_model_provider</code> to register the model providers, then use <code>load_chat_model</code> to load the models.</li>
+        <li>If the model providers you are integrating do not have a suitable integration but offer an OpenAI-compatible API (like vLLM, OpenRouter), it is recommended to use this module's features. First, use <code>register_model_provider</code> to register the model providers (passing <code>openai-compatible</code> for <code>chat_model</code>), then use <code>load_chat_model</code> to load the models.</li>
+    </ol>
+</BestPractice></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

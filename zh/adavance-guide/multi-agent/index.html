@@ -1,0 +1,1362 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../getting-started-guide/tool/">
+      
+      
+        <link rel="next" href="../middleware/">
+      
+      
+        
+          <link rel="alternate" href="../../../adavance-guide/multi-agent/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>多智能体构建 - Langchain Dev Utils</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../" title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Langchain Dev Utils
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              多智能体构建
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../adavance-guide/multi-agent/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    tbice123123/langchain-dev-utils
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Langchain Dev Utils
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    tbice123123/langchain-dev-utils
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started-guide/chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    对话模型管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started-guide/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入模型管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started-guide/format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    格式化序列
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started-guide/message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    消息处理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started-guide/tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具调用处理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    高级指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    高级指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多智能体构建
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多智能体构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        钩子函数
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="钩子函数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pre_input_hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. pre_input_hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-post_output_hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. post_output_hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../middleware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    中间件
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态图编排
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../human-in-the-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    为工具调用添加人工审核
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API 参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    智能体开发模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/chat_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    对话模型管理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入模型管理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/message_convert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    消息处理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/tool_calling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具调用处理模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态图编排模块 API参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        钩子函数
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="钩子函数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pre_input_hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. pre_input_hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-post_output_hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. post_output_hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="_1">多智能体构建</h1>
+<blockquote>
+<p>[!NOTE]</p>
+<p><strong>功能概述</strong>：提供方便进行Multi-Agent开发的实用工具。</p>
+<p><strong>前置要求</strong>：了解 langchain 的<a href="https://docs.langchain.com/oss/python/langchain/agents">Agent</a>、<a href="https://docs.langchain.com/oss/python/langchain/multi-agent">Multi-Agent</a>。</p>
+<p><strong>预计阅读时间</strong>：7 分钟</p>
+</blockquote>
+<h2 id="_2">概述</h2>
+<p>将智能体封装为工具是多智能体系统中的一种常见实现模式，LangChain 官方文档对此有详细阐述。为此，本库提供了预构建函数 <code>wrap_agent_as_tool</code> 来实现此模式，该函数能够将一个智能体实例封装成一个可供其它智能体调用的工具。</p>
+<p>其参数如下:</p>
+<p><Params
+name="agent"
+type="CompiledStateGraph"
+description="智能体，取值必须为 langgraph 的 CompiledStateGraph。"
+:required="true"
+:default="null"
+/>
+<Params
+name="tool_name"
+type="string"
+description="工具的名称。如果不传则工具默认名称是<code>transfor_to_agent_name</code>。"
+:required="false"
+:default="null"
+/>
+<Params
+name="tool_description"
+type="string"
+description="工具的描述。如果不传则使用默认的描述内容。"
+:required="false"
+:default="null"
+/>
+<Params
+name="pre_input_hooks"
+type="Callable | tuple[Callable, AwaitableCallable]"
+description="预处理钩子函数，可以是单个同步函数或一个二元组。如果是二元组，则第一个函数是同步函数，第二个函数是异步函数，用于在智能体运行前对输入进行预处理。"
+:required="false"
+:default="null"
+/>
+<Params
+name="post_output_hooks"
+type="Callable | tuple[Callable, AwaitableCallable]"
+description="后处理钩子函数，可以是单个同步函数或一个二元组。如果是二元组，则第一个函数是同步函数，第二个函数是异步函数，用于在智能体运行完成后，对其返回的完整消息列表进行后处理。"
+:required="false"
+:default="null"
+/></p>
+<h2 id="_3">使用示例</h2>
+<p>下面，我们以官方示例中的 <code>supervisor</code> 智能体为基础，介绍如何通过 <code>wrap_agent_as_tool</code> 将其快速改造成可被其它智能体调用的工具。</p>
+<p>首先实现两个子智能体，一个用于发送邮件，一个用于日程查询和安排。</p>
+<p><strong>邮件智能体</strong>
+```python{3}
+from langchain_core.tools import tool
+from langchain_dev_utils.chat_models import register_model_provider
+from langchain_dev_utils.agents import create_agent, wrap_agent_as_tool </p>
+<p>register_model_provider(
+    "vllm",
+    "openai-compatible",
+    base_url="http://localhost:8000/v1",
+)</p>
+<p>@tool
+def send_email(
+    to: list[str],  # 电子邮件地址
+    subject: str,
+    body: str,
+    cc: list[str] = [],
+) -&gt; str:
+    """通过电子邮件API发送邮件。要求正确格式的地址。"""
+    # 存根：实际应用中，这里会调用SendGrid、Gmail API等
+    return f"邮件已发送至 {', '.join(to)} - 主题: {subject}"</p>
+<p>EMAIL_AGENT_PROMPT = (
+    "你是一个电子邮件助手。"
+    "根据自然语言请求撰写专业邮件。"
+    "提取收件人信息并制作恰当的主题行和正文内容。"
+    "使用 send_email 来发送邮件。"
+    "始终在最终回复中确认已发送的内容。"
+)</p>
+<p>email_agent = create_agent(
+    "vllm:qwen3-4b",
+    tools=[send_email],
+    system_prompt=EMAIL_AGENT_PROMPT,
+    name="email_agent",
+)
+<div class="highlight"><pre><span></span><code>**日程智能体**
+```python
+@tool
+def create_calendar_event(
+    title: str,
+    start_time: str,  # ISO格式: &quot;2024-01-15T14:00:00&quot;
+    end_time: str,  # ISO格式: &quot;2024-01-15T15:00:00&quot;
+    attendees: list[str],  # 电子邮件地址
+    location: str = &quot;&quot;,
+) -&gt; str:
+    &quot;&quot;&quot;创建日历事件。要求精确的ISO日期时间格式。&quot;&quot;&quot;
+    # 存根：实际应用中，这里会调用Google Calendar API、Outlook API等
+    return f&quot;事件已创建：{title} 从 {start_time} 到 {end_time}，共有 {len(attendees)} 位参与者&quot;
+
+
+@tool
+def get_available_time_slots(
+    attendees: list[str],
+    date: str,  # ISO格式: &quot;2024-01-15&quot;
+    duration_minutes: int,
+) -&gt; list[str]:
+    &quot;&quot;&quot;在特定日期查询参与者的日历可用时间。&quot;&quot;&quot;
+    # 存根：实际应用中，这里会查询日历API
+    return [&quot;09:00&quot;, &quot;14:00&quot;, &quot;16:00&quot;]
+
+
+CALENDAR_AGENT_PROMPT = (
+    &quot;你是一个日历日程安排助手。&quot;
+    &quot;将自然语言的日程安排请求（例如&#39;下周二下午2点&#39;）解析为正确的ISO日期时间格式。&quot;
+    &quot;需要时使用 get_available_time_slots 来检查可用时间。&quot;
+    &quot;使用 create_calendar_event 来安排事件。&quot;
+    &quot;始终在最终回复中确认已安排的内容。&quot;
+)
+
+calendar_agent = create_agent(
+    &quot;vllm:qwen3-4b&quot;,
+    tools=[create_calendar_event, get_available_time_slots],
+    system_prompt=CALENDAR_AGENT_PROMPT,
+    name=&quot;calendar_agent&quot;,
+)
+</code></pre></div></p>
+<p>接下来，使用<code>wrap_agent_as_tool</code>将该两个子智能体封装为工具。</p>
+<div class="highlight"><pre><span></span><code><span class="n">schedule_event</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
+    <span class="n">calendar_agent</span><span class="p">,</span>
+    <span class="s2">&quot;schedule_event&quot;</span><span class="p">,</span>
+    <span class="n">tool_description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;使用自然语言安排日历事件。</span>
+
+<span class="s2">    在用户想要创建、修改或检查日历约会时使用此功能。</span>
+<span class="s2">    能够处理日期/时间解析、查询可用时间和创建事件。</span>
+
+<span class="s2">    输入：自然语言日历安排请求（例如&#39;与设计团队下个星期二下午2点的会议&#39;）</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">manage_email</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
+    <span class="n">email_agent</span><span class="p">,</span>
+    <span class="s2">&quot;manage_email&quot;</span><span class="p">,</span>
+    <span class="n">tool_description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;使用自然语言发送电子邮件。</span>
+
+<span class="s2">    在用户想要发送通知、提醒或任何电子邮件通信时使用此功能。</span>
+<span class="s2">    能够提取收件人信息、主题生成和电子邮件撰写。</span>
+
+<span class="s2">    输入：自然语言电子邮件请求（例如&#39;向他们发送会议提醒&#39;）</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>最终创建一个<code>supervisor_agent</code>，它可以调用这两个工具。</p>
+<div class="highlight"><pre><span></span><code><span class="n">SUPERVISOR_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;你是一个有用的个人助手。&quot;</span>
+    <span class="s2">&quot;你可以安排日历事件并发送电子邮件。&quot;</span>
+    <span class="s2">&quot;将用户请求分解为适当的工具调用，并协调结果。&quot;</span>
+    <span class="s2">&quot;当请求涉及多个操作时，请使用多个工具按顺序操作。&quot;</span>
+<span class="p">)</span>
+
+
+<span class="n">supervisor_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">schedule_event</span><span class="p">,</span> <span class="n">manage_email</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="n">SUPERVISOR_PROMPT</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>测试一下功能：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span>
+    <span class="n">supervisor_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查询明天的空闲时间&quot;</span><span class="p">)]})</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">supervisor_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;给test@123.com发送邮件会议提醒&quot;</span><span class="p">)]}</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>::: info 注意
+上述示例中，我们是从<code>langchain_dev_utils.agents</code>中导入了<code>create_agent</code>函数，而不是<code>langchain.agents</code>，这是因为本库也提供了一个与官方<code>create_agent</code>函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。使得可以直接使用<code>register_model_provider</code>注册的模型，而无需初始化模型实例后传入。
+:::</p>
+<h2 id="_4">钩子函数</h2>
+<p>本函数提供了几个钩子函数，用于在调用智能体前后进行一些操作。</p>
+<h4 id="1-pre_input_hooks">1. pre_input_hooks</h4>
+<p>在智能体运行前对输入进行预处理。可用于输入增强、上下文注入、格式校验、权限检查等。</p>
+<p>支持传入以下类型：</p>
+<ul>
+<li>若传入 <strong>单个同步函数</strong>，则该函数同时用于同步（<code>invoke</code>）和异步（<code>ainvoke</code>）调用路径（异步路径中不会 <code>await</code>，直接调用）。</li>
+<li>若传入 <strong>二元组 <code>(sync_func, async_func)</code></strong>：</li>
+<li>第一个函数用于同步调用路径；</li>
+<li>第二个函数（必须是 <code>async def</code>）用于异步调用路径，并会被 <code>await</code>。</li>
+</ul>
+<p>你传入的函数接收两个参数：</p>
+<ul>
+<li><code>request: str</code>：原始工具调用输入；</li>
+<li><code>runtime: ToolRuntime</code>：<code>langchain</code>的<code>ToolRuntime</code>。</li>
+</ul>
+<p>你传入的函数必须返回处理后的 <code>str</code>，作为 agent 的实际输入。</p>
+<p><strong>示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;&lt;task_description&gt;&quot;</span> <span class="o">+</span> <span class="n">request</span> <span class="o">+</span> <span class="s2">&quot;&lt;/task_description&gt;&quot;</span>
+
+<span class="c1"># 或支持异步</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_input_async</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;&lt;task_description&gt;&quot;</span> <span class="o">+</span> <span class="n">request</span> <span class="o">+</span> <span class="s2">&quot;&lt;/task_description&gt;&quot;</span>
+
+<span class="c1"># 使用</span>
+<span class="n">call_agent_tool</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
+    <span class="n">agent</span><span class="p">,</span>
+    <span class="n">pre_input_hooks</span><span class="o">=</span><span class="p">(</span><span class="n">process_input</span><span class="p">,</span> <span class="n">process_input_async</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>注意，上述的例子比较简单，实际上你可以根据<code>runtime</code>里面的<code>state</code>或者<code>context</code>添加更复杂的逻辑。</p>
+<h4 id="2-post_output_hooks">2. post_output_hooks</h4>
+<p>在智能体运行完成后，对其返回的完整消息列表进行后处理，以生成工具的最终返回值。可用于结果提取、结构化转换等。</p>
+<p>支持传入以下类型：</p>
+<ul>
+<li>若传入 <strong>单个函数</strong>，该函数用于同步和异步路径（异步路径中不 <code>await</code>）。</li>
+<li>若传入 <strong>二元组 <code>(sync_func, async_func)</code></strong>：</li>
+<li>第一个用于同步路径；</li>
+<li>第二个（<code>async def</code>）用于异步路径，并会被 <code>await</code>。</li>
+</ul>
+<p>你传入的函数接收三个参数：</p>
+<ul>
+<li><code>request: str</code>：（可能已处理的）原始输入；</li>
+<li><code>messages: List[AnyMessage]</code>：agent 返回的完整消息历史（来自 <code>response["messages"]</code>）；</li>
+<li><code>runtime: ToolRuntime</code>：<code>langchain</code>的<code>ToolRuntime</code>。</li>
+</ul>
+<p>你传入的函数返回的值可以是能够被序列化为一个字符串或者是<code>Command</code>对象。</p>
+<p><strong>示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_output_sync</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)]</span>
+    <span class="p">})</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_output_async</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)]</span>
+    <span class="p">})</span>
+
+<span class="c1"># 使用</span>
+<span class="n">call_agent_tool</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
+    <span class="n">agent</span><span class="p">,</span>
+    <span class="n">post_output_hooks</span><span class="o">=</span><span class="p">(</span><span class="n">process_output_sync</span><span class="p">,</span> <span class="n">process_output_async</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>若未提供 <code>pre_input_hooks</code>，输入原样传递；</li>
+<li>若未提供 <code>post_output_hooks</code>，默认返回 <code>response["messages"][-1].content</code>（即最后一条消息的文本内容）。</li>
+</ul>
+<p>注意，上述的例子比较简单，实际上你可以根据<code>runtime</code>里面的<code>state</code>或者<code>context</code>添加更复杂的逻辑。</p>
+<p><strong>注意</strong>：当该 Agent（CompiledStateGraph）作为 <code>wrap_agent_as_tool</code> 的 agent 参数时，该 Agent 必须定义 name 属性。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
