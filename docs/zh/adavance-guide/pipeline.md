@@ -1,13 +1,5 @@
 # 状态图编排
 
-> [!NOTE]
->
-> **功能概述**：主要用于实现多个状态图的并行和串行组合。
->
-> **前置要求**：了解 langchain 的[子图](https://docs.langchain.com/oss/python/langgraph/use-subgraphs),[Send](https://docs.langchain.com/oss/python/langgraph/graph-api#send)。
->
-> **预计阅读时间**：8 分钟
-
 ## 概述
 
 提供方便进行状态图编排的实用工具。主要包含以下功能：
@@ -19,78 +11,7 @@
 
 即用于搭建智能体顺序工作流（Sequential Pipeline）。这是一种将复杂任务分解为一系列连续、有序的子任务，并交由不同的专门化智能体依次处理的工作模式。
 
-通过下面函数实现:
-
-- `create_sequential_pipeline` - 以顺序方式组合多个状态图
-
-其参数如下:
-<Params
-name="sub_graphs"
-type="list[StateGraph | CompiledStateGraph]"
-description="要组合的状态图列表（必须是 StateGraph 或者 CompiledStateGraph 实例）"
-:required="true"
-:default="null"
-/>
-<Params
-name="state_schema"
-type="dict"
-description="最终生成图的 State Schema。"
-:required="true"
-:default="null"
-/>
-<Params
-name="graph_name"
-type="string"
-description="最终生成图的名称。"
-:required="false"
-:default="null"
-/>
-<Params
-name="context_schema"
-type="dict"
-description="最终生成图的 Context Schema。"
-:required="false"
-:default="null"
-/>
-<Params
-name="input_schema"
-type="dict"
-description="最终生成图的输入 Schema。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="output_schema"
-type="dict"
-description="最终生成图的输出 Schema。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="checkpoint"
-type="BaseCheckpointSaver"
-description="LangGraph 的持久化 Checkpoint。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="store"
-type="BaseStore"
-description="LangGraph 的持久化 Store。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="cache"
-type="BaseCache"
-description="LangGraph 的 Cache。"
-:required="false"
-:default="null"
-/>
+通过`create_sequential_pipeline` 可将多个状态图以顺序编排方式进行组合。
 
 **使用示例**：
 
@@ -179,107 +100,27 @@ response = graph.invoke({"messages": [HumanMessage("开发一个电商网站，�
 print(response)
 ```
 
-最终生成的图结构如下：
-![串行管道示意图](/img/sequential.png)
 
-::: tip 📝
-对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：
+!!! note "注意"
+    对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：
 
-```python
-graph = StateGraph(AgentState)
-graph.add_sequence([("graph1", graph1), ("graph2", graph2), ("graph3", graph3)])
-graph.add_edge("__start__", "graph1")
-graph = graph.compile()
-```
+    ```python
+    graph = StateGraph(AgentState)
+    graph.add_sequence([("graph1", graph1), ("graph2", graph2), ("graph3", graph3)])
+    graph.add_edge("__start__", "graph1")
+    graph = graph.compile()
+    ```
 
-不过，上述写法仍显繁琐。因此，更推荐使用 `create_sequential_pipeline` 函数，它能通过一行代码快速构建串行执行图，更为简洁高效。
-:::
+    不过，上述写法仍显繁琐。因此，更推荐使用 `create_sequential_pipeline` 函数，它能通过一行代码快速构建串行执行图，更为简洁高效。
+
 
 ## 并行编排
 
 即用于搭建智能体并行工作流（Parallel Pipeline）。它的工作原理是将多个状态图并行组合，对于每个状态图并发地执行任务，从而提高任务的执行效率。
 
-通过下面函数实现:
+通过 `create_parallel_pipeline` 函数，可将多个状态图以并行编排方式进行组合，实现并行执行任务的效果。
 
-- `create_parallel_pipeline` - 以并行方式组合多个状态图
-
-其参数如下:
-
-<Params
-name="sub_graphs"
-type="list[StateGraph | CompiledStateGraph]"
-description="要组合的状态图列表（必须是 StateGraph 或者 CompiledStateGraph 实例）。"
-:required="true"
-:default="null"
-/>
-<Params
-name="state_schema"
-type="dict"
-description="最终生成图的 State Schema。"
-:required="true"
-:default="null"
-/>
-<Params
-name="branches_fn"
-type="Callable[[Any], list[Send]]"
-description="并行分支函数，接收状态作为输入，返回 Send 对象列表以控制并行执行哪些子图。"
-:required="false"
-:default="null"
-/>
-<Params
-name="graph_name"
-type="string"
-description="最终生成图的名称。"
-:required="false"
-:default="null"
-/>
-<Params
-name="context_schema"
-type="dict"
-description="最终生成图的 Context Schema。"
-:required="false"
-:default="null"
-/>
-<Params
-name="input_schema"
-type="dict"
-description="最终生成图的输入 Schema。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="output_schema"
-type="dict"
-description="最终生成图的输出 Schema。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="checkpoint"
-type="BaseCheckpointSaver"
-description="LangGraph 的持久化 Checkpoint。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="store"
-type="BaseStore"
-description="LangGraph 的持久化 Store。"
-:required="false"
-:default="null"
-/>
-
-<Params
-name="cache"
-type="BaseCache"
-description="LangGraph 的 Cache。"
-:required="false"
-:default="null"
-/>
-
+### 简单示例 
 **使用示例**：
 
 在软件开发中，当系统架构设计完成后，不同的功能模块往往可以由不同的团队或工程师同时进行开发，因为它们之间是相对独立的。这就是并行工作的典型场景。
@@ -339,9 +180,7 @@ response = graph.invoke({"messages": [HumanMessage("并行开发电商网站的�
 print(response)
 ```
 
-最终生成的图结构如下：
-![并行管道示意图](/img/parallel.png)
-
+### 利用分支函数指定并行执行的子图
 
 有些时候需要根据条件指定并行执行哪些子图，这时可以使用分支函数。
 分支函数需要返回`Send`列表。

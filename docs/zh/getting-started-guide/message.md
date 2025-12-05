@@ -1,16 +1,10 @@
 # 消息处理
 
-> [!NOTE]
->
-> **功能概述**：提供实用性消息处理功能。
->
-> **前置要求**：了解 langchain 的[Message](https://docs.langchain.com/oss/python/langchain/messages)。
->
-> **预计阅读时间**：3 分钟
-
 ## 概述
 主要功能包括：
+
 - 合并推理内容至最终回复
+
 - 合并流式输出的 Chunks
 
 ## 合并推理内容至最终回复
@@ -23,23 +17,6 @@
 - `convert_reasoning_content_for_chunk_iterator`：将流式响应中的推理内容合并到内容字段 (用于模型的 stream)
 - `aconvert_reasoning_content_for_chunk_iterator`：`convert_reasoning_content_for_chunk_iterator` 的异步版本，用于异步流式处理(用于模型的 astream)
 
-其参数如下:
-
-<Params
-name="model_response"
-type="AIMessage | Iterable[AIMessageChunk | AIMessage]"
-description="模型返回的 AI 消息响应"
-:required="true"
-:default="null"
-/>
-
-<Params
-name="think_tag"
-type="tuple[string, string]"
-description="包含推理内容起始和结束标签的元组"
-:required="false"
-default="('<think>', '</think>')"
-/>
 
 使用示例:
 
@@ -67,16 +44,6 @@ for chunk in convert_reasoning_content_for_chunk_iterator(
 核心函数为：
 
 - `merge_ai_message_chunk`：合并 AI 消息块
-
-支持的参数如下:
-
-<Params
-name="chunks"
-type="list[AIMessageChunk]"
-description="AIMessageChunk 列表"
-:required="true"
-:default="null"
-/>
 
 使用示例:
 

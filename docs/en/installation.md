@@ -1,62 +1,53 @@
 # Installation
 
-`langchain-dev-utils` can be installed using various package managers. Choose the one that best fits your workflow.
+`langchain-dev-utils` can be installed using various package managers. Choose the tool that best fits your workflow.
 
 ## Prerequisites
 
 - Python 3.11 or higher
-- A Python package manager (we recommend `uv`)
-- An API key from any large language model provider
+- Python package manager (recommended to use `uv`)
+- API Key from any large language model provider
 
 ## Installation Methods
 
-`langchain-dev-utils` supports installation via multiple package managers, including `pip`, `poetry`, and `uv`.
+`langchain-dev-utils` supports installation using various package managers such as `pip`, `poetry`, and `uv`.
 
-::: code-group
-
-```sh[pip]
+```bash
+# Install using pip
 pip install -U langchain-dev-utils
-```
 
-```sh[poetry]
+# Install using poetry
 poetry add langchain-dev-utils
-```
 
-```sh[uv]
+# Install using uv  
 uv add langchain-dev-utils
 ```
 
-:::
+The above will install `langchain-dev-utils` and its basic dependencies. If you want to use its full functionality, you need to execute the following command:
 
-The commands above install `langchain-dev-utils` along with its core dependencies. To enable all features, install the full-featured version using the following commands:
-
-::: code-group
-
-```sh[pip]
+```bash
+# Install standard version using pip
 pip install -U langchain-dev-utils[standard]
-```
 
-```sh[poetry]
+# Install standard version using poetry
 poetry add langchain-dev-utils[standard]
-```
 
-```sh[uv]
+# Install standard version using uv  
 uv add langchain-dev-utils[standard]
 ```
 
-:::
 
 ## Dependencies
 
-The package automatically installs the following dependencies:
+The package will automatically install the following dependencies:
 
 - `langchain`
-- `langgraph` (installed automatically alongside `langchain`)
+- `langgraph` (will be installed when installing `langchain`)
 
-The `standard` extra additionally installs:
+For the standard version, the following dependencies will also be installed:
 
-- `langchain-openai` (used for model management)
-- `json-repair` (used by middleware to fix malformed tool calls)
+- `langchain-openai` (for model management)
+- `json-repair` (for tool call error fixing in middleware)
 
 ## Verification
 
@@ -69,7 +60,7 @@ print(langchain_dev_utils.__version__)
 
 ## Running Tests
 
-If you'd like to contribute to the project or run the test suite:
+If you want to contribute to the project or run tests:
 
 ```bash
 git clone https://github.com/TBice123123/langchain-dev-utils.git
@@ -80,5 +71,5 @@ uv run pytest .
 
 **Note:**
 
-- You need to create a `.env` file and include your relevant `API_KEY` and `API_BASE` configurations.
-- All test cases currently pass. If you encounter occasional model-related failures, they may be due to model instability—please try re-running the tests.
+- You need to create a new `.env` file and write the relevant `API_KEY` and `API_BASE`.
+- All test cases have been verified. If individual model-related failures occur during runtime, it might be due to model instability. Please try running the tests again.

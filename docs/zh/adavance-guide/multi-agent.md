@@ -1,57 +1,9 @@
 # 多智能体构建
 
-> [!NOTE]
->
-> **功能概述**：提供方便进行Multi-Agent开发的实用工具。
->
-> **前置要求**：了解 langchain 的[Agent](https://docs.langchain.com/oss/python/langchain/agents)、[Multi-Agent](https://docs.langchain.com/oss/python/langchain/multi-agent)。
->
-> **预计阅读时间**：7 分钟
 
 ## 概述
 
 将智能体封装为工具是多智能体系统中的一种常见实现模式，LangChain 官方文档对此有详细阐述。为此，本库提供了预构建函数 `wrap_agent_as_tool` 来实现此模式，该函数能够将一个智能体实例封装成一个可供其它智能体调用的工具。
-
-
-其参数如下:
-
-<Params
-name="agent"
-type="CompiledStateGraph"
-description="智能体，取值必须为 langgraph 的 CompiledStateGraph。"
-:required="true"
-:default="null"
-/>
-<Params
-name="tool_name"
-type="string"
-description="工具的名称。如果不传则工具默认名称是`transfor_to_agent_name`。"
-:required="false"
-:default="null"
-/>
-<Params
-name="tool_description"
-type="string"
-description="工具的描述。如果不传则使用默认的描述内容。"
-:required="false"
-:default="null"
-/>
-<Params
-name="pre_input_hooks"
-type="Callable | tuple[Callable, AwaitableCallable]"
-description="预处理钩子函数，可以是单个同步函数或一个二元组。如果是二元组，则第一个函数是同步函数，第二个函数是异步函数，用于在智能体运行前对输入进行预处理。"
-:required="false"
-:default="null"
-/>
-<Params
-name="post_output_hooks"
-type="Callable | tuple[Callable, AwaitableCallable]"
-description="后处理钩子函数，可以是单个同步函数或一个二元组。如果是二元组，则第一个函数是同步函数，第二个函数是异步函数，用于在智能体运行完成后，对其返回的完整消息列表进行后处理。"
-:required="false"
-:default="null"
-/>
-
-
 
 ## 使用示例
 
@@ -60,7 +12,7 @@ description="后处理钩子函数，可以是单个同步函数或一个二元�
 首先实现两个子智能体，一个用于发送邮件，一个用于日程查询和安排。
 
 **邮件智能体**
-```python{3}
+```python
 from langchain_core.tools import tool
 from langchain_dev_utils.chat_models import register_model_provider
 from langchain_dev_utils.agents import create_agent, wrap_agent_as_tool 
@@ -147,7 +99,7 @@ calendar_agent = create_agent(
 ```python
 schedule_event = wrap_agent_as_tool(
     calendar_agent,
-    "schedule_event",
+    tool_name="schedule_event",
     tool_description="""使用自然语言安排日历事件。
 
     在用户想要创建、修改或检查日历约会时使用此功能。
@@ -158,7 +110,7 @@ schedule_event = wrap_agent_as_tool(
 )
 manage_email = wrap_agent_as_tool(
     email_agent,
-    "manage_email",
+    tool_name="manage_email",
     tool_description="""使用自然语言发送电子邮件。
 
     在用户想要发送通知、提醒或任何电子邮件通信时使用此功能。
@@ -200,9 +152,9 @@ print(
 )
 ```
 
-::: info 注意
-上述示例中，我们是从`langchain_dev_utils.agents`中导入了`create_agent`函数，而不是`langchain.agents`，这是因为本库也提供了一个与官方`create_agent`函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。使得可以直接使用`register_model_provider`注册的模型，而无需初始化模型实例后传入。
-:::
+!!! info "注意"
+    上述示例中，我们是从`langchain_dev_utils.agents`中导入了`create_agent`函数，而不是`langchain.agents`，这是因为本库也提供了一个与官方`create_agent`函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。使得可以直接使用`register_model_provider`注册的模型，而无需初始化模型实例后传入。
+
 
 ## 钩子函数
 

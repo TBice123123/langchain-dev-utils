@@ -1,0 +1,109 @@
+site_name: Langchain Dev Utils
+site_url: https://tbice123123.github.io/langchain-dev-utils/
+theme:
+  name: material
+  features:
+    - navigation.tabs         
+    - navigation.sections      
+    - navigation.expand        
+    - navigation.instant      
+    - navigation.tracking      
+    - navigation.top          
+    - search.suggest           
+    - search.highlight         
+    - search.share             
+    - content.code.copy       
+    - content.code.annotate    
+    - content.tabs.link       
+    - content.tooltips        
+    - content.footnote.tooltips 
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  language: zh
+repo_name: tbice123123/langchain-dev-utils
+repo_url: https://github.com/tbice123123/langchain-dev-utils
+
+
+markdown_extensions:
+  - admonition         
+  - pymdownx.details    
+  - pymdownx.superfences 
+  - pymdownx.tabbed     
+  - pymdownx.highlight  
+  - attr_list           
+  - md_in_html          
+  - tables              
+  - toc                 
+  - footnotes            
+  - pymdownx.emoji       
+  - pymdownx.tasklist   
+  - pymdownx.mark                       
+
+
+plugins:
+  - i18n:
+      docs_structure: folder 
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+          nav:
+          - Index: index.md
+          - Installation: installation.md
+          - Getting Started:
+            - Chat Model Management: getting-started-guide/chat.md
+            - Embedding Model Management: getting-started-guide/embedding.md
+            - Formatting Sequences: getting-started-guide/format.md
+            - Message Processing: getting-started-guide/message.md
+            - Tool Calling Processing: getting-started-guide/tool.md
+          - Advanced Guides:
+            - Multi-Agent Construction: adavance-guide/multi-agent.md
+            - Middleware: adavance-guide/middleware.md
+            - State-Graph Orchestration: adavance-guide/pipeline.md
+            - Add Human-in-the-Loop Support: adavance-guide/human-in-the-loop.md
+          - API Reference:
+            - Agent Development Module API Reference: api-reference/agent.md
+            - Chat Model Management Module API Reference: api-reference/chat_model.md
+            - Embedding Model Management Module API Reference: api-reference/embeddings.md
+            - Message Handling Module API Reference: api-reference/message_convert.md
+            - Tool Calling Handling Module API Reference: api-reference/tool_calling.md
+            - State-Graph Orchestration Module API Reference: api-reference/pipeline.md
+          
+        - locale: zh
+          name: 中文
+          build: true
+          nav:
+          - 首页: index.md
+          - 安装: installation.md
+          - 入门指南:
+            - 对话模型管理: getting-started-guide/chat.md
+            - 嵌入模型管理: getting-started-guide/embedding.md
+            - 格式化序列: getting-started-guide/format.md
+            - 消息处理: getting-started-guide/message.md
+            - 工具调用处理: getting-started-guide/tool.md
+          - 高级指南:
+            - 多智能体构建: adavance-guide/multi-agent.md
+            - 中间件: adavance-guide/middleware.md
+            - 状态图编排: adavance-guide/pipeline.md
+            - 为工具调用添加人工审核: adavance-guide/human-in-the-loop.md  
+          - API 参考: 
+            - 智能体开发模块 API参考: api-reference/agent.md
+            - 对话模型管理模块 API参考: api-reference/chat_model.md
+            - 嵌入模型管理模块 API参考: api-reference/embeddings.md
+            - 消息处理模块 API参考: api-reference/message_convert.md
+            - 工具调用处理模块 API参考: api-reference/tool_calling.md
+            - 状态图编排模块 API参考: api-reference/pipeline.md
+          
+          

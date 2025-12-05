@@ -5,26 +5,26 @@
 </p>
 
 <p align="center">
-  📚 <a href="https://tbice123123.github.io/langchain-dev-utils-docs/en/">English</a> • 
-  <a href="https://tbice123123.github.io/langchain-dev-utils-docs/zh/">中文</a>
+  📚 <a href="https://tbice123123.github.io/langchain-dev-utils/">English</a> • 
+  <a href="https://tbice123123.github.io/langchain-dev-utils/zh/">中文</a>
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/en/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils/)
 
-> This is the English version. For the Chinese version, please visit [Chinese Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README_cn.md)
+> This is the English version. For the Chinese version, please visit [中文文档](https://github.com/TBice123123/langchain-dev-utils/blob/master/README_cn.md)
 
-**langchain-dev-utils** is a utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions that can both reduce repetitive code writing and improve code consistency and readability. By simplifying development workflows, this library helps you prototype faster, iterate more smoothly, and create clearer, more reliable LLM-based AI applications.
+**langchain-dev-utils** is a utility library focused on enhancing the development experience of LangChain and LangGraph. It provides a series of ready-to-use utility functions that can reduce repetitive code writing and improve code consistency and readability. By simplifying the development workflow, this library can help you build prototypes faster, iterate more smoothly, and create clearer and more reliable AI applications based on large language models.
 
 ## 🚀 Installation
 
 ```bash
 pip install -U langchain-dev-utils
 
-# Install the full-featured version:
+# Install full-featured version:
 pip install -U langchain-dev-utils[standard]
 ```
 
@@ -32,16 +32,16 @@ pip install -U langchain-dev-utils[standard]
 
 ### 1. **Model Management**
 
-In `langchain`, the `init_chat_model`/`init_embeddings` functions can be used to initialize chat model instances/embedding model instances, but the model providers they support are relatively limited. This module provides a registration function (`register_model_provider`/`register_embeddings_provider`) to register any model provider for subsequent model loading using `load_chat_model` / `load_embeddings`.
+In `langchain`, the `init_chat_model`/`init_embeddings` functions can be used to initialize chat model instances/embedding model instances, but they support a limited number of model providers. This module provides registration functions (`register_model_provider`/`register_embeddings_provider`) to easily register any model provider for later use with `load_chat_model` / `load_embeddings` for model loading.
 
 #### 1.1 Chat Model Management
 
-Mainly consists of the following two functions:
+There are two main functions:
 
 - `register_model_provider`: Register a chat model provider
 - `load_chat_model`: Load a chat model
 
-Example for integrating a qwen3-4b model deployed using `vllm`:
+Assuming you want to use the qwen3-4b model deployed with `vllm`, the reference code is as follows:
 
 ```python
 from langchain_dev_utils.chat_models import (
@@ -63,12 +63,12 @@ print(model.invoke("Hello"))
 
 #### 1.2 Embedding Model Management
 
-Mainly consists of the following two functions:
+There are two main functions:
 
 - `register_embeddings_provider`: Register an embedding model provider
 - `load_embeddings`: Load an embedding model
 
-Example for integrating a qwen3-embedding-4b model deployed using `vllm`:
+Assuming you want to use the qwen3-embedding-4b model deployed with `vllm`, the reference code is as follows:
 
 ```python
 from langchain_dev_utils.embeddings import register_embeddings_provider, load_embeddings
@@ -86,23 +86,21 @@ emb = embeddings.embed_query("Hello")
 print(emb)
 ```
 
-**For more information about model management, please refer to**: [Chat Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/chat.html), [Embedding Model Management](https://tbice123123.github.io/langchain-dev-utils-docs/en/model-management/embedding.html)
 
 ### 2. **Message Conversion**
 
 Includes the following features:
 
-- Merge reasoning content into the final response
+- Merge chain-of-thought content into final responses
 - Stream content merging
 - Content formatting tools
 
 #### 2.1 Stream Content Merging
 
-For stream responses obtained using `stream()` and `astream()`, you can use `merge_ai_message_chunk` to merge them into a final AIMessage.
+For streaming responses obtained using `stream()` and `astream()`, you can use `merge_ai_message_chunk` to merge them into a final AIMessage.
 
 ```python
 from langchain_dev_utils.message_convert import merge_ai_message_chunk
-
 chunks = list(model.stream("Hello"))
 merged = merge_ai_message_chunk(chunks)
 ```
@@ -120,7 +118,6 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**For more information about message conversion, please refer to**: [Message Process](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/message.html), [Formatting List Content](https://tbice123123.github.io/langchain-dev-utils-docs/en/message-conversion/format.html)
 
 ### 3. **Tool Calling**
 
@@ -140,10 +137,10 @@ from langchain_dev_utils.tool_calling import has_tool_calling, parse_tool_callin
 
 @tool
 def get_current_time() -> str:
-    """Get the current timestamp"""
+    """Get current timestamp"""
     return str(datetime.datetime.now().timestamp())
 
-response = model.bind_tools([get_current_time]).invoke("What time is it?")
+response = model.bind_tools([get_current_time]).invoke("What time is it now?")
 
 if has_tool_calling(response):
     name, args = parse_tool_calling(
@@ -167,24 +164,23 @@ import datetime
 @human_in_the_loop
 @tool
 def get_current_time() -> str:
-    """Get the current timestamp"""
+    """Get current timestamp"""
     return str(datetime.datetime.now().timestamp())
 ```
 
-**For more information about tool calling, please refer to**: [Add Human-in-the-Loop Support](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/human-in-the-loop.html), [Tool Call Handling](https://tbice123123.github.io/langchain-dev-utils-docs/en/tool-calling/tool.html)
 
 ### 4. **Agent Development**
 
-Includes the following capabilities:
+Includes the following features:
 
-- Multi-agent construction  
-- Commonly used middleware components  
+- Multi-agent construction
+- Common middleware components
 
 #### 4.1 Multi-Agent Construction
 
-Wrapping an agent as a tool is a common implementation pattern in multi-agent systems, as elaborated in the official LangChain documentation. To support this pattern, this library provides a pre-built utility function `wrap_agent_as_tool`, which encapsulates an agent instance into a tool that can be invoked by other agents.
+Wrapping agents as tools is a common implementation pattern in multi-agent systems, which is detailed in the official LangChain documentation. To this end, this library provides a pre-built function `wrap_agent_as_tool` to implement this pattern, which can wrap an agent instance into a tool that can be called by other agents.
 
-**Usage Example**:
+Usage example:
 
 ```python
 import datetime
@@ -193,7 +189,7 @@ from langchain.agents import AgentState
 
 @tool
 def get_current_time() -> str:
-    """Get the current time"""
+    """Get current time"""
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 time_agent = create_agent("vllm:qwen3-4b", tools=[get_current_time], name="time-agent")
@@ -212,10 +208,11 @@ print(response)
 
 #### 4.2 Middleware
 
-Provides several commonly used middleware components. Below are examples using `ToolCallRepairMiddleware` and `PlanMiddleware`.
+Provides some common middleware components. Below are examples using `ToolCallRepairMiddleware` and `PlanMiddleware`.
 
-- `ToolCallRepairMiddleware` automatically repairs malformed tool calls found in the model's `invalid_tool_calls` output.
-- `PlanMiddleware` enables task planning capabilities for agents.
+`ToolCallRepairMiddleware` is used to fix `invaild_tool_calls` content from large models.
+
+`PlanMiddleware` is used for agent planning.
 
 ```python
 from langchain_dev_utils.agents.middleware import (
@@ -223,33 +220,28 @@ from langchain_dev_utils.agents.middleware import (
     PlanMiddleware,
 )
 
-agent = create_agent(
+agent=create_agent(
     "vllm:qwen3-4b",
     name="plan-agent",
-    middleware=[
-        ToolCallRepairMiddleware(),
-        PlanMiddleware(use_read_plan_tool=False)
-    ]
+    middleware=[ToolCallRepairMiddleware(), PlanMiddleware(
+        use_read_plan_tool=False
+    )]
 )
-response = agent.invoke({"messages": [{"role": "user", "content": "Give me a travel plan for visiting New York."}]})
+response = agent.invoke({"messages": [{"role": "user", "content": "Give me a travel plan to New York"}]}))
 print(response)
 ```
-
-**For more details on agent development and a complete list of built-in middleware, please refer to**:  
-[Multi-Agent Construction](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/multi-agent.html),  
-[Middleware](https://tbice123123.github.io/langchain-dev-utils-docs/en/agent-development/middleware.html)
 
 
 ### 5. **State Graph Orchestration**
 
-Includes the following capabilities:
+Includes the following features:
 
 - Sequential graph orchestration
 - Parallel graph orchestration
 
 #### 5.1 Sequential Graph Orchestration
 
-Use `create_sequential_pipeline` to orchestrate multiple subgraphs in sequential order:
+Using `create_sequential_pipeline`, you can orchestrate multiple subgraphs in sequence:
 
 ```python
 from langchain.agents import AgentState
@@ -264,25 +256,25 @@ register_model_provider(
     base_url="http://localhost:8000/v1",
 )
 
-# Build a sequential pipeline (all subgraphs executed in order)
+# Build sequential pipeline (all subgraphs execute in sequence)
 graph = create_sequential_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_time],
-            system_prompt="You are a time-query assistant. You can only answer questions about the current time. If the question is unrelated to time, respond with 'I cannot answer that.'",
+            system_prompt="You are a time query assistant, you can only answer the current time. If this question is not related to time, please directly answer that you cannot answer",
             name="time_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_weather],
-            system_prompt="You are a weather-query assistant. You can only answer questions about the current weather. If the question is unrelated to weather, respond with 'I cannot answer that.'",
+            system_prompt="You are a weather query assistant, you can only answer the current weather. If this question is not related to weather, please directly answer that you cannot answer",
             name="weather_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_user],
-            system_prompt="You are a user-query assistant. You can only answer questions about the current user. If the question is unrelated to the user, respond with 'I cannot answer that.'",
+            system_prompt="You are a user query assistant, you can only answer the current user. If this question is not related to users, please directly answer that you cannot answer",
             name="user_agent",
         ),
     ],
@@ -295,44 +287,42 @@ print(response)
 
 #### 5.2 Parallel Graph Orchestration
 
-Use `create_parallel_pipeline` to orchestrate multiple subgraphs in parallel:
+Using `create_parallel_pipeline`, you can orchestrate multiple subgraphs in parallel:
 
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline
 
-# Build a parallel pipeline (all subgraphs executed concurrently)
+# Build parallel pipeline (all subgraphs execute in parallel)
 graph = create_parallel_pipeline(
     sub_graphs=[
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_time],
-            system_prompt="You are a time-query assistant. You can only answer questions about the current time. If the question is unrelated to time, respond with 'I cannot answer that.'",
+            system_prompt="You are a time query assistant, you can only answer the current time. If this question is not related to time, please directly answer that you cannot answer",
             name="time_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_weather],
-            system_prompt="You are a weather-query assistant. You can only answer questions about the current weather. If the question is unrelated to weather, respond with 'I cannot answer that.'",
+            system_prompt="You are a weather query assistant, you can only answer the current weather. If this question is not related to weather, please directly answer that you cannot answer",
             name="weather_agent",
         ),
         create_agent(
             model="vllm:qwen3-4b",
             tools=[get_current_user],
-            system_prompt="You are a user-query assistant. You can only answer questions about the current user. If the question is unrelated to the user, respond with 'I cannot answer that.'",
+            system_prompt="You are a user query assistant, you can only answer the current user. If this question is not related to users, please directly answer that you cannot answer",
             name="user_agent",
         ),
     ],
     state_schema=AgentState,
 )
-
 response = graph.invoke({"messages": [HumanMessage("Hello")]})
 print(response)
 ```
 
-**For more information about state graph orchestration, please refer to**: [State Graph Orchestration](https://tbice123123.github.io/langchain-dev-utils-docs/en/graph-orchestration/pipeline.html)
 
 ## 💬 Join the Community
 
 - [GitHub Repository](https://github.com/TBice123123/langchain-dev-utils) — Browse source code, submit Pull Requests
 - [Issue Tracker](https://github.com/TBice123123/langchain-dev-utils/issues) — Report bugs or suggest improvements
-- We welcome contributions in all forms — whether code, documentation, or usage examples. Let's build a more powerful and practical LangChain development ecosystem together!
+- We welcome all forms of contributions — whether code, documentation, or usage examples. Let's build a more powerful and practical LangChain development ecosystem together

@@ -5,15 +5,15 @@
 </p>
 
 <p align="center">
-  📚 <a href="https://tbice123123.github.io/langchain-dev-utils-docs/en/">English</a> • 
-  <a href="https://tbice123123.github.io/langchain-dev-utils-docs/zh/">中文</a>
+  📚 <a href="https://tbice123123.github.io/langchain-dev-utils/">English</a> • 
+  <a href="https://tbice123123.github.io/langchain-dev-utils/zh/">中文</a>
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils-docs/zh/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils/zh/)
 
 > 当前为中文版，英文版请访问[English Documentation](https://github.com/TBice123123/langchain-dev-utils/blob/master/README.md)
 
@@ -86,7 +86,6 @@ emb = embeddings.embed_query("Hello")
 print(emb)
 ```
 
-**对于更多关于模型管理的相关介绍，请参考**: [对话模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/chat.html)、[嵌入模型管理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/model-management/embedding.html)
 
 ### 2. **消息转换**
 
@@ -119,7 +118,6 @@ text = format_sequence([
 ], separator="\n", with_num=True)
 ```
 
-**对于更多关于消息转换的相关介绍，请参考**: [消息处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/message.html),[格式化列表内容](https://tbice123123.github.io/langchain-dev-utils-docs/zh/message-conversion/format.html)
 
 ### 3. **工具调用**
 
@@ -170,7 +168,6 @@ def get_current_time() -> str:
     return str(datetime.datetime.now().timestamp())
 ```
 
-**对于更多关于工具调用的相关介绍，请参考**: [添加人在回路支持](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/human-in-the-loop.html),[工具调用处理](https://tbice123123.github.io/langchain-dev-utils-docs/zh/tool-calling/tool.html)
 
 ### 4. **智能体开发**
 
@@ -234,7 +231,6 @@ response = agent.invoke({"messages": [{"role": "user", "content": "给我一个�
 print(response)
 ```
 
-**对于更多关于智能体开发以及所有的内置中间件的相关介绍，请参考**: [多智能体构建](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/multi-agent.html),[中间件](https://tbice123123.github.io/langchain-dev-utils-docs/zh/agent-development/middleware.html)
 
 ### 5. **状态图编排**
 
@@ -324,7 +320,6 @@ response = graph.invoke({"messages": [HumanMessage("你好")]})
 print(response)
 ```
 
-**对于更多关于状态图编排的相关介绍，请参考**: [状态图编排](https://tbice123123.github.io/langchain-dev-utils-docs/zh/graph-orchestration/pipeline.html)
 
 ## 💬 加入社区
 
