@@ -11,3 +11,5 @@ wheels/
 .env
 .benchmarks
 data/
+node_modules
+dist

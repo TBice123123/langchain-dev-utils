@@ -1,4 +1,4 @@
-from typing import Any, NotRequired, Optional, TypedDict, cast
+from typing import Any, Optional, cast
 
 from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -9,17 +9,10 @@ from langchain_dev_utils._utils import (
     _get_base_url_field_name,
 )
 
-from .types import ChatModelType, CompatibilityOptions
+from .types import ChatModelProvider, ChatModelType, CompatibilityOptions
+
 
 _MODEL_PROVIDERS_DICT = {}
-
-
-class ChatModelProvider(TypedDict):
-    provider_name: str
-    chat_model: ChatModelType
-    base_url: NotRequired[str]
-    model_profiles: NotRequired[dict[str, dict[str, Any]]]
-    compatibility_options: NotRequired[CompatibilityOptions]
 
 
 def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:

@@ -1,4 +1,4 @@
-from typing import Literal, NotRequired, TypedDict, Union
+from typing import Any, Literal, NotRequired, TypedDict, Union
 
 from langchain_core.language_models.chat_models import BaseChatModel
 
@@ -17,3 +17,11 @@ class CompatibilityOptions(TypedDict):
     supported_response_format: NotRequired[ResponseFormatType]
     reasoning_keep_policy: NotRequired[ReasoningKeepPolicy]
     include_usage: NotRequired[bool]
+
+
+class ChatModelProvider(TypedDict):
+    provider_name: str
+    chat_model: ChatModelType
+    base_url: NotRequired[str]
+    model_profiles: NotRequired[dict[str, dict[str, Any]]]
+    compatibility_options: NotRequired[CompatibilityOptions]
