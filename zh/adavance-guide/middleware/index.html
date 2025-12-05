@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="页眉">
     <a href="../../" title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  安装
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started-guide/chat/" class="md-tabs__link">
+          
+  
+  
+  入门指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../multi-agent/" class="md-tabs__link">
+          
+  
+  
+  高级指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API 参考
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../" title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -269,12 +414,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -465,15 +617,23 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -722,12 +882,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1025,55 +1192,22 @@
 
 
 <h1 id="_1">中间件</h1>
-<blockquote>
-<p>[!NOTE]</p>
-<p><strong>功能概述</strong>：提供方便进行 Agent 开发的实用工具。</p>
-<p><strong>前置要求</strong>：了解 langchain 的<a href="https://docs.langchain.com/oss/python/langchain/middleware">中间件</a>。</p>
-<p><strong>预计阅读时间</strong>：12 分钟</p>
-</blockquote>
 <h2 id="_2">概述</h2>
 <p>中间件是专门针对<code>langchain</code>预构建的 Agent 而构建的组件。官方提供了一些内置的中间件。本库则根据实际情况和本库的使用场景，提供了更多的中间件。</p>
 <h2 id="_3">任务规划</h2>
 <p>任务规划的中间件，用于在执行复杂任务前进行结构化分解与过程管理。</p>
-<p>::: tip 📝
-任务规划是一种高效的上下文工程管理策略。在执行任务之前，大模型首先将整体任务拆解为多个有序的子任务，形成任务规划列表（在本库中称为 plan）。随后按顺序执行各子任务，并在每完成一个步骤后动态更新任务状态，直至所有子任务执行完毕。
-:::</p>
-<p>实现任务规划的中间件为<code>PlanMiddleware</code> ，其参数说明如下:</p>
-<p><Params
-name="system_prompt"
-type="string"
-description="可选字符串类型，系统提示词。"
-:required="false"
-:default="null"
-/>
-<Params 
-name="write_plan_tool_description"
-type="string"
-description="可选字符串类型，写计划工具的描述。"
-:required="false"
-:default="null"
-/>
-<Params 
-name="finish_sub_plan_tool_description"
-type="string"
-description="可选字符串类型，完成子计划工具的描述。"
-:required="false"
-:default="null"
-/>
-<Params 
-name="read_plan_tool_description"
-type="string"
-description="可选字符串类型，读计划工具的描述。"
-:required="false"
-:default="null"
-/>
-<Params 
-name="use_read_plan_tool"
-type="bool"
-description="可选布尔类型，是否使用读计划工具。"
-:required="false"
-:default="true"
-/></p>
+<div class="admonition note">
+<p class="admonition-title">补充</p>
+<p>任务规划是一种高效的上下文工程管理策略。在执行任务之前，大模型首先将整体任务拆解为多个有序的子任务，形成任务规划列表（在本库中称为 plan）。随后按顺序执行各子任务，并在每完成一个步骤后动态更新任务状态，直至所有子任务执行完毕。</p>
+</div>
+<p>实现任务规划的中间件为<code>PlanMiddleware</code>，其中接收以下参数：</p>
+<ul>
+<li><code>system_prompt</code>：可选字符串类型，系统提示词。默认值为 <code>None</code>，将使用默认的系统提示词。</li>
+<li><code>write_plan_tool_description</code>：可选字符串类型，写计划工具的描述。默认值为 <code>None</code>，将使用默认的写计划工具描述。</li>
+<li><code>finish_sub_plan_tool_description</code>：可选字符串类型，完成子计划工具的描述。默认值为 <code>None</code>，将使用默认的完成子计划工具描述。</li>
+<li><code>read_plan_tool_description</code>：可选字符串类型，读计划工具的描述。默认值为 <code>None</code>，将使用默认的读计划工具描述。</li>
+<li><code>use_read_plan_tool</code>：可选布尔类型，是否使用读计划工具。默认值为 <code>True</code>，将启用读计划工具。</li>
+</ul>
 <p><strong>使用示例</strong>：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlanMiddleware</span>
 
@@ -1100,21 +1234,7 @@ description="可选布尔类型，是否使用读计划工具。"
 <li><code>create_finish_sub_plan_tool</code>：创建一个用于完成子任务的工具的函数</li>
 <li><code>create_read_plan_tool</code>：创建一个用于查询计划的工具的函数</li>
 </ul>
-<p>这三个函数接收的参数如下:</p>
-<p><Params
-name="description"
-type="string"
-description="工具描述,如果不传则采用默认的工具描述。"
-:required="false"
-:default="null"
-/>
-<Params
-name="message_key"
-type="string"
-description="用于更新 messages 的键，若不传入则使用默认的 messages（read_plan 工具无此参数）。"
-:required="false"
-:default="null"
-/></p>
+<p>这三个函数都可以接收一个<code>description</code>参数,用于自定义工具的描述。如果不传入,则采用默认的工具描述。其中<code>create_write_plan_tool</code>和<code>create_finish_sub_plan_tool</code>还可以接收一个<code>message_key</code>参数,用于自定义更新 messages 的键。如果不传入,则采用默认的<code>messages</code>键。</p>
 <p><strong>使用示例</strong>：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.plan</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">create_write_plan_tool</span><span class="p">,</span>
@@ -1130,39 +1250,24 @@ description="用于更新 messages 的键，若不传入则使用默认的 messa
 <span class="p">)</span>
 </code></pre></div>
 <p>需要注意的是,要使用这三个工具,你必须要保证状态 Schema 中包含 plan 这个键,否则会报错,对此你可以使用本库提供的<code>PlanState</code>来继承状态 Schema。</p>
-<p><BestPractice></p>
+<div class="admonition note">
+<p class="admonition-title">最佳实践</p>
 <p>一、使用 <code>create_agent</code> 时：</p>
 <p>推荐直接使用 <code>PlanMiddleware</code>，而不是手动传入 <code>write_plan</code>、<code>finish_sub_plan</code>、<code>read_plan</code> 这三个工具。</p>
 <p>原因：中间件已自动处理提示词构造和智能体状态管理，能显著降低使用复杂度。</p>
 <p>注意：由于 <code>create_agent</code> 的模型输出固定更新到 <code>messages</code> 键，因此 <code>PlanMiddleware</code> 没有 <code>message_key</code> 参数。</p>
 <p>二、使用 <code>langgraph</code> 时：</p>
 <p>推荐直接使用这三个工具 (<code>write_plan</code>, <code>finish_sub_plan</code>, <code>read_plan</code>)。</p>
-<p>原因：这种方式能更好地融入 <code>langgraph</code> 的自定义节点和状态管理。
-</BestPractice></p>
+<p>原因：这种方式能更好地融入 <code>langgraph</code> 的自定义节点和状态管理。</p>
+</div>
 <h2 id="_4">模型路由</h2>
 <p><code>ModelRouterMiddleware</code> 是一个用于<strong>根据输入内容动态路由到最适配模型</strong>的中间件。它通过一个“路由模型”分析用户请求，从预定义的模型列表中选择最适合当前任务的模型进行处理。</p>
-<p>其参数如下:</p>
-<p><Params
-name="router_model"
-type="BaseChatModel | string"
-description="用于执行路由决策的模型。可以传入字符串（将通过 load_chat_model 自动加载），例如 vllm:qwen3-4b；或直接传入已实例化的 BaseChatModel 对象。"
-:required="true"
-:default="null"
-/>
-<Params
-name="model_list"
-type="list[dict]"
-description="一个模型配置列表，每个元素是一个字典，需包含 model_name (str), model_description (str)，以及可选的 tools (list[BaseTool]), model_kwargs (dict), model_system_prompt (str)。"
-:required="true"
-:default="null"
-/>
-<Params
-name="router_prompt"
-type="string"
-description="自定义路由模型的提示词。若为 None（默认），则使用内置的默认提示模板。"
-:required="false"
-:default="null"
-/></p>
+<p>其参数如下：</p>
+<ul>
+<li><code>router_model</code>：用于执行路由决策的模型。可以传入字符串（将通过 <code>load_chat_model</code> 自动加载），例如 <code>vllm:qwen3-4b</code>；或直接传入已实例化的 <code>BaseChatModel</code> 对象。</li>
+<li><code>model_list</code>：一个模型配置列表，每个元素是一个字典，需包含 <code>model_name</code> (str), <code>model_description</code> (str)，以及可选的 <code>tools</code> (list[BaseTool]), <code>model_kwargs</code> (dict), <code>model_system_prompt</code> (str)。</li>
+<li><code>router_prompt</code>：自定义路由模型的提示词。若为 <code>None</code>（默认），则使用内置的默认提示模板。</li>
+</ul>
 <p><strong>使用示例</strong></p>
 <p>首先定义模型列表：</p>
 <div class="highlight"><pre><span></span><code><span class="n">model_list</span> <span class="o">=</span> <span class="p">[</span>
@@ -1207,18 +1312,19 @@ description="自定义路由模型的提示词。若为 None（默认），则�
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>通过 <code>ModelRouterMiddleware</code>，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。</p>
-<p>::: info 工具权限配置<br />
-<code>model_list</code> 中每个模型的工具权限，由其 <code>tools</code> 字段的配置决定，此配置遵循以下规则：</p>
+<div class="admonition info">
+<p class="admonition-title">工具权限配置</p>
+<p><code>model_list</code> 中每个模型的工具权限，由其 <code>tools</code> 字段的配置决定，此配置遵循以下规则：</p>
 <ul>
 <li><strong>未定义时</strong>：模型继承 <code>create_agent</code> 参数<code>tools</code>载入的全部工具。</li>
 <li><strong>定义为空列表 []</strong>：模型被显式禁用所有工具。</li>
 <li><strong>定义为非空列表 [tool1, tool2, ...]</strong>：此列表充当“工具白名单”，模型被严格限制仅能调用名单内的工具。所有在此指定的工具，必须已预先载入至 <code>create_agent</code>参数<code>tools</code>中。</li>
 </ul>
-<p>:::</p>
+</div>
 <h2 id="_5">工具调用修复</h2>
 <p><code>ToolCallRepairMiddleware</code> 是一个<strong>自动修复大模型无效工具调用（<code>invalid_tool_calls</code>）</strong>的中间件。</p>
 <p>大模型在输出工具调用的 JSON Schema 时，可能因模型自身原因生成JSON格式错误的内容(错误的内容常见于<code>arguments</code> 字段)，导致 JSON 解析失败。这类调用会被存到 <code>invalid_tool_calls</code>字段中。<code>ToolCallRepairMiddleware</code> 会在模型返回结果后自动检测 <code>invalid_tool_calls</code>，并尝试调用 <code>json-repair</code> 进行修复，使工具调用得以正常执行。</p>
-<p>请确保已安装 <code>langchain-dev-utils[standard]</code>，详见<a href="../../installation/">安装指南</a>。</p>
+<p>请确保已安装 <code>langchain-dev-utils[standard]</code>，详见<strong>安装指南</strong>。</p>
 <p>该中间件零配置开箱即用，无需额外参数。</p>
 <p><strong>使用示例：</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolCallRepairMiddleware</span>
@@ -1231,47 +1337,60 @@ description="自定义路由模型的提示词。若为 None（默认），则�
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>::: warning 注意
-本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 <code>json-repair</code> 的修复能力；此外，它仅作用于 <code>invalid_tool_calls</code> 字段中的无效工具调用内容。
-:::</p>
-<p>::: info 注意
-除此之外，本库还扩充了以下中间件通过字符串参数指定模型的功能：
-- SummarizationMiddleware
-- LLMToolSelectorMiddleware
-- ModelFallbackMiddleware
-- LLMToolEmulator</p>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p>本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 <code>json-repair</code> 的修复能力；此外，它仅作用于 <code>invalid_tool_calls</code> 字段中的无效工具调用内容。</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">注意</p>
+<p>除此之外，本库还扩充了以下中间件通过字符串参数指定模型的功能：</p>
+<ul>
+<li>
+<p>SummarizationMiddleware</p>
+</li>
+<li>
+<p>LLMToolSelectorMiddleware</p>
+</li>
+<li>
+<p>ModelFallbackMiddleware</p>
+</li>
+<li>
+<p>LLMToolEmulator</p>
+</li>
+</ul>
 <p>你只需要导入本库中的这些中间件，即可使用字符串指定已经被<code>register_model_provider</code>注册的模型。中间件使用方法和官方中间件保持一致，例如：
-```python
-from langchain_core.messages import AIMessage
-from langchain_dev_utils.agents.middleware import SummarizationMiddleware
-from langchain_dev_utils.chat_models import register_model_provider</p>
-<p>register_model_provider(
-    provider_name="vllm",
-    chat_model="openai-compatible",
-    base_url="http://localhost:8000/v1",
-)
-agent = create_agent(
-    model="vllm:qwen3-4b",
-    middleware=[
-        SummarizationMiddleware(
-            model="vllm:qwen3-4b",
-            trigger=("tokens", 50),
-            keep=("messages", 1),
-        )
-    ],
-    system_prompt="你是一个智能的AI助手，可以解决用户的问题",
-)</p>
-<h1 id="big_text">big_text 是一个包含大量内容的文本，这里省略</h1>
-<p>big_messages = [
-    HumanMessage(content="你好，你是谁"),
-    AIMessage(content="我是你的AI助手"),
-    HumanMessage(content="写一段优美的长文本"),
-    AIMessage(content=f"好的，我会写一段优美的长文本，内容是：{big_text}"),
-    HumanMessage(content="你为啥要写这段长文本呢？"),
-]
-response = agent.invoke({"messages": big_messages})
-print(response)
-:::</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizationMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">SummarizationMiddleware</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+            <span class="n">trigger</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="n">keep</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个智能的AI助手，可以解决用户的问题&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># big_text 是一个包含大量内容的文本，这里省略</span>
+<span class="n">big_messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好，你是谁&quot;</span><span class="p">),</span>
+    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;我是你的AI助手&quot;</span><span class="p">),</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;写一段优美的长文本&quot;</span><span class="p">),</span>
+    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;好的，我会写一段优美的长文本，内容是：</span><span class="si">{</span><span class="n">big_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你为啥要写这段长文本呢？&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">big_messages</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
 
 
 
@@ -1289,8 +1408,16 @@ print(response)
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
         
       </main>
       
@@ -1321,7 +1448,7 @@ print(response)
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>

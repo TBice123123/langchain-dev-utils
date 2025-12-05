@@ -33,6 +33,9 @@
     
       <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -59,7 +62,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -68,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#what-is-langchain-dev-utils" class="md-skip">
+        <a href="#langchain-dev-utils" class="md-skip">
           Skip to content
         </a>
       
@@ -80,9 +90,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -110,6 +118,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -164,6 +198,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Index
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="getting-started-guide/chat/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="adavance-guide/multi-agent/" class="md-tabs__link">
+          
+  
+  
+  Advanced Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -177,8 +320,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -281,17 +426,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#key-features" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -358,12 +492,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -552,12 +693,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -718,12 +866,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -968,17 +1123,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#key-features" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1020,37 +1164,36 @@
   
 
 
-<h1 id="what-is-langchain-dev-utils">What is langchain-dev-utils?</h1>
-<p>Building complex large language model applications with LangChain and LangGraph isn't always efficient, as developers often need to write substantial boilerplate code for common functionalities. To help developers focus more on core business logic, <code>langchain-dev-utils</code> was created.</p>
-<p>This is a lightweight yet practical utility library focused on enhancing the development experience with LangChain and LangGraph. It provides a series of out-of-the-box utility functions, thereby reducing repetitive code and improving code consistency and readability. By streamlining the development process, <code>langchain-dev-utils</code> enables you to prototype features faster and iterate more smoothly, helping you build clearer and more reliable AI-powered applications.</p>
+<h1 id="langchain-dev-utils">🦜️🧰 langchain-dev-utils</h1>
+<p align="center">
+    <em>A utility library for LangChain and LangGraph development.</em>
+</p>
+
+<p><a href="https://pypi.org/project/langchain-dev-utils/"><img alt="PyPI" src="https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&amp;label=pypi%20package" /></a>
+<a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<a href="https://www.python.org/downloads"><img alt="Python" src="https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058" /></a>
+<a href="https://pepy.tech/project/langchain-dev-utils"><img alt="Downloads" src="https://static.pepy.tech/badge/langchain-dev-utils/month" /></a></p>
+<p>When building complex large language model applications with LangChain and LangGraph, the development process is not always efficient, and developers often need to write a lot of boilerplate code for regular functionality. To help developers focus more on writing core business logic, <code>langchain-dev-utils</code> was created.</p>
+<p>This is a lightweight but practical utility library focused on improving the development experience of LangChain and LangGraph. It provides a series of ready-to-use practical utility functions, thereby reducing repetitive code and enhancing code consistency and readability. By simplifying the development path, <code>langchain-dev-utils</code> enables you to implement functional prototypes faster, iterate more smoothly, and helps build clearer and more reliable AI large model applications.</p>
 <h2 id="use-cases">Use Cases</h2>
 <ul>
-<li><strong>General LLM Applications</strong></li>
+<li><strong>Regular Large Language Model Applications</strong></li>
 </ul>
-<p><code>langchain-dev-utils</code> offers a range of ready-to-use tools that can significantly boost development efficiency for LLM applications. For example, its model management module allows developers to specify model providers directly using strings, which is particularly useful for scenarios requiring dynamic model specification or integration of models from multiple different providers.</p>
+<p><code>langchain-dev-utils</code> provides a series of ready-to-use tools that can significantly improve the development efficiency of large language model applications. For example, its model management module allows developers to directly specify model providers using strings, which is particularly suitable for scenarios that require dynamically specifying models or need to integrate models from multiple different providers.</p>
 <ul>
 <li><strong>Complex Agent Development</strong></li>
 </ul>
-<p><code>langchain-dev-utils</code> provides deeply optimized support for complex agent applications. The toolkit not only includes richer agent middleware but also further encapsulates the tool calling process. Additionally, it specifically offers two efficient pipeline utility functions to facilitate the orchestration and composition of multiple independent agents.</p>
-<h2 id="documentation">Documentation</h2>
-<p><code>langchain-dev-utils</code> contains the following five modules. The first four are primarily used with <code>langchain</code>, while the last is mainly for <code>langgraph</code>.</p>
-<ul>
-<li><strong><a href="./model-management/chat.md">Model Management</a></strong> - Provides a unified registration and management approach, making it convenient for developers to use chat and embedding models.</li>
-<li><strong><a href="./message-conversion/message.md">Message Conversion</a></strong> - Provides utility functions related to the Message class, including chain-of-thought concatenation, chunk merging, list string formatting, and more.</li>
-<li><strong><a href="./tool-calling/tool.md">Tool Calling</a></strong> - Provides utility functions related to tool calling, including tool call detection and parameter parsing, and adding human review to tool calls.</li>
-<li><strong><a href="./agent-development/multi-agent.md">Agent Development</a></strong> - Provides utility functions to facilitate Agent development, including further encapsulation of official Agent creation functions and common middleware.</li>
-<li><strong><a href="./graph-orchestration/pipeline.md">State Graph Orchestration Pipeline</a></strong> - Provides pipeline utility functions to combine multiple state subgraphs (StateGraph) in parallel or serial.</li>
-</ul>
+<p><code>langchain-dev-utils</code> provides deep optimization support for complex agent applications. This toolset not only offers richer agent middleware but also further encapsulates the tool calling process. Additionally, it specifically provides two efficient pipeline utility functions to facilitate the orchestration and combination of multiple independent agents.</p>
 <h2 id="key-features">Key Features</h2>
 <ul>
-<li><strong>Unified Model Management Mechanism</strong>: Simplifies model invocation and switching through centralized registration and management of Chat and Embeddings models, enhancing development efficiency.</li>
-<li><strong>More Flexible Message Handling</strong>: Offers rich Message class utility functions, supporting chain-of-thought concatenation, streaming chunk merging, message formatting, etc., facilitating the construction of complex dialogue logic.</li>
-<li><strong>More Powerful Tool Calling Support</strong>: Built-in capabilities for tool call detection, parameter parsing, and human review intervention, enhancing the security and controllability of Agent interactions with external tools.</li>
-<li><strong>More Efficient Agent Development</strong>: Encapsulates the official Agent creation process and integrates common middleware, accelerating the construction and iteration of agents.</li>
-<li><strong>More Flexible State Graph Composition</strong>: Supports combining multiple StateGraphs in serial or parallel, enabling the visualization and modular orchestration of complex workflows.</li>
+<li><strong>Unified Model Management Mechanism</strong>: Simplify model invocation and switching through centralized registration and management of Chat and Embeddings models, improving development efficiency.</li>
+<li><strong>More Flexible Message Processing</strong>: Provide rich Message class utility functions, supporting chain-of-thought concatenation, streaming chunk merging, message formatting, etc., facilitating the construction of complex dialogue logic.</li>
+<li><strong>More Powerful Tool Calling Support</strong>: Built-in tool calling detection, parameter parsing, and human review intervention capabilities, enhancing the security and controllability of Agent interactions with external tools.</li>
+<li><strong>More Efficient Agent Development</strong>: Encapsulate the official Agent creation process, integrate commonly used middleware, and accelerate the construction and iteration of intelligent agents.</li>
+<li><strong>More Flexible StateGraph Composition</strong>: Support combining multiple StateGraphs in serial or parallel ways, enabling visualization and modular orchestration of complex workflows.</li>
 </ul>
 <h2 id="github-repository">GitHub Repository</h2>
-<p>Visit the <a href="https://github.com/TBice123123/langchain-dev-utils">GitHub repository</a> to view the source code and issues.</p>
+<p>Visit the <a href="https://github.com/TBice123123/langchain-dev-utils">GitHub Repository</a> to view source code and issues.</p>
 
 
 
@@ -1068,8 +1211,16 @@
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1100,7 +1251,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": [], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>

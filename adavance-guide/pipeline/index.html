@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Index
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started-guide/chat/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../multi-agent/" class="md-tabs__link">
+          
+  
+  
+  Advanced Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -269,12 +414,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -465,15 +617,23 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -655,6 +815,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Parallel Orchestration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-branch-functions-to-specify-parallelly-executed-subgraphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Branch Functions to Specify Parallelly Executed Subgraphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -711,12 +899,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -980,6 +1175,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Parallel Orchestration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-branch-functions-to-specify-parallelly-executed-subgraphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Branch Functions to Specify Parallelly Executed Subgraphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1003,101 +1226,28 @@
 
 
 <h1 id="state-graph-orchestration">State Graph Orchestration</h1>
-<blockquote>
-<p>[!NOTE]</p>
-<p><strong>Feature Overview</strong>: Primarily used for implementing parallel and serial combinations of multiple state graphs.</p>
-<p><strong>Prerequisites</strong>: Understanding of langchain's <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">Subgraphs</a> and <a href="https://docs.langchain.com/oss/python/langgraph/graph-api#send">Send</a>.</p>
-<p><strong>Estimated Reading Time</strong>: 8 minutes</p>
-</blockquote>
 <h2 id="overview">Overview</h2>
-<p>Provides utility tools for convenient state graph orchestration. Mainly includes the following functionalities:</p>
+<p>Provides practical utilities for state graph orchestration. Mainly includes the following features:</p>
 <ul>
-<li>Orchestrate multiple state graphs in a sequential manner to form a sequential workflow.</li>
-<li>Orchestrate multiple state graphs in a parallel manner to form a parallel workflow.</li>
+<li>Orchestrating multiple state graphs in a sequential manner to form a sequential workflow.</li>
+<li>Orchestrating multiple state graphs in a parallel manner to form a parallel workflow.</li>
 </ul>
 <h2 id="sequential-orchestration">Sequential Orchestration</h2>
-<p>Used for building agent sequential workflows (Sequential Pipeline). This is a work pattern that decomposes complex tasks into a series of continuous, ordered sub-tasks, and hands them over to different specialized agents for sequential processing.</p>
-<p>Implemented through the following function:</p>
-<ul>
-<li><code>create_sequential_pipeline</code> - Combines multiple state graphs in a sequential manner</li>
-</ul>
-<p>Its parameters are as follows:
-<Params
-name="sub_graphs"
-type="list[StateGraph | CompiledStateGraph]"
-description="List of state graphs to combine (must be StateGraph or CompiledStateGraph instances)"
-:required="true"
-:default="null"
-/>
-<Params
-name="state_schema"
-type="dict"
-description="State Schema of the final generated graph."
-:required="true"
-:default="null"
-/>
-<Params
-name="graph_name"
-type="string"
-description="Name of the final generated graph."
-:required="false"
-:default="null"
-/>
-<Params
-name="context_schema"
-type="dict"
-description="Context Schema of the final generated graph."
-:required="false"
-:default="null"
-/>
-<Params
-name="input_schema"
-type="dict"
-description="Input Schema of the final generated graph."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="output_schema"
-type="dict"
-description="Output Schema of the final generated graph."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="checkpoint"
-type="BaseCheckpointSaver"
-description="LangGraph's persistent Checkpoint."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="store"
-type="BaseStore"
-description="LangGraph's persistent Store."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="cache"
-type="BaseCache"
-description="LangGraph's Cache."
-:required="false"
-:default="null"
-/></p>
+<p>Used for building agent sequential pipelines. This is a work pattern that decomposes complex tasks into a series of continuous, ordered subtasks, which are then processed sequentially by different specialized agents.</p>
+<p>Multiple state graphs can be combined in a sequential orchestration manner through <code>create_sequential_pipeline</code>.</p>
 <p><strong>Usage Example</strong>:</p>
-<p>Developing a software project usually follows a strict linear process:
+<p>Developing a software project typically follows a strict linear process:
 1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed Product Requirements Document (PRD).
 2. Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.
-3. Code Writing: Next, the development engineer implements the blueprint into specific code according to the architecture design.
-4. Testing and Quality Assurance: Finally, the testing engineer verifies the code to ensure its quality meets requirements.
-This process is interlinked and the order cannot be reversed.</p>
-<p>For the above four processes, each process has a specialized agent responsible.
-1. Product Manager Agent: Receives user's vague requirements and outputs a structured Product Requirements Document (PRD).
+3. Code Writing: Next, the development engineer implements the blueprint as concrete code according to the architecture design.
+4. Testing &amp; Quality Assurance: Finally, the testing engineer verifies the code to ensure its quality meets requirements.
+This process is interconnected and the order cannot be reversed.</p>
+<p>For the above four processes, each process is handled by a specialized agent:
+1. Product Manager Agent: Receives vague user requirements and outputs a structured Product Requirements Document (PRD).
 2. Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.
 3. Development Engineer Agent: Receives the architecture solution and outputs executable source code.
 4. Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.</p>
-<p>Through the <code>create_sequential_pipeline</code> function, these four agents are seamlessly connected to form a highly automated software development pipeline with clear responsibilities.</p>
+<p>Through the <code>create_sequential_pipeline</code> function, these four agents are seamlessly connected to form a highly automated, clearly divided software development pipeline.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
@@ -1113,13 +1263,13 @@ This process is interlinked and the order cannot be reversed.</p>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyze_requirements</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze user requirements and generate detailed product requirements document&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze user requirements and generate a detailed product requirements document&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Based on user request &#39;</span><span class="si">{</span><span class="n">user_request</span><span class="si">}</span><span class="s2">&#39;, a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria.&quot;</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">design_architecture</span><span class="p">(</span><span class="n">requirements</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Design system architecture based on requirements document&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Based on the requirements document, system architecture has been designed, including microservice division, data flow diagrams, and technology stack selection.&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Based on the requirements document, system architecture has been designed, including microservice division, data flow diagram, and technology stack selection.&quot;</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_code</span><span class="p">(</span><span class="n">architecture</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -1165,118 +1315,44 @@ This process is interlinked and the order cannot be reversed.</p>
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Develop an e-commerce website with user registration, product browsing, and shopping cart functionality&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>The final generated graph structure is as follows:
-<img alt="Sequential Pipeline Diagram" src="/img/sequential.png" /></p>
-<p>::: tip 📝
-For sequentially combined graphs, langgraph's StateGraph provides the add_sequence method as a convenient syntax. This method is most suitable when nodes are functions (not subgraphs). If nodes are subgraphs, the code might look like this:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For serially combined graphs, LangGraph's StateGraph provides the add_sequence method as a convenient shorthand. This method works best when nodes are functions (not subgraphs). If nodes are subgraphs, the code might look like:</p>
 <div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">AgentState</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add_sequence</span><span class="p">([(</span><span class="s2">&quot;graph1&quot;</span><span class="p">,</span> <span class="n">graph1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph2&quot;</span><span class="p">,</span> <span class="n">graph2</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph3&quot;</span><span class="p">,</span> <span class="n">graph3</span><span class="p">)])</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;__start__&quot;</span><span class="p">,</span> <span class="s2">&quot;graph1&quot;</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 </code></pre></div>
-<p>However, the above syntax is still somewhat cumbersome. Therefore, it is more recommended to use the <code>create_sequential_pipeline</code> function, which can quickly build a sequential execution graph with one line of code, making it more concise and efficient.
-:::</p>
+<p>However, the above approach is still somewhat cumbersome. Therefore, using the <code>create_sequential_pipeline</code> function is recommended, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.</p>
+</div>
 <h2 id="parallel-orchestration">Parallel Orchestration</h2>
-<p>Used for building agent parallel workflows (Parallel Pipeline). Its working principle is to combine multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.</p>
-<p>Implemented through the following function:</p>
-<ul>
-<li><code>create_parallel_pipeline</code> - Combines multiple state graphs in a parallel manner</li>
-</ul>
-<p>Its parameters are as follows:</p>
-<p><Params
-name="sub_graphs"
-type="list[StateGraph | CompiledStateGraph]"
-description="List of state graphs to combine (must be StateGraph or CompiledStateGraph instances)."
-:required="true"
-:default="null"
-/>
-<Params
-name="state_schema"
-type="dict"
-description="State Schema of the final generated graph."
-:required="true"
-:default="null"
-/>
-<Params
-name="branches_fn"
-type="Callable[[Any], list[Send]]"
-description="Parallel branch function that receives state as input and returns a list of Send objects to control which subgraphs are executed in parallel."
-:required="false"
-:default="null"
-/>
-<Params
-name="graph_name"
-type="string"
-description="Name of the final generated graph."
-:required="false"
-:default="null"
-/>
-<Params
-name="context_schema"
-type="dict"
-description="Context Schema of the final generated graph."
-:required="false"
-:default="null"
-/>
-<Params
-name="input_schema"
-type="dict"
-description="Input Schema of the final generated graph."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="output_schema"
-type="dict"
-description="Output Schema of the final generated graph."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="checkpoint"
-type="BaseCheckpointSaver"
-description="LangGraph's persistent Checkpoint."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="store"
-type="BaseStore"
-description="LangGraph's persistent Store."
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="cache"
-type="BaseCache"
-description="LangGraph's Cache."
-:required="false"
-:default="null"
-/></p>
+<p>Used for building agent parallel workflows. It works by combining multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.</p>
+<p>Through the <code>create_parallel_pipeline</code> function, multiple state graphs can be combined in a parallel orchestration manner to achieve parallel task execution.</p>
+<h3 id="simple-example">Simple Example</h3>
 <p><strong>Usage Example</strong>:</p>
 <p>In software development, when the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.</p>
-<p>Suppose we want to develop an e-commerce website whose core functions can be divided into three independent modules:
+<p>Suppose we're developing an e-commerce website whose core functions can be divided into three independent modules:
 1. User Module (registration, login, personal center)
-2. Product Module (display, search, classification)
-3. Order Module (placing orders, payment, status query)</p>
-<p>If developed serially, the time consumption would be the sum of all three. But if developed in parallel, the total time consumption would be approximately equal to the development time of the longest module, greatly improving efficiency.</p>
-<p>Through the <code>create_parallel_pipeline</code> function, assign a specialized module development agent to each module, allowing them to work in parallel.</p>
+2. Product Module (display, search, categorization)
+3. Order Module (placing orders, payment, status inquiry)</p>
+<p>If developed serially, the time required would be the sum of all three modules. But if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.</p>
+<p>Through the <code>create_parallel_pipeline</code> function, assign a dedicated module development agent to each module, allowing them to work in parallel.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_pipeline</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">develop_user_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Develop user module functionality&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;User module development completed, including registration, login, and personal profile management functions.&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;User module development completed, including registration, login, and personal profile management features.&quot;</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">develop_product_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Develop product module functionality&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;Product module development completed, including product display, search, and classification functions.&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Product module development completed, including product display, search, and categorization features.&quot;</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">develop_order_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Develop order module functionality&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;Order module development completed, including order placement, payment, and order query functions.&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Order module development completed, including order placement, payment, and order inquiry features.&quot;</span>
 
 <span class="c1"># Build a parallel workflow (pipeline) for frontend module development</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
@@ -1305,12 +1381,11 @@ description="LangGraph's Cache."
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Parallel development of three core modules of an e-commerce website&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>The final generated graph structure is as follows:
-<img alt="Parallel Pipeline Diagram" src="/img/parallel.png" /></p>
-<p>Sometimes it's necessary to specify which subgraphs are executed in parallel based on conditions. In this case, a branch function can be used.
-The branch function needs to return a list of <code>Send</code>.</p>
+<h3 id="using-branch-functions-to-specify-parallelly-executed-subgraphs">Using Branch Functions to Specify Parallelly Executed Subgraphs</h3>
+<p>Sometimes it's necessary to specify which subgraphs to execute in parallel based on conditions. In such cases, branch functions can be used.
+The branch function needs to return a list of <code>Send</code> objects.</p>
 <p>For example, in the above case, suppose the modules to be developed are specified by the user, then only the specified modules will be executed in parallel.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Build a parallel pipeline (select subgraphs to execute in parallel based on conditions)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build a parallel pipeline (selecting subgraphs to execute in parallel based on conditions)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">DevAgentState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
@@ -1351,7 +1426,7 @@ The branch function needs to return a list of <code>Send</code>.</p>
 
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Develop some modules of an e-commerce website&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Develop some modules of the e-commerce website&quot;</span><span class="p">)],</span>
         <span class="s2">&quot;selected_modules&quot;</span><span class="p">:</span> <span class="n">select_modules</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">)</span>
@@ -1360,7 +1435,7 @@ The branch function needs to return a list of <code>Send</code>.</p>
 <p><strong>Important Notes</strong></p>
 <ul>
 <li>When the <code>branches_fn</code> parameter is not provided, all subgraphs will be executed in parallel.</li>
-<li>When the <code>branches_fn</code> parameter is provided, which subgraphs are executed is determined by the return value of this function.</li>
+<li>When the <code>branches_fn</code> parameter is provided, which subgraphs to execute is determined by the return value of this function.</li>
 </ul>
 
 
@@ -1379,8 +1454,16 @@ The branch function needs to return a list of <code>Send</code>.</p>
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1411,7 +1494,7 @@ The branch function needs to return a list of <code>Send</code>.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>

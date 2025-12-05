@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Index
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started-guide/chat/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../multi-agent/" class="md-tabs__link">
+          
+  
+  
+  Advanced Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -269,12 +414,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -465,15 +617,23 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -722,12 +882,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1025,55 +1192,22 @@
 
 
 <h1 id="middleware">Middleware</h1>
-<blockquote>
-<p>[!NOTE]</p>
-<p><strong>Function Overview</strong>: Provides practical tools for convenient Agent development.</p>
-<p><strong>Prerequisites</strong>: Understanding of langchain's <a href="https://docs.langchain.com/oss/python/langchain/middleware">middleware</a>.</p>
-<p><strong>Estimated Reading Time</strong>: 12 minutes</p>
-</blockquote>
 <h2 id="overview">Overview</h2>
-<p>Middleware is a component specifically built for pre-built <code>langchain</code> Agents. The official documentation provides some built-in middleware. This library, based on actual needs and usage scenarios, offers additional middleware.</p>
+<p>Middleware are components specifically built for pre-built Agents in <code>langchain</code>. The official library provides some built-in middleware. This library offers additional middleware based on practical needs and usage scenarios within this library.</p>
 <h2 id="task-planning">Task Planning</h2>
 <p>Task planning middleware is used for structured decomposition and process management before executing complex tasks.</p>
-<p>::: tip 📝
-Task planning is an efficient context engineering management strategy. Before executing a task, the large model first breaks down the overall task into multiple ordered subtasks, forming a task planning list (called "plan" in this library). Then it executes each subtask in sequence, dynamically updating the task status after completing each step, until all subtasks are completed.
-:::</p>
-<p>The middleware that implements task planning is <code>PlanMiddleware</code>, with the following parameter descriptions:</p>
-<p><Params
-name="system_prompt"
-type="string"
-description="Optional string type, system prompt."
-:required="false"
-:default="null"
-/>
-<Params 
-name="write_plan_tool_description"
-type="string"
-description="Optional string type, description of the write plan tool."
-:required="false"
-:default="null"
-/>
-<Params 
-name="finish_sub_plan_tool_description"
-type="string"
-description="Optional string type, description of the finish sub plan tool."
-:required="false"
-:default="null"
-/>
-<Params 
-name="read_plan_tool_description"
-type="string"
-description="Optional string type, description of the read plan tool."
-:required="false"
-:default="null"
-/>
-<Params 
-name="use_read_plan_tool"
-type="bool"
-description="Optional boolean type, whether to use the read plan tool."
-:required="false"
-:default="true"
-/></p>
+<div class="admonition note">
+<p class="admonition-title">Additional Information</p>
+<p>Task planning is an efficient context engineering management strategy. Before executing a task, the large language model first breaks down the overall task into multiple ordered subtasks, forming a task planning list (called "plan" in this library). It then executes each subtask in sequence, dynamically updating the task status after completing each step, until all subtasks are finished.</p>
+</div>
+<p>The middleware implementing task planning is <code>PlanMiddleware</code>, which accepts the following parameters:</p>
+<ul>
+<li><code>system_prompt</code>: Optional string type, system prompt. Default value is <code>None</code>, which will use the default system prompt.</li>
+<li><code>write_plan_tool_description</code>: Optional string type, description of the write plan tool. Default value is <code>None</code>, which will use the default write plan tool description.</li>
+<li><code>finish_sub_plan_tool_description</code>: Optional string type, description of the finish sub-plan tool. Default value is <code>None</code>, which will use the default finish sub-plan tool description.</li>
+<li><code>read_plan_tool_description</code>: Optional string type, description of the read plan tool. Default value is <code>None</code>, which will use the default read plan tool description.</li>
+<li><code>use_read_plan_tool</code>: Optional boolean type, whether to use the read plan tool. Default value is <code>True</code>, which will enable the read plan tool.</li>
+</ul>
 <p><strong>Usage Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlanMiddleware</span>
 
@@ -1081,7 +1215,7 @@ description="Optional boolean type, whether to use the read plan tool."
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">PlanMiddleware</span><span class="p">(</span>
-            <span class="n">use_read_plan_tool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># If you don&#39;t want to use the read plan tool, set this parameter to False</span>
+            <span class="n">use_read_plan_tool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># If you don&#39;t want to use the read plan tool, you can set this parameter to False</span>
         <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
@@ -1091,30 +1225,16 @@ description="Optional boolean type, whether to use the read plan tool."
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><code>PlanMiddleware</code> requires the use of two tools: <code>write_plan</code> and <code>finish_sub_plan</code>, while the <code>read_plan</code> tool is enabled by default; if not needed, you can set the <code>use_read_plan_tool</code> parameter to <code>False</code>.</p>
-<p>This middleware is similar in functionality to the <strong>To-do list middleware</strong> provided by LangChain officially, but there are differences in tool design. The official middleware only provides the <code>write_todo</code> tool, which is oriented towards a todo list structure; while this library provides three specialized tools: <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>, specifically for writing, modifying, and querying plan lists.</p>
-<p>Whether it's <code>todo</code> or <code>plan</code>, their essence is the same, so the key difference between this middleware and the official one lies in the tools provided. The official addition and modification are completed through one tool, while this library provides three tools, where <code>write_plan</code> can be used to write or update plan content, <code>finish_sub_plan</code> is used to update the status after completing a subtask, and <code>read_plan</code> is used to query plan content.</p>
-<p>At the same time, this library also provides three functions to create the above three tools:</p>
+<p><code>PlanMiddleware</code> requires the use of two tools: <code>write_plan</code> and <code>finish_sub_plan</code>, while the <code>read_plan</code> tool is enabled by default; if not needed, the <code>use_read_plan_tool</code> parameter can be set to <code>False</code>.</p>
+<p>This middleware is similar in functionality to the official <strong>To-do list middleware</strong> provided by LangChain, but differs in tool design. The official middleware only provides a <code>write_todo</code> tool, which is oriented toward a todo list structure; whereas this library provides three specialized tools: <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>, specifically designed for writing, modifying, and querying plan lists.</p>
+<p>Whether it's <code>todo</code> or <code>plan</code>, their essence is the same. Therefore, the key difference between this middleware and the official one lies in the tools provided. The official middleware uses one tool for both adding and modifying, while this library provides three tools: <code>write_plan</code> can be used to write or update plan content, <code>finish_sub_plan</code> is used to update the status after completing a subtask, and <code>read_plan</code> is used to query plan content.</p>
+<p>Additionally, this library provides three functions to create these three tools:</p>
 <ul>
 <li><code>create_write_plan_tool</code>: A function to create a tool for writing plans</li>
 <li><code>create_finish_sub_plan_tool</code>: A function to create a tool for completing subtasks</li>
 <li><code>create_read_plan_tool</code>: A function to create a tool for querying plans</li>
 </ul>
-<p>The parameters received by these three functions are as follows:</p>
-<p><Params
-name="description"
-type="string"
-description="Tool description. If not passed, the default tool description is used."
-:required="false"
-:default="null"
-/>
-<Params
-name="message_key"
-type="string"
-description="The key for updating messages. If not passed, the default messages is used (read_plan tool has no this parameter)."
-:required="false"
-:default="null"
-/></p>
+<p>All three functions can receive a <code>description</code> parameter for customizing the tool description. If not provided, the default tool description will be used. Both <code>create_write_plan_tool</code> and <code>create_finish_sub_plan_tool</code> can also receive a <code>message_key</code> parameter for customizing the key to update messages. If not provided, the default <code>messages</code> key will be used.</p>
 <p><strong>Usage Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.plan</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">create_write_plan_tool</span><span class="p">,</span>
@@ -1129,56 +1249,41 @@ description="The key for updating messages. If not passed, the default messages 
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_write_plan_tool</span><span class="p">(),</span> <span class="n">create_finish_sub_plan_tool</span><span class="p">(),</span> <span class="n">create_read_plan_tool</span><span class="p">()],</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>It should be noted that to use these three tools, you must ensure that the state Schema contains the plan key, otherwise an error will be reported. For this, you can use the <code>PlanState</code> provided by this library to inherit the state Schema.</p>
-<p><BestPractice></p>
-<p>I. When using <code>create_agent</code>:</p>
-<p>It is recommended to directly use <code>PlanMiddleware</code> instead of manually passing in the three tools <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>.</p>
-<p>Reason: The middleware has automatically handled prompt construction and agent state management, which can significantly reduce usage complexity.</p>
-<p>Note: Since the model output of <code>create_agent</code> is fixed to update to the <code>messages</code> key, <code>PlanMiddleware</code> does not have a <code>message_key</code> parameter.</p>
-<p>II. When using <code>langgraph</code>:</p>
-<p>It is recommended to directly use these three tools (<code>write_plan</code>, <code>finish_sub_plan</code>, <code>read_plan</code>).</p>
-<p>Reason: This approach can better integrate with <code>langgraph</code>'s custom nodes and state management.
-</BestPractice></p>
+<p>It's important to note that to use these three tools, you must ensure that the state Schema contains the "plan" key, otherwise an error will occur. For this, you can use the <code>PlanState</code> provided by this library to inherit the state Schema.</p>
+<div class="admonition note">
+<p class="admonition-title">Best Practices</p>
+<p>1.When using <code>create_agent</code>:</p>
+<p>It's recommended to directly use <code>PlanMiddleware</code> instead of manually passing the three tools: <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>.</p>
+<p>Reason: The middleware automatically handles prompt construction and agent state management, significantly reducing usage complexity.</p>
+<p>Note: Since the model output of <code>create_agent</code> is fixed to update the <code>messages</code> key, <code>PlanMiddleware</code> does not have a <code>message_key</code> parameter.</p>
+<p>2.When using <code>langgraph</code>:</p>
+<p>It's recommended to directly use these three tools (<code>write_plan</code>, <code>finish_sub_plan</code>, <code>read_plan</code>).</p>
+<p>Reason: This approach better integrates with <code>langgraph</code>'s custom nodes and state management.</p>
+</div>
 <h2 id="model-routing">Model Routing</h2>
-<p><code>ModelRouterMiddleware</code> is a middleware for <strong>dynamically routing to the most suitable model based on input content</strong>. It analyzes user requests through a "router model" and selects the most suitable model from a predefined list of models to handle the current task.</p>
+<p><code>ModelRouterMiddleware</code> is a middleware for <strong>dynamically routing to the most suitable model based on input content</strong>. It analyzes user requests through a "routing model" and selects the most appropriate model from a predefined list of models to handle the current task.</p>
 <p>Its parameters are as follows:</p>
-<p><Params
-name="router_model"
-type="BaseChatModel | string"
-description="The model used to execute routing decisions. You can pass a string (which will be automatically loaded through load_chat_model), such as vllm:qwen3-4b; or directly pass an instantiated BaseChatModel object."
-:required="true"
-:default="null"
-/>
-<Params
-name="model_list"
-type="list[dict]"
-description="A list of model configurations, each element is a dictionary, which needs to include model_name (str), model_description (str), and optional tools (list[BaseTool]), model_kwargs (dict), model_system_prompt (str)."
-:required="true"
-:default="null"
-/>
-<Params
-name="router_prompt"
-type="string"
-description="Custom prompt for the router model. If None (default), the built-in default prompt template is used."
-:required="false"
-:default="null"
-/></p>
+<ul>
+<li><code>router_model</code>: The model used to execute routing decisions. You can pass a string (which will be automatically loaded via <code>load_chat_model</code>), such as <code>vllm:qwen3-4b</code>; or directly pass an instantiated <code>BaseChatModel</code> object.</li>
+<li><code>model_list</code>: A list of model configurations, where each element is a dictionary containing <code>model_name</code> (str), <code>model_description</code> (str), and optional <code>tools</code> (list[BaseTool]), <code>model_kwargs</code> (dict), <code>model_system_prompt</code> (str).</li>
+<li><code>router_prompt</code>: Custom prompt for the routing model. If <code>None</code> (default), the built-in default prompt template will be used.</li>
+</ul>
 <p><strong>Usage Example</strong></p>
-<p>First define the model list:</p>
+<p>First, define the model list:</p>
 <div class="highlight"><pre><span></span><code><span class="n">model_list</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks, such as dialogue, text generation, etc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks such as conversation, text generation, etc.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
             <span class="s2">&quot;extra_body&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}</span>
         <span class="p">},</span>
-        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant, good at handling general tasks, such as dialogue, text generation, etc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant skilled at handling general tasks such as conversation, text generation, etc.&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openrouter:qwen/qwen3-vl-32b-instruct&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for visual tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># If this model does not need any tools, set this field to an empty list []</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># If this model doesn&#39;t need any tools, set this field to an empty list []</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openrouter:qwen/qwen3-coder-plus&quot;</span><span class="p">,</span>
@@ -1192,7 +1297,7 @@ description="Custom prompt for the router model. If None (default), the built-in
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># This model is only a placeholder, actually dynamically replaced by the middleware</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># This model is only a placeholder, actually replaced dynamically by the middleware</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">run_python_code</span><span class="p">,</span> <span class="n">get_current_time</span><span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">ModelRouterMiddleware</span><span class="p">(</span>
@@ -1202,24 +1307,25 @@ description="Custom prompt for the router model. If None (default), the built-in
     <span class="p">],</span>
 <span class="p">)</span>
 
-<span class="c1"># The routing middleware will automatically select the most suitable model based on the input content</span>
+<span class="c1"># The routing middleware will automatically select the most suitable model based on input content</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Help me write a bubble sort code&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>Through <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model according to the task type, improving response quality and efficiency.</p>
-<p>::: info Tool Permission Configuration<br />
-The tool permissions for each model in <code>model_list</code> are determined by the configuration of its <code>tools</code> field, which follows the following rules:</p>
+<p>With <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
+<div class="admonition info">
+<p class="admonition-title">Tool Permission Configuration</p>
+<p>The tool permissions for each model in <code>model_list</code> are determined by its <code>tools</code> field configuration, which follows these rules:</p>
 <ul>
-<li><strong>When undefined</strong>: The model inherits all tools loaded by the <code>create_agent</code> parameter <code>tools</code>.</li>
-<li><strong>Defined as an empty list []</strong>: The model is explicitly disabled from all tools.</li>
-<li><strong>Defined as a non-empty list [tool1, tool2, ...]</strong>: This list acts as a "tool whitelist", and the model is strictly limited to only call tools within the list. All tools specified here must have been preloaded into the <code>create_agent</code> parameter <code>tools</code>.</li>
+<li><strong>When undefined</strong>: The model inherits all tools loaded via the <code>create_agent</code> parameter <code>tools</code>.</li>
+<li><strong>Defined as an empty list []</strong>: The model is explicitly disabled from using all tools.</li>
+<li><strong>Defined as a non-empty list [tool1, tool2, ...]</strong>: This list acts as a "tool whitelist," strictly limiting the model to only call tools within the list. All tools specified here must have been pre-loaded into the <code>create_agent</code> parameter <code>tools</code>.</li>
 </ul>
-<p>:::</p>
+</div>
 <h2 id="tool-call-repair">Tool Call Repair</h2>
-<p><code>ToolCallRepairMiddleware</code> is a middleware for <strong>automatically repairing invalid tool calls (<code>invalid_tool_calls</code>) by large models</strong>.</p>
-<p>When large models output JSON Schema for tool calls, they may generate JSON format errors due to the model itself (error content is common in the <code>arguments</code> field), causing JSON parsing to fail. Such calls will be stored in the <code>invalid_tool_calls</code> field. <code>ToolCallRepairMiddleware</code> will automatically detect <code>invalid_tool_calls</code> after the model returns results, and attempt to call <code>json-repair</code> for repair, so that tool calls can be executed normally.</p>
-<p>Make sure you have installed <code>langchain-dev-utils[standard]</code>, see <a href="../../installation/">Installation Guide</a> for details.</p>
-<p>This middleware is zero-configuration and ready to use out of the box, with no additional parameters required.</p>
+<p><code>ToolCallRepairMiddleware</code> is a middleware that <strong>automatically repairs invalid tool calls (<code>invalid_tool_calls</code>) by the large language model</strong>.</p>
+<p>When the large language model outputs tool calls in JSON Schema, it may generate JSON format errors due to the model's own reasons (common errors in the <code>arguments</code> field), leading to JSON parsing failures. Such calls are stored in the <code>invalid_tool_calls</code> field. <code>ToolCallRepairMiddleware</code> will automatically detect <code>invalid_tool_calls</code> after the model returns results and attempt to repair them using <code>json-repair</code>, enabling the tool calls to execute normally.</p>
+<p>Please ensure you have installed <code>langchain-dev-utils[standard]</code>, as detailed in the <strong>Installation Guide</strong>.</p>
+<p>This middleware is zero-configuration and ready to use out of the box, requiring no additional parameters.</p>
 <p><strong>Usage Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolCallRepairMiddleware</span>
 
@@ -1231,16 +1337,18 @@ The tool permissions for each model in <code>model_list</code> are determined by
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>::: warning Note
-This middleware cannot guarantee 100% repair of all invalid tool calls. The actual effect depends on the repair capability of <code>json-repair</code>; additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.
-:::</p>
-<p>::: info Note
-In addition, this library has also expanded the following middleware to support the function of specifying models through string parameters:
+<div class="admonition warning">
+<p class="admonition-title">Note</p>
+<p>This middleware cannot guarantee 100% repair of all invalid tool calls; the actual effect depends on the repair capability of <code>json-repair</code>. Additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Note</p>
+<p>In addition, this library has extended the following middleware with the functionality to specify models through string parameters:
 - SummarizationMiddleware
 - LLMToolSelectorMiddleware
 - ModelFallbackMiddleware
 - LLMToolEmulator</p>
-<p>You just need to import these middleware from this library to use strings to specify models that have been registered by <code>register_model_provider</code>. The usage of middleware is consistent with the official middleware, for example:
+<p>You only need to import these middleware from this library to use strings to specify models that have been registered with <code>register_model_provider</code>. The middleware usage is consistent with the official middleware, for example:
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizationMiddleware</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
@@ -1272,7 +1380,7 @@ In addition, this library has also expanded the following middleware to support 
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">big_messages</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div></p>
-<p>:::</p>
+</div>
 
 
 
@@ -1290,8 +1398,16 @@ In addition, this library has also expanded the following middleware to support 
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1322,7 +1438,7 @@ In addition, this library has also expanded the following middleware to support 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>

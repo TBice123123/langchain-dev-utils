@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Index
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../chat/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../adavance-guide/multi-agent/" class="md-tabs__link">
+          
+  
+  
+  Advanced Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -271,15 +416,23 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -470,41 +623,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merging-reasoning-content-into-final-response" class="md-nav__link">
+  <a href="#merging-reasoning-content-into-final-replies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merging Reasoning Content into Final Response
+        Merging Reasoning Content into Final Replies
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Merging Reasoning Content into Final Response">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage Example:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -516,34 +641,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Merging Streamed Output Chunks">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage-example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage Example:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -601,12 +698,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -767,12 +871,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1017,41 +1128,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merging-reasoning-content-into-final-response" class="md-nav__link">
+  <a href="#merging-reasoning-content-into-final-replies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merging Reasoning Content into Final Response
+        Merging Reasoning Content into Final Replies
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Merging Reasoning Content into Final Response">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage Example:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1063,34 +1146,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Merging Streamed Output Chunks">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage-example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage Example:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1115,33 +1170,25 @@
 
 
 <h1 id="message-processing">Message Processing</h1>
-<blockquote>
-<p>[!NOTE]</p>
-<p><strong>Feature Overview</strong>: Provides practical message processing utilities.  </p>
-<p><strong>Prerequisites</strong>: Familiarity with LangChain's <a href="https://docs.langchain.com/oss/python/langchain/messages">Message</a>.  </p>
-<p><strong>Estimated Reading Time</strong>: 3 minutes</p>
-</blockquote>
 <h2 id="overview">Overview</h2>
-<p>Key functionalities include:
-- Merging reasoning content into the final response
-- Merging streamed output chunks</p>
-<h2 id="merging-reasoning-content-into-final-response">Merging Reasoning Content into Final Response</h2>
-<p>These utilities merge reasoning content (<code>reasoning_content</code>) into the main response content (<code>content</code>).</p>
+<p>Main functions include:</p>
+<ul>
+<li>
+<p>Merging reasoning content into final replies</p>
+</li>
+<li>
+<p>Merging streamed output Chunks</p>
+</li>
+</ul>
+<h2 id="merging-reasoning-content-into-final-replies">Merging Reasoning Content into Final Replies</h2>
+<p>Used to merge reasoning content (<code>reasoning_content</code>) into the final reply (<code>content</code>).</p>
 <p>Specifically:</p>
 <ul>
-<li><code>convert_reasoning_content_for_ai_message</code>: Merges reasoning content from an <code>AIMessage</code> into its <code>content</code> field (for use with model <code>invoke</code> and <code>ainvoke</code>)</li>
-<li><code>convert_reasoning_content_for_chunk_iterator</code>: Merges reasoning content from streamed responses into the <code>content</code> field (for use with model <code>stream</code>)</li>
-<li><code>aconvert_reasoning_content_for_chunk_iterator</code>: An asynchronous version of <code>convert_reasoning_content_for_chunk_iterator</code>, for async streaming (for use with model <code>astream</code>)</li>
+<li><code>convert_reasoning_content_for_ai_message</code>: Merges reasoning content in AIMessage into the content field (used for model's invoke and ainvoke)</li>
+<li><code>convert_reasoning_content_for_chunk_iterator</code>: Merges reasoning content in streaming responses into the content field (used for model's stream)</li>
+<li><code>aconvert_reasoning_content_for_chunk_iterator</code>: Asynchronous version of <code>convert_reasoning_content_for_chunk_iterator</code>, used for asynchronous streaming processing (used for model's astream)</li>
 </ul>
-<h3 id="parameters">Parameters:</h3>
-<p><Params<br />name="model_response"<br />type="AIMessage | Iterable[AIMessageChunk | AIMessage]"<br />description="The AI message response returned by the model"<br />:required="true"<br />:default="null"<br />/></p>
-<p>&lt;Params<br />
-name="think_tag"<br />
-type="tuple[string, string]"<br />
-description="A tuple containing start and end tags for wrapping reasoning content"<br />
-:required="false"<br />
-default="('\&lt;think&gt;', '\</think\>')"<br />/></p>
-<h3 id="usage-example">Usage Example:</h3>
+<p>Usage examples:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">convert_reasoning_content_for_ai_message</span><span class="p">,</span>
     <span class="n">convert_reasoning_content_for_chunk_iterator</span><span class="p">,</span>
@@ -1159,14 +1206,12 @@ default="('\&lt;think&gt;', '\</think\>')"<br />/></p>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="merging-streamed-output-chunks">Merging Streamed Output Chunks</h2>
-<p>Provides utility functions to combine multiple <code>AIMessageChunk</code> objects—produced during streaming—into a single <code>AIMessage</code>.</p>
-<p>Core function:</p>
+<p>Provides utility functions to merge multiple AIMessageChunks generated from streaming output into a single AIMessage.
+Core function:</p>
 <ul>
-<li><code>merge_ai_message_chunk</code>: Merges a sequence of AI message chunks</li>
+<li><code>merge_ai_message_chunk</code>: Merges AI message chunks</li>
 </ul>
-<h3 id="parameters_1">Parameters:</h3>
-<p><Params<br />name="chunks"<br />type="list[AIMessageChunk]"<br />description="A list of AIMessageChunk objects"<br />:required="true"<br />:default="null"<br />/></p>
-<h3 id="usage-example_1">Usage Example:</h3>
+<p>Usage example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge_ai_message_chunk</span>
 
 <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1193,8 +1238,16 @@ default="('\&lt;think&gt;', '\</think\>')"<br />/></p>
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1225,7 +1278,7 @@ default="('\&lt;think&gt;', '\</think\>')"<br />/></p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>

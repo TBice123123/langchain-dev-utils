@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="页眉">
     <a href="../../" title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  安装
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started-guide/chat/" class="md-tabs__link">
+          
+  
+  
+  入门指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../multi-agent/" class="md-tabs__link">
+          
+  
+  
+  高级指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API 参考
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../" title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -269,12 +414,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -465,15 +617,23 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -655,6 +815,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="并行编排">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        简单示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        利用分支函数指定并行执行的子图
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -711,12 +899,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -980,6 +1175,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="并行编排">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        简单示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        利用分支函数指定并行执行的子图
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1003,12 +1226,6 @@
 
 
 <h1 id="_1">状态图编排</h1>
-<blockquote>
-<p>[!NOTE]</p>
-<p><strong>功能概述</strong>：主要用于实现多个状态图的并行和串行组合。</p>
-<p><strong>前置要求</strong>：了解 langchain 的<a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">子图</a>,<a href="https://docs.langchain.com/oss/python/langgraph/graph-api#send">Send</a>。</p>
-<p><strong>预计阅读时间</strong>：8 分钟</p>
-</blockquote>
 <h2 id="_2">概述</h2>
 <p>提供方便进行状态图编排的实用工具。主要包含以下功能：</p>
 <ul>
@@ -1017,74 +1234,7 @@
 </ul>
 <h2 id="_3">顺序编排</h2>
 <p>即用于搭建智能体顺序工作流（Sequential Pipeline）。这是一种将复杂任务分解为一系列连续、有序的子任务，并交由不同的专门化智能体依次处理的工作模式。</p>
-<p>通过下面函数实现:</p>
-<ul>
-<li><code>create_sequential_pipeline</code> - 以顺序方式组合多个状态图</li>
-</ul>
-<p>其参数如下:
-<Params
-name="sub_graphs"
-type="list[StateGraph | CompiledStateGraph]"
-description="要组合的状态图列表（必须是 StateGraph 或者 CompiledStateGraph 实例）"
-:required="true"
-:default="null"
-/>
-<Params
-name="state_schema"
-type="dict"
-description="最终生成图的 State Schema。"
-:required="true"
-:default="null"
-/>
-<Params
-name="graph_name"
-type="string"
-description="最终生成图的名称。"
-:required="false"
-:default="null"
-/>
-<Params
-name="context_schema"
-type="dict"
-description="最终生成图的 Context Schema。"
-:required="false"
-:default="null"
-/>
-<Params
-name="input_schema"
-type="dict"
-description="最终生成图的输入 Schema。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="output_schema"
-type="dict"
-description="最终生成图的输出 Schema。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="checkpoint"
-type="BaseCheckpointSaver"
-description="LangGraph 的持久化 Checkpoint。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="store"
-type="BaseStore"
-description="LangGraph 的持久化 Store。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="cache"
-type="BaseCache"
-description="LangGraph 的 Cache。"
-:required="false"
-:default="null"
-/></p>
+<p>通过<code>create_sequential_pipeline</code> 可将多个状态图以顺序编排方式进行组合。</p>
 <p><strong>使用示例</strong>：</p>
 <p>开发一个软件项目，通常遵循一个严格的线性流程：
 1. 需求分析：首先，产品经理必须明确“要做什么”，并产出详细的产品需求文档（PRD）。
@@ -1165,94 +1315,20 @@ description="LangGraph 的 Cache。"
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;开发一个电商网站，包含用户注册、商品浏览和购物车功能&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>最终生成的图结构如下：
-<img alt="串行管道示意图" src="/img/sequential.png" /></p>
-<p>::: tip 📝
-对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：</p>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：</p>
 <div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">AgentState</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add_sequence</span><span class="p">([(</span><span class="s2">&quot;graph1&quot;</span><span class="p">,</span> <span class="n">graph1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph2&quot;</span><span class="p">,</span> <span class="n">graph2</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph3&quot;</span><span class="p">,</span> <span class="n">graph3</span><span class="p">)])</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;__start__&quot;</span><span class="p">,</span> <span class="s2">&quot;graph1&quot;</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 </code></pre></div>
-<p>不过，上述写法仍显繁琐。因此，更推荐使用 <code>create_sequential_pipeline</code> 函数，它能通过一行代码快速构建串行执行图，更为简洁高效。
-:::</p>
+<p>不过，上述写法仍显繁琐。因此，更推荐使用 <code>create_sequential_pipeline</code> 函数，它能通过一行代码快速构建串行执行图，更为简洁高效。</p>
+</div>
 <h2 id="_4">并行编排</h2>
 <p>即用于搭建智能体并行工作流（Parallel Pipeline）。它的工作原理是将多个状态图并行组合，对于每个状态图并发地执行任务，从而提高任务的执行效率。</p>
-<p>通过下面函数实现:</p>
-<ul>
-<li><code>create_parallel_pipeline</code> - 以并行方式组合多个状态图</li>
-</ul>
-<p>其参数如下:</p>
-<p><Params
-name="sub_graphs"
-type="list[StateGraph | CompiledStateGraph]"
-description="要组合的状态图列表（必须是 StateGraph 或者 CompiledStateGraph 实例）。"
-:required="true"
-:default="null"
-/>
-<Params
-name="state_schema"
-type="dict"
-description="最终生成图的 State Schema。"
-:required="true"
-:default="null"
-/>
-<Params
-name="branches_fn"
-type="Callable[[Any], list[Send]]"
-description="并行分支函数，接收状态作为输入，返回 Send 对象列表以控制并行执行哪些子图。"
-:required="false"
-:default="null"
-/>
-<Params
-name="graph_name"
-type="string"
-description="最终生成图的名称。"
-:required="false"
-:default="null"
-/>
-<Params
-name="context_schema"
-type="dict"
-description="最终生成图的 Context Schema。"
-:required="false"
-:default="null"
-/>
-<Params
-name="input_schema"
-type="dict"
-description="最终生成图的输入 Schema。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="output_schema"
-type="dict"
-description="最终生成图的输出 Schema。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="checkpoint"
-type="BaseCheckpointSaver"
-description="LangGraph 的持久化 Checkpoint。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="store"
-type="BaseStore"
-description="LangGraph 的持久化 Store。"
-:required="false"
-:default="null"
-/></p>
-<p><Params
-name="cache"
-type="BaseCache"
-description="LangGraph 的 Cache。"
-:required="false"
-:default="null"
-/></p>
+<p>通过 <code>create_parallel_pipeline</code> 函数，可将多个状态图以并行编排方式进行组合，实现并行执行任务的效果。</p>
+<h3 id="_5">简单示例</h3>
 <p><strong>使用示例</strong>：</p>
 <p>在软件开发中，当系统架构设计完成后，不同的功能模块往往可以由不同的团队或工程师同时进行开发，因为它们之间是相对独立的。这就是并行工作的典型场景。</p>
 <p>假设要开发一个电商网站，其核心功能可以分为三个独立模块：
@@ -1305,8 +1381,7 @@ description="LangGraph 的 Cache。"
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;并行开发电商网站的三个核心模块&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>最终生成的图结构如下：
-<img alt="并行管道示意图" src="/img/parallel.png" /></p>
+<h3 id="_6">利用分支函数指定并行执行的子图</h3>
 <p>有些时候需要根据条件指定并行执行哪些子图，这时可以使用分支函数。
 分支函数需要返回<code>Send</code>列表。</p>
 <p>例如上述例子，假设开发的模块由用户指定，则只有被指定的模块才会被并行执行。</p>
@@ -1379,8 +1454,16 @@ description="LangGraph 的 Cache。"
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
         
       </main>
       
@@ -1411,7 +1494,7 @@ description="LangGraph 的 Cache。"
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>

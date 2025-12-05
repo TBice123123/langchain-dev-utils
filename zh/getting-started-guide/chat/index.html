@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="页眉">
     <a href="../../" title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  安装
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  入门指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../adavance-guide/multi-agent/" class="md-tabs__link">
+          
+  
+  
+  高级指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API 参考
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../" title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -271,15 +416,23 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -612,12 +765,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -778,12 +938,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1137,11 +1304,6 @@
 
 
 <h1 id="_1">对话模型管理</h1>
-<blockquote>
-<p><strong>功能概述</strong>：提供更高效、更便捷的对话模型管理，支持多种模型提供商。<br />
-<strong>前置要求</strong>：了解 LangChain <a href="https://docs.langchain.com/oss/python/langchain/models">对话模型</a>。<br />
-<strong>预计阅读时间</strong>：15 分钟。</p>
-</blockquote>
 <h2 id="_2">概述</h2>
 <p>LangChain 的 <code>init_chat_model</code> 函数仅支持有限的模型提供商。本库提供更灵活的对话模型管理方案，支持自定义模型提供商，特别适用于需要接入未内置支持的模型服务（如 vLLM、OpenRouter 等）的场景。</p>
 <h2 id="_3">注册模型提供商</h2>
@@ -1159,8 +1321,8 @@
 </code></pre></div>
 对于上述代码有以下几点补充：</p>
 <ul>
-<li><strong><code>FakeChatModel</code> 仅用于测试</strong>。实际使用中必须传入具备真实功能的 <code>ChatModel</code> 类。</li>
-<li><strong><code>provider_name</code> 代表模型提供商的名称</strong>，用于后续在 <code>load_chat_model</code> 中引用。名称可自定义，但不要包含":"、"-"等特殊字符。</li>
+<li><code>FakeChatModel</code> 仅用于测试。实际使用中必须传入具备真实功能的 <code>ChatModel</code> 类。</li>
+<li><code>provider_name</code> 代表模型提供商的名称，用于后续在 <code>load_chat_model</code> 中引用。名称可自定义，但不要包含":"、"-"等特殊字符。</li>
 </ul>
 <p>除此之外，本情况下，该函数还接收以下参数：</p>
 <ul>
@@ -1189,7 +1351,10 @@
     <span class="c1"># 可以有任意多个模型配置</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>提示</strong>：推荐使用 <code>langchain-model-profiles</code> 库来获取你所用模型提供商的 profiles。</p>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>推荐使用 <code>langchain-model-profiles</code> 库来获取你所用模型提供商的 profiles。</p>
+</div>
 <h3 id="langchain-openai-api">未有 LangChain 对话模型类，但模型提供商支持 OpenAI 兼容 API</h3>
 <p>很多模型提供商都支持 <strong>OpenAI 兼容 API</strong> 的服务，例如：<a href="https://github.com/vllm-project/vllm">vLLM</a>、<a href="https://openrouter.ai/">OpenRouter</a>、<a href="https://www.together.ai/">Together AI</a>等。当你接入的模型提供商未有合适的 LangChain 对话模型类时，但提供商支持 OpenAI 兼容 API 时，可以考虑使用此情况。</p>
 <p>本库会根据用户的相关输入，使用内置 <code>BaseChatOpenAICompatible</code> 类构建对应于特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并增强以下能力：</p>
@@ -1227,11 +1392,11 @@
 <div class="admonition note">
 <p class="admonition-title">补充</p>
 <p>vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API，例如本例子中的 Qwen3-4B：</p>
-<p><div class="highlight"><pre><span></span><code><span class="w">    </span>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--served-model-name<span class="w"> </span>qwen3-4b
+<p><div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
+--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
+--enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
+--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+--served-model-name<span class="w"> </span>qwen3-4b
 </code></pre></div>
 服务地址为 <code>http://localhost:8000/v1</code>。  </p>
 </div>
@@ -1255,8 +1420,8 @@
 <p class="admonition-title">补充</p>
 <p>因为同一模型提供商的不同模型对于<code>tool_choice</code>、<code>response_format</code>等参数的支持情况有所差异。故该四个兼容性选项最终会作为该类的<strong>实例属性</strong>。注册时可传值作为全局默认值（代表该提供商的大部分模型支持的配置），加载时如需微调，在 <code>load_chat_model</code> 中覆盖同名参数即可。</p>
 </div>
-<p>对于这些配置项的介绍具体如下：</p>
-<p><strong>1.supported_tool_choice</strong></p>
+<details class="note">
+<summary>1. supported_tool_choice</summary>
 <p><code>tool_choice</code> 用于控制大模型在响应时是否以及调用哪个外部工具，以提升准确性、可靠性和可控性。常见的取值有：</p>
 <ul>
 <li><code>"auto"</code>：模型自主决定是否调用工具(默认行为)；</li>
@@ -1290,7 +1455,9 @@
 </ol>
 <p>该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；推荐在 <code>register_model_provider</code> 中一次性声明该提供商的大多数模型的<code>tool_choice</code>支持情况，而对于部分支持情况不同的模型，则在 <code>load_chat_model</code> 中单独指定。</p>
 </div>
-<p><strong>2.supported_response_format</strong></p>
+</details>
+<details class="note">
+<summary>2. supported_response_format</summary>
 <p>目前常见的结构化输出方法有三种。</p>
 <ul>
 <li><code>function_calling</code>：通过调用一个符合指定 schema 的工具来生成结构化输出。</li>
@@ -1308,26 +1475,36 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
-<p>通常一般情况下也无需配置。仅在需要使用<code>with_structured_output</code>方法时需要考虑进行配置，此时，如果模型提供商支持<code>json_schema</code>，则可以考虑配置本参数。以保证结构化输出的稳定性。对于<code>json_mode</code>，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置<code>response_format={"type":"json_object"}</code>时，才需要配置本参数包含<code>json_mode</code>。
-同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；推荐在 <code>register_model_provider</code> 中一次性声明该提供商的大多数模型的<code>response_format</code>支持情况，而对于部分支持情况不同的模型，则在 <code>load_chat_model</code> 中单独指定。</p>
+<p>通常一般情况下也无需配置。仅在需要使用<code>with_structured_output</code>方法时需要考虑进行配置，此时，如果模型提供商支持<code>json_schema</code>，则可以考虑配置本参数。以保证结构化输出的稳定性。对于<code>json_mode</code>，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置<code>response_format={"type":"json_object"}</code>时，才需要配置本参数包含<code>json_mode</code>。</p>
+<p>同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；推荐在 <code>register_model_provider</code> 中一次性声明该提供商的大多数模型的<code>response_format</code>支持情况，而对于部分支持情况不同的模型，则在 <code>load_chat_model</code> 中单独指定。</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
 <p>本参数目前仅影响<code>model.with_structured_output</code>方法。对于<code>create_agent</code>中的结构化输出，若需要使用<code>json_schema</code>的实现方式，你需要确保对应模型的<code>profile</code>中包含<code>structured_output</code>字段，且值为<code>True</code>。</p>
 </div>
-<p><strong>3.reasoning_keep_policy</strong></p>
+</details>
+<details class="note">
+<summary>3. reasoning_keep_policy</summary>
 <p>用于控制历史消息（messages）中<code>reasoning_content</code> 字段的保留策略。</p>
-<p>支持以下取值：
-- <code>never</code>：在历史消息中<strong>不保留任何</strong>推理内容（默认）；
-- <code>current</code>：仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段；
-- <code>all</code>：保留<strong>所有对话</strong>中的 <code>reasoning_content</code> 字段。</p>
+<p>支持以下取值：</p>
+<ul>
+<li>
+<p><code>never</code>：在历史消息中<strong>不保留任何</strong>推理内容（默认)；</p>
+</li>
+<li>
+<p><code>current</code>：仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段；</p>
+</li>
+<li>
+<p><code>all</code>：保留<strong>所有对话</strong>中的 <code>reasoning_content</code> 字段。</p>
+</li>
+</ul>
 <p>例如：
 例如，用户先提问“纽约天气如何？”，随后追问“伦敦天气如何？”，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
 <ul>
 <li>取值为<code>never</code>时</li>
 </ul>
 <p>当取值为<code>never</code>时，则最终传递给模型的 messages 中<strong>不会有任何</strong>的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：</p>
-<p><div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;多云 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
@@ -1337,7 +1514,9 @@
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div>
-- 取值为<code>current</code>时</p>
+<ul>
+<li>取值为<code>current</code>时</li>
+</ul>
 <p>当取值为<code>current</code>时，仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
@@ -1353,8 +1532,10 @@
     <span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
-</code></pre></div>
-- 取值为<code>all</code>时</p>
+</code></pre></div></p>
+<ul>
+<li>取值为<code>all</code>时</li>
+</ul>
 <p>当取值为<code>all</code>时，保留<strong>所有</strong>对话中的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
@@ -1391,13 +1572,16 @@
 </ul>
 <p>同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；若需要保留<code>reasoning_content</code>的情况的模型较少，推荐在 <code>load_chat_model</code> 中单独指定，此时<code>register_model_provider</code>无需设置。</p>
 </div>
-<p><strong>4.include_usage</strong></p>
+</details>
+<details class="note">
+<summary>4. include_usage</summary>
 <p><code>include_usage</code> 是 OpenAI 兼容 API 中的一个参数，用于控制是否在流式响应的末尾附加一条包含 token 使用情况（如 <code>prompt_tokens</code> 和 <code>completion_tokens</code>）的消息。由于标准流式响应默认不返回用量信息，启用该选项后，客户端可直接获取完整的 token 消耗数据，便于计费、监控或日志记录。</p>
 <p>通常通过 <code>stream_options={"include_usage": true}</code> 启用。考虑到有些模型提供商不支持该参数，因此本库将其设为兼容性选项，默认值为 <code>True</code>，因为绝大多数模型提供商均支持该参数，如果不支持，则可以显式设为 <code>False</code>。</p>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
 <p>此参数一般无需设置，保持默认值即可。只有在模型提供商不支持时，才需要设置为 <code>False</code>。</p>
 </div>
+</details>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
 <p>尽管已提供上述兼容性配置，本库仍无法保证 100% 适配所有 OpenAI 兼容接口。若模型提供商已有官方或社区集成类，请优先采用该集成类。如遇到任何兼容性问题，欢迎在本库 GitHub 仓库提交 issue。</p>
@@ -1450,10 +1634,10 @@
 <li>支持<code>with_structured_output</code>方法，进行结构化输出。</li>
 <li>支持传递<code>BaseChatOpenAI</code>的参数，例如<code>temperature</code>、<code>top_p</code>、<code>max_tokens</code>等。</li>
 <li>支持传递多模态数据</li>
-<li>支持 OpenAI 最新的<code>responses api</code></li>
-<li>支持<code>model.profile</code>参数，获取模型的 profile。</li>
+<li>支持 OpenAI 最新的<code>responses api</code> (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)</li>
 </ul>
-<p><strong>普通调用</strong></p>
+<details class="note">
+<summary>普通调用</summary>
 <p>支持<code>invoke</code>进行简单的调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1470,7 +1654,9 @@
 <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">model</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>流式输出</strong></p>
+</details>
+<details class="note">
+<summary>流式输出</summary>
 <p>支持<code>stream</code>进行流式输出：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1487,7 +1673,9 @@
 <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>工具调用</strong></p>
+</details>
+<details class="note">
+<summary>工具调用</summary>
 <p>如果模型本身支持工具调用，那么可以直接使用<code>bind_tools</code>方法进行工具调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1503,7 +1691,9 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;获取当前时间戳&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>结构化输出</strong></p>
+</details>
+<details class="note">
+<summary>结构化输出</summary>
 <p>支持结构化输出，默认的<code>method</code>取值为<code>auto</code>，此时将会根据模型提供商的<code>supported_response_format</code>参数自动选择合适的结构化输出方法。具体为如果其中取值包含<code>json_schema</code>，则会选择<code>json_schema</code>方法；否则，则会选择<code>function_calling</code>方法。</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1520,7 +1710,9 @@
 </code></pre></div>
 相较于工具调用，<code>json_schema</code>能100%保证输出符合JSON Schema规范，避免工具调用可能产生的参数误差。故如果模型提供商支持<code>json_schema</code>，则默认会采用此方法。当模型提供商不支持时，才会回退到<code>function_calling</code>方法。
 对于<code>json_mode</code>，虽然支持度较高，但是由于其必须在提示词中引导模型输出指定Schema的JSON字符串，因此使用起来比较麻烦，故默认不采用此方法。如想要采用，则可以显示提供<code>method="json_mode"</code>（前提是注册或者实例化的时候保证<code>supported_response_format</code>取值中包含<code>json_mode</code>)。</p>
-<p><strong>传递模型参数</strong></p>
+</details>
+<details class="note">
+<summary>传递模型参数</summary>
 <p>除此之外，由于该类继承了<code>BaseChatOpenAI</code>,因此支持传递<code>BaseChatOpenAI</code>的模型参数，例如<code>temperature</code>, <code>extra_body</code>等：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1529,7 +1721,9 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>传递多模态数据</strong></p>
+</details>
+<details class="note">
+<summary>传递多模态数据</summary>
 <p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。例如：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1557,7 +1751,9 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>OpenAI 最新的<code>responses_api</code></strong></p>
+</details>
+<details class="note">
+<summary>OpenAI 最新的<code>responses_api</code></summary>
 <p>该模型类也支持 OpenAI 最新的<code>responses_api</code>。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入<code>use_responses_api</code>参数为<code>True</code>。
 例如 vllm 支持<code>responses_api</code>，则可以这样使用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
@@ -1567,6 +1763,11 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+</details>
+<div class="admonition info">
+<p class="admonition-title">提示</p>
+<p>无论是哪种情况，你都可以传入任意数量的关键字参数作为模型的额外参数，例如<code>temperature</code>, <code>extra_body</code>等。</p>
+</div>
 <h3 id="_7">兼容官方提供商</h3>
 <p>对于 LangChain 官方已支持的提供商（如 <code>openai</code>），可直接使用 <code>load_chat_model</code> 无需注册：</p>
 <div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">)</span>
@@ -1575,9 +1776,11 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">最佳实践</p>
-<p>对于本模块的使用，可以根据下面三种情况进行选择：
-1. 若接入的所有模型提供商均被官方 <code>init_chat_model</code> 支持，请直接使用官方函数，以获得最佳兼容性和稳定性。</p>
+<p>对于本模块的使用，可以根据下面三种情况进行选择：</p>
 <ol>
+<li>
+<p>若接入的所有模型提供商均被官方 <code>init_chat_model</code> 支持，请直接使用官方函数，以获得最佳兼容性和稳定性。</p>
+</li>
 <li>
 <p>若接入的部分模型提供商为非官方支持，可使用本模块的功能，先利用<code>register_model_provider</code>注册模型提供商，然后使用<code>load_chat_model</code>加载模型。</p>
 </li>
@@ -1603,8 +1806,16 @@
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
         
       </main>
       
@@ -1635,7 +1846,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>

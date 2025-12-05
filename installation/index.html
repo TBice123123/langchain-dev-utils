@@ -35,6 +35,9 @@
     
       <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
       
 
 
@@ -61,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,9 +92,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -112,6 +120,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -166,6 +200,115 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Index
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started-guide/chat/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../adavance-guide/multi-agent/" class="md-tabs__link">
+          
+  
+  
+  Advanced Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api-reference/agent/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -179,8 +322,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
@@ -371,12 +516,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -565,12 +717,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -731,12 +890,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1045,48 +1211,44 @@
 
 
 <h1 id="installation">Installation</h1>
-<p><code>langchain-dev-utils</code> can be installed using various package managers. Choose the one that best fits your workflow.</p>
+<p><code>langchain-dev-utils</code> can be installed using various package managers. Choose the tool that best fits your workflow.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
 <li>Python 3.11 or higher</li>
-<li>A Python package manager (we recommend <code>uv</code>)</li>
-<li>An API key from any large language model provider</li>
+<li>Python package manager (recommended to use <code>uv</code>)</li>
+<li>API Key from any large language model provider</li>
 </ul>
 <h2 id="installation-methods">Installation Methods</h2>
-<p><code>langchain-dev-utils</code> supports installation via multiple package managers, including <code>pip</code>, <code>poetry</code>, and <code>uv</code>.</p>
-<p>::: code-group</p>
-<p>```sh[pip]
-pip install -U langchain-dev-utils
-<div class="highlight"><pre><span></span><code>```sh[poetry]
-poetry add langchain-dev-utils
-</code></pre></div></p>
-<p>```sh[uv]
-uv add langchain-dev-utils
-<div class="highlight"><pre><span></span><code>:::
+<p><code>langchain-dev-utils</code> supports installation using various package managers such as <code>pip</code>, <code>poetry</code>, and <code>uv</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install using pip</span>
+pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils
 
-The commands above install `langchain-dev-utils` along with its core dependencies. To enable all features, install the full-featured version using the following commands:
+<span class="c1"># Install using poetry</span>
+poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
 
-::: code-group
+<span class="c1"># Install using uv  </span>
+uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
+</code></pre></div>
+<p>The above will install <code>langchain-dev-utils</code> and its basic dependencies. If you want to use its full functionality, you need to execute the following command:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install standard version using pip</span>
+pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
 
-```sh[pip]
-pip install -U langchain-dev-utils[standard]
-</code></pre></div></p>
-<p>```sh[poetry]
-poetry add langchain-dev-utils[standard]
-<div class="highlight"><pre><span></span><code>```sh[uv]
-uv add langchain-dev-utils[standard]
-</code></pre></div></p>
-<p>:::</p>
+<span class="c1"># Install standard version using poetry</span>
+poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
+
+<span class="c1"># Install standard version using uv  </span>
+uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
+</code></pre></div>
 <h2 id="dependencies">Dependencies</h2>
-<p>The package automatically installs the following dependencies:</p>
+<p>The package will automatically install the following dependencies:</p>
 <ul>
 <li><code>langchain</code></li>
-<li><code>langgraph</code> (installed automatically alongside <code>langchain</code>)</li>
+<li><code>langgraph</code> (will be installed when installing <code>langchain</code>)</li>
 </ul>
-<p>The <code>standard</code> extra additionally installs:</p>
+<p>For the standard version, the following dependencies will also be installed:</p>
 <ul>
-<li><code>langchain-openai</code> (used for model management)</li>
-<li><code>json-repair</code> (used by middleware to fix malformed tool calls)</li>
+<li><code>langchain-openai</code> (for model management)</li>
+<li><code>json-repair</code> (for tool call error fixing in middleware)</li>
 </ul>
 <h2 id="verification">Verification</h2>
 <p>After installation, verify that the package is correctly installed:</p>
@@ -1094,7 +1256,7 @@ uv add langchain-dev-utils[standard]
 <span class="nb">print</span><span class="p">(</span><span class="n">langchain_dev_utils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="running-tests">Running Tests</h2>
-<p>If you'd like to contribute to the project or run the test suite:</p>
+<p>If you want to contribute to the project or run tests:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TBice123123/langchain-dev-utils.git
 <span class="nb">cd</span><span class="w"> </span>langchain-dev-utils
 uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>tests
@@ -1102,8 +1264,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p><strong>Note:</strong></p>
 <ul>
-<li>You need to create a <code>.env</code> file and include your relevant <code>API_KEY</code> and <code>API_BASE</code> configurations.</li>
-<li>All test cases currently pass. If you encounter occasional model-related failures, they may be due to model instability—please try re-running the tests.</li>
+<li>You need to create a new <code>.env</code> file and write the relevant <code>API_KEY</code> and <code>API_BASE</code>.</li>
+<li>All test cases have been verified. If individual model-related failures occur during runtime, it might be due to model instability. Please try running the tests again.</li>
 </ul>
 
 
@@ -1122,8 +1284,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1154,7 +1324,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
