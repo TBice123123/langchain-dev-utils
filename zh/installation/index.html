@@ -178,6 +178,53 @@
 </div>
     
     
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
     
       <div class="md-header__source">
         <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
@@ -1220,25 +1267,40 @@
 </ul>
 <h2 id="_3">安装方式</h2>
 <p><code>langchain-dev-utils</code>支持使用<code>pip</code>、<code>poetry</code>、<code>uv</code>等多种包管理器进行安装。</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># 使用 pip 安装</span>
-pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils
-
-<span class="c1"># 使用 poetry 安装</span>
-poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
-
-<span class="c1"># 使用 uv 安装  </span>
-uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
+<p>安装基础版本的<code>langchain-dev-utils</code>：</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pip</label><label for="__tabbed_1_2">poetry</label><label for="__tabbed_1_3">uv</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils
 </code></pre></div>
-<p>上述会安装<code>langchain-dev-utils</code>以及它的基础依赖。如果你想要使用它的完整功能你需要执行下面的命令：</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># 使用 pip 安装 standard 版本</span>
-pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-
-<span class="c1"># 使用 poetry 安装 standard 版本</span>
-poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-
-<span class="c1"># 使用 uv 安装 standard 版本  </span>
-uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>安装完整功能版本的<code>langchain-dev-utils</code>：</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">pip</label><label for="__tabbed_2_2">poetry</label><label for="__tabbed_2_3">uv</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="_4">依赖项</h2>
 <p>该包会自动安装以下依赖项：</p>
 <ul>
