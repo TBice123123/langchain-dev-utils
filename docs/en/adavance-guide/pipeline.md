@@ -2,28 +2,28 @@
 
 ## Overview
 
-Provides practical utilities for state graph orchestration. Mainly includes the following features:
+Provides practical tools for state graph orchestration. Mainly includes the following functions:
 
 - Orchestrating multiple state graphs in a sequential manner to form a sequential workflow.
 - Orchestrating multiple state graphs in a parallel manner to form a parallel workflow.
 
 ## Sequential Orchestration
 
-Used for building agent sequential pipelines. This is a work pattern that decomposes complex tasks into a series of continuous, ordered subtasks, which are then processed sequentially by different specialized agents.
+Used to build an agent sequential workflow (Sequential Pipeline). This is a work pattern that decomposes complex tasks into a series of continuous, ordered subtasks, and hands them over to different specialized agents for processing in sequence.
 
 Multiple state graphs can be combined in a sequential orchestration manner through `create_sequential_pipeline`.
 
 **Usage Example**:
 
 Developing a software project typically follows a strict linear process:
-1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed Product Requirements Document (PRD).
+1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed product requirements document (PRD).
 2. Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.
-3. Code Writing: Next, the development engineer implements the blueprint as concrete code according to the architecture design.
-4. Testing & Quality Assurance: Finally, the testing engineer verifies the code to ensure its quality meets requirements.
+3. Code Writing: Next, development engineers implement the blueprint into specific code according to the architecture design.
+4. Testing and Quality Assurance: Finally, testing engineers verify the code to ensure its quality meets requirements.
 This process is interconnected and the order cannot be reversed.
 
-For the above four processes, each process is handled by a specialized agent:
-1. Product Manager Agent: Receives vague user requirements and outputs a structured Product Requirements Document (PRD).
+For the above four processes, each process has a specialized agent responsible.
+1. Product Manager Agent: Receives user's vague requirements and outputs a structured product requirements document (PRD).
 2. Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.
 3. Development Engineer Agent: Receives the architecture solution and outputs executable source code.
 4. Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.
@@ -46,13 +46,13 @@ register_model_provider(
 
 @tool
 def analyze_requirements(user_request: str) -> str:
-    """Analyze user requirements and generate a detailed product requirements document"""
+    """Analyze user requirements and generate detailed product requirements document"""
     return f"Based on user request '{user_request}', a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria."
 
 @tool
 def design_architecture(requirements: str) -> str:
     """Design system architecture based on requirements document"""
-    return f"Based on the requirements document, system architecture has been designed, including microservice division, data flow diagram, and technology stack selection."
+    return f"Based on the requirements document, system architecture has been designed, including microservice division, data flow diagrams, and technology stack selection."
 
 @tool
 def generate_code(architecture: str) -> str:
@@ -99,8 +99,12 @@ response = graph.invoke({"messages": [HumanMessage("Develop an e-commerce websit
 print(response)
 ```
 
+The generated graph is as follows:
+
+![Sequential Pipeline](../../assets/sequential.png)
+
 !!! note "Note"
-    For serially combined graphs, LangGraph's StateGraph provides the add_sequence method as a convenient shorthand. This method works best when nodes are functions (not subgraphs). If nodes are subgraphs, the code might look like:
+    For serially combined graphs, LangGraph's StateGraph provides the add_sequence method as a convenient shorthand. This method works best when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like this:
 
     ```python
     graph = StateGraph(AgentState)
@@ -109,27 +113,27 @@ print(response)
     graph = graph.compile()
     ```
 
-    However, the above approach is still somewhat cumbersome. Therefore, using the `create_sequential_pipeline` function is recommended, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.
+    However, the above writing is still somewhat cumbersome. Therefore, it's more recommended to use the `create_sequential_pipeline` function, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.
 
 ## Parallel Orchestration
 
-Used for building agent parallel workflows. It works by combining multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.
+Used to build an agent parallel workflow (Parallel Pipeline). Its working principle is to combine multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.
 
-Through the `create_parallel_pipeline` function, multiple state graphs can be combined in a parallel orchestration manner to achieve parallel task execution.
+Through the `create_parallel_pipeline` function, multiple state graphs can be combined in a parallel orchestration manner to achieve the effect of parallel task execution.
 
 ### Simple Example
 **Usage Example**:
 
-In software development, when the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.
+In software development, once the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.
 
-Suppose we're developing an e-commerce website whose core functions can be divided into three independent modules:
+Suppose we want to develop an e-commerce website, whose core functions can be divided into three independent modules:
 1. User Module (registration, login, personal center)
-2. Product Module (display, search, categorization)
-3. Order Module (placing orders, payment, status inquiry)
+2. Product Module (display, search, classification)
+3. Order Module (placing orders, payment, status query)
 
-If developed serially, the time required would be the sum of all three modules. But if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.
+If developed serially, the time consumption will be the sum of all three. But if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.
 
-Through the `create_parallel_pipeline` function, assign a dedicated module development agent to each module, allowing them to work in parallel.
+Through the `create_parallel_pipeline` function, assign a specialized module development agent to each module, allowing them to work in parallel.
 
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline
@@ -137,17 +141,17 @@ from langchain_dev_utils.pipeline import create_parallel_pipeline
 @tool
 def develop_user_module():
     """Develop user module functionality"""
-    return "User module development completed, including registration, login, and personal profile management features."
+    return "User module development completed, including registration, login, and personal profile management functions."
 
 @tool
 def develop_product_module():
     """Develop product module functionality"""
-    return "Product module development completed, including product display, search, and categorization features."
+    return "Product module development completed, including product display, search, and classification functions."
 
 @tool
 def develop_order_module():
     """Develop order module functionality"""
-    return "Order module development completed, including order placement, payment, and order inquiry features."
+    return "Order module development completed, including order placement, payment, and order query functions."
 
 # Build a parallel workflow (pipeline) for frontend module development
 graph = create_parallel_pipeline(
@@ -177,19 +181,23 @@ response = graph.invoke({"messages": [HumanMessage("Parallel development of thre
 print(response)
 ```
 
-### Using Branch Functions to Specify Parallelly Executed Subgraphs
+The generated graph is as follows:
 
-Sometimes it's necessary to specify which subgraphs to execute in parallel based on conditions. In such cases, branch functions can be used.
-The branch function needs to return a list of `Send` objects.
+![Parallel Pipeline](../../assets/parallel.png)
+
+### Using Branch Function to Specify Subgraphs for Parallel Execution
+
+Sometimes it's necessary to specify which subgraphs to execute in parallel based on conditions. In this case, a branch function can be used.
+The branch function needs to return a list of `Send`.
 
 For example, in the above case, suppose the modules to be developed are specified by the user, then only the specified modules will be executed in parallel.
 
 ```python
-# Build a parallel pipeline (selecting subgraphs to execute in parallel based on conditions)
+# Build a parallel pipeline (select subgraphs for parallel execution based on conditions)
 from langgraph.types import Send
 
 class DevAgentState(AgentState):
-    """Development agent state"""
+    """Development Agent State"""
     selected_modules: list[tuple[str, str]]
 
 
@@ -235,5 +243,5 @@ print(response)
 
 **Important Notes**
 
-- When the `branches_fn` parameter is not provided, all subgraphs will be executed in parallel.
-- When the `branches_fn` parameter is provided, which subgraphs to execute is determined by the return value of this function.
+- When the `branches_fn` parameter is not passed, all subgraphs will be executed in parallel.
+- When the `branches_fn` parameter is passed, which subgraphs to execute is determined by the return value of this function.

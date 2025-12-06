@@ -39,7 +39,8 @@ markdown_extensions:
   - admonition         
   - pymdownx.details    
   - pymdownx.superfences 
-  - pymdownx.tabbed     
+  - pymdownx.tabbed:
+      alternate_style: true     
   - pymdownx.highlight  
   - attr_list           
   - md_in_html          
@@ -52,6 +53,7 @@ markdown_extensions:
 
 
 plugins:
+  - search
   - i18n:
       docs_structure: folder 
       languages:

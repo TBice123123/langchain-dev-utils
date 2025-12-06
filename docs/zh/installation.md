@@ -12,29 +12,40 @@
 
 `langchain-dev-utils`支持使用`pip`、`poetry`、`uv`等多种包管理器进行安装。
 
-```bash
-# 使用 pip 安装
-pip install -U langchain-dev-utils
+安装基础版本的`langchain-dev-utils`：
 
-# 使用 poetry 安装
-poetry add langchain-dev-utils
+=== "pip"
+    ```bash
+    pip install -U langchain-dev-utils
+    ```
 
-# 使用 uv 安装  
-uv add langchain-dev-utils
-```
+=== "poetry"
+    ```bash
+    poetry add langchain-dev-utils
+    ```
 
-上述会安装`langchain-dev-utils`以及它的基础依赖。如果你想要使用它的完整功能你需要执行下面的命令：
+=== "uv"
+    ```bash
+    uv add langchain-dev-utils
+    ```
 
-```bash
-# 使用 pip 安装 standard 版本
-pip install -U langchain-dev-utils[standard]
+安装完整功能版本的`langchain-dev-utils`：
 
-# 使用 poetry 安装 standard 版本
-poetry add langchain-dev-utils[standard]
 
-# 使用 uv 安装 standard 版本  
-uv add langchain-dev-utils[standard]
-```
+=== "pip"
+    ```bash
+    pip install -U langchain-dev-utils[standard]
+    ```
+
+=== "poetry"
+    ```bash
+    poetry add langchain-dev-utils[standard]
+    ```
+
+=== "uv"
+    ```bash
+    uv add langchain-dev-utils[standard]
+    ```
 
 
 ## 依赖项

@@ -100,6 +100,9 @@ response = graph.invoke({"messages": [HumanMessage("开发一个电商网站，�
 print(response)
 ```
 
+最终生成的图如下：
+
+![Sequential Pipeline](../../assets/sequential.png)
 
 !!! note "注意"
     对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：
@@ -179,6 +182,10 @@ graph = create_parallel_pipeline(
 response = graph.invoke({"messages": [HumanMessage("并行开发电商网站的三个核心模块")]})
 print(response)
 ```
+
+最终生成的图如下：
+
+![Parallel Pipeline](../../assets/parallel.png)
 
 ### 利用分支函数指定并行执行的子图
 
