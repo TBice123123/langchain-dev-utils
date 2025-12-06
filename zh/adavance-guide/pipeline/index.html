@@ -1362,6 +1362,8 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;开发一个电商网站，包含用户注册、商品浏览和购物车功能&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+<p>最终生成的图如下：</p>
+<p><img alt="Sequential Pipeline" src="../../../assets/sequential.png" /></p>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
 <p>对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：</p>
@@ -1428,6 +1430,8 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;并行开发电商网站的三个核心模块&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+<p>最终生成的图如下：</p>
+<p><img alt="Parallel Pipeline" src="../../../assets/parallel.png" /></p>
 <h3 id="_6">利用分支函数指定并行执行的子图</h3>
 <p>有些时候需要根据条件指定并行执行哪些子图，这时可以使用分支函数。
 分支函数需要返回<code>Send</code>列表。</p>
