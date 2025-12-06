@@ -14,12 +14,11 @@
 ### 使用默认的 handler
 
 ```python
-from langchain_dev_utils import human_in_the_loop
-from langchain_core.tools import tool
+from langchain_dev_utils.tool_calling import human_in_the_loop
 import datetime
 
+
 @human_in_the_loop
-@tool
 def get_current_time() -> str:
     """获取当前时间戳"""
     return str(datetime.datetime.now().timestamp())
@@ -28,13 +27,12 @@ def get_current_time() -> str:
 ### 异步工具示例
 
 ```python
-from langchain_dev_utils import human_in_the_loop_async
-from langchain_core.tools import tool
+from langchain_dev_utils.tool_calling import human_in_the_loop_async
 import asyncio
 import datetime
 
+
 @human_in_the_loop_async
-@tool
 async def async_get_current_time() -> str:
     """异步获取当前时间戳"""
     await asyncio.sleep(1)
@@ -83,8 +81,9 @@ async def async_get_current_time() -> str:
 
 ```python
 from typing import Any
-from langchain_dev_utils import human_in_the_loop_async, InterruptParams
+from langchain_dev_utils.tool_calling import human_in_the_loop_async, InterruptParams
 from langgraph.types import interrupt
+
 
 async def custom_handler(params: InterruptParams) -> Any:
     response = interrupt(
@@ -97,8 +96,8 @@ async def custom_handler(params: InterruptParams) -> Any:
     else:
         raise ValueError(f"不支持的响应类型: {response['type']}")
 
+
 @human_in_the_loop_async(handler=custom_handler)
-@tool
 async def get_weather(city: str) -> str:
     """获取天气信息"""
     return f"{city}天气晴朗"
