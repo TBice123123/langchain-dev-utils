@@ -1286,24 +1286,22 @@
 </ul>
 <h2 id="_3">使用示例</h2>
 <h3 id="handler">使用默认的 handler</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
+
 <span class="nd">@human_in_the_loop</span>
-<span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;获取当前时间戳&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 </code></pre></div>
 <h3 id="_4">异步工具示例</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
+
 <span class="nd">@human_in_the_loop_async</span>
-<span class="nd">@tool</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;异步获取当前时间戳&quot;&quot;&quot;</span>
     <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1346,8 +1344,9 @@
 <h3 id="handler_1">自定义 Handler 示例</h3>
 <p>你可以完全控制中断行为，例如只允许“接受/拒绝”，或自定义提示语：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span><span class="p">,</span> <span class="n">InterruptParams</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span><span class="p">,</span> <span class="n">InterruptParams</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">interrupt</span>
+
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">custom_handler</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">InterruptParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">interrupt</span><span class="p">(</span>
@@ -1360,8 +1359,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;不支持的响应类型: </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+
 <span class="nd">@human_in_the_loop_async</span><span class="p">(</span><span class="n">handler</span><span class="o">=</span><span class="n">custom_handler</span><span class="p">)</span>
-<span class="nd">@tool</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_weather</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;获取天气信息&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">天气晴朗&quot;</span>
