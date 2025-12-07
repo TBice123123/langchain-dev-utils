@@ -1283,17 +1283,37 @@
 <p>即用于搭建智能体顺序工作流（Sequential Pipeline）。这是一种将复杂任务分解为一系列连续、有序的子任务，并交由不同的专门化智能体依次处理的工作模式。</p>
 <p>通过<code>create_sequential_pipeline</code> 可将多个状态图以顺序编排方式进行组合。</p>
 <p><strong>使用示例</strong>：</p>
-<p>开发一个软件项目，通常遵循一个严格的线性流程：
-1. 需求分析：首先，产品经理必须明确“要做什么”，并产出详细的产品需求文档（PRD）。
-2. 架构设计：然后，架构师基于PRD，设计“要怎么做”，规划系统蓝图和技术选型。
-3. 代码编写：接着，开发工程师根据架构设计，将蓝图实现为具体的代码。
-4. 测试与质保：最后，测试工程师对代码进行验证，确保其质量符合要求。
-这个流程环环相扣，顺序不可颠倒。</p>
-<p>对于上述四个流程，每个流程都有一个专门化的智能体负责。
-1. 产品经理智能体：接收用户的模糊需求，输出结构化的产品需求文档（PRD）。
-2. 架构师智能体：接收PRD，输出系统架构图和技术方案。
-3. 开发工程师智能体：接收架构方案，输出可执行的源代码。
-4. 测试工程师智能体：接收源代码，输出测试报告和优化建议。</p>
+<p>开发一个软件项目，通常遵循一个严格的线性流程：</p>
+<ol>
+<li>
+<p>需求分析：首先，产品经理必须明确“要做什么”，并产出详细的产品需求文档（PRD）。</p>
+</li>
+<li>
+<p>架构设计：然后，架构师基于PRD，设计“要怎么做”，规划系统蓝图和技术选型。</p>
+</li>
+<li>
+<p>代码编写：接着，开发工程师根据架构设计，将蓝图实现为具体的代码。</p>
+</li>
+<li>
+<p>测试与质保：最后，测试工程师对代码进行验证，确保其质量符合要求。</p>
+</li>
+</ol>
+<p>这个流程环环相扣，顺序不可颠倒。</p>
+<p>对于上述四个流程，每个流程都有一个专门化的智能体负责。</p>
+<ol>
+<li>
+<p>产品经理智能体：接收用户的模糊需求，输出结构化的产品需求文档（PRD）。</p>
+</li>
+<li>
+<p>架构师智能体：接收PRD，输出系统架构图和技术方案。</p>
+</li>
+<li>
+<p>开发工程师智能体：接收架构方案，输出可执行的源代码。</p>
+</li>
+<li>
+<p>测试工程师智能体：接收源代码，输出测试报告和优化建议。</p>
+</li>
+</ol>
 <p>通过 <code>create_sequential_pipeline</code> 函数，将这四个智能体无缝地串联起来，形成一个高度自动化、职责分明的软件开发流水线。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1364,6 +1384,19 @@
 </code></pre></div>
 <p>最终生成的图如下：</p>
 <p><img alt="Sequential Pipeline" src="../../../assets/sequential.png" /></p>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p>上述示例仅作参考，实际上，该例子在运行时会将前面所有智能体的完整上下文依次传递给当前智能体，可能导致上下文膨胀，影响性能与效果。<br />
+推荐采用以下任一方案精简上下文：</p>
+<ol>
+<li>
+<p>使用 <code>create_agent</code> 配合<code>中间件</code>，仅提取并传递必要信息；</p>
+</li>
+<li>
+<p>基于 <code>LangGraph</code> 完全自定义状态图，显式控制状态字段与消息流动。</p>
+</li>
+</ol>
+</div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
 <p>对于串行组合的图，langgraph 的 StateGraph 提供了 add_sequence 方法作为简便写法。该方法最适合在节点为函数（而非子图）时使用。若节点为子图，代码可能如下：</p>

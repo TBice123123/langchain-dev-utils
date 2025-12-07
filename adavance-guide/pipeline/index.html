@@ -1283,17 +1283,37 @@
 <p>Used to build an agent sequential workflow (Sequential Pipeline). This is a work pattern that decomposes complex tasks into a series of continuous, ordered subtasks, and hands them over to different specialized agents for processing in sequence.</p>
 <p>Multiple state graphs can be combined in a sequential orchestration manner through <code>create_sequential_pipeline</code>.</p>
 <p><strong>Usage Example</strong>:</p>
-<p>Developing a software project typically follows a strict linear process:
-1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed product requirements document (PRD).
-2. Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.
-3. Code Writing: Next, development engineers implement the blueprint into specific code according to the architecture design.
-4. Testing and Quality Assurance: Finally, testing engineers verify the code to ensure its quality meets requirements.
-This process is interconnected and the order cannot be reversed.</p>
-<p>For the above four processes, each process has a specialized agent responsible.
-1. Product Manager Agent: Receives user's vague requirements and outputs a structured product requirements document (PRD).
-2. Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.
-3. Development Engineer Agent: Receives the architecture solution and outputs executable source code.
-4. Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.</p>
+<p>Developing a software project typically follows a strict linear process:</p>
+<ol>
+<li>
+<p>Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed product requirements document (PRD).</p>
+</li>
+<li>
+<p>Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.</p>
+</li>
+<li>
+<p>Code Writing: Next, development engineers implement the blueprint into specific code according to the architecture design.</p>
+</li>
+<li>
+<p>Testing and Quality Assurance: Finally, testing engineers verify the code to ensure its quality meets requirements.</p>
+</li>
+</ol>
+<p>This process is interconnected and the order cannot be reversed.</p>
+<p>For the above four processes, each process has a specialized agent responsible.</p>
+<ol>
+<li>
+<p>Product Manager Agent: Receives user's vague requirements and outputs a structured product requirements document (PRD).</p>
+</li>
+<li>
+<p>Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.</p>
+</li>
+<li>
+<p>Development Engineer Agent: Receives the architecture solution and outputs executable source code.</p>
+</li>
+<li>
+<p>Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.</p>
+</li>
+</ol>
 <p>Through the <code>create_sequential_pipeline</code> function, these four agents are seamlessly connected to form a highly automated, clearly divided software development pipeline.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1364,6 +1384,19 @@ This process is interconnected and the order cannot be reversed.</p>
 </code></pre></div>
 <p>The generated graph is as follows:</p>
 <p><img alt="Sequential Pipeline" src="../../assets/sequential.png" /></p>
+<div class="admonition warning">
+<p class="admonition-title">Note</p>
+<p>The example above is for reference only; in practice, it will pass the complete context of all previous agents to the current agent, which may cause context bloat and impact performance and effectiveness.<br />
+It is recommended to adopt either of the following approaches to streamline the context:</p>
+<ol>
+<li>
+<p>Use <code>create_agent</code> with middleware to extract and pass only the necessary information;</p>
+</li>
+<li>
+<p>Fully customize the state graph based on <code>LangGraph</code>, explicitly controlling state fields and message flow.</p>
+</li>
+</ol>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For serially combined graphs, LangGraph's StateGraph provides the add_sequence method as a convenient shorthand. This method works best when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like this:</p>
