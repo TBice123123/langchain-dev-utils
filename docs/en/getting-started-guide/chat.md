@@ -470,21 +470,13 @@ For **case two**, the model's methods and parameters are as follows:
     print(response)
     ```
 
-
 ??? note "Passing Multimodal Data"
 
-    Supports passing multimodal data. You can use the OpenAI-compatible multimodal data format or directly use `content_block` in `langchain`. For example:
+    Multimodal data can be passed using either the OpenAI-compatible multimodal format or directly via `content_block` in LangChain. For example:
 
     ```python
-    from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
+    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
-
-
-    register_model_provider(
-        provider_name="openrouter",
-        chat_model="openai-compatible",
-        base_url="https://openrouter.ai/api/v1",
-    )
 
     messages = [
         HumanMessage(
@@ -498,10 +490,20 @@ For **case two**, the model's methods and parameters are as follows:
         )
     ]
 
-    model = load_chat_model("openrouter:qwen/qwen3-vl-8b-thinking")
+    model = load_chat_model("vllm:qwen3-vl-2b")
     response = model.invoke(messages)
     print(response)
     ```
+
+    !!! note "Additional Note"
+        vLLM also supports serving multimodal models, such as `qwen3-vl-2b`:
+
+        ```bash
+        vllm serve Qwen/Qwen3-VL-2B-Instruct \
+        --trust-remote-code \
+        --host 0.0.0.0 --port 8000 \
+        --served-model-name qwen3-vl-2b
+        ```
 
 
 ??? note "OpenAI's Latest `responses_api`"

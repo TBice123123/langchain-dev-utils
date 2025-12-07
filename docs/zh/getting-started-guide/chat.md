@@ -479,32 +479,32 @@ export VLLM_API_KEY=vllm
     支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用`langchain`中的`content_block`。例如：
 
     ```python
-    from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
+    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
-
-
-    register_model_provider(
-        provider_name="openrouter",
-        chat_model="openai-compatible",
-        base_url="https://openrouter.ai/api/v1  ",
-    )
-
     messages = [
         HumanMessage(
             content_blocks=[
                 {
                     "type": "image",
-                    "url": "https://example.com/image.png  ",
+                    "url": "https://example.com/image.png",
                 },
                 {"type": "text", "text": "描述这张图片"},
             ]
         )
     ]
 
-    model = load_chat_model("openrouter:qwen/qwen3-vl-8b-thinking")
+    model = load_chat_model("vllm:qwen3-vl-2b")
     response = model.invoke(messages)
     print(response)
     ```
+    !!! note "补充"
+        vllm 也支持部署多模态模型，例如 `qwen3-vl-2b`：
+        ```bash
+        vllm serve Qwen/Qwen3-VL-2B-Instruct \
+        --trust-remote-code \
+        --host 0.0.0.0 --port 8000 \
+        --served-model-name qwen3-vl-2b
+        ```
 
 
 ??? note "OpenAI 最新的`responses_api`"
