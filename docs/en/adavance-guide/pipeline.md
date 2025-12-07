@@ -16,16 +16,25 @@ Multiple state graphs can be combined in a sequential orchestration manner throu
 **Usage Example**:
 
 Developing a software project typically follows a strict linear process:
+
 1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed product requirements document (PRD).
+
 2. Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.
+
 3. Code Writing: Next, development engineers implement the blueprint into specific code according to the architecture design.
+
 4. Testing and Quality Assurance: Finally, testing engineers verify the code to ensure its quality meets requirements.
+
 This process is interconnected and the order cannot be reversed.
 
 For the above four processes, each process has a specialized agent responsible.
+
 1. Product Manager Agent: Receives user's vague requirements and outputs a structured product requirements document (PRD).
+
 2. Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.
+
 3. Development Engineer Agent: Receives the architecture solution and outputs executable source code.
+
 4. Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.
 
 Through the `create_sequential_pipeline` function, these four agents are seamlessly connected to form a highly automated, clearly divided software development pipeline.
@@ -103,6 +112,15 @@ The generated graph is as follows:
 
 ![Sequential Pipeline](../../assets/sequential.png)
 
+!!! warning "Note"
+    The example above is for reference only; in practice, it will pass the complete context of all previous agents to the current agent, which may cause context bloat and impact performance and effectiveness.  
+    It is recommended to adopt either of the following approaches to streamline the context:
+
+    1. Use `create_agent` with middleware to extract and pass only the necessary information;
+
+    2. Fully customize the state graph based on `LangGraph`, explicitly controlling state fields and message flow.
+
+    
 !!! note "Note"
     For serially combined graphs, LangGraph's StateGraph provides the add_sequence method as a convenient shorthand. This method works best when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like this:
 
