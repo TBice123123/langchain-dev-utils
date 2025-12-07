@@ -1772,32 +1772,33 @@
 <details class="note">
 <summary>传递多模态数据</summary>
 <p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。例如：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
-
-
-<span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://openrouter.ai/api/v1  &quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">HumanMessage</span><span class="p">(</span>
         <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
             <span class="p">{</span>
                 <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/image.png  &quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/image.png&quot;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;描述这张图片&quot;</span><span class="p">},</span>
         <span class="p">]</span>
     <span class="p">)</span>
 <span class="p">]</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openrouter:qwen/qwen3-vl-8b-thinking&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">补充</p>
+<p>vllm 也支持部署多模态模型，例如 <code>qwen3-vl-2b</code>：
+<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
+--trust-remote-code<span class="w"> </span><span class="se">\</span>
+--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+--served-model-name<span class="w"> </span>qwen3-vl-2b
+</code></pre></div></p>
+</div>
 </details>
 <details class="note">
 <summary>OpenAI 最新的<code>responses_api</code></summary>

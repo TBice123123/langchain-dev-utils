@@ -1767,16 +1767,9 @@ For <code>json_mode</code>, although it has higher support, since it must guide 
 </details>
 <details class="note">
 <summary>Passing Multimodal Data</summary>
-<p>Supports passing multimodal data. You can use the OpenAI-compatible multimodal data format or directly use <code>content_block</code> in <code>langchain</code>. For example:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
+<p>Multimodal data can be passed using either the OpenAI-compatible multimodal format or directly via <code>content_block</code> in LangChain. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
-
-
-<span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://openrouter.ai/api/v1&quot;</span><span class="p">,</span>
-<span class="p">)</span>
 
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">HumanMessage</span><span class="p">(</span>
@@ -1790,10 +1783,19 @@ For <code>json_mode</code>, although it has higher support, since it must guide 
     <span class="p">)</span>
 <span class="p">]</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openrouter:qwen/qwen3-vl-8b-thinking&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Additional Note</p>
+<p>vLLM also supports serving multimodal models, such as <code>qwen3-vl-2b</code>:</p>
+<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
+--trust-remote-code<span class="w"> </span><span class="se">\</span>
+--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+--served-model-name<span class="w"> </span>qwen3-vl-2b
+</code></pre></div>
+</div>
 </details>
 <details class="note">
 <summary>OpenAI's Latest <code>responses_api</code></summary>
