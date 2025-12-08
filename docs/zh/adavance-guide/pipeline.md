@@ -121,20 +121,19 @@ print(response)
 2. 基于 `LangGraph` 完全自定义状态图，显式控制状态字段与消息流动。
 
 
-??? tip "参考代码"
+??? tip "利用中间件解决的参考代码"
 
     ```python
-    from langchain.agents import AgentState
-    from langchain.agents.middleware import after_agent
-    from langchain_core.messages import HumanMessage, RemoveMessage, ToolMessage
-    from langchain_core.tools import tool
-    from langchain_dev_utils.agents import create_agent
-    from langchain_dev_utils.pipeline import create_sequential_pipeline
-    from langchain.tools import ToolRuntime
-    from langgraph.runtime import Runtime
-    from langgraph.types import Command
+    from typing import Any
 
+    from langchain.agents import AgentState
+    from langchain.agents.middleware import AgentMiddleware
+    from langchain_core.messages import HumanMessage, RemoveMessage
+    from langgraph.runtime import Runtime
+
+    from langchain_dev_utils.agents import create_agent
     from langchain_dev_utils.agents.middleware import format_prompt
+    from langchain_dev_utils.pipeline import create_sequential_pipeline
 
 
     class DeveloperState(AgentState, total=False):
@@ -144,116 +143,74 @@ print(response)
         tests: str
 
 
-    @tool
-    def analyze_requirements(user_request: str, runtime: ToolRuntime):
-        """分析用户需求并生成详细的产品需求文档，本工具用于保存最终结果"""
-        return Command(
-            update={
+    class ClearAgentContextMiddleware(AgentMiddleware):
+        state_schema = DeveloperState
+
+        def __init__(self, result_save_key: str) -> None:
+            super().__init__()
+            self.result_save_key = result_save_key
+
+        def after_agent(
+            self, state: DeveloperState, runtime: Runtime
+        ) -> dict[str, Any] | None:
+            final_message = state["messages"][-1]
+            update_key = self.result_save_key
+            return {
                 "messages": [
-                    ToolMessage(
-                        content="需求分析报告已生成", tool_call_id=runtime.tool_call_id
-                    )
+                    RemoveMessage(id=msg.id or "") for msg in state["messages"][1:]
                 ],
-                "requirement": user_request,
+                update_key: final_message.content,
             }
-        )
 
 
-    @tool
-    def design_architecture(content: str, runtime: ToolRuntime):
-        """根据需求文档设计系统架构，本工具用于保存最终结果"""
-        return Command(
-            update={
-                "messages": [
-                    ToolMessage(
-                        content="系统架构设计已生成", tool_call_id=runtime.tool_call_id
-                    )
-                ],
-                "architecture": content,
-            }
-        )
-
-
-    @tool
-    def generate_code(content: str, runtime: ToolRuntime):
-        """根据架构设计生成核心业务代码，本工具用于保存最终结果"""
-        return Command(
-            update={
-                "messages": [
-                    ToolMessage(
-                        content="核心业务代码已生成", tool_call_id=runtime.tool_call_id
-                    )
-                ],
-                "code": content,
-            }
-        )
-
-
-    @tool
-    def create_tests(content: str, runtime: ToolRuntime):
-        """为生成的核心业务代码创建测试用例，本工具用于保存最终结果"""
-        return Command(
-            update={
-                "messages": [
-                    ToolMessage(content="测试用例已生成", tool_call_id=runtime.tool_call_id)
-                ],
-                "tests": content,
-            }
-        )
-
-
-    @after_agent(state_schema=DeveloperState)
-    def clear_agent_context(state: DeveloperState, runtime: Runtime):
-        return {"messages": [RemoveMessage(id=msg.id) for msg in state["messages"][1:]]}
-
-
+    # 构建自动化软件开发顺序工作流（管道）
     graph = create_sequential_pipeline(
         sub_graphs=[
             create_agent(
-                model="dashscope:qwen-flash",
+                model="vllm:qwen3-4b",
                 tools=[analyze_requirements],
-                system_prompt="""你是一个产品经理，负责分析用户需求并生成详细的产品需求文档""",
+                system_prompt="你是一个产品经理，负责分析用户需求并生成详细的产品需求文档",
                 name="requirements_agent",
                 state_schema=DeveloperState,
-                middleware=[format_prompt, clear_agent_context],
+                middleware=[format_prompt, ClearAgentContextMiddleware("requirement")],
             ),
             create_agent(
-                model="dashscope:qwen-flash",
+                model="vllm:qwen3-4b",
                 tools=[design_architecture],
-                system_prompt="""你是一个系统架构师，负责根据需求文档设计系统架构。
-                ## 需求文档：
-                {requirement}
-                """,
+                system_prompt=(
+                    "你是一个系统架构师，负责根据需求文档设计系统架构。\n"
+                    "## 需求文档：\n"
+                    "{requirement}"
+                ),
                 name="architecture_agent",
                 state_schema=DeveloperState,
-                middleware=(
-                    format_prompt,
-                    clear_agent_context,
-                ),
+                middleware=[format_prompt, ClearAgentContextMiddleware("architecture")],
             ),
             create_agent(
-                model="dashscope:qwen-flash",
+                model="vllm:qwen3-4b",
                 tools=[generate_code],
-                system_prompt="""你是一个高级开发工程师，负责根据需求文档以及系统架构生成核心业务代码。
-                ## 需求文档：
-                {requirement}
-                ## 系统架构：
-                {architecture}
-                """,
+                system_prompt=(
+                    "你是一个高级开发工程师，负责根据需求文档以及系统架构生成核心业务代码。\n"
+                    "## 需求文档：\n"
+                    "{requirement}\n"
+                    "## 系统架构：\n"
+                    "{architecture}"
+                ),
                 name="coding_agent",
                 state_schema=DeveloperState,
-                middleware=[format_prompt, clear_agent_context],
+                middleware=[format_prompt, ClearAgentContextMiddleware("code")],
             ),
             create_agent(
-                model="dashscope:qwen-flash",
+                model="vllm:qwen3-4b",
                 tools=[create_tests],
-                system_prompt="""你是一个测试工程师，负责为**生成的核心业务代码创建全面的测试用例。
-                ## 生成的代码：
-                {code}
-                """,
+                system_prompt=(
+                    "你是一个测试工程师，负责为**生成的核心业务代码创建全面的测试用例。\n"
+                    "## 生成的代码：\n"
+                    "{code}"
+                ),
                 name="testing_agent",
                 state_schema=DeveloperState,
-                middleware=[format_prompt, clear_agent_context],
+                middleware=[format_prompt, ClearAgentContextMiddleware("tests")],
             ),
         ],
         state_schema=DeveloperState,
@@ -264,9 +221,10 @@ print(response)
     )
     print(response)
     ```
-    在优化后的代码里，每个工具返回 `Command` 对象，通过 `update` 字段将关键结果写入对应状态字段（如 `architecture`、`code`、`tests` 等）。
-    然后，借助内置中间件 `format_prompt`，可在运行时把前置智能体的输出按需动态拼入 `system_prompt`。  
-    同时引入自定义中间件 `clear_agent_context`，在每个智能体结束后自动清理历史消息，实现上下文的清理。
+    在优化后的代码里，我们对智能体的State Schema添加了`requirement`、`architecture`、`code`、`tests`四个字段，用于存储相对应的智能体最终的输出结果。
+    同时，我们自定义了一个中间件`ClearAgentContextMiddleware`，用于在每个智能体结束后清除当前的运行上下文，并将最终的结果（final_message.content）保存到对应的key中。
+    最后，我们使用本库内置的`format_prompt`中间件，在运行时把前置智能体的输出按需动态拼入 `system_prompt`。  
+
 
 
 !!! note "注意"
