@@ -1394,18 +1394,17 @@
 </li>
 </ol>
 <details class="tip">
-<summary>参考代码</summary>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">after_agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">RemoveMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runtime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
+<summary>利用中间件解决的参考代码</summary>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">RemoveMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runtime</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_pipeline</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">DeveloperState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1415,116 +1414,74 @@
     <span class="n">tests</span><span class="p">:</span> <span class="nb">str</span>
 
 
-<span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">analyze_requirements</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;分析用户需求并生成详细的产品需求文档，本工具用于保存最终结果&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
-        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClearAgentContextMiddleware</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
+    <span class="n">state_schema</span> <span class="o">=</span> <span class="n">DeveloperState</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_save_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_save_key</span> <span class="o">=</span> <span class="n">result_save_key</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">after_agent</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">DeveloperState</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Runtime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">final_message</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">update_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_save_key</span>
+        <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="n">ToolMessage</span><span class="p">(</span>
-                    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;需求分析报告已生成&quot;</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span>
-                <span class="p">)</span>
+                <span class="n">RemoveMessage</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
             <span class="p">],</span>
-            <span class="s2">&quot;requirement&quot;</span><span class="p">:</span> <span class="n">user_request</span><span class="p">,</span>
+            <span class="n">update_key</span><span class="p">:</span> <span class="n">final_message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
         <span class="p">}</span>
-    <span class="p">)</span>
 
 
-<span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">design_architecture</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;根据需求文档设计系统架构，本工具用于保存最终结果&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
-        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="n">ToolMessage</span><span class="p">(</span>
-                    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;系统架构设计已生成&quot;</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span>
-                <span class="p">)</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;architecture&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
-
-
-<span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_code</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;根据架构设计生成核心业务代码，本工具用于保存最终结果&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
-        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="n">ToolMessage</span><span class="p">(</span>
-                    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;核心业务代码已生成&quot;</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span>
-                <span class="p">)</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
-
-
-<span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_tests</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;为生成的核心业务代码创建测试用例，本工具用于保存最终结果&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
-        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;测试用例已生成&quot;</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;tests&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
-
-
-<span class="nd">@after_agent</span><span class="p">(</span><span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">clear_agent_context</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">DeveloperState</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Runtime</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RemoveMessage</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]]}</span>
-
-
+<span class="c1"># 构建自动化软件开发顺序工作流（管道）</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
         <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;dashscope:qwen-flash&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
             <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">analyze_requirements</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;你是一个产品经理，负责分析用户需求并生成详细的产品需求文档&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个产品经理，负责分析用户需求并生成详细的产品需求文档&quot;</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;requirements_agent&quot;</span><span class="p">,</span>
             <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">clear_agent_context</span><span class="p">],</span>
+            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;requirement&quot;</span><span class="p">)],</span>
         <span class="p">),</span>
         <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;dashscope:qwen-flash&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
             <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">design_architecture</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;你是一个系统架构师，负责根据需求文档设计系统架构。</span>
-<span class="s2">            ## 需求文档：</span>
-<span class="s2">            </span><span class="si">{requirement}</span>
-<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">&quot;你是一个系统架构师，负责根据需求文档设计系统架构。</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;## 需求文档：</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;</span><span class="si">{requirement}</span><span class="s2">&quot;</span>
+            <span class="p">),</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;architecture_agent&quot;</span><span class="p">,</span>
             <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">(</span>
-                <span class="n">format_prompt</span><span class="p">,</span>
-                <span class="n">clear_agent_context</span><span class="p">,</span>
-            <span class="p">),</span>
+            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;architecture&quot;</span><span class="p">)],</span>
         <span class="p">),</span>
         <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;dashscope:qwen-flash&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
             <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_code</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;你是一个高级开发工程师，负责根据需求文档以及系统架构生成核心业务代码。</span>
-<span class="s2">            ## 需求文档：</span>
-<span class="s2">            </span><span class="si">{requirement}</span>
-<span class="s2">            ## 系统架构：</span>
-<span class="s2">            </span><span class="si">{architecture}</span>
-<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">&quot;你是一个高级开发工程师，负责根据需求文档以及系统架构生成核心业务代码。</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;## 需求文档：</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;</span><span class="si">{requirement}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;## 系统架构：</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;</span><span class="si">{architecture}</span><span class="s2">&quot;</span>
+            <span class="p">),</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coding_agent&quot;</span><span class="p">,</span>
             <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">clear_agent_context</span><span class="p">],</span>
+            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)],</span>
         <span class="p">),</span>
         <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;dashscope:qwen-flash&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
             <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;你是一个测试工程师，负责为**生成的核心业务代码创建全面的测试用例。</span>
-<span class="s2">            ## 生成的代码：</span>
-<span class="s2">            </span><span class="si">{code}</span>
-<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">&quot;你是一个测试工程师，负责为**生成的核心业务代码创建全面的测试用例。</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;## 生成的代码：</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;</span><span class="si">{code}</span><span class="s2">&quot;</span>
+            <span class="p">),</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
             <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">clear_agent_context</span><span class="p">],</span>
+            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;tests&quot;</span><span class="p">)],</span>
         <span class="p">),</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
@@ -1535,9 +1492,9 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-在优化后的代码里，每个工具返回 <code>Command</code> 对象，通过 <code>update</code> 字段将关键结果写入对应状态字段（如 <code>architecture</code>、<code>code</code>、<code>tests</code> 等）。
-然后，借助内置中间件 <code>format_prompt</code>，可在运行时把前置智能体的输出按需动态拼入 <code>system_prompt</code>。<br />
-同时引入自定义中间件 <code>clear_agent_context</code>，在每个智能体结束后自动清理历史消息，实现上下文的清理。</p>
+在优化后的代码里，我们对智能体的State Schema添加了<code>requirement</code>、<code>architecture</code>、<code>code</code>、<code>tests</code>四个字段，用于存储相对应的智能体最终的输出结果。
+同时，我们自定义了一个中间件<code>ClearAgentContextMiddleware</code>，用于在每个智能体结束后清除当前的运行上下文，并将最终的结果（final_message.content）保存到对应的key中。
+最后，我们使用本库内置的<code>format_prompt</code>中间件，在运行时把前置智能体的输出按需动态拼入 <code>system_prompt</code>。  </p>
 </details>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
