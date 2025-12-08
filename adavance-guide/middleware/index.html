@@ -264,7 +264,7 @@
   
     
   
-  Index
+  Home
 
       </a>
     </li>
@@ -411,7 +411,7 @@
   <span class="md-ellipsis">
     
   
-    Index
+    Home
   
 
     
@@ -847,6 +847,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#formatting-system-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formatting System Prompts
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1218,6 +1229,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#formatting-system-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formatting System Prompts
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1428,6 +1450,102 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div></p>
 </div>
+<h2 id="formatting-system-prompts">Formatting System Prompts</h2>
+<p>This middleware <code>format_prompt</code> allows you to use f-string style placeholders (like <code>{name}</code>) in your <code>system_prompt</code>, and dynamically replace them with actual values at runtime.</p>
+<p>The values for placeholders follow a clear resolution order:</p>
+<ol>
+<li><strong>First, look in <code>state</code></strong>: It first searches for fields with the same name as the placeholder in the <code>state</code> dictionary.</li>
+<li><strong>Then, look in <code>context</code></strong>: If the field is not found in <code>state</code>, it continues to search in the <code>context</code> object.</li>
+</ol>
+<p>This order means that values in <code>state</code> have higher priority and can override values with the same name in <code>context</code>.</p>
+<p>Usage examples are as follows:</p>
+<ul>
+<li>
+<p><strong>Getting variables only from <code>state</code></strong></p>
+<p>This is the most basic usage, where all placeholder variables are provided by <code>state</code>.
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AssistantState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">.&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># When calling, you must provide the value for &#39;name&#39; in state</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">)],</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Getting variables from both <code>state</code> and <code>context</code></strong></p>
+<p>Using both <code>state</code> and <code>context</code> simultaneously:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">:</span>
+    <span class="n">user</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="c1"># {name} will be obtained from state, {user} will be obtained from context</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">. Your user is named </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span>
+    <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># When calling, provide &#39;name&#39; for state and &#39;user&#39; for context</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;I&#39;m going to New York for a few days, help me plan my itinerary&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;Zhang San&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Variable Override Example</strong></p>
+<p>This example shows that when there are variables with the same name in <code>state</code> and <code>context</code>, the value from <code>state</code> takes precedence.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">:</span>
+    <span class="c1"># &#39;name&#39; is defined in context</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">user</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">. Your user is named </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span> <span class="c1"># &#39;name&#39; is also defined in state</span>
+    <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># When calling, both state and context provide values for &#39;name&#39;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What&#39;s your name?&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant-1&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;assistant-2&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;Zhang San&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># The final system prompt will be &quot;You are an intelligent assistant, your name is assistant-1. Your user is named Zhang San.&quot;</span>
+<span class="c1"># Because state has higher priority</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+</li>
+</ul>
 
 
 

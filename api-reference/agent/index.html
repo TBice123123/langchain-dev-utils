@@ -264,7 +264,7 @@
   
     
   
-  Index
+  Home
 
       </a>
     </li>
@@ -411,7 +411,7 @@
   <span class="md-ellipsis">
     
   
-    Index
+    Home
   
 
     
@@ -1081,6 +1081,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#format_prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        format_prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#planstate" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1428,6 +1439,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#format_prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        format_prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#planstate" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1752,6 +1774,11 @@
 </code></pre></div>
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">tool_call_repair_middleware</span> <span class="o">=</span> <span class="n">ToolCallRepairMiddleware</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="format_prompt">format_prompt</h2>
+<p>Middleware for formatting prompts.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dynamic_prompt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_prompt</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ModelRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </code></pre></div>
 <h2 id="planstate">PlanState</h2>
 <p>State Schema for Plan.</p>

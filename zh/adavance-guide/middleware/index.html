@@ -847,6 +847,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        格式化系统提示词
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1218,6 +1229,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        格式化系统提示词
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1438,6 +1460,102 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div></p>
 </div>
+<h2 id="_6">格式化系统提示词</h2>
+<p>本中间件 <code>format_prompt</code> 允许您在 <code>system_prompt</code> 中使用 <code>f-string</code> 风格的占位符（如 <code>{name}</code>），并在运行时动态地用实际值替换它们。</p>
+<p>占位符中的变量值遵循一个明确的解析顺序：</p>
+<ol>
+<li><strong>优先从 <code>state</code> 中查找</strong>：会先从<code>state</code>字典中查找与占位符同名的字段。</li>
+<li><strong>其次从 <code>context</code> 中查找</strong>：如果在 <code>state</code> 中未找到该字段，则会继续在 <code>context</code> 对象中查找。</li>
+</ol>
+<p>这个顺序意味着 <code>state</code> 中的值拥有更高的优先级，可以覆盖 <code>context</code> 中同名的值。</p>
+<p>使用示例如下：</p>
+<ul>
+<li>
+<p><strong>仅从 <code>state</code> 中获取变量</strong></p>
+<p>这是最基础的用法，所有占位符变量都由 <code>state</code> 提供。
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AssistantState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个智能助手，你的名字叫做</span><span class="si">{name}</span><span class="s2">。&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 在调用时，必须为 state 提供 &#39;name&#39; 的值</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好啊&quot;</span><span class="p">)],</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>同时从 <code>state</code> 和 <code>context</code> 中获取变量</strong></p>
+<p>同时使用 <code>state</code> 和 <code>context</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">:</span>
+    <span class="n">user</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="c1"># {name} 将从 state 获取，{user} 将从 context 获取</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个智能助手，你的名字叫做</span><span class="si">{name}</span><span class="s2">。你的使用者叫做</span><span class="si">{user}</span><span class="s2">。&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span>
+    <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 在调用时，为 state 提供 &#39;name&#39;，为 context 提供 &#39;user&#39;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;我要去New York玩几天，帮我规划行程&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;张三&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>变量覆盖示例</strong></p>
+<p>此示例展示了当 <code>state</code> 和 <code>context</code> 中存在同名变量时，<code>state</code> 的值会优先生效。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">:</span>
+    <span class="c1"># context 中定义了 &#39;name&#39;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">user</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个智能助手，你的名字叫做</span><span class="si">{name}</span><span class="s2">。你的使用者叫做</span><span class="si">{user}</span><span class="s2">。&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span> <span class="c1"># state 中也定义了 &#39;name&#39;</span>
+    <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 在调用时，state 和 context 都提供了 &#39;name&#39; 的值</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你叫什么名字？&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant-1&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;assistant-2&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;张三&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># 最终的系统提示词会是 &quot;你是一个智能助手，你的名字叫做assistant-1。你的使用者叫做张三。&quot;</span>
+<span class="c1"># 因为 state 的优先级更高</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+</li>
+</ul>
 
 
 
