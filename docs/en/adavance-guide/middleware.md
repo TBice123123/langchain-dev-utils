@@ -230,3 +230,106 @@ agent = create_agent(
     response = agent.invoke({"messages": big_messages})
     print(response)
     ```
+
+## Formatting System Prompts
+
+This middleware `format_prompt` allows you to use f-string style placeholders (like `{name}`) in your `system_prompt`, and dynamically replace them with actual values at runtime.
+
+The values for placeholders follow a clear resolution order:
+
+1.  **First, look in `state`**: It first searches for fields with the same name as the placeholder in the `state` dictionary.
+2.  **Then, look in `context`**: If the field is not found in `state`, it continues to search in the `context` object.
+
+This order means that values in `state` have higher priority and can override values with the same name in `context`.
+
+Usage examples are as follows:
+
+- **Getting variables only from `state`**
+
+    This is the most basic usage, where all placeholder variables are provided by `state`.
+    ```python
+    from langchain_dev_utils.agents.middleware import format_prompt
+    from langchain.agents import AgentState
+
+    class AssistantState(AgentState):
+        name: str
+
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        system_prompt="You are an intelligent assistant, your name is {name}.",
+        middleware=[format_prompt],
+        state_schema=AssistantState,
+    )
+
+    # When calling, you must provide the value for 'name' in state
+    response = agent.invoke(
+        {"messages": [HumanMessage(content="Hello")], "name": "assistant"}
+    )
+    print(response)
+    ```
+
+- **Getting variables from both `state` and `context`**
+
+    Using both `state` and `context` simultaneously:
+
+    ```python
+    from dataclasses import dataclass
+
+    @dataclass
+    class Context:
+        user: str
+
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        # {name} will be obtained from state, {user} will be obtained from context
+        system_prompt="You are an intelligent assistant, your name is {name}. Your user is named {user}.",
+        middleware=[format_prompt],
+        state_schema=AssistantState,
+        context_schema=Context,
+    )
+
+    # When calling, provide 'name' for state and 'user' for context
+    response = agent.invoke(
+        {
+            "messages": [HumanMessage(content="I'm going to New York for a few days, help me plan my itinerary")],
+            "name": "assistant",
+        },
+        context=Context(user="Zhang San"),
+    )
+    print(response)
+    ```
+
+- **Variable Override Example**
+
+    This example shows that when there are variables with the same name in `state` and `context`, the value from `state` takes precedence.
+
+    ```python
+    from dataclasses import dataclass
+
+    @dataclass
+    class Context:
+        # 'name' is defined in context
+        name: str
+        user: str
+
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        system_prompt="You are an intelligent assistant, your name is {name}. Your user is named {user}.",
+        middleware=[format_prompt],
+        state_schema=AssistantState, # 'name' is also defined in state
+        context_schema=Context,
+    )
+
+    # When calling, both state and context provide values for 'name'
+    response = agent.invoke(
+        {
+            "messages": [HumanMessage(content="What's your name?")],
+            "name": "assistant-1",
+        },
+        context=Context(name="assistant-2", user="Zhang San"),
+    )
+
+    # The final system prompt will be "You are an intelligent assistant, your name is assistant-1. Your user is named Zhang San."
+    # Because state has higher priority
+    print(response)
+    ```

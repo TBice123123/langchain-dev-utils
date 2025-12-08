@@ -233,3 +233,107 @@ agent = create_agent(
     response = agent.invoke({"messages": big_messages})
     print(response)
     ```
+
+
+## 格式化系统提示词
+
+本中间件 `format_prompt` 允许您在 `system_prompt` 中使用 `f-string` 风格的占位符（如 `{name}`），并在运行时动态地用实际值替换它们。
+
+占位符中的变量值遵循一个明确的解析顺序：
+
+1.  **优先从 `state` 中查找**：会先从`state`字典中查找与占位符同名的字段。
+2.  **其次从 `context` 中查找**：如果在 `state` 中未找到该字段，则会继续在 `context` 对象中查找。
+
+这个顺序意味着 `state` 中的值拥有更高的优先级，可以覆盖 `context` 中同名的值。
+
+使用示例如下：
+
+- **仅从 `state` 中获取变量**
+
+    这是最基础的用法，所有占位符变量都由 `state` 提供。
+    ```python
+    from langchain_dev_utils.agents.middleware import format_prompt
+    from langchain.agents import AgentState
+
+    class AssistantState(AgentState):
+        name: str
+
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        system_prompt="你是一个智能助手，你的名字叫做{name}。",
+        middleware=[format_prompt],
+        state_schema=AssistantState,
+    )
+
+    # 在调用时，必须为 state 提供 'name' 的值
+    response = agent.invoke(
+        {"messages": [HumanMessage(content="你好啊")], "name": "assistant"}
+    )
+    print(response)
+    ```
+
+- **同时从 `state` 和 `context` 中获取变量**
+
+    同时使用 `state` 和 `context`：
+
+    ```python
+    from dataclasses import dataclass
+
+    @dataclass
+    class Context:
+        user: str
+
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        # {name} 将从 state 获取，{user} 将从 context 获取
+        system_prompt="你是一个智能助手，你的名字叫做{name}。你的使用者叫做{user}。",
+        middleware=[format_prompt],
+        state_schema=AssistantState,
+        context_schema=Context,
+    )
+
+    # 在调用时，为 state 提供 'name'，为 context 提供 'user'
+    response = agent.invoke(
+        {
+            "messages": [HumanMessage(content="我要去New York玩几天，帮我规划行程")],
+            "name": "assistant",
+        },
+        context=Context(user="张三"),
+    )
+    print(response)
+    ```
+
+- **变量覆盖示例**
+
+    此示例展示了当 `state` 和 `context` 中存在同名变量时，`state` 的值会优先生效。
+
+    ```python
+    from dataclasses import dataclass
+
+    @dataclass
+    class Context:
+        # context 中定义了 'name'
+        name: str
+        user: str
+
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        system_prompt="你是一个智能助手，你的名字叫做{name}。你的使用者叫做{user}。",
+        middleware=[format_prompt],
+        state_schema=AssistantState, # state 中也定义了 'name'
+        context_schema=Context,
+    )
+
+    # 在调用时，state 和 context 都提供了 'name' 的值
+    response = agent.invoke(
+        {
+            "messages": [HumanMessage(content="你叫什么名字？")],
+            "name": "assistant-1",
+        },
+        context=Context(name="assistant-2", user="张三"),
+    )
+
+    # 最终的系统提示词会是 "你是一个智能助手，你的名字叫做assistant-1。你的使用者叫做张三。"
+    # 因为 state 的优先级更高
+    print(response)
+    ```

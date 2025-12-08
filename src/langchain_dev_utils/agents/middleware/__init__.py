@@ -1,3 +1,4 @@
+from .format_prompt import format_prompt
 from .model_fallback import ModelFallbackMiddleware
 from .model_router import ModelRouterMiddleware
 from .plan import (
@@ -22,4 +23,5 @@ __all__ = [
     "LLMToolEmulator",
     "ModelRouterMiddleware",
     "ToolCallRepairMiddleware",
+    "format_prompt",
 ]

@@ -361,6 +361,17 @@ class ToolCallRepairMiddleware(AgentMiddleware):
 tool_call_repair_middleware = ToolCallRepairMiddleware()
 ```
 
+## format_prompt
+
+用于格式化提示词的中间件。
+
+```python
+@dynamic_prompt
+def format_prompt(request: ModelRequest) -> str:
+```
+
+
+
 ## PlanState
 
 用于 Plan 的状态 Schema。

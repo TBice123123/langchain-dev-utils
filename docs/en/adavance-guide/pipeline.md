@@ -2,34 +2,34 @@
 
 ## Overview
 
-Provides practical tools for state graph orchestration. Mainly includes the following functions:
+This provides practical utilities for orchestrating state graphs. It mainly includes the following features:
 
-- Orchestrating multiple state graphs in a sequential manner to form a sequential workflow.
-- Orchestrating multiple state graphs in a parallel manner to form a parallel workflow.
+- Orchestrate multiple state graphs in sequence to form a sequential workflow.
+- Orchestrate multiple state graphs in parallel to form a parallel workflow.
 
 ## Sequential Orchestration
 
-Used to build an agent sequential workflow (Sequential Pipeline). This is a work pattern that decomposes complex tasks into a series of continuous, ordered subtasks, and hands them over to different specialized agents for processing in sequence.
+Used to build agent sequential pipelines. This is a workflow pattern that decomposes complex tasks into a series of continuous, ordered sub-tasks, handled by different specialized agents in sequence.
 
-Multiple state graphs can be combined in a sequential orchestration manner through `create_sequential_pipeline`.
+Multiple state graphs can be combined through sequential orchestration using `create_sequential_pipeline`.
 
 **Usage Example**:
 
 Developing a software project typically follows a strict linear process:
 
-1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed product requirements document (PRD).
+1. Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed Product Requirements Document (PRD).
 
 2. Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.
 
-3. Code Writing: Next, development engineers implement the blueprint into specific code according to the architecture design.
+3. Code Writing: Next, the development engineer implements the blueprint into specific code according to the architecture design.
 
-4. Testing and Quality Assurance: Finally, testing engineers verify the code to ensure its quality meets requirements.
+4. Testing and Quality Assurance: Finally, the testing engineer validates the code to ensure its quality meets requirements.
 
-This process is interconnected and the order cannot be reversed.
+This process is interlinked and the order cannot be reversed.
 
-For the above four processes, each process has a specialized agent responsible.
+For the above four processes, each has a specialized agent responsible:
 
-1. Product Manager Agent: Receives user's vague requirements and outputs a structured product requirements document (PRD).
+1. Product Manager Agent: Receives user's vague requirements and outputs a structured Product Requirements Document (PRD).
 
 2. Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.
 
@@ -37,7 +37,7 @@ For the above four processes, each process has a specialized agent responsible.
 
 4. Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.
 
-Through the `create_sequential_pipeline` function, these four agents are seamlessly connected to form a highly automated, clearly divided software development pipeline.
+Through the `create_sequential_pipeline` function, these four agents can be seamlessly connected to form a highly automated, clearly divided software development pipeline.
 
 ```python
 from langchain.agents import AgentState
@@ -55,8 +55,8 @@ register_model_provider(
 
 @tool
 def analyze_requirements(user_request: str) -> str:
-    """Analyze user requirements and generate detailed product requirements document"""
-    return f"Based on user request '{user_request}', a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria."
+    """Analyze user requirements and generate a detailed product requirements document"""
+    return f"Based on the user request '{user_request}', a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria."
 
 @tool
 def design_architecture(requirements: str) -> str:
@@ -112,17 +112,161 @@ The generated graph is as follows:
 
 ![Sequential Pipeline](../../assets/sequential.png)
 
-!!! warning "Note"
-    The example above is for reference only; in practice, it will pass the complete context of all previous agents to the current agent, which may cause context bloat and impact performance and effectiveness.  
-    It is recommended to adopt either of the following approaches to streamline the context:
+The above example is for reference only. In practice, this example passes the complete context of all previous agents to the current agent, which may lead to context expansion, affecting performance and effectiveness. It is recommended to adopt either of the following solutions to streamline the context:
 
-    1. Use `create_agent` with middleware to extract and pass only the necessary information;
+1. Use `create_agent` with `middleware` to extract and pass only necessary information;
 
-    2. Fully customize the state graph based on `LangGraph`, explicitly controlling state fields and message flow.
+2. Completely customize the state graph based on `LangGraph`, explicitly controlling state fields and message flow.
 
-    
+??? tip "Reference Code"
+
+    ```python
+    from langchain.agents import AgentState
+    from langchain.agents.middleware import after_agent
+    from langchain_core.messages import HumanMessage, RemoveMessage, ToolMessage
+    from langchain_core.tools import tool
+    from langchain_dev_utils.agents import create_agent
+    from langchain_dev_utils.pipeline import create_sequential_pipeline
+    from langchain.tools import ToolRuntime
+    from langgraph.runtime import Runtime
+    from langgraph.types import Command
+
+    from langchain_dev_utils.agents.middleware import format_prompt
+
+
+    class DeveloperState(AgentState, total=False):
+        requirement: str
+        architecture: str
+        code: str
+        tests: str
+
+
+    @tool
+    def analyze_requirements(user_request: str, runtime: ToolRuntime):
+        """Analyze user requirements and generate a detailed product requirements document, this tool is used to save the final result"""
+        return Command(
+            update={
+                "messages": [
+                    ToolMessage(
+                        content="Requirements analysis report has been generated", tool_call_id=runtime.tool_call_id
+                    )
+                ],
+                "requirement": user_request,
+            }
+        )
+
+
+    @tool
+    def design_architecture(content: str, runtime: ToolRuntime):
+        """Design system architecture based on requirements document, this tool is used to save the final result"""
+        return Command(
+            update={
+                "messages": [
+                    ToolMessage(
+                        content="System architecture design has been generated", tool_call_id=runtime.tool_call_id
+                    )
+                ],
+                "architecture": content,
+            }
+        )
+
+
+    @tool
+    def generate_code(content: str, runtime: ToolRuntime):
+        """Generate core business code based on architecture design, this tool is used to save the final result"""
+        return Command(
+            update={
+                "messages": [
+                    ToolMessage(
+                        content="Core business code has been generated", tool_call_id=runtime.tool_call_id
+                    )
+                ],
+                "code": content,
+            }
+        )
+
+
+    @tool
+    def create_tests(content: str, runtime: ToolRuntime):
+        """Create test cases for the generated core business code, this tool is used to save the final result"""
+        return Command(
+            update={
+                "messages": [
+                    ToolMessage(content="Test cases have been generated", tool_call_id=runtime.tool_call_id)
+                ],
+                "tests": content,
+            }
+        )
+
+
+    @after_agent(state_schema=DeveloperState)
+    def clear_agent_context(state: DeveloperState, runtime: Runtime):
+        return {"messages": [RemoveMessage(id=msg.id) for msg in state["messages"][1:]]}
+
+
+    graph = create_sequential_pipeline(
+        sub_graphs=[
+            create_agent(
+                model="dashscope:qwen-flash",
+                tools=[analyze_requirements],
+                system_prompt="""You are a product manager responsible for analyzing user requirements and generating detailed product requirements documents""",
+                name="requirements_agent",
+                state_schema=DeveloperState,
+                middleware=[format_prompt, clear_agent_context],
+            ),
+            create_agent(
+                model="dashscope:qwen-flash",
+                tools=[design_architecture],
+                system_prompt="""You are a system architect responsible for designing system architecture based on requirements documents.
+                ## Requirements Document:
+                {requirement}
+                """,
+                name="architecture_agent",
+                state_schema=DeveloperState,
+                middleware=(
+                    format_prompt,
+                    clear_agent_context,
+                ),
+            ),
+            create_agent(
+                model="dashscope:qwen-flash",
+                tools=[generate_code],
+                system_prompt="""You are a senior development engineer responsible for generating core business code based on requirements documents and system architecture.
+                ## Requirements Document:
+                {requirement}
+                ## System Architecture:
+                {architecture}
+                """,
+                name="coding_agent",
+                state_schema=DeveloperState,
+                middleware=[format_prompt, clear_agent_context],
+            ),
+            create_agent(
+                model="dashscope:qwen-flash",
+                tools=[create_tests],
+                system_prompt="""You are a testing engineer responsible for creating comprehensive test cases for the generated core business code.
+                ## Generated Code:
+                {code}
+                """,
+                name="testing_agent",
+                state_schema=DeveloperState,
+                middleware=[format_prompt, clear_agent_context],
+            ),
+        ],
+        state_schema=DeveloperState,
+    )
+
+    response = graph.invoke(
+        {"messages": [HumanMessage("Develop an e-commerce website with user registration, product browsing, and shopping cart functionality")]}
+    )
+    print(response)
+    ```
+    In the optimized code, each tool returns a `Command` object, writing key results to corresponding state fields (such as `architecture`, `code`, `tests`, etc.) through the `update` field.
+    Then, with the built-in middleware `format_prompt`, the outputs of preceding agents can be dynamically inserted into the `system_prompt` as needed at runtime.
+    At the same time, a custom middleware `clear_agent_context` is introduced to automatically clear historical messages after each agent finishes, implementing context cleanup.
+
 !!! note "Note"
-    For serially combined graphs, LangGraph's StateGraph provides the add_sequence method as a convenient shorthand. This method works best when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like this:
+    For serially combined graphs, langgraph's StateGraph provides the add_sequence method as a convenient shorthand. This method is most suitable when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like this:
 
     ```python
     graph = StateGraph(AgentState)
@@ -131,13 +275,13 @@ The generated graph is as follows:
     graph = graph.compile()
     ```
 
-    However, the above writing is still somewhat cumbersome. Therefore, it's more recommended to use the `create_sequential_pipeline` function, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.
+    However, the above approach is still somewhat verbose. Therefore, it is more recommended to use the `create_sequential_pipeline` function, which can quickly build a serial execution graph with just one line of code, making it more concise and efficient.
 
 ## Parallel Orchestration
 
-Used to build an agent parallel workflow (Parallel Pipeline). Its working principle is to combine multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.
+Used to build agent parallel workflows. Its working principle is to combine multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.
 
-Through the `create_parallel_pipeline` function, multiple state graphs can be combined in a parallel orchestration manner to achieve the effect of parallel task execution.
+Through the `create_parallel_pipeline` function, multiple state graphs can be combined in a parallel orchestration manner, achieving the effect of parallel task execution.
 
 ### Simple Example
 **Usage Example**:
@@ -145,11 +289,11 @@ Through the `create_parallel_pipeline` function, multiple state graphs can be co
 In software development, once the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.
 
 Suppose we want to develop an e-commerce website, whose core functions can be divided into three independent modules:
-1. User Module (registration, login, personal center)
-2. Product Module (display, search, classification)
-3. Order Module (placing orders, payment, status query)
+1. User module (registration, login, personal center)
+2. Product module (display, search, categorization)
+3. Order module (placing orders, payment, status inquiry)
 
-If developed serially, the time consumption will be the sum of all three. But if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.
+If developed serially, the time required would be the sum of all three. But if developed in parallel, the total time would be approximately equal to the development time of the longest module, greatly improving efficiency.
 
 Through the `create_parallel_pipeline` function, assign a specialized module development agent to each module, allowing them to work in parallel.
 
@@ -164,12 +308,12 @@ def develop_user_module():
 @tool
 def develop_product_module():
     """Develop product module functionality"""
-    return "Product module development completed, including product display, search, and classification functions."
+    return "Product module development completed, including product display, search, and categorization functions."
 
 @tool
 def develop_order_module():
     """Develop order module functionality"""
-    return "Order module development completed, including order placement, payment, and order query functions."
+    return "Order module development completed, including order placement, payment, and order inquiry functions."
 
 # Build a parallel workflow (pipeline) for frontend module development
 graph = create_parallel_pipeline(
@@ -195,7 +339,7 @@ graph = create_parallel_pipeline(
     ],
     state_schema=AgentState,
 )
-response = graph.invoke({"messages": [HumanMessage("Parallel development of three core modules of an e-commerce website")]})
+response = graph.invoke({"messages": [HumanMessage("Develop three core modules of an e-commerce website in parallel")]})
 print(response)
 ```
 
@@ -203,19 +347,19 @@ The generated graph is as follows:
 
 ![Parallel Pipeline](../../assets/parallel.png)
 
-### Using Branch Function to Specify Subgraphs for Parallel Execution
+### Using Branch Functions to Specify Subgraphs for Parallel Execution
 
-Sometimes it's necessary to specify which subgraphs to execute in parallel based on conditions. In this case, a branch function can be used.
-The branch function needs to return a list of `Send`.
+Sometimes it is necessary to specify which subgraphs to execute in parallel based on conditions. In this case, branch functions can be used.
+The branch function needs to return a list of `Send` objects.
 
-For example, in the above case, suppose the modules to be developed are specified by the user, then only the specified modules will be executed in parallel.
+For example, in the above case, assuming the modules to be developed are specified by the user, only the specified modules will be executed in parallel.
 
 ```python
 # Build a parallel pipeline (select subgraphs for parallel execution based on conditions)
 from langgraph.types import Send
 
 class DevAgentState(AgentState):
-    """Development Agent State"""
+    """Development agent state"""
     selected_modules: list[tuple[str, str]]
 
 
@@ -252,7 +396,7 @@ graph = create_parallel_pipeline(
 
 response = graph.invoke(
     {
-        "messages": [HumanMessage("Develop some modules of the e-commerce website")],
+        "messages": [HumanMessage("Develop some modules of an e-commerce website")],
         "selected_modules": select_modules,
     }
 )
@@ -261,5 +405,5 @@ print(response)
 
 **Important Notes**
 
-- When the `branches_fn` parameter is not passed, all subgraphs will be executed in parallel.
-- When the `branches_fn` parameter is passed, which subgraphs to execute is determined by the return value of this function.
+- When the `branches_fn` parameter is not provided, all subgraphs will be executed in parallel.
+- When the `branches_fn` parameter is provided, which subgraphs to execute is determined by the return value of this function.

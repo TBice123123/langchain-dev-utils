@@ -361,6 +361,16 @@ class ToolCallRepairMiddleware(AgentMiddleware):
 tool_call_repair_middleware = ToolCallRepairMiddleware()
 ```
 
+## format_prompt
+
+Middleware for formatting prompts.
+
+```python
+@dynamic_prompt
+def format_prompt(request: ModelRequest) -> str:
+```
+
+
 ## PlanState
 
 State Schema for Plan.
