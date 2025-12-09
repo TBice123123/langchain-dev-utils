@@ -11,7 +11,6 @@ from langchain_dev_utils._utils import (
 
 from .types import ChatModelProvider, ChatModelType, CompatibilityOptions
 
-
 _MODEL_PROVIDERS_DICT = {}
 
 

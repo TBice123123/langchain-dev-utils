@@ -1,6 +1,6 @@
 [project]
 name = "langchain-dev-utils"
-version = "1.2.12"
+version = "1.2.13"
 description = "A practical utility library for LangChain and LangGraph development"
 readme = "README.md"
 authors = [{ name = "tiebingice", email = "tiebingice123@outlook.com" }]
@@ -10,7 +10,7 @@ dependencies = ["langchain>=1.1.0", "langgraph>=1.0.0"]
 [project.urls]
 "Source Code" = "https://github.com/TBice123123/langchain-dev-utils"
 repository = "https://github.com/TBice123123/langchain-dev-utils"
-documentation = "https://tbice123123.github.io/langchain-dev-utils-docs/en/"
+documentation = "https://tbice123123.github.io/langchain-dev-utils"
 
 
 [project.optional-dependencies]
@@ -19,9 +19,6 @@ standard = ["json-repair>=0.53.1", "langchain-openai"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.uv.build-backend]
-source-exclude = ["/data", "/docs", "mkdocs.yml"]
 
 [tool.hatch.build]
 exclude = ["/data", "/docs", "mkdocs.yml"]

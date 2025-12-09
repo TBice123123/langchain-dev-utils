@@ -20,7 +20,13 @@ from langchain_core.callbacks import (
     CallbackManagerForLLMRun,
 )
 from langchain_core.language_models import LangSmithParams, LanguageModelInput
-from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, HumanMessage
+from langchain_core.messages import (
+    AIMessage,
+    AIMessageChunk,
+    BaseMessage,
+    HumanMessage,
+    ToolMessage,
+)
 from langchain_core.outputs import ChatGenerationChunk, ChatResult
 from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool
@@ -61,6 +67,58 @@ def _get_last_human_message_index(messages: list[BaseMessage]) -> int:
         ),
         -1,
     )
+
+
+def _transform_video_block(block: dict[str, Any]) -> dict:
+    """Transform video block to video_url block."""
+    if "url" in block:
+        return {
+            "type": "video_url",
+            "video_url": {
+                "url": block["url"],
+            },
+        }
+    if "base64" in block or block.get("source_type") == "base64":
+        if "mime_type" not in block:
+            error_message = "mime_type key is required for base64 data."
+            raise ValueError(error_message)
+        mime_type = block["mime_type"]
+        base64_data = block["data"] if "data" in block else block["base64"]
+        return {
+            "type": "video_url",
+            "video_url": {
+                "url": f"data:{mime_type};base64,{base64_data}",
+            },
+        }
+    error_message = "Unsupported source type. Only 'url' and 'base64' are supported."
+    raise ValueError(error_message)
+
+
+def _process_video_input(message: BaseMessage):
+    """
+    Process BaseMessage with video input.
+
+    Args:
+        message (BaseMessage): The HumanMessage instance to process.
+
+    Returns:
+        None: The method modifies the message in-place.
+    """
+    if not message.content:
+        return message
+    content = message.content
+
+    if not isinstance(content, list):
+        return message
+
+    formatted_content = []
+    for block in content:
+        if isinstance(block, dict) and block.get("type") == "video":
+            formatted_content.append(_transform_video_block(block))
+        else:
+            formatted_content.append(block)
+    message = message.model_copy(update={"content": formatted_content})
+    return message
 
 
 class _BaseChatOpenAICompatible(BaseChatOpenAI):
@@ -183,6 +241,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                     )
                 payload_messages.append(msg_dict)
             else:
+                if (
+                    isinstance(m, HumanMessage) or isinstance(m, ToolMessage)
+                ) and isinstance(m.content, list):
+                    m = _process_video_input(m)
                 payload_messages.append(_convert_message_to_dict(m))
 
         payload["messages"] = payload_messages

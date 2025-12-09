@@ -69,6 +69,7 @@ register_model_provider(
 本库会根据用户的相关输入，使用内置 `BaseChatOpenAICompatible` 类构建对应于特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并增强以下能力：
 
 - **支持更多格式的推理内容**： 相较于`ChatOpenAI` 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如`vLLM`）。
+- **支持`video`类型 content_block**： `ChatOpenAI` 无法转换 `type=video` 的 `content_block`，本实现已完成支持。
 - **动态适配并选择最合适的结构化输出方法**：默认情况下，能够根据模型提供商的实际支持情况，自动选择最优的结构化输出方法（`function_calling` 或 `json_schema`）。  
 - **通过 compatibility_options 精细适配差异**： 通过配置提供商兼容性选项，解决`tool_choice`、`response_format` 等参数的支持差异。
 
@@ -477,6 +478,8 @@ export VLLM_API_KEY=vllm
 ??? note "传递多模态数据"
 
     支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用`langchain`中的`content_block`。例如：
+    
+    **传递图片类数据**：
 
     ```python
     from langchain_dev_utils.chat_models import load_chat_model
@@ -497,6 +500,31 @@ export VLLM_API_KEY=vllm
     response = model.invoke(messages)
     print(response)
     ```
+
+    **传递视频类数据**：
+    
+
+    ```python
+    from langchain_dev_utils.chat_models import load_chat_model
+    from langchain_core.messages import HumanMessage
+
+    messages = [
+        HumanMessage(
+            content_blocks=[
+                {
+                    "type": "video",
+                    "url": "https://example.com/video.mp4",
+                },
+                {"type": "text", "text": "描述这视频"},
+            ]
+        )
+    ]
+
+    model = load_chat_model("vllm:qwen3-vl-2b")
+    response = model.invoke(messages)
+    print(response)
+    ```
+    
     !!! note "补充"
         vllm 也支持部署多模态模型，例如 `qwen3-vl-2b`：
         ```bash

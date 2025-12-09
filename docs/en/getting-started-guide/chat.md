@@ -68,6 +68,7 @@ Many model providers support **OpenAI-compatible API** services, such as: [vLLM]
 This library will use the built-in `BaseChatOpenAICompatible` class to construct a chat model class corresponding to a specific provider based on user input. This class inherits from `langchain-openai`'s `BaseChatOpenAI` and enhances the following capabilities:
 
 - **Support for more formats of reasoning content**: Compared to `ChatOpenAI` which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., `vLLM`).
+- **Support for `video` type content_block**: `ChatOpenAI` cannot convert `type=video` content_blocks, but this implementation has completed support.
 - **Dynamic adaptation and selection of the most suitable structured output method**: By default, it can automatically select the optimal structured output method (`function_calling` or `json_schema`) based on the actual support of the model provider.
 - **Fine-tune compatibility through compatibility_options**: By configuring provider compatibility options, resolve support differences for parameters like `tool_choice` and `response_format`.
 
@@ -472,12 +473,13 @@ For **case two**, the model's methods and parameters are as follows:
 
 ??? note "Passing Multimodal Data"
 
-    Multimodal data can be passed using either the OpenAI-compatible multimodal format or directly via `content_block` in LangChain. For example:
+    Supports passing multimodal data. You can use OpenAI-compatible multimodal data formats or directly use `content_block` from `langchain`. For example:
+    
+    **Passing Image Data**:
 
     ```python
     from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
-
     messages = [
         HumanMessage(
             content_blocks=[
@@ -495,17 +497,39 @@ For **case two**, the model's methods and parameters are as follows:
     print(response)
     ```
 
-    !!! note "Additional Note"
-        vLLM also supports serving multimodal models, such as `qwen3-vl-2b`:
+    **Passing Video Data**:
+    
 
+    ```python
+    from langchain_dev_utils.chat_models import load_chat_model
+    from langchain_core.messages import HumanMessage
+
+    messages = [
+        HumanMessage(
+            content_blocks=[
+                {
+                    "type": "video",
+                    "url": "https://example.com/video.mp4",
+                },
+                {"type": "text", "text": "Describe this video"},
+            ]
+        )
+    ]
+
+    model = load_chat_model("vllm:qwen3-vl-2b")
+    response = model.invoke(messages)
+    print(response)
+    ```
+    
+    !!! note "Additional Information"
+        vllm also supports deploying multimodal models, such as `qwen3-vl-2b`:
         ```bash
         vllm serve Qwen/Qwen3-VL-2B-Instruct \
         --trust-remote-code \
         --host 0.0.0.0 --port 8000 \
         --served-model-name qwen3-vl-2b
         ```
-
-
+        
 ??? note "OpenAI's Latest `responses_api`"
 
     This model class also supports OpenAI's latest `responses_api`. However, currently only a few providers support this API style. If your model provider supports this API style, you can pass `use_responses_api=True`.
