@@ -1407,6 +1407,7 @@
 <p>本库会根据用户的相关输入，使用内置 <code>BaseChatOpenAICompatible</code> 类构建对应于特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并增强以下能力：</p>
 <ul>
 <li><strong>支持更多格式的推理内容</strong>： 相较于<code>ChatOpenAI</code> 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如<code>vLLM</code>）。</li>
+<li><strong>支持<code>video</code>类型 content_block</strong>： <code>ChatOpenAI</code> 无法转换 <code>type=video</code> 的 <code>content_block</code>，本实现已完成支持。</li>
 <li><strong>动态适配并选择最合适的结构化输出方法</strong>：默认情况下，能够根据模型提供商的实际支持情况，自动选择最优的结构化输出方法（<code>function_calling</code> 或 <code>json_schema</code>）。  </li>
 <li><strong>通过 compatibility_options 精细适配差异</strong>： 通过配置提供商兼容性选项，解决<code>tool_choice</code>、<code>response_format</code> 等参数的支持差异。</li>
 </ul>
@@ -1772,6 +1773,7 @@
 <details class="note">
 <summary>传递多模态数据</summary>
 <p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。例如：</p>
+<p><strong>传递图片类数据</strong>：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1782,6 +1784,26 @@
                 <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/image.png&quot;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;描述这张图片&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>传递视频类数据</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span>
+        <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;video&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/video.mp4&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;描述这视频&quot;</span><span class="p">},</span>
         <span class="p">]</span>
     <span class="p">)</span>
 <span class="p">]</span>

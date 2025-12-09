@@ -1407,6 +1407,7 @@ A few notes about the above code:</p>
 <p>This library will use the built-in <code>BaseChatOpenAICompatible</code> class to construct a chat model class corresponding to a specific provider based on user input. This class inherits from <code>langchain-openai</code>'s <code>BaseChatOpenAI</code> and enhances the following capabilities:</p>
 <ul>
 <li><strong>Support for more formats of reasoning content</strong>: Compared to <code>ChatOpenAI</code> which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., <code>vLLM</code>).</li>
+<li><strong>Support for <code>video</code> type content_block</strong>: <code>ChatOpenAI</code> cannot convert <code>type=video</code> content_blocks, but this implementation has completed support.</li>
 <li><strong>Dynamic adaptation and selection of the most suitable structured output method</strong>: By default, it can automatically select the optimal structured output method (<code>function_calling</code> or <code>json_schema</code>) based on the actual support of the model provider.</li>
 <li><strong>Fine-tune compatibility through compatibility_options</strong>: By configuring provider compatibility options, resolve support differences for parameters like <code>tool_choice</code> and <code>response_format</code>.</li>
 </ul>
@@ -1767,10 +1768,10 @@ For <code>json_mode</code>, although it has higher support, since it must guide 
 </details>
 <details class="note">
 <summary>Passing Multimodal Data</summary>
-<p>Multimodal data can be passed using either the OpenAI-compatible multimodal format or directly via <code>content_block</code> in LangChain. For example:</p>
+<p>Supports passing multimodal data. You can use OpenAI-compatible multimodal data formats or directly use <code>content_block</code> from <code>langchain</code>. For example:</p>
+<p><strong>Passing Image Data</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
-
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">HumanMessage</span><span class="p">(</span>
         <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
@@ -1787,14 +1788,34 @@ For <code>json_mode</code>, although it has higher support, since it must guide 
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+<p><strong>Passing Video Data</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span>
+        <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;video&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/video.mp4&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Describe this video&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
 <div class="admonition note">
-<p class="admonition-title">Additional Note</p>
-<p>vLLM also supports serving multimodal models, such as <code>qwen3-vl-2b</code>:</p>
+<p class="admonition-title">Additional Information</p>
+<p>vllm also supports deploying multimodal models, such as <code>qwen3-vl-2b</code>:
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
 --trust-remote-code<span class="w"> </span><span class="se">\</span>
 --host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-vl-2b
-</code></pre></div>
+</code></pre></div></p>
 </div>
 </details>
 <details class="note">
