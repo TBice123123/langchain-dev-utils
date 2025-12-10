@@ -54,58 +54,77 @@ register_model_provider(
     base_url="http://localhost:8000/v1",
 )
 
+
 @tool
 def analyze_requirements(user_request: str) -> str:
     """分析用户需求并生成详细的产品需求文档"""
     return f"根据用户请求'{user_request}'，已生成详细的产品需求文档，包含功能列表、用户故事和验收标准。"
 
+
 @tool
 def design_architecture(requirements: str) -> str:
     """根据需求文档设计系统架构"""
-    return f"基于需求文档，已设计系统架构，包含微服务划分、数据流图和技术栈选择。"
+    return "基于需求文档，已设计系统架构，包含微服务划分、数据流图和技术栈选择。"
+
 
 @tool
 def generate_code(architecture: str) -> str:
     """根据架构设计生成核心代码"""
-    return f"基于架构设计，已生成核心业务代码，包含API接口、数据模型和业务逻辑实现。"
+    return "基于架构设计，已生成核心业务代码，包含API接口、数据模型和业务逻辑实现。"
+
 
 @tool
 def create_tests(code: str) -> str:
     """为生成的代码创建测试用例"""
-    return f"为生成的代码创建了单元测试、集成测试和端到端测试用例。"
+    return "为生成的代码创建了单元测试、集成测试和端到端测试用例。"
+
+
+# 产品经理智能体
+requirements_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[analyze_requirements],
+    system_prompt="你是一个产品经理，负责分析用户需求并生成详细的产品需求文档。",
+    name="requirements_agent",
+)
+
+# 系统架构师智能体
+architecture_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[design_architecture],
+    system_prompt="你是一个系统架构师，负责根据需求文档设计系统架构。",
+    name="architecture_agent",
+)
+
+# 高级开发工程师智能体
+coding_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[generate_code],
+    system_prompt="你是一个高级开发工程师，负责根据架构设计生成核心代码。",
+    name="coding_agent",
+)
+
+# 测试工程师智能体
+testing_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[create_tests],
+    system_prompt="你是一个测试工程师，负责为生成的代码创建全面的测试用例。",
+    name="testing_agent",
+)
 
 # 构建自动化软件开发顺序工作流（管道）
 graph = create_sequential_pipeline(
     sub_graphs=[
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[analyze_requirements],
-            system_prompt="你是一个产品经理，负责分析用户需求并生成详细的产品需求文档。",
-            name="requirements_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[design_architecture],
-            system_prompt="你是一个系统架构师，负责根据需求文档设计系统架构。",
-            name="architecture_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[generate_code],
-            system_prompt="你是一个高级开发工程师，负责根据架构设计生成核心代码。",
-            name="coding_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[create_tests],
-            system_prompt="你是一个测试工程师，负责为生成的代码创建全面的测试用例。",
-            name="testing_agent",
-        ),
+        requirements_agent,
+        architecture_agent,
+        coding_agent,
+        testing_agent,
     ],
     state_schema=AgentState,
 )
 
-response = graph.invoke({"messages": [HumanMessage("开发一个电商网站，包含用户注册、商品浏览和购物车功能")]})
+response = graph.invoke(
+    {"messages": [HumanMessage("开发一个电商网站，包含用户注册、商品浏览和购物车功能")]}
+)
 print(response)
 ```
 
@@ -142,7 +161,6 @@ print(response)
         code: str
         tests: str
 
-
     class ClearAgentContextMiddleware(AgentMiddleware):
         state_schema = DeveloperState
 
@@ -162,56 +180,53 @@ print(response)
                 update_key: final_message.content,
             }
 
+    # 产品经理智能体
+    requirements_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[analyze_requirements],
+        system_prompt="你是一个产品经理，负责分析用户需求并生成详细的产品需求文档。",
+        name="requirements_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("requirement")],
+    )
+
+    # 系统架构师智能体
+    architecture_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[design_architecture],
+        system_prompt="你是一个系统架构师，负责根据需求文档设计系统架构。",
+        name="architecture_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("architecture")],
+    )
+
+    # 高级开发工程师智能体
+    coding_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[generate_code],
+        system_prompt="你是一个高级开发工程师，负责根据架构设计生成核心代码。",
+        name="coding_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("code")],
+    )
+
+    # 测试工程师智能体
+    testing_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[create_tests],
+        system_prompt="你是一个测试工程师，负责为生成的代码创建全面的测试用例。",
+        name="testing_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("tests")],
+    )
 
     # 构建自动化软件开发顺序工作流（管道）
     graph = create_sequential_pipeline(
         sub_graphs=[
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[analyze_requirements],
-                system_prompt="你是一个产品经理，负责分析用户需求并生成详细的产品需求文档",
-                name="requirements_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("requirement")],
-            ),
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[design_architecture],
-                system_prompt=(
-                    "你是一个系统架构师，负责根据需求文档设计系统架构。\n"
-                    "## 需求文档：\n"
-                    "{requirement}"
-                ),
-                name="architecture_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("architecture")],
-            ),
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[generate_code],
-                system_prompt=(
-                    "你是一个高级开发工程师，负责根据需求文档以及系统架构生成核心业务代码。\n"
-                    "## 需求文档：\n"
-                    "{requirement}\n"
-                    "## 系统架构：\n"
-                    "{architecture}"
-                ),
-                name="coding_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("code")],
-            ),
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[create_tests],
-                system_prompt=(
-                    "你是一个测试工程师，负责为**生成的核心业务代码创建全面的测试用例。\n"
-                    "## 生成的代码：\n"
-                    "{code}"
-                ),
-                name="testing_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("tests")],
-            ),
+            requirements_agent,
+            architecture_agent,
+            coding_agent,
+            testing_agent,
         ],
         state_schema=DeveloperState,
     )
@@ -263,42 +278,55 @@ print(response)
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline
 
+
 @tool
 def develop_user_module():
     """开发用户模块功能"""
     return "用户模块开发完成，包含注册、登录和个人资料管理功能。"
+
 
 @tool
 def develop_product_module():
     """开发商品模块功能"""
     return "商品模块开发完成，包含商品展示、搜索和分类功能。"
 
+
 @tool
 def develop_order_module():
     """开发订单模块功能"""
     return "订单模块开发完成，包含下单、支付和订单查询功能。"
 
+
+# 用户模块开发智能体
+user_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_user_module],
+    system_prompt="你是一个前端开发工程师，负责开发用户相关模块。",
+    name="user_module_agent",
+)
+
+# 商品模块开发智能体
+product_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_product_module],
+    system_prompt="你是一个前端开发工程师，负责开发商品相关模块。",
+    name="product_module_agent",
+)
+
+# 订单模块开发智能体
+order_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_order_module],
+    system_prompt="你是一个前端开发工程师，负责开发订单相关模块。",
+    name="order_module_agent",
+)
+
 # 构建前端模块开发的并行工作流（管道）
 graph = create_parallel_pipeline(
     sub_graphs=[
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_user_module],
-            system_prompt="你是一个前端开发工程师，负责开发用户相关模块。",
-            name="user_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_product_module],
-            system_prompt="你是一个前端开发工程师，负责开发商品相关模块。",
-            name="product_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_order_module],
-            system_prompt="你是一个前端开发工程师，负责开发订单相关模块。",
-            name="order_module_agent",
-        ),
+        user_module_agent,
+        product_module_agent,
+        order_module_agent,
     ],
     state_schema=AgentState,
 )
@@ -321,34 +349,44 @@ print(response)
 # 构建并行管道（根据条件选择并行执行的子图）
 from langgraph.types import Send
 
+
 class DevAgentState(AgentState):
     """开发代理状态"""
+
     selected_modules: list[tuple[str, str]]
 
 
 # 指定用户选择的模块
 select_modules = [("user_module", "开发用户模块"), ("product_module", "开发商品模块")]
 
+user_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_user_module],
+    system_prompt="你是一个前端开发工程师，负责开发用户相关模块。",
+    name="user_module_agent",
+)
+
+product_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_product_module],
+    system_prompt="你是一个前端开发工程师，负责开发商品相关模块。",
+    name="product_module_agent",
+)
+
+
+order_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_order_module],
+    system_prompt="你是一个前端开发工程师，负责开发订单相关模块。",
+    name="order_module_agent",
+)
+
+
 graph = create_parallel_pipeline(
     sub_graphs=[
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_user_module],
-            system_prompt="你是一个前端开发工程师，负责开发用户相关模块。",
-            name="user_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_product_module],
-            system_prompt="你是一个前端开发工程师，负责开发商品相关模块。",
-            name="product_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_order_module],
-            system_prompt="你是一个前端开发工程师，负责开发订单相关模块。",
-            name="order_module_agent",
-        ),
+        user_module_agent,
+        product_module_agent,
+        order_module_agent,
     ],
     state_schema=DevAgentState,
     branches_fn=lambda state: [

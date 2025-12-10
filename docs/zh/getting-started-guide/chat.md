@@ -66,6 +66,9 @@ register_model_provider(
 
 很多模型提供商都支持 **OpenAI 兼容 API** 的服务，例如：[vLLM](https://github.com/vllm-project/vllm)、[OpenRouter](https://openrouter.ai/)、[Together AI](https://www.together.ai/)等。当你接入的模型提供商未有合适的 LangChain 对话模型类时，但提供商支持 OpenAI 兼容 API 时，可以考虑使用此情况。
 
+!!!tip "提示"
+    一种常见的接入 OpenAI 兼容 API 的做法是直接使用 `langchain-openai` 中的 `ChatOpenAI`，只需传入 `base_url` 与 `api_key` 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题：无法显示非OpenAI官方的推理模型的思维链(`reasoning_content`)、不支持使用视频类型的content_block、结构化输出默认策略覆盖率低等。为此，本库专门提供了此功能，用于解决上述问题。因此，如果对于比较简单的场景（尤其是是对兼容性要求低的场景）可以完全使用`ChatOpenAI`而无需使用本功能。
+    
 本库会根据用户的相关输入，使用内置 `BaseChatOpenAICompatible` 类构建对应于特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并增强以下能力：
 
 - **支持更多格式的推理内容**： 相较于`ChatOpenAI` 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如`vLLM`）。

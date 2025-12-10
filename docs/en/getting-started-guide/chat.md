@@ -65,6 +65,9 @@ If accessing through `model.profile` returns an empty dictionary `{}`, it indica
 
 Many model providers support **OpenAI-compatible API** services, such as: [vLLM](https://github.com/vllm-project/vllm), [OpenRouter](https://openrouter.ai/), [Together AI](https://www.together.ai/), etc. When the model provider you're integrating with doesn't have a suitable LangChain chat model class but supports OpenAI-compatible API, you can consider using this option.
 
+!!!tip "Tip"
+    A common approach to integrating with OpenAI-compatible APIs is to directly use `ChatOpenAI` from `langchain-openai`, simply by passing in the `base_url` and `api_key`. However, this method is only suitable for simple scenarios and has numerous compatibility issues: it cannot display the chain of thought (`reasoning_content`) of non-OpenAI official inference models, does not support using video-type content_blocks, and has low coverage rate for default structured output strategies, among others. To address these problems, this library specifically provides this functionality. Therefore, for relatively simple scenarios (especially those with low compatibility requirements), you can completely use `ChatOpenAI` without needing this feature.
+
 This library will use the built-in `BaseChatOpenAICompatible` class to construct a chat model class corresponding to a specific provider based on user input. This class inherits from `langchain-openai`'s `BaseChatOpenAI` and enhances the following capabilities:
 
 - **Support for more formats of reasoning content**: Compared to `ChatOpenAI` which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., `vLLM`).

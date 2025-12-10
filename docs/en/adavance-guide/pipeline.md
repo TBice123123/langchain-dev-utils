@@ -2,16 +2,16 @@
 
 ## Overview
 
-Provides practical tools for state graph orchestration. Mainly includes the following features:
+Provides practical utilities for state graph orchestration. Mainly includes the following features:
 
 - Orchestrating multiple state graphs in sequence to form sequential workflows.
 - Orchestrating multiple state graphs in parallel to form parallel workflows.
 
 ## Sequential Orchestration
 
-Used for building agent sequential pipelines. This is a work pattern that decomposes complex tasks into a series of continuous, ordered subtasks, and hands them over to different specialized agents to process in sequence.
+Used for building agent sequential pipelines. This is a work pattern that decomposes complex tasks into a series of continuous, ordered sub-tasks, handled by different specialized agents in sequence.
 
-Multiple state graphs can be combined in a sequential orchestration manner through `create_sequential_pipeline`.
+Multiple state graphs can be combined through sequential orchestration using `create_sequential_pipeline`.
 
 **Usage Example**:
 
@@ -27,7 +27,7 @@ Developing a software project typically follows a strict linear process:
 
 This process is interconnected and the order cannot be reversed.
 
-For the above four processes, each process has a specialized agent responsible for it.
+For the above four processes, each process is handled by a specialized agent:
 
 1. Product Manager Agent: Receives vague user requirements and outputs a structured Product Requirements Document (PRD).
 
@@ -37,7 +37,7 @@ For the above four processes, each process has a specialized agent responsible f
 
 4. Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.
 
-Through the `create_sequential_pipeline` function, these four agents are seamlessly connected to form a highly automated, clearly divided software development pipeline.
+Through the `create_sequential_pipeline` function, these four agents can be seamlessly connected to form a highly automated software development pipeline with clear responsibilities.
 
 ```python
 from langchain.agents import AgentState
@@ -53,58 +53,77 @@ register_model_provider(
     base_url="http://localhost:8000/v1",
 )
 
+
 @tool
 def analyze_requirements(user_request: str) -> str:
     """Analyze user requirements and generate detailed product requirements document"""
     return f"Based on user request '{user_request}', a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria."
 
+
 @tool
 def design_architecture(requirements: str) -> str:
     """Design system architecture based on requirements document"""
-    return f"Based on the requirements document, system architecture has been designed, including microservice division, data flow diagrams, and technology stack selection."
+    return "Based on the requirements document, system architecture has been designed, including microservice division, data flow diagram, and technology stack selection."
+
 
 @tool
 def generate_code(architecture: str) -> str:
     """Generate core code based on architecture design"""
-    return f"Based on the architecture design, core business code has been generated, including API interfaces, data models, and business logic implementation."
+    return "Based on the architecture design, core business code has been generated, including API interfaces, data models, and business logic implementation."
+
 
 @tool
 def create_tests(code: str) -> str:
-    """Create test cases for generated code"""
-    return f"Unit tests, integration tests, and end-to-end test cases have been created for the generated code."
+    """Create test cases for the generated code"""
+    return "Unit tests, integration tests, and end-to-end test cases have been created for the generated code."
 
-# Build an automated software development sequential workflow (pipeline)
+
+# Product Manager Agent
+requirements_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[analyze_requirements],
+    system_prompt="You are a product manager responsible for analyzing user requirements and generating detailed product requirements documents.",
+    name="requirements_agent",
+)
+
+# System Architect Agent
+architecture_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[design_architecture],
+    system_prompt="You are a system architect responsible for designing system architecture based on requirements documents.",
+    name="architecture_agent",
+)
+
+# Senior Development Engineer Agent
+coding_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[generate_code],
+    system_prompt="You are a senior development engineer responsible for generating core code based on architecture design.",
+    name="coding_agent",
+)
+
+# Testing Engineer Agent
+testing_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[create_tests],
+    system_prompt="You are a testing engineer responsible for creating comprehensive test cases for the generated code.",
+    name="testing_agent",
+)
+
+# Build automated software development sequential workflow (pipeline)
 graph = create_sequential_pipeline(
     sub_graphs=[
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[analyze_requirements],
-            system_prompt="You are a product manager responsible for analyzing user requirements and generating detailed product requirements documents.",
-            name="requirements_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[design_architecture],
-            system_prompt="You are a system architect responsible for designing system architecture based on requirements documents.",
-            name="architecture_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[generate_code],
-            system_prompt="You are a senior development engineer responsible for generating core code based on architecture design.",
-            name="coding_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[create_tests],
-            system_prompt="You are a testing engineer responsible for creating comprehensive test cases for generated code.",
-            name="testing_agent",
-        ),
+        requirements_agent,
+        architecture_agent,
+        coding_agent,
+        testing_agent,
     ],
     state_schema=AgentState,
 )
 
-response = graph.invoke({"messages": [HumanMessage("Develop an e-commerce website with user registration, product browsing, and shopping cart functionality")]})
+response = graph.invoke(
+    {"messages": [HumanMessage("Develop an e-commerce website with user registration, product browsing, and shopping cart functionality")]}
+)
 print(response)
 ```
 
@@ -112,7 +131,7 @@ The generated graph is as follows:
 
 ![Sequential Pipeline](../../assets/sequential.png)
 
-The above example is for reference only. In practice, this example will pass the complete context of all previous agents to the current agent in sequence, which may lead to context expansion, affecting performance and effectiveness. It is recommended to adopt either of the following solutions to simplify the context:
+The above example is for reference only. In practice, this example passes the complete context of all previous agents to the current agent in sequence, which may lead to context expansion, affecting performance and effectiveness. It is recommended to adopt either of the following solutions to simplify the context:
 
 1. Use `create_agent` with `middleware` to extract and pass only necessary information;
 
@@ -139,7 +158,6 @@ The above example is for reference only. In practice, this example will pass the
         code: str
         tests: str
 
-
     class ClearAgentContextMiddleware(AgentMiddleware):
         state_schema = DeveloperState
 
@@ -159,56 +177,53 @@ The above example is for reference only. In practice, this example will pass the
                 update_key: final_message.content,
             }
 
+    # Product Manager Agent
+    requirements_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[analyze_requirements],
+        system_prompt="You are a product manager responsible for analyzing user requirements and generating detailed product requirements documents.",
+        name="requirements_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("requirement")],
+    )
 
-    # Build an automated software development sequential workflow (pipeline)
+    # System Architect Agent
+    architecture_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[design_architecture],
+        system_prompt="You are a system architect responsible for designing system architecture based on requirements documents.",
+        name="architecture_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("architecture")],
+    )
+
+    # Senior Development Engineer Agent
+    coding_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[generate_code],
+        system_prompt="You are a senior development engineer responsible for generating core code based on architecture design.",
+        name="coding_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("code")],
+    )
+
+    # Testing Engineer Agent
+    testing_agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[create_tests],
+        system_prompt="You are a testing engineer responsible for creating comprehensive test cases for the generated code.",
+        name="testing_agent",
+        state_schema=DeveloperState,
+        middleware=[format_prompt, ClearAgentContextMiddleware("tests")],
+    )
+
+    # Build automated software development sequential workflow (pipeline)
     graph = create_sequential_pipeline(
         sub_graphs=[
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[analyze_requirements],
-                system_prompt="You are a product manager responsible for analyzing user requirements and generating detailed product requirements documents",
-                name="requirements_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("requirement")],
-            ),
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[design_architecture],
-                system_prompt=(
-                    "You are a system architect responsible for designing system architecture based on requirements documents.\n"
-                    "## Requirements Document:\n"
-                    "{requirement}"
-                ),
-                name="architecture_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("architecture")],
-            ),
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[generate_code],
-                system_prompt=(
-                    "You are a senior development engineer responsible for generating core business code based on requirements documents and system architecture.\n"
-                    "## Requirements Document:\n"
-                    "{requirement}\n"
-                    "## System Architecture:\n"
-                    "{architecture}"
-                ),
-                name="coding_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("code")],
-            ),
-            create_agent(
-                model="vllm:qwen3-4b",
-                tools=[create_tests],
-                system_prompt=(
-                    "You are a testing engineer responsible for creating comprehensive test cases for the generated core business code.\n"
-                    "## Generated Code:\n"
-                    "{code}"
-                ),
-                name="testing_agent",
-                state_schema=DeveloperState,
-                middleware=[format_prompt, ClearAgentContextMiddleware("tests")],
-            ),
+            requirements_agent,
+            architecture_agent,
+            coding_agent,
+            testing_agent,
         ],
         state_schema=DeveloperState,
     )
@@ -218,12 +233,14 @@ The above example is for reference only. In practice, this example will pass the
     )
     print(response)
     ```
-    In the optimized code, we added four fields `requirement`, `architecture`, `code`, and `tests` to the agent's State Schema to store the corresponding final output results of each agent.
-    At the same time, we customized a middleware `ClearAgentContextMiddleware` to clear the current runtime context after each agent finishes, and save the final result (final_message.content) to the corresponding key.
-    Finally, we use the built-in `format_prompt` middleware to dynamically splice the output of preceding agents into the `system_prompt` at runtime as needed.
+    In the optimized code, we added four fields `requirement`, `architecture`, `code`, and `tests` to the agent's State Schema to store the final output results of corresponding agents.
+    
+    At the same time, we customized a middleware `ClearAgentContextMiddleware` to clear the current execution context after each agent finishes and save the final result (final_message.content) to the corresponding key.
+    
+    Finally, we use the built-in `format_prompt` middleware to dynamically concatenate the output of preceding agents into the `system_prompt` as needed at runtime.
 
 !!! note "Note"
-    For serially combined graphs, langgraph's StateGraph provides the add_sequence method as a convenient notation. This method is most suitable when nodes are functions (not subgraphs). If nodes are subgraphs, the code might look like this:
+    For serially combined graphs, langgraph's StateGraph provides the add_sequence method as a convenient shorthand. This method is most suitable when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like:
 
     ```python
     graph = StateGraph(AgentState)
@@ -232,71 +249,84 @@ The above example is for reference only. In practice, this example will pass the
     graph = graph.compile()
     ```
 
-    However, the above notation is still somewhat cumbersome. Therefore, it is more recommended to use the `create_sequential_pipeline` function, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.
+    However, the above writing is still somewhat cumbersome. Therefore, it is more recommended to use the `create_sequential_pipeline` function, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.
 
 ## Parallel Orchestration
 
 Used for building agent parallel workflows. Its working principle is to combine multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.
 
-Through the `create_parallel_pipeline` function, multiple state graphs can be combined in a parallel orchestration manner to achieve parallel task execution.
+Through the `create_parallel_pipeline` function, multiple state graphs can be combined in a parallel orchestration manner to achieve the effect of parallel task execution.
 
 ### Simple Example
 **Usage Example**:
 
-In software development, after the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.
+In software development, when the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.
 
-Suppose we want to develop an e-commerce website whose core functions can be divided into three independent modules:
+Suppose we want to develop an e-commerce website, whose core functions can be divided into three independent modules:
 1. User module (registration, login, personal center)
 2. Product module (display, search, classification)
 3. Order module (placing orders, payment, status query)
 
-If developed serially, the time required would be the sum of all three. But if developed in parallel, the total time would be approximately equal to the development time of the longest module, greatly improving efficiency.
+If developed serially, the time required would be the sum of all three. But if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.
 
 Through the `create_parallel_pipeline` function, assign a specialized module development agent to each module, allowing them to work in parallel.
 
 ```python
 from langchain_dev_utils.pipeline import create_parallel_pipeline
 
+
 @tool
 def develop_user_module():
     """Develop user module functionality"""
     return "User module development completed, including registration, login, and personal profile management functions."
+
 
 @tool
 def develop_product_module():
     """Develop product module functionality"""
     return "Product module development completed, including product display, search, and classification functions."
 
+
 @tool
 def develop_order_module():
     """Develop order module functionality"""
     return "Order module development completed, including order placement, payment, and order query functions."
 
-# Build a parallel workflow (pipeline) for frontend module development
+
+# User Module Development Agent
+user_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_user_module],
+    system_prompt="You are a frontend development engineer responsible for developing user-related modules.",
+    name="user_module_agent",
+)
+
+# Product Module Development Agent
+product_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_product_module],
+    system_prompt="You are a frontend development engineer responsible for developing product-related modules.",
+    name="product_module_agent",
+)
+
+# Order Module Development Agent
+order_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_order_module],
+    system_prompt="You are a frontend development engineer responsible for developing order-related modules.",
+    name="order_module_agent",
+)
+
+# Build frontend module development parallel workflow (pipeline)
 graph = create_parallel_pipeline(
     sub_graphs=[
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_user_module],
-            system_prompt="You are a frontend development engineer responsible for developing user-related modules.",
-            name="user_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_product_module],
-            system_prompt="You are a frontend development engineer responsible for developing product-related modules.",
-            name="product_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_order_module],
-            system_prompt="You are a frontend development engineer responsible for developing order-related modules.",
-            name="order_module_agent",
-        ),
+        user_module_agent,
+        product_module_agent,
+        order_module_agent,
     ],
     state_schema=AgentState,
 )
-response = graph.invoke({"messages": [HumanMessage("Develop three core modules of an e-commerce website in parallel")]})
+response = graph.invoke({"messages": [HumanMessage("Parallel development of three core modules of an e-commerce website")]})
 print(response)
 ```
 
@@ -304,45 +334,55 @@ The generated graph is as follows:
 
 ![Parallel Pipeline](../../assets/parallel.png)
 
-### Using Branch Functions to Specify Subgraphs for Parallel Execution
+### Using Branch Functions to Specify Parallelly Executed Subgraphs
 
-Sometimes it is necessary to specify which subgraphs to execute in parallel based on conditions. In this case, branch functions can be used.
-Branch functions need to return a list of `Send`.
+Sometimes it is necessary to specify which subgraphs to execute in parallel based on conditions. In such cases, a branch function can be used.
+The branch function needs to return a list of `Send`.
 
-For example, in the above case, assuming the modules to be developed are specified by the user, only the specified modules will be executed in parallel.
+For example, in the above case, suppose the modules to be developed are specified by the user, then only the specified modules will be executed in parallel.
 
 ```python
-# Build a parallel pipeline (select subgraphs for parallel execution based on conditions)
+# Build parallel pipeline (select subgraphs to execute in parallel based on conditions)
 from langgraph.types import Send
+
 
 class DevAgentState(AgentState):
     """Development Agent State"""
+
     selected_modules: list[tuple[str, str]]
 
 
 # Specify modules selected by the user
 select_modules = [("user_module", "Develop user module"), ("product_module", "Develop product module")]
 
+user_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_user_module],
+    system_prompt="You are a frontend development engineer responsible for developing user-related modules.",
+    name="user_module_agent",
+)
+
+product_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_product_module],
+    system_prompt="You are a frontend development engineer responsible for developing product-related modules.",
+    name="product_module_agent",
+)
+
+
+order_module_agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[develop_order_module],
+    system_prompt="You are a frontend development engineer responsible for developing order-related modules.",
+    name="order_module_agent",
+)
+
+
 graph = create_parallel_pipeline(
     sub_graphs=[
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_user_module],
-            system_prompt="You are a frontend development engineer responsible for developing user-related modules.",
-            name="user_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_product_module],
-            system_prompt="You are a frontend development engineer responsible for developing product-related modules.",
-            name="product_module_agent",
-        ),
-        create_agent(
-            model="vllm:qwen3-4b",
-            tools=[develop_order_module],
-            system_prompt="You are a frontend development engineer responsible for developing order-related modules.",
-            name="order_module_agent",
-        ),
+        user_module_agent,
+        product_module_agent,
+        order_module_agent,
     ],
     state_schema=DevAgentState,
     branches_fn=lambda state: [
@@ -353,7 +393,7 @@ graph = create_parallel_pipeline(
 
 response = graph.invoke(
     {
-        "messages": [HumanMessage("Develop some modules of an e-commerce website")],
+        "messages": [HumanMessage("Develop some modules of the e-commerce website")],
         "selected_modules": select_modules,
     }
 )
