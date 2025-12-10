@@ -1328,58 +1328,77 @@
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
+
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyze_requirements</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;分析用户需求并生成详细的产品需求文档&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;根据用户请求&#39;</span><span class="si">{</span><span class="n">user_request</span><span class="si">}</span><span class="s2">&#39;，已生成详细的产品需求文档，包含功能列表、用户故事和验收标准。&quot;</span>
 
+
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">design_architecture</span><span class="p">(</span><span class="n">requirements</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;根据需求文档设计系统架构&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;基于需求文档，已设计系统架构，包含微服务划分、数据流图和技术栈选择。&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;基于需求文档，已设计系统架构，包含微服务划分、数据流图和技术栈选择。&quot;</span>
+
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_code</span><span class="p">(</span><span class="n">architecture</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;根据架构设计生成核心代码&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;基于架构设计，已生成核心业务代码，包含API接口、数据模型和业务逻辑实现。&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;基于架构设计，已生成核心业务代码，包含API接口、数据模型和业务逻辑实现。&quot;</span>
+
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_tests</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;为生成的代码创建测试用例&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;为生成的代码创建了单元测试、集成测试和端到端测试用例。&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;为生成的代码创建了单元测试、集成测试和端到端测试用例。&quot;</span>
+
+
+<span class="c1"># 产品经理智能体</span>
+<span class="n">requirements_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">analyze_requirements</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个产品经理，负责分析用户需求并生成详细的产品需求文档。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;requirements_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 系统架构师智能体</span>
+<span class="n">architecture_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">design_architecture</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个系统架构师，负责根据需求文档设计系统架构。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;architecture_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 高级开发工程师智能体</span>
+<span class="n">coding_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_code</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个高级开发工程师，负责根据架构设计生成核心代码。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coding_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 测试工程师智能体</span>
+<span class="n">testing_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个测试工程师，负责为生成的代码创建全面的测试用例。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># 构建自动化软件开发顺序工作流（管道）</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">analyze_requirements</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个产品经理，负责分析用户需求并生成详细的产品需求文档。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;requirements_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">design_architecture</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个系统架构师，负责根据需求文档设计系统架构。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;architecture_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_code</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个高级开发工程师，负责根据架构设计生成核心代码。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coding_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个测试工程师，负责为生成的代码创建全面的测试用例。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
+        <span class="n">requirements_agent</span><span class="p">,</span>
+        <span class="n">architecture_agent</span><span class="p">,</span>
+        <span class="n">coding_agent</span><span class="p">,</span>
+        <span class="n">testing_agent</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;开发一个电商网站，包含用户注册、商品浏览和购物车功能&quot;</span><span class="p">)]})</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;开发一个电商网站，包含用户注册、商品浏览和购物车功能&quot;</span><span class="p">)]}</span>
+<span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>最终生成的图如下：</p>
@@ -1413,7 +1432,6 @@
     <span class="n">code</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">tests</span><span class="p">:</span> <span class="nb">str</span>
 
-
 <span class="k">class</span><span class="w"> </span><span class="nc">ClearAgentContextMiddleware</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
     <span class="n">state_schema</span> <span class="o">=</span> <span class="n">DeveloperState</span>
 
@@ -1433,56 +1451,53 @@
             <span class="n">update_key</span><span class="p">:</span> <span class="n">final_message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
         <span class="p">}</span>
 
+<span class="c1"># 产品经理智能体</span>
+<span class="n">requirements_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">analyze_requirements</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个产品经理，负责分析用户需求并生成详细的产品需求文档。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;requirements_agent&quot;</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;requirement&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
+
+<span class="c1"># 系统架构师智能体</span>
+<span class="n">architecture_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">design_architecture</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个系统架构师，负责根据需求文档设计系统架构。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;architecture_agent&quot;</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;architecture&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
+
+<span class="c1"># 高级开发工程师智能体</span>
+<span class="n">coding_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_code</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个高级开发工程师，负责根据架构设计生成核心代码。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coding_agent&quot;</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
+
+<span class="c1"># 测试工程师智能体</span>
+<span class="n">testing_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个测试工程师，负责为生成的代码创建全面的测试用例。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;tests&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
 
 <span class="c1"># 构建自动化软件开发顺序工作流（管道）</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">analyze_requirements</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个产品经理，负责分析用户需求并生成详细的产品需求文档&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;requirements_agent&quot;</span><span class="p">,</span>
-            <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;requirement&quot;</span><span class="p">)],</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">design_architecture</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;你是一个系统架构师，负责根据需求文档设计系统架构。</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;## 需求文档：</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;</span><span class="si">{requirement}</span><span class="s2">&quot;</span>
-            <span class="p">),</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;architecture_agent&quot;</span><span class="p">,</span>
-            <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;architecture&quot;</span><span class="p">)],</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_code</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;你是一个高级开发工程师，负责根据需求文档以及系统架构生成核心业务代码。</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;## 需求文档：</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;</span><span class="si">{requirement}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;## 系统架构：</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;</span><span class="si">{architecture}</span><span class="s2">&quot;</span>
-            <span class="p">),</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coding_agent&quot;</span><span class="p">,</span>
-            <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)],</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;你是一个测试工程师，负责为**生成的核心业务代码创建全面的测试用例。</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;## 生成的代码：</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;</span><span class="si">{code}</span><span class="s2">&quot;</span>
-            <span class="p">),</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
-            <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
-            <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;tests&quot;</span><span class="p">)],</span>
-        <span class="p">),</span>
+        <span class="n">requirements_agent</span><span class="p">,</span>
+        <span class="n">architecture_agent</span><span class="p">,</span>
+        <span class="n">coding_agent</span><span class="p">,</span>
+        <span class="n">testing_agent</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1520,42 +1535,55 @@
 <p>通过<code>create_parallel_pipeline</code>函数，为每个模块分配一个专门的模块开发智能体，让它们并行工作。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_pipeline</span>
 
+
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">develop_user_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;开发用户模块功能&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;用户模块开发完成，包含注册、登录和个人资料管理功能。&quot;</span>
+
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">develop_product_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;开发商品模块功能&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;商品模块开发完成，包含商品展示、搜索和分类功能。&quot;</span>
 
+
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">develop_order_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;开发订单模块功能&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;订单模块开发完成，包含下单、支付和订单查询功能。&quot;</span>
 
+
+<span class="c1"># 用户模块开发智能体</span>
+<span class="n">user_module_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_user_module</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发用户相关模块。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_module_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 商品模块开发智能体</span>
+<span class="n">product_module_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_product_module</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发商品相关模块。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;product_module_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 订单模块开发智能体</span>
+<span class="n">order_module_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_order_module</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发订单相关模块。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_module_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># 构建前端模块开发的并行工作流（管道）</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_user_module</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发用户相关模块。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_module_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_product_module</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发商品相关模块。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;product_module_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_order_module</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发订单相关模块。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_module_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
+        <span class="n">user_module_agent</span><span class="p">,</span>
+        <span class="n">product_module_agent</span><span class="p">,</span>
+        <span class="n">order_module_agent</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1571,34 +1599,44 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># 构建并行管道（根据条件选择并行执行的子图）</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 
+
 <span class="k">class</span><span class="w"> </span><span class="nc">DevAgentState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;开发代理状态&quot;&quot;&quot;</span>
+
     <span class="n">selected_modules</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 
 
 <span class="c1"># 指定用户选择的模块</span>
 <span class="n">select_modules</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;user_module&quot;</span><span class="p">,</span> <span class="s2">&quot;开发用户模块&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;product_module&quot;</span><span class="p">,</span> <span class="s2">&quot;开发商品模块&quot;</span><span class="p">)]</span>
 
+<span class="n">user_module_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_user_module</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发用户相关模块。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_module_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">product_module_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_product_module</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发商品相关模块。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;product_module_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">order_module_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_order_module</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发订单相关模块。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_module_agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_user_module</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发用户相关模块。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_module_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_product_module</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发商品相关模块。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;product_module_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">create_agent</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">develop_order_module</span><span class="p">],</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个前端开发工程师，负责开发订单相关模块。&quot;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_module_agent&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
+        <span class="n">user_module_agent</span><span class="p">,</span>
+        <span class="n">product_module_agent</span><span class="p">,</span>
+        <span class="n">order_module_agent</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">DevAgentState</span><span class="p">,</span>
     <span class="n">branches_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="p">[</span>

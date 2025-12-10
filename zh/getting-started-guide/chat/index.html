@@ -1404,6 +1404,10 @@
 </div>
 <h3 id="langchain-openai-api">未有 LangChain 对话模型类，但模型提供商支持 OpenAI 兼容 API</h3>
 <p>很多模型提供商都支持 <strong>OpenAI 兼容 API</strong> 的服务，例如：<a href="https://github.com/vllm-project/vllm">vLLM</a>、<a href="https://openrouter.ai/">OpenRouter</a>、<a href="https://www.together.ai/">Together AI</a>等。当你接入的模型提供商未有合适的 LangChain 对话模型类时，但提供商支持 OpenAI 兼容 API 时，可以考虑使用此情况。</p>
+<div class="admonition tip">
+<p class="admonition-title">提示</p>
+<p>一种常见的接入 OpenAI 兼容 API 的做法是直接使用 <code>langchain-openai</code> 中的 <code>ChatOpenAI</code>，只需传入 <code>base_url</code> 与 <code>api_key</code> 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题：无法显示非OpenAI官方的推理模型的思维链(<code>reasoning_content</code>)、不支持使用视频类型的content_block、结构化输出默认策略覆盖率低等。为此，本库专门提供了此功能，用于解决上述问题。因此，如果对于比较简单的场景（尤其是是对兼容性要求低的场景）可以完全使用<code>ChatOpenAI</code>而无需使用本功能。</p>
+</div>
 <p>本库会根据用户的相关输入，使用内置 <code>BaseChatOpenAICompatible</code> 类构建对应于特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并增强以下能力：</p>
 <ul>
 <li><strong>支持更多格式的推理内容</strong>： 相较于<code>ChatOpenAI</code> 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如<code>vLLM</code>）。</li>

@@ -1404,6 +1404,10 @@ A few notes about the above code:</p>
 </div>
 <h3 id="no-langchain-chat-model-class-but-provider-supports-openai-compatible-api">No LangChain Chat Model Class, but Provider Supports OpenAI-Compatible API</h3>
 <p>Many model providers support <strong>OpenAI-compatible API</strong> services, such as: <a href="https://github.com/vllm-project/vllm">vLLM</a>, <a href="https://openrouter.ai/">OpenRouter</a>, <a href="https://www.together.ai/">Together AI</a>, etc. When the model provider you're integrating with doesn't have a suitable LangChain chat model class but supports OpenAI-compatible API, you can consider using this option.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A common approach to integrating with OpenAI-compatible APIs is to directly use <code>ChatOpenAI</code> from <code>langchain-openai</code>, simply by passing in the <code>base_url</code> and <code>api_key</code>. However, this method is only suitable for simple scenarios and has numerous compatibility issues: it cannot display the chain of thought (<code>reasoning_content</code>) of non-OpenAI official inference models, does not support using video-type content_blocks, and has low coverage rate for default structured output strategies, among others. To address these problems, this library specifically provides this functionality. Therefore, for relatively simple scenarios (especially those with low compatibility requirements), you can completely use <code>ChatOpenAI</code> without needing this feature.</p>
+</div>
 <p>This library will use the built-in <code>BaseChatOpenAICompatible</code> class to construct a chat model class corresponding to a specific provider based on user input. This class inherits from <code>langchain-openai</code>'s <code>BaseChatOpenAI</code> and enhances the following capabilities:</p>
 <ul>
 <li><strong>Support for more formats of reasoning content</strong>: Compared to <code>ChatOpenAI</code> which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., <code>vLLM</code>).</li>
