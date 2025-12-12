@@ -1410,46 +1410,6 @@
 <p class="admonition-title">Note</p>
 <p>This middleware cannot guarantee 100% repair of all invalid tool calls; the actual effect depends on the repair capability of <code>json-repair</code>. Additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Note</p>
-<p>In addition, this library has extended the following middleware with the functionality to specify models through string parameters:
-- SummarizationMiddleware
-- LLMToolSelectorMiddleware
-- ModelFallbackMiddleware
-- LLMToolEmulator</p>
-<p>You only need to import these middleware from this library to use strings to specify models that have been registered with <code>register_model_provider</code>. The middleware usage is consistent with the official middleware, for example:
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizationMiddleware</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
-
-<span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">SummarizationMiddleware</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="n">trigger</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="n">keep</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="p">)</span>
-    <span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent AI assistant that can solve user problems&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="c1"># big_text is a text containing a lot of content, omitted here</span>
-<span class="n">big_messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello, who are you&quot;</span><span class="p">),</span>
-    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;I am your AI assistant&quot;</span><span class="p">),</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Write a beautiful long text&quot;</span><span class="p">),</span>
-    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Okay, I will write a beautiful long text, the content is: </span><span class="si">{</span><span class="n">big_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Why did you write this long text?&quot;</span><span class="p">),</span>
-<span class="p">]</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">big_messages</span><span class="p">})</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-</code></pre></div></p>
-</div>
 <h2 id="formatting-system-prompts">Formatting System Prompts</h2>
 <p>This middleware <code>format_prompt</code> allows you to use f-string style placeholders (like <code>{name}</code>) in your <code>system_prompt</code>, and dynamically replace them with actual values at runtime.</p>
 <p>The values for placeholders follow a clear resolution order:</p>
@@ -1546,6 +1506,52 @@
 </code></pre></div>
 </li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Note</p>
+<p>There are two ways to implement custom middleware: decorator or class inheritance.<br />
+- Class inheritance implementation: <code>PlanMiddleware</code>, <code>ModelMiddleware</code>, <code>ToolCallRepairMiddleware</code><br />
+- Decorator implementation: <code>format_prompt</code> (the decorator directly turns the function into a middleware instance, so no manual instantiation is required)</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Note</p>
+<p>In addition, this library has extended the following middleware with the functionality to specify models through string parameters:
+- SummarizationMiddleware
+- LLMToolSelectorMiddleware
+- ModelFallbackMiddleware
+- LLMToolEmulator</p>
+<p>You only need to import these middleware from this library to use strings to specify models that have been registered with <code>register_model_provider</code>. The middleware usage is consistent with the official middleware, for example:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizationMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">SummarizationMiddleware</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+            <span class="n">trigger</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="n">keep</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent AI assistant that can solve user problems&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># big_text is a text containing a lot of content, omitted here</span>
+<span class="n">big_messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello, who are you&quot;</span><span class="p">),</span>
+    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;I am your AI assistant&quot;</span><span class="p">),</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Write a beautiful long text&quot;</span><span class="p">),</span>
+    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Okay, I will write a beautiful long text, the content is: </span><span class="si">{</span><span class="n">big_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Why did you write this long text?&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">big_messages</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
 
 
 
