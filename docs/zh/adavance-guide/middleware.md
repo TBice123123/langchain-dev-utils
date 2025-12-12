@@ -189,50 +189,6 @@ agent = create_agent(
     本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 `json-repair` 的修复能力；此外，它仅作用于 `invalid_tool_calls` 字段中的无效工具调用内容。
 
 
-!!! info "注意"
-    除此之外，本库还扩充了以下中间件通过字符串参数指定模型的功能：
-
-    - SummarizationMiddleware
-
-    - LLMToolSelectorMiddleware
-
-    - ModelFallbackMiddleware
-    
-    - LLMToolEmulator
-
-    你只需要导入本库中的这些中间件，即可使用字符串指定已经被`register_model_provider`注册的模型。中间件使用方法和官方中间件保持一致，例如：
-    ```python
-    from langchain_core.messages import AIMessage
-    from langchain_dev_utils.agents.middleware import SummarizationMiddleware
-    from langchain_dev_utils.chat_models import register_model_provider
-
-    register_model_provider(
-        provider_name="vllm",
-        chat_model="openai-compatible",
-        base_url="http://localhost:8000/v1",
-    )
-    agent = create_agent(
-        model="vllm:qwen3-4b",
-        middleware=[
-            SummarizationMiddleware(
-                model="vllm:qwen3-4b",
-                trigger=("tokens", 50),
-                keep=("messages", 1),
-            )
-        ],
-        system_prompt="你是一个智能的AI助手，可以解决用户的问题",
-    )
-    # big_text 是一个包含大量内容的文本，这里省略
-    big_messages = [
-        HumanMessage(content="你好，你是谁"),
-        AIMessage(content="我是你的AI助手"),
-        HumanMessage(content="写一段优美的长文本"),
-        AIMessage(content=f"好的，我会写一段优美的长文本，内容是：{big_text}"),
-        HumanMessage(content="你为啥要写这段长文本呢？"),
-    ]
-    response = agent.invoke({"messages": big_messages})
-    print(response)
-    ```
 
 
 ## 格式化系统提示词
@@ -335,5 +291,56 @@ agent = create_agent(
 
     # 最终的系统提示词会是 "你是一个智能助手，你的名字叫做assistant-1。你的使用者叫做张三。"
     # 因为 state 的优先级更高
+    print(response)
+    ```
+
+!!! warning "注意"
+    自定义中间件有两种实现方式：装饰器或继承类。  
+    - 继承类实现：`PlanMiddleware`、`ModelMiddleware`、`ToolCallRepairMiddleware`  
+    - 装饰器实现：`format_prompt`（装饰器会把函数直接变成中间件实例，因此无需手动实例化即可使用）
+
+
+!!! info "注意"
+    除此之外，本库还扩充了以下中间件通过字符串参数指定模型的功能：
+
+    - SummarizationMiddleware
+
+    - LLMToolSelectorMiddleware
+
+    - ModelFallbackMiddleware
+    
+    - LLMToolEmulator
+
+    你只需要导入本库中的这些中间件，即可使用字符串指定已经被`register_model_provider`注册的模型。中间件使用方法和官方中间件保持一致，例如：
+    ```python
+    from langchain_core.messages import AIMessage
+    from langchain_dev_utils.agents.middleware import SummarizationMiddleware
+    from langchain_dev_utils.chat_models import register_model_provider
+
+    register_model_provider(
+        provider_name="vllm",
+        chat_model="openai-compatible",
+        base_url="http://localhost:8000/v1",
+    )
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        middleware=[
+            SummarizationMiddleware(
+                model="vllm:qwen3-4b",
+                trigger=("tokens", 50),
+                keep=("messages", 1),
+            )
+        ],
+        system_prompt="你是一个智能的AI助手，可以解决用户的问题",
+    )
+    # big_text 是一个包含大量内容的文本，这里省略
+    big_messages = [
+        HumanMessage(content="你好，你是谁"),
+        AIMessage(content="我是你的AI助手"),
+        HumanMessage(content="写一段优美的长文本"),
+        AIMessage(content=f"好的，我会写一段优美的长文本，内容是：{big_text}"),
+        HumanMessage(content="你为啥要写这段长文本呢？"),
+    ]
+    response = agent.invoke({"messages": big_messages})
     print(response)
     ```

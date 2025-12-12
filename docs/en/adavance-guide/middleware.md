@@ -190,47 +190,6 @@ agent = create_agent(
     This middleware cannot guarantee 100% repair of all invalid tool calls; the actual effect depends on the repair capability of `json-repair`. Additionally, it only acts on invalid tool call content in the `invalid_tool_calls` field.
 
 
-!!! info "Note"
-    In addition, this library has extended the following middleware with the functionality to specify models through string parameters:
-    - SummarizationMiddleware
-    - LLMToolSelectorMiddleware
-    - ModelFallbackMiddleware
-    - LLMToolEmulator
-
-    You only need to import these middleware from this library to use strings to specify models that have been registered with `register_model_provider`. The middleware usage is consistent with the official middleware, for example:
-    ```python
-    from langchain_core.messages import AIMessage
-    from langchain_dev_utils.agents.middleware import SummarizationMiddleware
-    from langchain_dev_utils.chat_models import register_model_provider
-
-    register_model_provider(
-        provider_name="vllm",
-        chat_model="openai-compatible",
-        base_url="http://localhost:8000/v1",
-    )
-    agent = create_agent(
-        model="vllm:qwen3-4b",
-        middleware=[
-            SummarizationMiddleware(
-                model="vllm:qwen3-4b",
-                trigger=("tokens", 50),
-                keep=("messages", 1),
-            )
-        ],
-        system_prompt="You are an intelligent AI assistant that can solve user problems",
-    )
-    # big_text is a text containing a lot of content, omitted here
-    big_messages = [
-        HumanMessage(content="Hello, who are you"),
-        AIMessage(content="I am your AI assistant"),
-        HumanMessage(content="Write a beautiful long text"),
-        AIMessage(content=f"Okay, I will write a beautiful long text, the content is: {big_text}"),
-        HumanMessage(content="Why did you write this long text?"),
-    ]
-    response = agent.invoke({"messages": big_messages})
-    print(response)
-    ```
-
 ## Formatting System Prompts
 
 This middleware `format_prompt` allows you to use f-string style placeholders (like `{name}`) in your `system_prompt`, and dynamically replace them with actual values at runtime.
@@ -331,5 +290,54 @@ Usage examples are as follows:
 
     # The final system prompt will be "You are an intelligent assistant, your name is assistant-1. Your user is named Zhang San."
     # Because state has higher priority
+    print(response)
+    ```
+
+
+
+!!! warning "Note"
+    There are two ways to implement custom middleware: decorator or class inheritance.  
+    - Class inheritance implementation: `PlanMiddleware`, `ModelMiddleware`, `ToolCallRepairMiddleware`  
+    - Decorator implementation: `format_prompt` (the decorator directly turns the function into a middleware instance, so no manual instantiation is required)
+
+    
+!!! info "Note"
+    In addition, this library has extended the following middleware with the functionality to specify models through string parameters:
+    - SummarizationMiddleware
+    - LLMToolSelectorMiddleware
+    - ModelFallbackMiddleware
+    - LLMToolEmulator
+
+    You only need to import these middleware from this library to use strings to specify models that have been registered with `register_model_provider`. The middleware usage is consistent with the official middleware, for example:
+    ```python
+    from langchain_core.messages import AIMessage
+    from langchain_dev_utils.agents.middleware import SummarizationMiddleware
+    from langchain_dev_utils.chat_models import register_model_provider
+
+    register_model_provider(
+        provider_name="vllm",
+        chat_model="openai-compatible",
+        base_url="http://localhost:8000/v1",
+    )
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        middleware=[
+            SummarizationMiddleware(
+                model="vllm:qwen3-4b",
+                trigger=("tokens", 50),
+                keep=("messages", 1),
+            )
+        ],
+        system_prompt="You are an intelligent AI assistant that can solve user problems",
+    )
+    # big_text is a text containing a lot of content, omitted here
+    big_messages = [
+        HumanMessage(content="Hello, who are you"),
+        AIMessage(content="I am your AI assistant"),
+        HumanMessage(content="Write a beautiful long text"),
+        AIMessage(content=f"Okay, I will write a beautiful long text, the content is: {big_text}"),
+        HumanMessage(content="Why did you write this long text?"),
+    ]
+    response = agent.invoke({"messages": big_messages})
     print(response)
     ```
