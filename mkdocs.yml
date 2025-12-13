@@ -63,7 +63,6 @@ plugins:
           build: true
           nav:
           - Home: index.md
-          - Installation: installation.md
           - Getting Started:
             - Chat Model Management: getting-started-guide/chat.md
             - Embedding Model Management: getting-started-guide/embedding.md
@@ -88,7 +87,6 @@ plugins:
           build: true
           nav:
           - 首页: index.md
-          - 安装: installation.md
           - 入门指南:
             - 对话模型管理: getting-started-guide/chat.md
             - 嵌入模型管理: getting-started-guide/embedding.md

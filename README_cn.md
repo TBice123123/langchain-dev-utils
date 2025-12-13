@@ -37,38 +37,38 @@
 
 ## ⚡ 快速开始
 
-1. 安装 `langchain-dev-utils`：
+**1. 安装 `langchain-dev-utils`**
 
-   ```bash
-   pip install -U langchain[openai] langchain-dev-utils
-   ```
+```bash
+pip install -U "langchain-dev-utils[standard]"
+```
 
-2. 开始使用：
+**2. 开始使用**
 
-   ```python
-    from langchain.tools import tool
-    from langchain_core.messages import HumanMessage
-    from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
-    from langchain_dev_utils.agents import create_agent
+```python
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
+from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
+from langchain_dev_utils.agents import create_agent
 
-    # 注册模型提供商
-    register_model_provider("vllm", "openai-compatible", "http://localhost:8000/v1")
+# 注册模型提供商
+register_model_provider("vllm", "openai-compatible", base_url="http://localhost:8000/v1")
 
-    @tool
-    def get_current_weather(location: str) -> str:
-        """获取指定地点的当前天气"""
-        return f"25度，{location}"
+@tool
+def get_current_weather(location: str) -> str:
+    """获取指定地点的当前天气"""
+    return f"25度，{location}"
 
-    # 使用字符串动态加载模型
-    model = load_chat_model("vllm:qwen3-4b")
-    response = model.invoke("你好")
-    print(response)
+# 使用字符串动态加载模型
+model = load_chat_model("vllm:qwen3-4b")
+response = model.invoke("你好")
+print(response)
 
-    # 创建智能体
-    agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
-    response = agent.invoke({"messages": [HumanMessage(content="今天纽约的天气如何？")]})
-    print(response)
-   ```
+# 创建智能体
+agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
+response = agent.invoke({"messages": [HumanMessage(content="今天纽约的天气如何？")]})
+print(response)
+```
 
 **获取更多的本库功能，请访问[完整文档](https://tbice123123.github.io/langchain-dev-utils/zh/)**
 

@@ -13,6 +13,63 @@ When building complex large language model applications with LangChain and LangG
 
 This is a lightweight but practical utility library focused on improving the development experience of LangChain and LangGraph. It provides a series of ready-to-use practical utility functions, thereby reducing repetitive code and enhancing code consistency and readability. By simplifying the development path, `langchain-dev-utils` enables you to implement functional prototypes faster, iterate more smoothly, and helps build clearer and more reliable AI large model applications.
 
+
+## Installation
+
+`langchain-dev-utils` supports installation with multiple package managers such as `pip`, `poetry`, and `uv`.
+
+To install the basic version of `langchain-dev-utils`:
+
+=== "pip"
+    ```bash
+    pip install -U langchain-dev-utils
+    ```
+
+=== "poetry"
+    ```bash
+    poetry add langchain-dev-utils
+    ```
+
+=== "uv"
+    ```bash
+    uv add langchain-dev-utils
+    ```
+
+To install the full-featured version of `langchain-dev-utils`:
+
+=== "pip"
+    ```bash
+    pip install -U langchain-dev-utils[standard]
+    ```
+
+=== "poetry"
+    ```bash
+    poetry add langchain-dev-utils[standard]
+    ```
+
+=== "uv"
+    ```bash
+    uv add langchain-dev-utils[standard]
+    ```
+
+After installation, verify that the package is correctly installed:
+
+```python
+import langchain_dev_utils
+print(langchain_dev_utils.__version__)
+```
+
+The package will automatically install the following dependencies:
+
+- `langchain`
+- `langgraph` (installed automatically with `langchain`)
+
+For the standard version, the following additional dependencies will be installed:
+
+- `langchain-openai` (for model management)
+- `json-repair` (for middleware tool call error fixes)
+
+
 ## Use Cases
 
 - **Regular Large Language Model Applications**

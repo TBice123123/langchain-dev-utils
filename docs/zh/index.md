@@ -13,6 +13,63 @@
 
 这是一个轻量但实用的工具库，聚焦于提升 langchain 与 langgraph 的开发体验。它提供了一系列开箱即用的实用性工具函数，从而做到减少重复代码，增强代码的一致性与可读性。通过简化开发路径，`langchain-dev-utils` 让您能够更快地实现功能原型、更顺畅地推进迭代，助力构建更清晰、更可靠的 AI 大模型应用。
 
+## 安装
+
+`langchain-dev-utils`支持使用`pip`、`poetry`、`uv`等多种包管理器进行安装。
+
+安装基础版本的`langchain-dev-utils`：
+
+=== "pip"
+    ```bash
+    pip install -U langchain-dev-utils
+    ```
+
+=== "poetry"
+    ```bash
+    poetry add langchain-dev-utils
+    ```
+
+=== "uv"
+    ```bash
+    uv add langchain-dev-utils
+    ```
+
+安装完整功能版本的`langchain-dev-utils`：
+
+
+=== "pip"
+    ```bash
+    pip install -U langchain-dev-utils[standard]
+    ```
+
+=== "poetry"
+    ```bash
+    poetry add langchain-dev-utils[standard]
+    ```
+
+=== "uv"
+    ```bash
+    uv add langchain-dev-utils[standard]
+    ```
+
+安装后，验证包是否正确安装：
+
+```python
+import langchain_dev_utils
+print(langchain_dev_utils.__version__)
+```
+
+该包会自动安装以下依赖项：
+
+- `langchain`
+- `langgraph` (安装`langchain`时会同时也会安装)
+
+如果是 standard 版本，还会安装以下依赖项：
+
+- `langchain-openai`（用于模型管理）
+- `json-repair`(用于中间件的工具调用错误修复)
+
+
 ## 使用场景
 
 - **常规大模型应用**

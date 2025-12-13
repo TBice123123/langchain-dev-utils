@@ -152,7 +152,6 @@ model = load_embeddings("text-embedding-3-large", provider="openai")
 ```
 
 !!! note "最佳实践"
-    无论是哪种情况，你都可以传入任意数量的关键字参数作为模型的额外参数，例如`temperature`, `extra_body`等。
     对于本模块的使用，可以根据下面三种情况进行选择：
 
     1. 若接入的所有嵌入模型提供商均被官方 `init_embeddings` 支持，请直接使用官方函数，以获得最佳兼容性。

@@ -151,7 +151,6 @@ model = load_embeddings("text-embedding-3-large", provider="openai")
 ```
 
 !!! note "Best Practice"
-    Regardless of the situation, you can pass any number of keyword arguments as additional model parameters, such as `temperature`, `extra_body`, etc.
     For using this module, you can choose based on the following three scenarios:
 
     1. If all embedding model providers you're connecting to are supported by the official `init_embeddings`, please use the official function directly for best compatibility.

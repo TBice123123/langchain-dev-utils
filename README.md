@@ -37,38 +37,38 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
 
 ## ⚡ Quick Start
 
-1. Install `langchain-dev-utils`:
+**1. Install `langchain-dev-utils`**
 
-   ```bash
-   pip install -U langchain[openai] langchain-dev-utils
-   ```
+```bash
+pip install -U "langchain-dev-utils[standard]"
+```
 
-2. Start using:
+**2. Start using**
 
-   ```python
-    from langchain.tools import tool
-    from langchain_core.messages import HumanMessage
-    from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
-    from langchain_dev_utils.agents import create_agent
+```python
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
+from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
+from langchain_dev_utils.agents import create_agent
 
-    # Register model provider
-    register_model_provider("vllm", "openai-compatible", "http://localhost:8000/v1")
+# Register model provider
+register_model_provider("vllm", "openai-compatible", base_url="http://localhost:8000/v1")
 
-    @tool
-    def get_current_weather(location: str) -> str:
-        """Get the current weather for the specified location"""
-        return f"25 degrees, {location}"
+@tool
+def get_current_weather(location: str) -> str:
+    """Get the current weather for the specified location"""
+    return f"25 degrees, {location}"
 
-    # Dynamically load model using string
-    model = load_chat_model("vllm:qwen3-4b")
-    response = model.invoke("Hello")
-    print(response)
+# Dynamically load model using string
+model = load_chat_model("vllm:qwen3-4b")
+response = model.invoke("Hello")
+print(response)
 
-    # Create agent
-    agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
-    response = agent.invoke({"messages": [HumanMessage(content="What's the weather like in New York today?")]})
-    print(response)
-   ```
+# Create agent
+agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
+response = agent.invoke({"messages": [HumanMessage(content="What's the weather like in New York today?")]})
+print(response)
+```
 
 **For more features of this library, please visit the [full documentation](https://tbice123123.github.io/langchain-dev-utils/)**
 
