@@ -1704,7 +1704,7 @@
 <p><strong>参数说明：</strong></p>
 <ul>
 <li><code>router_model</code>: 用于路由的模型,接收字符串类型（使用<code>load_chat_model</code>加载）或者直接传入 ChatModel</li>
-<li><code>model_list</code>：模型列表，每个模型需要包含 <code>model_name</code> 和 <code>model_description</code> 两个键，同时也可以选择性地包含 <code>tools</code>、<code>model_kwargs</code> 、<code>model_system_prompt</code> 这三个键，分别代表模型可用的工具（如果不传则默认是使用全部工具）、传递给模型的额外参数（例如：temperature、top_p 等）和该模型的系统提示词。</li>
+<li><code>model_list</code>：模型列表，每个模型需要包含 <code>model_name</code> 和 <code>model_description</code> 两个键，同时也可以选择性地包含 <code>tools</code>、<code>model_kwargs</code> 、<code>model_instance</code>、<code>model_system_prompt</code> 这四个键，分别代表模型可用的工具（如果不传则默认是使用全部工具）、传递给模型的额外参数（例如：temperature、top_p 等）、以及该模型对应的模型实例和该模型的系统提示词。</li>
 <li><code>router_prompt</code>: 路由模型的提示词，如果为 None 则使用默认的提示词</li>
 </ul>
 <p><strong>示例：</strong></p>
@@ -1756,6 +1756,7 @@
     <span class="n">model_description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">tools</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">BaseTool</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>
     <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+    <span class="n">model_instance</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]</span>
     <span class="n">model_system_prompt</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
 <h2 id="selectmodel">SelectModel</h2>
