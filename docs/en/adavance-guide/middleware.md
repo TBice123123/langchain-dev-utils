@@ -93,13 +93,19 @@ It's important to note that to use these three tools, you must ensure that the s
 
 ## Model Routing
 
-`ModelRouterMiddleware` is a middleware for **dynamically routing to the most suitable model based on input content**. It analyzes user requests through a "routing model" and selects the most appropriate model from a predefined list of models to handle the current task.
+`ModelRouterMiddleware` is a middleware for **dynamically routing to the most suitable model based on input content**. It analyzes user requests through a "router model" and selects the most appropriate model from a predefined list to handle the current task.
 
 Its parameters are as follows:
 
 - `router_model`: The model used to execute routing decisions. You can pass a string (which will be automatically loaded via `load_chat_model`), such as `vllm:qwen3-4b`; or directly pass an instantiated `BaseChatModel` object.
-- `model_list`: A list of model configurations, where each element is a dictionary containing `model_name` (str), `model_description` (str), and optional `tools` (list[BaseTool]), `model_kwargs` (dict), `model_system_prompt` (str).
-- `router_prompt`: Custom prompt for the routing model. If `None` (default), the built-in default prompt template will be used.
+- `model_list`: A list of model configurations, where each element is a dictionary that must include `model_name` (str), `model_description` (str), and optionally `tools` (list[BaseTool]), `model_kwargs` (dict), `model_instance` (BaseChatModel), and `model_system_prompt` (str).
+- `router_prompt`: Custom prompt for the router model. If `None` (default), the built-in default prompt template will be used.
+
+!!! info "Tips"
+    - If `model_instance` is not provided in `model_list`, the model will be loaded by calling `load_chat_model` with `model_name` during routing; if `model_kwargs` is also provided, they will be passed as keyword arguments (provided that the provider has been registered with `register_model_provider`).
+    - If `model_instance` is already provided in `model_list`, that instance will be used directly, `model_name` will only serve as an identifier and will not be loaded again through `load_chat_model`, and `model_kwargs` will be ignored.
+    - Therefore, there are two ways to pass additional model parameters: When the provider is registered, it is recommended to declare them in `model_kwargs`; When the provider is not registered, you can first manually instantiate the model (with parameters), and then assign the instance to `model_instance`.
+    - Regardless of whether `model_instance` is passed, `model_name` is the unique identifier of the model and must be passed. It is recommended to name it as `{provider}:{model_name}`, such as `vllm:qwen3-8b`, `openrouter:qwen/qwen3-vl-32b-instruct`, etc.
 
 
 **Usage Example**
@@ -110,22 +116,22 @@ First, define the model list:
 model_list = [
     {
         "model_name": "vllm:qwen3-8b",
-        "model_description": "Suitable for general tasks such as conversation, text generation, etc.",
+        "model_description": "Suitable for general tasks, such as dialogue, text generation, etc.",
         "model_kwargs": {
             "temperature": 0.7,
             "extra_body": {"chat_template_kwargs": {"enable_thinking": False}}
         },
-        "model_system_prompt": "You are an assistant skilled at handling general tasks such as conversation, text generation, etc.",
+        "model_system_prompt": "You are an assistant, skilled at handling general tasks, such as dialogue, text generation, etc.",
     },
     {
         "model_name": "openrouter:qwen/qwen3-vl-32b-instruct",
-        "model_description": "Suitable for visual tasks",
-        "tools": [],  # If this model doesn't need any tools, set this field to an empty list []
+        "model_description": "Suitable for vision tasks",
+        "tools": [],  # If this model doesn't need any tools, please set this field to an empty list []
     },
     {
         "model_name": "openrouter:qwen/qwen3-coder-plus",
         "model_description": "Suitable for code generation tasks",
-        "tools": [run_python_code],  # Only allow the use of run_python_code tool
+        "tools": [run_python_code],  # Only allow using the run_python_code tool
     },
 ]
 ```
@@ -137,7 +143,7 @@ from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
 from langchain_core.messages import HumanMessage
 
 agent = create_agent(
-    model="vllm:qwen3-4b",  # This model is only a placeholder, actually replaced dynamically by the middleware
+    model="vllm:qwen3-4b",  # This model is just a placeholder, will be dynamically replaced by the middleware
     tools=[run_python_code, get_current_time],
     middleware=[
         ModelRouterMiddleware(
@@ -152,15 +158,14 @@ response = agent.invoke({"messages": [HumanMessage(content="Help me write a bubb
 print(response)
 ```
 
-With `ModelRouterMiddleware`, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.
+With `ModelRouterMiddleware`, you can easily build an Agent with multiple models and capabilities, which automatically selects the optimal model based on task type, improving response quality and efficiency.
 
-!!! info "Tool Permission Configuration"  
-    The tool permissions for each model in `model_list` are determined by its `tools` field configuration, which follows these rules:
+!!! info "Tool Permission Configuration"
+    The tool permissions for each model in `model_list` are determined by the configuration of its `tools` field, which follows these rules:
 
-    - **When undefined**: The model inherits all tools loaded via the `create_agent` parameter `tools`.
-    - **Defined as an empty list []**: The model is explicitly disabled from using all tools.
-    - **Defined as a non-empty list [tool1, tool2, ...]**: This list acts as a "tool whitelist," strictly limiting the model to only call tools within the list. All tools specified here must have been pre-loaded into the `create_agent` parameter `tools`.
-
+    - **When undefined**: The model inherits all tools loaded in the `tools` parameter of `create_agent`.
+    - **When defined as an empty list []**: The model is explicitly disabled from using all tools.
+    - **When defined as a non-empty list [tool1, tool2, ...]**: This list acts as a "tool whitelist," strictly restricting the model to only call tools within this list. All tools specified here must have been preloaded into the `tools` parameter of `create_agent`.
 
 
 ## Tool Call Repair

@@ -19,6 +19,7 @@ class ModelDict(TypedDict):
     model_description: str
     tools: NotRequired[list[BaseTool | dict[str, Any]]]
     model_kwargs: NotRequired[dict[str, Any]]
+    model_instance: NotRequired[BaseChatModel]
     model_system_prompt: NotRequired[str]
 
 
@@ -76,7 +77,7 @@ class ModelRouterMiddleware(AgentMiddleware):
             model name or a BaseChatModel instance
         model_list: List of available routing models, each containing model_name,
             model_description, tools(Optional), model_kwargs(Optional),
-            model_system_prompt(Optional)
+            model_instance(Optional), model_system_prompt(Optional)
         router_prompt: Routing prompt template, uses default template if None
 
     Examples:
@@ -155,6 +156,7 @@ class ModelRouterMiddleware(AgentMiddleware):
                 "tools": item.get("tools", None),
                 "kwargs": item.get("model_kwargs", None),
                 "system_prompt": item.get("model_system_prompt", None),
+                "model_instance": item.get("model_instance", None),
             }
             for item in self.model_list
         }
@@ -163,10 +165,13 @@ class ModelRouterMiddleware(AgentMiddleware):
         override_kwargs = {}
         if select_model_name != "default-model" and select_model_name in model_dict:
             model_values = model_dict.get(select_model_name, {})
-            if model_values["kwargs"] is not None:
-                model = load_chat_model(select_model_name, **model_values["kwargs"])
+            if model_values["model_instance"] is not None:
+                model = model_values["model_instance"]
             else:
-                model = load_chat_model(select_model_name)
+                if model_values["kwargs"] is not None:
+                    model = load_chat_model(select_model_name, **model_values["kwargs"])
+                else:
+                    model = load_chat_model(select_model_name)
             override_kwargs["model"] = model
             if model_values["tools"] is not None:
                 override_kwargs["tools"] = model_values["tools"]

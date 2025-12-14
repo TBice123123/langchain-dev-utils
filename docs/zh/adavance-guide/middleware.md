@@ -97,9 +97,15 @@ agent = create_agent(
 其参数如下：
 
 - `router_model`：用于执行路由决策的模型。可以传入字符串（将通过 `load_chat_model` 自动加载），例如 `vllm:qwen3-4b`；或直接传入已实例化的 `BaseChatModel` 对象。
-- `model_list`：一个模型配置列表，每个元素是一个字典，需包含 `model_name` (str), `model_description` (str)，以及可选的 `tools` (list[BaseTool]), `model_kwargs` (dict), `model_system_prompt` (str)。
+- `model_list`：一个模型配置列表，每个元素是一个字典，需包含 `model_name` (str), `model_description` (str)，以及可选的 `tools` (list[BaseTool]), `model_kwargs` (dict), `model_instance` (BaseChatModel), `model_system_prompt` (str)。
 - `router_prompt`：自定义路由模型的提示词。若为 `None`（默认），则使用内置的默认提示模板。
 
+!!! info "提示"
+    - 若 `model_list` 未提供 `model_instance`，路由时会按 `model_name` 调用 `load_chat_model` 加载模型；此时若额外给出 `model_kwargs`，则作为关键字参数一并传入（前提：已用 `register_model_provider` 注册该提供商）。
+    - 若 `model_list` 已提供 `model_instance`，则直接使用该实例，`model_name` 仅作标识，不会再通过 `load_chat_model` 加载，同时 `model_kwargs` 将被忽略。
+    - 因此，传递额外模型参数有两种做法，如果提供商已注册时，推荐在 `model_kwargs` 中声明；提供商未注册时，可先手动实例化模型（带参数），再将实例赋给 `model_instance`。
+    - 无论是否传递`model_instance`，`model_name` 均为模型的唯一标识，必传，且推荐命名方式为`{provider}:{model_name}`，例如`vllm:qwen3-8b`、`openrouter:qwen/qwen3-vl-32b-instruct`等。
+    
 
 **使用示例**
 
@@ -128,6 +134,7 @@ model_list = [
     },
 ]
 ```
+
 
 然后在创建 agent 时启用中间件：
 

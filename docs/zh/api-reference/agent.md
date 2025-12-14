@@ -326,7 +326,7 @@ class ModelRouterMiddleware(AgentMiddleware):
 **参数说明：**
 
 - `router_model`: 用于路由的模型,接收字符串类型（使用`load_chat_model`加载）或者直接传入 ChatModel
-- `model_list`：模型列表，每个模型需要包含 `model_name` 和 `model_description` 两个键，同时也可以选择性地包含 `tools`、`model_kwargs` 、`model_system_prompt` 这三个键，分别代表模型可用的工具（如果不传则默认是使用全部工具）、传递给模型的额外参数（例如：temperature、top_p 等）和该模型的系统提示词。
+- `model_list`：模型列表，每个模型需要包含 `model_name` 和 `model_description` 两个键，同时也可以选择性地包含 `tools`、`model_kwargs` 、`model_instance`、`model_system_prompt` 这四个键，分别代表模型可用的工具（如果不传则默认是使用全部工具）、传递给模型的额外参数（例如：temperature、top_p 等）、以及该模型对应的模型实例和该模型的系统提示词。
 - `router_prompt`: 路由模型的提示词，如果为 None 则使用默认的提示词
 
 **示例：**
@@ -400,6 +400,7 @@ class ModelDict(TypedDict):
     model_description: str
     tools: NotRequired[list[BaseTool | dict[str, Any]]]
     model_kwargs: NotRequired[dict[str, Any]]
+    model_instance: NotRequired[BaseChatModel]
     model_system_prompt: NotRequired[str]
 ```
 
