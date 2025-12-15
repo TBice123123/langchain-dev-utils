@@ -97,15 +97,19 @@ agent = create_agent(
 其参数如下：
 
 - `router_model`：用于执行路由决策的模型。可以传入字符串（将通过 `load_chat_model` 自动加载），例如 `vllm:qwen3-4b`；或直接传入已实例化的 `BaseChatModel` 对象。
-- `model_list`：一个模型配置列表，每个元素是一个字典，需包含 `model_name` (str), `model_description` (str)，以及可选的 `tools` (list[BaseTool]), `model_kwargs` (dict), `model_instance` (BaseChatModel), `model_system_prompt` (str)。
+- `model_list`：模型配置列表，每个元素为一个字典，其中可以包含以下字段：
+    - `model_name`（str）：必传，模型的唯一标识，**使用 `provider:model-name` 格式**，例如 `vllm:qwen3-4b` 或 `openrouter:qwen/qwen3-vl-32b-instruct`；
+    - `model_description`（str）：必传，模型能力或适用场景的简要描述，供路由模型进行决策。
+    - `tools`（list[BaseTool]）：可选，该模型可调用的工具白名单。  
+            - 若未提供，则继承全局工具列表；  
+            - 若设为 `[]`，则显式禁用所有工具。
+    - `model_kwargs`（dict）：可选，模型加载时的额外参数（如 `temperature`、`max_tokens` 等），**仅在未传入 `model_instance` 时生效**。
+    - `model_instance`（BaseChatModel）：可选，已实例化的模型对象。  
+            - 若提供，则直接使用该实例，`model_name` 仅作标识，**不再通过 `load_chat_model` 加载**，且 `model_kwargs` 被忽略；  
+            - 若未提供，则会根据 `model_name` 和 `model_kwargs` 自动加载模型。
+    - `model_system_prompt`（str）：可选，模型的系统级提示词。
 - `router_prompt`：自定义路由模型的提示词。若为 `None`（默认），则使用内置的默认提示模板。
 
-!!! info "提示"
-    - 若 `model_list` 未提供 `model_instance`，路由时会按 `model_name` 调用 `load_chat_model` 加载模型；此时若额外给出 `model_kwargs`，则作为关键字参数一并传入（前提：已用 `register_model_provider` 注册该提供商）。
-    - 若 `model_list` 已提供 `model_instance`，则直接使用该实例，`model_name` 仅作标识，不会再通过 `load_chat_model` 加载，同时 `model_kwargs` 将被忽略。
-    - 因此，传递额外模型参数有两种做法，如果提供商已注册时，推荐在 `model_kwargs` 中声明；提供商未注册时，可先手动实例化模型（带参数），再将实例赋给 `model_instance`。
-    - 无论是否传递`model_instance`，`model_name` 均为模型的唯一标识，必传，且推荐命名方式为`{provider}:{model_name}`，例如`vllm:qwen3-8b`、`openrouter:qwen/qwen3-vl-32b-instruct`等。
-    
 
 **使用示例**
 
@@ -159,13 +163,6 @@ print(response)
 ```
 
 通过 `ModelRouterMiddleware`，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。
-
-!!! info "工具权限配置"  
-    `model_list` 中每个模型的工具权限，由其 `tools` 字段的配置决定，此配置遵循以下规则：
-
-    - **未定义时**：模型继承 `create_agent` 参数`tools`载入的全部工具。
-    - **定义为空列表 []**：模型被显式禁用所有工具。
-    - **定义为非空列表 [tool1, tool2, ...]**：此列表充当“工具白名单”，模型被严格限制仅能调用名单内的工具。所有在此指定的工具，必须已预先载入至 `create_agent `参数`tools`中。
 
 
 

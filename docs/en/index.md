@@ -1,7 +1,7 @@
 # 🦜️🧰 langchain-dev-utils
 
 <p align="center">
-    <em>A utility library for LangChain and LangGraph development.</em>
+    <em>🚀 High-efficiency toolkit designed for LangChain and LangGraph developers</em>
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
@@ -9,85 +9,62 @@
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
 
-When building complex large language model applications with LangChain and LangGraph, the development process is not always efficient, and developers often need to write a lot of boilerplate code for regular functionality. To help developers focus more on writing core business logic, `langchain-dev-utils` was created.
-
-This is a lightweight but practical utility library focused on improving the development experience of LangChain and LangGraph. It provides a series of ready-to-use practical utility functions, thereby reducing repetitive code and enhancing code consistency and readability. By simplifying the development path, `langchain-dev-utils` enables you to implement functional prototypes faster, iterate more smoothly, and helps build clearer and more reliable AI large model applications.
 
 
-## Installation
+## ✨ Why choose langchain-dev-utils?
 
-`langchain-dev-utils` supports installation with multiple package managers such as `pip`, `poetry`, and `uv`.
+Tired of writing repetitive code in LangChain development? `langchain-dev-utils` is the solution you need! This lightweight yet powerful toolkit is designed to enhance the development experience of LangChain and LangGraph, helping you:
 
-To install the basic version of `langchain-dev-utils`:
+- ⚡ **Boost development efficiency** - Reduce boilerplate code, allowing you to focus on core functionality
+- 🧩 **Simplify complex workflows** - Easily manage multi-model, multi-tool, and multi-agent applications
+- 🔧 **Enhance code quality** - Improve consistency and readability, reducing maintenance costs
+- 🎯 **Accelerate prototype development** - Quickly implement ideas, iterate and validate faster
 
-=== "pip"
-    ```bash
-    pip install -U langchain-dev-utils
-    ```
 
-=== "poetry"
-    ```bash
-    poetry add langchain-dev-utils
-    ```
+## 🎯 Core Features
 
-=== "uv"
-    ```bash
-    uv add langchain-dev-utils
-    ```
+- **🔌 Unified model management** - Specify model providers through strings, easily switch and combine different models
+- **💬 Flexible message handling** - Support for chain-of-thought concatenation, streaming processing, and message formatting
+- **🛠️ Powerful tool calling** - Built-in tool call detection, parameter parsing, and human review functionality
+- **🤖 Efficient Agent development** - Simplify agent creation process, expand more common middleware
+- **📊 Flexible state graph composition** - Support for serial and parallel composition of multiple StateGraphs
 
-To install the full-featured version of `langchain-dev-utils`:
+## ⚡ Quick Start
 
-=== "pip"
-    ```bash
-    pip install -U langchain-dev-utils[standard]
-    ```
+**1. Install `langchain-dev-utils`**
 
-=== "poetry"
-    ```bash
-    poetry add langchain-dev-utils[standard]
-    ```
-
-=== "uv"
-    ```bash
-    uv add langchain-dev-utils[standard]
-    ```
-
-After installation, verify that the package is correctly installed:
-
-```python
-import langchain_dev_utils
-print(langchain_dev_utils.__version__)
+```bash
+pip install -U "langchain-dev-utils[standard]"
 ```
 
-The package will automatically install the following dependencies:
+**2. Start using**
 
-- `langchain`
-- `langgraph` (installed automatically with `langchain`)
+```python
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
+from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
+from langchain_dev_utils.agents import create_agent
 
-For the standard version, the following additional dependencies will be installed:
+# Register model provider
+register_model_provider("vllm", "openai-compatible", base_url="http://localhost:8000/v1")
 
-- `langchain-openai` (for model management)
-- `json-repair` (for middleware tool call error fixes)
+@tool
+def get_current_weather(location: str) -> str:
+    """Get the current weather for the specified location"""
+    return f"25 degrees, {location}"
+
+# Dynamically load model using string
+model = load_chat_model("vllm:qwen3-4b")
+response = model.invoke("Hello")
+print(response)
+
+# Create agent
+agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
+response = agent.invoke({"messages": [HumanMessage(content="What's the weather like in New York today?")]})
+print(response)
+```
 
 
-## Use Cases
+## 🛠️ GitHub Repository
 
-- **Regular Large Language Model Applications**
-
-`langchain-dev-utils` provides a series of ready-to-use tools that can significantly improve the development efficiency of large language model applications. For example, its model management module allows developers to directly specify model providers using strings, which is particularly suitable for scenarios that require dynamically specifying models or need to integrate models from multiple different providers.
-
-- **Complex Agent Development**
-
-`langchain-dev-utils` provides deep optimization support for complex agent applications. This toolset not only offers richer agent middleware but also further encapsulates the tool calling process. Additionally, it specifically provides two efficient pipeline utility functions to facilitate the orchestration and combination of multiple independent agents.
-
-## Key Features
-
-- **Unified Model Management Mechanism**: Simplify model invocation and switching through centralized registration and management of Chat and Embeddings models, improving development efficiency.
-- **More Flexible Message Processing**: Provide rich Message class utility functions, supporting chain-of-thought concatenation, streaming chunk merging, message formatting, etc., facilitating the construction of complex dialogue logic.
-- **More Powerful Tool Calling Support**: Built-in tool calling detection, parameter parsing, and human review intervention capabilities, enhancing the security and controllability of Agent interactions with external tools.
-- **More Efficient Agent Development**: Encapsulate the official Agent creation process, integrate commonly used middleware, and accelerate the construction and iteration of intelligent agents.
-- **More Flexible StateGraph Composition**: Support combining multiple StateGraphs in serial or parallel ways, enabling visualization and modular orchestration of complex workflows.
-
-## GitHub Repository
-
-Visit the [GitHub Repository](https://github.com/TBice123123/langchain-dev-utils) to view source code and issues.
+Visit the [GitHub repository](https://github.com/TBice123123/langchain-dev-utils) to view the source code and report issues.

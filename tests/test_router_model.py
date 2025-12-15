@@ -51,6 +51,10 @@ def test_model_router_middleware():
     assert response
     assert response["messages"][-1].response_metadata.get("model_name") == "glm-4.5"
     assert isinstance(response["messages"][-2], ToolMessage)
+    assert (
+        "router_model_selection" in response
+        and response["router_model_selection"] == "zai:glm-4.5"
+    )
 
 
 async def test_model_router_middleware_async():
@@ -93,3 +97,7 @@ async def test_model_router_middleware_async():
     assert response
     assert response["messages"][-1].response_metadata.get("model_name") == "glm-4.5"
     assert isinstance(response["messages"][-2], ToolMessage)
+    assert (
+        "router_model_selection" in response
+        and response["router_model_selection"] == "zai:glm-4.5"
+    )

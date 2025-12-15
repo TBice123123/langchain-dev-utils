@@ -1,8 +1,8 @@
-from typing import Any, Awaitable, Callable, NotRequired, Optional, cast
+from typing import Annotated, Any, Awaitable, Callable, NotRequired, Optional, cast
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
-from langchain.agents.middleware.types import ModelCallResult
+from langchain.agents.middleware.types import ModelCallResult, OmitFromInput
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AnyMessage, SystemMessage
 from langchain_core.tools import BaseTool
@@ -65,7 +65,7 @@ Strictly adhere to tool call requirements!
 
 
 class ModelRouterState(AgentState):
-    router_model_selection: str
+    router_model_selection: Annotated[str, OmitFromInput]
 
 
 class ModelRouterMiddleware(AgentMiddleware):

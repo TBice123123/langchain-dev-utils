@@ -1,96 +1,70 @@
 # 🦜️🧰 langchain-dev-utils
 
 <p align="center">
-    <em>用于 LangChain 和 LangGraph 开发的实用工具库。</em>
+    <em>🚀 专为 LangChain 和 LangGraph 开发者打造的高效工具库</em>
 </p>
+
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
 
-在使用 langchain 和 langgraph 构建复杂的大语言模型应用时，其开发过程并不总是高效的，开发者往往需要为常规功能编写大量样板代码。为了帮助开发者更专注于核心业务的编写，`langchain-dev-utils` 应运而生。
 
-这是一个轻量但实用的工具库，聚焦于提升 langchain 与 langgraph 的开发体验。它提供了一系列开箱即用的实用性工具函数，从而做到减少重复代码，增强代码的一致性与可读性。通过简化开发路径，`langchain-dev-utils` 让您能够更快地实现功能原型、更顺畅地推进迭代，助力构建更清晰、更可靠的 AI 大模型应用。
+## ✨ 为什么选择 langchain-dev-utils？
 
-## 安装
+厌倦了在 LangChain 开发中编写重复代码？`langchain-dev-utils` 正是您需要的解决方案！这个轻量但功能强大的工具库专为提升 LangChain 和 LangGraph 开发体验而设计，帮助您：
 
-`langchain-dev-utils`支持使用`pip`、`poetry`、`uv`等多种包管理器进行安装。
-
-安装基础版本的`langchain-dev-utils`：
-
-=== "pip"
-    ```bash
-    pip install -U langchain-dev-utils
-    ```
-
-=== "poetry"
-    ```bash
-    poetry add langchain-dev-utils
-    ```
-
-=== "uv"
-    ```bash
-    uv add langchain-dev-utils
-    ```
-
-安装完整功能版本的`langchain-dev-utils`：
+- ⚡ **提升开发效率** - 减少样板代码，让您专注于核心功能
+- 🧩 **简化复杂流程** - 轻松管理多模型、多工具和多智能体应用
+- 🔧 **增强代码质量** - 提高一致性和可读性，减少维护成本
+- 🎯 **加速原型开发** - 快速实现想法，更快迭代验证
 
 
-=== "pip"
-    ```bash
-    pip install -U langchain-dev-utils[standard]
-    ```
+## 🎯 核心功能
 
-=== "poetry"
-    ```bash
-    poetry add langchain-dev-utils[standard]
-    ```
+- **🔌 统一的模型管理** - 通过字符串指定模型提供商，轻松切换和组合不同模型
+- **💬 灵活的消息处理** - 支持思维链拼接、流式处理和消息格式化
+- **🛠️ 强大的工具调用** - 内置工具调用检测、参数解析和人工审核功能
+- **🤖 高效的 Agent 开发** - 简化智能体创建流程，扩充更多的常用中间件
+- **📊 灵活的状态图组合** - 支持串行和并行方式组合多个 StateGraph
 
-=== "uv"
-    ```bash
-    uv add langchain-dev-utils[standard]
-    ```
+## ⚡ 快速开始
 
-安装后，验证包是否正确安装：
+**1. 安装 `langchain-dev-utils`**
 
-```python
-import langchain_dev_utils
-print(langchain_dev_utils.__version__)
+```bash
+pip install -U "langchain-dev-utils[standard]"
 ```
 
-该包会自动安装以下依赖项：
+**2. 开始使用**
 
-- `langchain`
-- `langgraph` (安装`langchain`时会同时也会安装)
+```python
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
+from langchain_dev_utils.chat_models import register_model_provider, load_chat_model
+from langchain_dev_utils.agents import create_agent
 
-如果是 standard 版本，还会安装以下依赖项：
+# 注册模型提供商
+register_model_provider("vllm", "openai-compatible", base_url="http://localhost:8000/v1")
 
-- `langchain-openai`（用于模型管理）
-- `json-repair`(用于中间件的工具调用错误修复)
+@tool
+def get_current_weather(location: str) -> str:
+    """获取指定地点的当前天气"""
+    return f"25度，{location}"
 
+# 使用字符串动态加载模型
+model = load_chat_model("vllm:qwen3-4b")
+response = model.invoke("你好")
+print(response)
 
-## 使用场景
-
-- **常规大模型应用**
-
-`langchain-dev-utils` 提供了一系列开箱即用的工具，能显著提升大模型应用的开发效率。例如，其模型管理模块允许开发者直接用字符串指定模型提供商，特别适用于需要动态指定模型或者需要接入多个不同提供商的模型的场景。
-
-- **复杂智能体开发**
-
-`langchain-dev-utils` 针对复杂智能体应用提供了深度优化支持。该工具集不仅提供了更丰富的智能体中间件，还对工具调用的过程进行了进一步封装。此外，还专门提供了两个高效的管道工具函数，方便进行多个独立智能体的编排与组合。
-
-
-## 主要特性
-
-- **统一的模型管理机制**：通过集中注册与管理 Chat 和 Embeddings 模型，简化模型调用与切换，提升开发效率。
-- **更灵活的消息处理**：提供丰富的 Message 类工具函数，支持思维链拼接、流式 chunk 合并、消息格式化等，便于构建复杂对话逻辑。
-- **更强大的工具调用支持**：内置工具调用的检测、参数解析及人工审核介入能力，增强 Agent 与外部工具交互的安全性与可控性。
-- **更高效的 Agent 开发**：封装官方 Agent 创建流程，集成常用中间件，加速智能体的构建与迭代。
-- **更灵活的状态图组合**：支持将多个 StateGraph 以串行或并行方式组合，实现复杂工作流的可视化与模块化编排。
+# 创建智能体
+agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
+response = agent.invoke({"messages": [HumanMessage(content="今天纽约的天气如何？")]})
+print(response)
+```
 
 
-## GitHub 仓库
+## 🛠️ GitHub 仓库
 
 访问 [GitHub 仓库](https://github.com/TBice123123/langchain-dev-utils) 查看源代码和问题。
-

@@ -62,8 +62,9 @@ plugins:
           name: English
           build: true
           nav:
-          - Home: index.md
+          - Overview: index.md
           - Getting Started:
+            - Installation: getting-started-guide/installation.md
             - Chat Model Management: getting-started-guide/chat.md
             - Embedding Model Management: getting-started-guide/embedding.md
             - Formatting Sequences: getting-started-guide/format.md
@@ -86,8 +87,9 @@ plugins:
           name: 中文
           build: true
           nav:
-          - 首页: index.md
+          - 概述: index.md
           - 入门指南:
+            - 安装: getting-started-guide/installation.md
             - 对话模型管理: getting-started-guide/chat.md
             - 嵌入模型管理: getting-started-guide/embedding.md
             - 格式化序列: getting-started-guide/format.md
