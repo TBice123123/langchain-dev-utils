@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="getting-started-guide/chat/">
+        <link rel="next" href="getting-started-guide/installation/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>首页 - Langchain Dev Utils</title>
+        <title>概述 - Langchain Dev Utils</title>
       
     
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              首页
+              概述
             
           </span>
         </div>
@@ -264,7 +264,7 @@
   
     
   
-  首页
+  概述
 
       </a>
     </li>
@@ -279,7 +279,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="getting-started-guide/chat/" class="md-tabs__link">
+        <a href="getting-started-guide/installation/" class="md-tabs__link">
           
   
   
@@ -399,7 +399,7 @@
   <span class="md-ellipsis">
     
   
-    首页
+    概述
   
 
     
@@ -417,7 +417,7 @@
   <span class="md-ellipsis">
     
   
-    首页
+    概述
   
 
     
@@ -443,10 +443,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#langchain-dev-utils_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✨ 为什么选择 langchain-dev-utils？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        安装
+        🎯 核心功能
       
     </span>
   </a>
@@ -457,18 +468,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        使用场景
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        主要特性
+        ⚡ 快速开始
       
     </span>
   </a>
@@ -479,7 +479,7 @@
   <a href="#github" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GitHub 仓库
+        🛠️ GitHub 仓库
       
     </span>
   </a>
@@ -547,6 +547,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1124,10 +1152,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#langchain-dev-utils_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✨ 为什么选择 langchain-dev-utils？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        安装
+        🎯 核心功能
       
     </span>
   </a>
@@ -1138,18 +1177,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        使用场景
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        主要特性
+        ⚡ 快速开始
       
     </span>
   </a>
@@ -1160,7 +1188,7 @@
   <a href="#github" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GitHub 仓库
+        🛠️ GitHub 仓库
       
     </span>
   </a>
@@ -1189,83 +1217,58 @@
 
 <h1 id="langchain-dev-utils">🦜️🧰 langchain-dev-utils</h1>
 <p align="center">
-    <em>用于 LangChain 和 LangGraph 开发的实用工具库。</em>
+    <em>🚀 专为 LangChain 和 LangGraph 开发者打造的高效工具库</em>
 </p>
 
 <p><a href="https://pypi.org/project/langchain-dev-utils/"><img alt="PyPI" src="https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&amp;label=pypi%20package" /></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
 <a href="https://www.python.org/downloads"><img alt="Python" src="https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058" /></a>
 <a href="https://pepy.tech/project/langchain-dev-utils"><img alt="Downloads" src="https://static.pepy.tech/badge/langchain-dev-utils/month" /></a></p>
-<p>在使用 langchain 和 langgraph 构建复杂的大语言模型应用时，其开发过程并不总是高效的，开发者往往需要为常规功能编写大量样板代码。为了帮助开发者更专注于核心业务的编写，<code>langchain-dev-utils</code> 应运而生。</p>
-<p>这是一个轻量但实用的工具库，聚焦于提升 langchain 与 langgraph 的开发体验。它提供了一系列开箱即用的实用性工具函数，从而做到减少重复代码，增强代码的一致性与可读性。通过简化开发路径，<code>langchain-dev-utils</code> 让您能够更快地实现功能原型、更顺畅地推进迭代，助力构建更清晰、更可靠的 AI 大模型应用。</p>
-<h2 id="_1">安装</h2>
-<p><code>langchain-dev-utils</code>支持使用<code>pip</code>、<code>poetry</code>、<code>uv</code>等多种包管理器进行安装。</p>
-<p>安装基础版本的<code>langchain-dev-utils</code>：</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pip</label><label for="__tabbed_1_2">poetry</label><label for="__tabbed_1_3">uv</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
-</code></pre></div>
-</div>
-</div>
-</div>
-<p>安装完整功能版本的<code>langchain-dev-utils</code>：</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">pip</label><label for="__tabbed_2_2">poetry</label><label for="__tabbed_2_3">uv</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<p>安装后，验证包是否正确安装：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">langchain_dev_utils</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">langchain_dev_utils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</code></pre></div>
-<p>该包会自动安装以下依赖项：</p>
+<h2 id="langchain-dev-utils_1">✨ 为什么选择 langchain-dev-utils？</h2>
+<p>厌倦了在 LangChain 开发中编写重复代码？<code>langchain-dev-utils</code> 正是您需要的解决方案！这个轻量但功能强大的工具库专为提升 LangChain 和 LangGraph 开发体验而设计，帮助您：</p>
 <ul>
-<li><code>langchain</code></li>
-<li><code>langgraph</code> (安装<code>langchain</code>时会同时也会安装)</li>
+<li>⚡ <strong>提升开发效率</strong> - 减少样板代码，让您专注于核心功能</li>
+<li>🧩 <strong>简化复杂流程</strong> - 轻松管理多模型、多工具和多智能体应用</li>
+<li>🔧 <strong>增强代码质量</strong> - 提高一致性和可读性，减少维护成本</li>
+<li>🎯 <strong>加速原型开发</strong> - 快速实现想法，更快迭代验证</li>
 </ul>
-<p>如果是 standard 版本，还会安装以下依赖项：</p>
+<h2 id="_1">🎯 核心功能</h2>
 <ul>
-<li><code>langchain-openai</code>（用于模型管理）</li>
-<li><code>json-repair</code>(用于中间件的工具调用错误修复)</li>
+<li><strong>🔌 统一的模型管理</strong> - 通过字符串指定模型提供商，轻松切换和组合不同模型</li>
+<li><strong>💬 灵活的消息处理</strong> - 支持思维链拼接、流式处理和消息格式化</li>
+<li><strong>🛠️ 强大的工具调用</strong> - 内置工具调用检测、参数解析和人工审核功能</li>
+<li><strong>🤖 高效的 Agent 开发</strong> - 简化智能体创建流程，扩充更多的常用中间件</li>
+<li><strong>📊 灵活的状态图组合</strong> - 支持串行和并行方式组合多个 StateGraph</li>
 </ul>
-<h2 id="_2">使用场景</h2>
-<ul>
-<li><strong>常规大模型应用</strong></li>
-</ul>
-<p><code>langchain-dev-utils</code> 提供了一系列开箱即用的工具，能显著提升大模型应用的开发效率。例如，其模型管理模块允许开发者直接用字符串指定模型提供商，特别适用于需要动态指定模型或者需要接入多个不同提供商的模型的场景。</p>
-<ul>
-<li><strong>复杂智能体开发</strong></li>
-</ul>
-<p><code>langchain-dev-utils</code> 针对复杂智能体应用提供了深度优化支持。该工具集不仅提供了更丰富的智能体中间件，还对工具调用的过程进行了进一步封装。此外，还专门提供了两个高效的管道工具函数，方便进行多个独立智能体的编排与组合。</p>
-<h2 id="_3">主要特性</h2>
-<ul>
-<li><strong>统一的模型管理机制</strong>：通过集中注册与管理 Chat 和 Embeddings 模型，简化模型调用与切换，提升开发效率。</li>
-<li><strong>更灵活的消息处理</strong>：提供丰富的 Message 类工具函数，支持思维链拼接、流式 chunk 合并、消息格式化等，便于构建复杂对话逻辑。</li>
-<li><strong>更强大的工具调用支持</strong>：内置工具调用的检测、参数解析及人工审核介入能力，增强 Agent 与外部工具交互的安全性与可控性。</li>
-<li><strong>更高效的 Agent 开发</strong>：封装官方 Agent 创建流程，集成常用中间件，加速智能体的构建与迭代。</li>
-<li><strong>更灵活的状态图组合</strong>：支持将多个 StateGraph 以串行或并行方式组合，实现复杂工作流的可视化与模块化编排。</li>
-</ul>
-<h2 id="github">GitHub 仓库</h2>
+<h2 id="_2">⚡ 快速开始</h2>
+<p><strong>1. 安装 <code>langchain-dev-utils</code></strong></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;langchain-dev-utils[standard]&quot;</span>
+</code></pre></div>
+<p><strong>2. 开始使用</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+
+<span class="c1"># 注册模型提供商</span>
+<span class="n">register_model_provider</span><span class="p">(</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_weather</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;获取指定地点的当前天气&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;25度，</span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># 使用字符串动态加载模型</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="c1"># 创建智能体</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;今天纽约的天气如何？&quot;</span><span class="p">)]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="github">🛠️ GitHub 仓库</h2>
 <p>访问 <a href="https://github.com/TBice123123/langchain-dev-utils">GitHub 仓库</a> 查看源代码和问题。</p>
 
 

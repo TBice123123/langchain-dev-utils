@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="getting-started-guide/chat/">
+        <link rel="next" href="getting-started-guide/installation/">
       
       
         
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Overview
             
           </span>
         </div>
@@ -264,7 +264,7 @@
   
     
   
-  Home
+  Overview
 
       </a>
     </li>
@@ -279,7 +279,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="getting-started-guide/chat/" class="md-tabs__link">
+        <a href="getting-started-guide/installation/" class="md-tabs__link">
           
   
   
@@ -399,7 +399,7 @@
   <span class="md-ellipsis">
     
   
-    Home
+    Overview
   
 
     
@@ -417,7 +417,7 @@
   <span class="md-ellipsis">
     
   
-    Home
+    Overview
   
 
     
@@ -443,10 +443,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#why-choose-langchain-dev-utils" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        ✨ Why choose langchain-dev-utils?
       
     </span>
   </a>
@@ -454,10 +454,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#core-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Cases
+        🎯 Core Features
       
     </span>
   </a>
@@ -465,10 +465,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-features" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Features
+        ⚡ Quick Start
       
     </span>
   </a>
@@ -479,7 +479,7 @@
   <a href="#github-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GitHub Repository
+        🛠️ GitHub Repository
       
     </span>
   </a>
@@ -547,6 +547,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started-guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1124,10 +1152,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#why-choose-langchain-dev-utils" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        ✨ Why choose langchain-dev-utils?
       
     </span>
   </a>
@@ -1135,10 +1163,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#core-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Cases
+        🎯 Core Features
       
     </span>
   </a>
@@ -1146,10 +1174,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-features" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Features
+        ⚡ Quick Start
       
     </span>
   </a>
@@ -1160,7 +1188,7 @@
   <a href="#github-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GitHub Repository
+        🛠️ GitHub Repository
       
     </span>
   </a>
@@ -1189,84 +1217,59 @@
 
 <h1 id="langchain-dev-utils">🦜️🧰 langchain-dev-utils</h1>
 <p align="center">
-    <em>A utility library for LangChain and LangGraph development.</em>
+    <em>🚀 High-efficiency toolkit designed for LangChain and LangGraph developers</em>
 </p>
 
 <p><a href="https://pypi.org/project/langchain-dev-utils/"><img alt="PyPI" src="https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&amp;label=pypi%20package" /></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
 <a href="https://www.python.org/downloads"><img alt="Python" src="https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058" /></a>
 <a href="https://pepy.tech/project/langchain-dev-utils"><img alt="Downloads" src="https://static.pepy.tech/badge/langchain-dev-utils/month" /></a></p>
-<p>When building complex large language model applications with LangChain and LangGraph, the development process is not always efficient, and developers often need to write a lot of boilerplate code for regular functionality. To help developers focus more on writing core business logic, <code>langchain-dev-utils</code> was created.</p>
-<p>This is a lightweight but practical utility library focused on improving the development experience of LangChain and LangGraph. It provides a series of ready-to-use practical utility functions, thereby reducing repetitive code and enhancing code consistency and readability. By simplifying the development path, <code>langchain-dev-utils</code> enables you to implement functional prototypes faster, iterate more smoothly, and helps build clearer and more reliable AI large model applications.</p>
-<h2 id="installation">Installation</h2>
-<p><code>langchain-dev-utils</code> supports installation with multiple package managers such as <code>pip</code>, <code>poetry</code>, and <code>uv</code>.</p>
-<p>To install the basic version of <code>langchain-dev-utils</code>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pip</label><label for="__tabbed_1_2">poetry</label><label for="__tabbed_1_3">uv</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils
-</code></pre></div>
-</div>
-</div>
-</div>
-<p>To install the full-featured version of <code>langchain-dev-utils</code>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">pip</label><label for="__tabbed_2_2">poetry</label><label for="__tabbed_2_3">uv</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>langchain-dev-utils<span class="o">[</span>standard<span class="o">]</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<p>After installation, verify that the package is correctly installed:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">langchain_dev_utils</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">langchain_dev_utils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</code></pre></div>
-<p>The package will automatically install the following dependencies:</p>
+<h2 id="why-choose-langchain-dev-utils">✨ Why choose langchain-dev-utils?</h2>
+<p>Tired of writing repetitive code in LangChain development? <code>langchain-dev-utils</code> is the solution you need! This lightweight yet powerful toolkit is designed to enhance the development experience of LangChain and LangGraph, helping you:</p>
 <ul>
-<li><code>langchain</code></li>
-<li><code>langgraph</code> (installed automatically with <code>langchain</code>)</li>
+<li>⚡ <strong>Boost development efficiency</strong> - Reduce boilerplate code, allowing you to focus on core functionality</li>
+<li>🧩 <strong>Simplify complex workflows</strong> - Easily manage multi-model, multi-tool, and multi-agent applications</li>
+<li>🔧 <strong>Enhance code quality</strong> - Improve consistency and readability, reducing maintenance costs</li>
+<li>🎯 <strong>Accelerate prototype development</strong> - Quickly implement ideas, iterate and validate faster</li>
 </ul>
-<p>For the standard version, the following additional dependencies will be installed:</p>
+<h2 id="core-features">🎯 Core Features</h2>
 <ul>
-<li><code>langchain-openai</code> (for model management)</li>
-<li><code>json-repair</code> (for middleware tool call error fixes)</li>
+<li><strong>🔌 Unified model management</strong> - Specify model providers through strings, easily switch and combine different models</li>
+<li><strong>💬 Flexible message handling</strong> - Support for chain-of-thought concatenation, streaming processing, and message formatting</li>
+<li><strong>🛠️ Powerful tool calling</strong> - Built-in tool call detection, parameter parsing, and human review functionality</li>
+<li><strong>🤖 Efficient Agent development</strong> - Simplify agent creation process, expand more common middleware</li>
+<li><strong>📊 Flexible state graph composition</strong> - Support for serial and parallel composition of multiple StateGraphs</li>
 </ul>
-<h2 id="use-cases">Use Cases</h2>
-<ul>
-<li><strong>Regular Large Language Model Applications</strong></li>
-</ul>
-<p><code>langchain-dev-utils</code> provides a series of ready-to-use tools that can significantly improve the development efficiency of large language model applications. For example, its model management module allows developers to directly specify model providers using strings, which is particularly suitable for scenarios that require dynamically specifying models or need to integrate models from multiple different providers.</p>
-<ul>
-<li><strong>Complex Agent Development</strong></li>
-</ul>
-<p><code>langchain-dev-utils</code> provides deep optimization support for complex agent applications. This toolset not only offers richer agent middleware but also further encapsulates the tool calling process. Additionally, it specifically provides two efficient pipeline utility functions to facilitate the orchestration and combination of multiple independent agents.</p>
-<h2 id="key-features">Key Features</h2>
-<ul>
-<li><strong>Unified Model Management Mechanism</strong>: Simplify model invocation and switching through centralized registration and management of Chat and Embeddings models, improving development efficiency.</li>
-<li><strong>More Flexible Message Processing</strong>: Provide rich Message class utility functions, supporting chain-of-thought concatenation, streaming chunk merging, message formatting, etc., facilitating the construction of complex dialogue logic.</li>
-<li><strong>More Powerful Tool Calling Support</strong>: Built-in tool calling detection, parameter parsing, and human review intervention capabilities, enhancing the security and controllability of Agent interactions with external tools.</li>
-<li><strong>More Efficient Agent Development</strong>: Encapsulate the official Agent creation process, integrate commonly used middleware, and accelerate the construction and iteration of intelligent agents.</li>
-<li><strong>More Flexible StateGraph Composition</strong>: Support combining multiple StateGraphs in serial or parallel ways, enabling visualization and modular orchestration of complex workflows.</li>
-</ul>
-<h2 id="github-repository">GitHub Repository</h2>
-<p>Visit the <a href="https://github.com/TBice123123/langchain-dev-utils">GitHub Repository</a> to view source code and issues.</p>
+<h2 id="quick-start">⚡ Quick Start</h2>
+<p><strong>1. Install <code>langchain-dev-utils</code></strong></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;langchain-dev-utils[standard]&quot;</span>
+</code></pre></div>
+<p><strong>2. Start using</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span><span class="p">,</span> <span class="n">load_chat_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+
+<span class="c1"># Register model provider</span>
+<span class="n">register_model_provider</span><span class="p">(</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_weather</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current weather for the specified location&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;25 degrees, </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Dynamically load model using string</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="c1"># Create agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What&#39;s the weather like in New York today?&quot;</span><span class="p">)]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="github-repository">🛠️ GitHub Repository</h2>
+<p>Visit the <a href="https://github.com/TBice123123/langchain-dev-utils">GitHub repository</a> to view the source code and report issues.</p>
 
 
 
