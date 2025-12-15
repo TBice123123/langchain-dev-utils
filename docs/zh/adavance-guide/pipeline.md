@@ -140,7 +140,7 @@ print(response)
 2. 基于 `LangGraph` 完全自定义状态图，显式控制状态字段与消息流动。
 
 
-??? tip "利用中间件解决的参考代码"
+??? example "利用中间件解决的参考代码"
 
     ```python
     from typing import Any

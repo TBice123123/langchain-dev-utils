@@ -102,5 +102,5 @@ async def get_weather(city: str) -> str:
     return f"The weather in {city} is sunny."
 ```
 
-!!! note "Best Practice"
+!!! success "Best Practice"
     When implementing custom human-in-the-loop logic, you need to pass a `handler` parameter to this decorator. This handler parameter is a function that must internally use LangGraph's `interrupt` function to perform the interruption. Therefore, if you are only adding custom human-in-the-loop logic to a single tool, it is recommended to use LangGraph's `interrupt` function directly. When multiple tools require the same custom human-in-the-loop logic, using this decorator can effectively avoid code duplication.

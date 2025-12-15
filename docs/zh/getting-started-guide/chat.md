@@ -565,7 +565,7 @@ model = load_chat_model("openai:gpt-4o-mini")
 model = load_chat_model("gpt-4o-mini", model_provider="openai")
 ```
 
-!!! note "最佳实践"
+!!! success "最佳实践"
     对于本模块的使用，可以根据下面三种情况进行选择：
 
     1. 若接入的所有模型提供商均被官方 `init_chat_model` 支持，请直接使用官方函数，以获得最佳兼容性和稳定性。

@@ -560,7 +560,7 @@ model = load_chat_model("openai:gpt-4o-mini")
 model = load_chat_model("gpt-4o-mini", model_provider="openai")
 ```
 
-!!! note "Best Practices"
+!!! success "Best Practices"
     For using this module, you can choose based on the following three situations:
     
     1. If all model providers you're integrating with are supported by the official `init_chat_model`, please use the official function directly for the best compatibility and stability.

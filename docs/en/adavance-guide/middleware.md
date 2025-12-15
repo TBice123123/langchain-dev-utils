@@ -72,7 +72,7 @@ agent = create_agent(
 
 Note that to use these three tools, you must ensure that the state Schema contains the "plan" key, otherwise it will raise an error. For this, you can use the `PlanState` provided by this library to inherit the state Schema.
 
-!!! note "Best Practices"
+!!! success "Best Practices"
     1. When using `create_agent`:
 
     It is recommended to directly use `PlanMiddleware` rather than manually passing in the three tools: `write_plan`, `finish_sub_plan`, and `read_plan`.

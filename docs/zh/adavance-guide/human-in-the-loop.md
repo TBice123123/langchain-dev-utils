@@ -103,5 +103,5 @@ async def get_weather(city: str) -> str:
     return f"{city}天气晴朗"
 ```
 
-!!! note "最佳实践"
+!!! success "最佳实践"
     该装饰器在实现自定义人在回路逻辑时，需要传入handler参数。此handler参数是一个函数，内部必须使用LangGraph的interrupt函数来执行中断操作。因此，如果仅为单个工具添加自定义的人在回路逻辑，建议直接使用LangGraph的interrupt函数。当多个工具需要相同自定义人在回路逻辑时，使用本装饰器可以有效避免代码重复。

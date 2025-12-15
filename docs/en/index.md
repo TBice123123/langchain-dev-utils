@@ -1,7 +1,7 @@
 # 🦜️🧰 langchain-dev-utils
 
 <p align="center">
-    <em>🚀 High-efficiency toolkit designed for LangChain and LangGraph developers</em>
+    <em>🚀 A high-efficiency toolkit designed specifically for LangChain and LangGraph developers</em>
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
@@ -9,27 +9,52 @@
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
 
+## Why choose langchain-dev-utils?
 
+Tired of writing repetitive code in LangChain development? `langchain-dev-utils` is exactly the solution you need! This lightweight yet powerful toolkit is designed specifically to enhance the development experience of LangChain and LangGraph, helping you:
 
-## ✨ Why choose langchain-dev-utils?
+- **Improve development efficiency** - Reduce boilerplate code, allowing you to focus on core functionality
+- **Simplify complex processes** - Easily manage multi-model, multi-tool, and multi-agent applications
+- **Enhance code quality** - Improve consistency and readability, reducing maintenance costs
+- **Accelerate prototype development** - Quickly implement ideas, iterate and validate faster
 
-Tired of writing repetitive code in LangChain development? `langchain-dev-utils` is the solution you need! This lightweight yet powerful toolkit is designed to enhance the development experience of LangChain and LangGraph, helping you:
+## Core Features
 
-- ⚡ **Boost development efficiency** - Reduce boilerplate code, allowing you to focus on core functionality
-- 🧩 **Simplify complex workflows** - Easily manage multi-model, multi-tool, and multi-agent applications
-- 🔧 **Enhance code quality** - Improve consistency and readability, reducing maintenance costs
-- 🎯 **Accelerate prototype development** - Quickly implement ideas, iterate and validate faster
+<div class="grid cards" markdown>
 
+-   __Unified Model Management__
+    
+    ---
+    
+    Easily switch and combine different models by specifying model providers through strings
+    
+-   __Flexible Message Processing__
+    
+    ---
+    
+    Support chain-of-thought concatenation, streaming processing, and message formatting
+    
+-   __Powerful Tool Invocation__
+    
+    ---
+    
+    Built-in tool invocation detection, parameter parsing, and manual review features
+    
+-   __Efficient Agent Development__
+    
+    ---
+    
+    Simplify the agent creation process and expand more common middleware
+    
+-   __Flexible State Graph Composition__
+    
+    ---
+    
+    Support serial and parallel composition of multiple StateGraphs
 
-## 🎯 Core Features
+</div>
 
-- **🔌 Unified model management** - Specify model providers through strings, easily switch and combine different models
-- **💬 Flexible message handling** - Support for chain-of-thought concatenation, streaming processing, and message formatting
-- **🛠️ Powerful tool calling** - Built-in tool call detection, parameter parsing, and human review functionality
-- **🤖 Efficient Agent development** - Simplify agent creation process, expand more common middleware
-- **📊 Flexible state graph composition** - Support for serial and parallel composition of multiple StateGraphs
-
-## ⚡ Quick Start
+## Quick Start
 
 **1. Install `langchain-dev-utils`**
 
@@ -37,7 +62,7 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
 pip install -U "langchain-dev-utils[standard]"
 ```
 
-**2. Start using**
+**2. Get Started**
 
 ```python
 from langchain.tools import tool
@@ -64,7 +89,6 @@ response = agent.invoke({"messages": [HumanMessage(content="What's the weather l
 print(response)
 ```
 
+## GitHub Repository
 
-## 🛠️ GitHub Repository
-
-Visit the [GitHub repository](https://github.com/TBice123123/langchain-dev-utils) to view the source code and report issues.
+Visit the [GitHub Repository](https://github.com/TBice123123/langchain-dev-utils) to view source code and issues.

@@ -137,7 +137,7 @@ The above example is for reference only. In practice, this example passes the co
 
 2. Completely customize the state graph based on `LangGraph` to explicitly control state fields and message flow.
 
-??? tip "Reference code for solving with middleware"
+??? example "Reference code for solving with middleware"
 
     ```python
     from typing import Any

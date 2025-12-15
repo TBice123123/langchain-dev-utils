@@ -150,7 +150,7 @@ model = load_embeddings("openai:text-embedding-3-large")
 model = load_embeddings("text-embedding-3-large", provider="openai")
 ```
 
-!!! note "Best Practice"
+!!! success "Best Practice"
     For using this module, you can choose based on the following three scenarios:
 
     1. If all embedding model providers you're connecting to are supported by the official `init_embeddings`, please use the official function directly for best compatibility.

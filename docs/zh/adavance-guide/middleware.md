@@ -74,7 +74,7 @@ agent = create_agent(
 
 需要注意的是,要使用这三个工具,你必须要保证状态 Schema 中包含 plan 这个键,否则会报错,对此你可以使用本库提供的`PlanState`来继承状态 Schema。
 
-!!! note "最佳实践"
+!!! success "最佳实践"
     一、使用 `create_agent` 时：
 
     推荐直接使用 `PlanMiddleware`，而不是手动传入 `write_plan`、`finish_sub_plan`、`read_plan` 这三个工具。
@@ -100,13 +100,9 @@ agent = create_agent(
 - `model_list`：模型配置列表，每个元素为一个字典，其中可以包含以下字段：
     - `model_name`（str）：必传，模型的唯一标识，**使用 `provider:model-name` 格式**，例如 `vllm:qwen3-4b` 或 `openrouter:qwen/qwen3-vl-32b-instruct`；
     - `model_description`（str）：必传，模型能力或适用场景的简要描述，供路由模型进行决策。
-    - `tools`（list[BaseTool]）：可选，该模型可调用的工具白名单。  
-            - 若未提供，则继承全局工具列表；  
-            - 若设为 `[]`，则显式禁用所有工具。
+    - `tools`（list[BaseTool]）：可选，该模型可调用的工具白名单。若未提供，则继承全局工具列表；若设为 `[]`，则显式禁用所有工具。
     - `model_kwargs`（dict）：可选，模型加载时的额外参数（如 `temperature`、`max_tokens` 等），**仅在未传入 `model_instance` 时生效**。
-    - `model_instance`（BaseChatModel）：可选，已实例化的模型对象。  
-            - 若提供，则直接使用该实例，`model_name` 仅作标识，**不再通过 `load_chat_model` 加载**，且 `model_kwargs` 被忽略；  
-            - 若未提供，则会根据 `model_name` 和 `model_kwargs` 自动加载模型。
+    - `model_instance`（BaseChatModel）：可选，已实例化的模型对象。若提供，则直接使用该实例，`model_name` 仅作标识, `model_kwargs` 被忽略；若未提供，则会根据 `model_name` 和 `model_kwargs` 使用`load_chat_model`加载模型。
     - `model_system_prompt`（str）：可选，模型的系统级提示词。
 - `router_prompt`：自定义路由模型的提示词。若为 `None`（默认），则使用内置的默认提示模板。
 
