@@ -25,31 +25,31 @@
 
 <div class="grid cards" markdown>
 
--   __统一的模型管理__
+-   :material-code-json: __统一的模型管理__
     
     ---
     
     通过字符串指定模型提供商，轻松切换和组合不同模型
     
--   __灵活的消息处理__
+-   :material-message-fast: __灵活的消息处理__
     
     ---
     
     支持思维链拼接、流式处理和消息格式化
     
--   __强大的工具调用__
+-   :material-tools: __强大的工具调用__
     
     ---
     
     内置工具调用检测、参数解析和人工审核功能
     
--   __高效的 Agent 开发__
+-   :material-robot: __高效的 Agent 开发__
     
     ---
     
     简化智能体创建流程，扩充更多的常用中间件
     
--   __灵活的状态图组合__
+-   :octicons-ai-model-16: __灵活的状态图组合__
     
     ---
     
@@ -96,3 +96,4 @@ print(response)
 ##  GitHub 仓库
 
 访问 [GitHub 仓库](https://github.com/TBice123123/langchain-dev-utils) 查看源代码和问题。
+

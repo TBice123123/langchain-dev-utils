@@ -22,31 +22,31 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
 
 <div class="grid cards" markdown>
 
--   __Unified Model Management__
+-   :material-code-json: __Unified Model Management__
     
     ---
     
     Easily switch and combine different models by specifying model providers through strings
     
--   __Flexible Message Processing__
+-   :material-message-fast: __Flexible Message Processing__
     
     ---
     
     Support chain-of-thought concatenation, streaming processing, and message formatting
     
--   __Powerful Tool Invocation__
+-   :material-tools: __Powerful Tool Invocation__
     
     ---
     
-    Built-in tool invocation detection, parameter parsing, and manual review features
+    Built-in tool invocation detection, parameter parsing, and manual review features    
     
--   __Efficient Agent Development__
+-   :material-robot: __Efficient Agent Development__
     
     ---
     
     Simplify the agent creation process and expand more common middleware
     
--   __Flexible State Graph Composition__
+-   :octicons-ai-model-16: __Flexible State Graph Composition__
     
     ---
     
