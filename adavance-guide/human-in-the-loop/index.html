@@ -1346,7 +1346,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get weather information&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The weather in </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2"> is sunny.&quot;</span>
 </code></pre></div>
-<div class="admonition note">
+<div class="admonition success">
 <p class="admonition-title">Best Practice</p>
 <p>When implementing custom human-in-the-loop logic, you need to pass a <code>handler</code> parameter to this decorator. This handler parameter is a function that must internally use LangGraph's <code>interrupt</code> function to perform the interruption. Therefore, if you are only adding custom human-in-the-loop logic to a single tool, it is recommended to use LangGraph's <code>interrupt</code> function directly. When multiple tools require the same custom human-in-the-loop logic, using this decorator can effectively avoid code duplication.</p>
 </div>

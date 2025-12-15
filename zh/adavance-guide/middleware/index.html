@@ -1301,7 +1301,7 @@
 <span class="p">)</span>
 </code></pre></div>
 <p>需要注意的是,要使用这三个工具,你必须要保证状态 Schema 中包含 plan 这个键,否则会报错,对此你可以使用本库提供的<code>PlanState</code>来继承状态 Schema。</p>
-<div class="admonition note">
+<div class="admonition success">
 <p class="admonition-title">最佳实践</p>
 <p>一、使用 <code>create_agent</code> 时：</p>
 <p>推荐直接使用 <code>PlanMiddleware</code>，而不是手动传入 <code>write_plan</code>、<code>finish_sub_plan</code>、<code>read_plan</code> 这三个工具。</p>
@@ -1319,13 +1319,9 @@
 <li><code>model_list</code>：模型配置列表，每个元素为一个字典，其中可以包含以下字段：<ul>
 <li><code>model_name</code>（str）：必传，模型的唯一标识，<strong>使用 <code>provider:model-name</code> 格式</strong>，例如 <code>vllm:qwen3-4b</code> 或 <code>openrouter:qwen/qwen3-vl-32b-instruct</code>；</li>
 <li><code>model_description</code>（str）：必传，模型能力或适用场景的简要描述，供路由模型进行决策。</li>
-<li><code>tools</code>（list[BaseTool]）：可选，该模型可调用的工具白名单。<br />
-        - 若未提供，则继承全局工具列表；<br />
-        - 若设为 <code>[]</code>，则显式禁用所有工具。</li>
+<li><code>tools</code>（list[BaseTool]）：可选，该模型可调用的工具白名单。若未提供，则继承全局工具列表；若设为 <code>[]</code>，则显式禁用所有工具。</li>
 <li><code>model_kwargs</code>（dict）：可选，模型加载时的额外参数（如 <code>temperature</code>、<code>max_tokens</code> 等），<strong>仅在未传入 <code>model_instance</code> 时生效</strong>。</li>
-<li><code>model_instance</code>（BaseChatModel）：可选，已实例化的模型对象。<br />
-        - 若提供，则直接使用该实例，<code>model_name</code> 仅作标识，<strong>不再通过 <code>load_chat_model</code> 加载</strong>，且 <code>model_kwargs</code> 被忽略；<br />
-        - 若未提供，则会根据 <code>model_name</code> 和 <code>model_kwargs</code> 自动加载模型。</li>
+<li><code>model_instance</code>（BaseChatModel）：可选，已实例化的模型对象。若提供，则直接使用该实例，<code>model_name</code> 仅作标识, <code>model_kwargs</code> 被忽略；若未提供，则会根据 <code>model_name</code> 和 <code>model_kwargs</code> 使用<code>load_chat_model</code>加载模型。</li>
 <li><code>model_system_prompt</code>（str）：可选，模型的系统级提示词。</li>
 </ul>
 </li>
