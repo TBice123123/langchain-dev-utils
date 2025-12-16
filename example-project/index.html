@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#langchain-development-utilities-example-project" class="md-skip">
+        <a href="#langchain-dev-utils-example-project" class="md-skip">
           Skip to content
         </a>
       
@@ -1142,10 +1142,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#environment-setup" class="md-nav__link">
+  <a href="#installation-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Environment Setup
+        Installation Steps
       
     </span>
   </a>
@@ -1209,10 +1209,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#environment-setup" class="md-nav__link">
+  <a href="#installation-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Environment Setup
+        Installation Steps
       
     </span>
   </a>
@@ -1239,7 +1239,7 @@
   
 
 
-<h1 id="langchain-development-utilities-example-project">LangChain Development Utilities Example Project</h1>
+<h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
 <h2 id="project-overview">Project Overview</h2>
 <p>This <a href="https://github.com/TBice123123/langchain-dev-utils-example">example project</a> demonstrates how to efficiently build two typical types of agent systems using the tools and abstractions provided by <code>langchain-dev-utils</code>:</p>
 <ul>
@@ -1247,37 +1247,37 @@
 <p><strong>Simple Agent</strong>: Suitable for end-to-end automation of simple tasks.</p>
 </li>
 <li>
-<p><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a supervisor, suitable for complex scenarios that require division of labor, planning, and iteration.</p>
+<p><strong>Supervisor-Multi-Agent Architecture</strong>: A supervisor coordinates multiple specialized agents, suitable for complex scenarios that require division of labor, planning, and iteration.</p>
 </li>
 </ul>
 <h2 id="project-structure">Project Structure</h2>
 <div class="highlight"><pre><span></span><code>langchain-dev-utils-example/
-├── lib/                          # Library modules
-│   ├── __init__.py               # Library initialization
-│   ├── models.py                 # Model definitions and tools
-│   └── register.py               # Model provider registration
-├── src/                          # Source code
-│   └── agents/                   # Agent implementations
-│       ├── __init__.py           # Agent module initialization
-│       ├── simple_agent/         # Simple agent example
-│       │   ├── __init__.py       # Simple agent module initialization
-│       │   ├── agent.py          # Simple agent definition
-│       │   └── context.py        # Context schema definition
-│       └── supervisor/           # Supervisor multi-agent architecture
-│           ├── __init__.py       # Supervisor module initialization
-│           ├── supervisor.py     # Supervisor agent
-│           └── subagent.py       # Specialized sub-agents
-├── .env.example                  # Environment variable template
-├── .gitignore                    # Git ignore file
-├── .python-version               # Python version specification
-├── LICENSE                       # MIT License
-├── README.md                     # English documentation
-├── README_cn.md                  # Chinese documentation
-├── langgraph.json               # LangGraph configuration
-├── pyproject.toml               # Project dependencies
-└── uv.lock                      # Dependency lock file
+├── src/                          
+│   ├── agents/                   
+│   │   ├── __init__.py           
+│   │   ├── simple_agent/        
+│   │   │   ├── __init__.py       
+│   │   │   ├── agent.py         
+│   │   │   └── context.py        
+│   │   └── supervisor/           
+│   │       ├── __init__.py       
+│   │       ├── supervisor.py    
+│   │       └── subagent.py      
+│   └── utils/                    
+│       ├── __init__.py           
+│       ├── models.py             
+│       └── register.py          
+├── .env.example                  
+├── .gitignore                    
+├── .python-version               
+├── LICENSE                       
+├── README.md                     
+├── README_cn.md                  
+├── langgraph.json               
+├── pyproject.toml               
+└── uv.lock                    
 </code></pre></div>
-<h2 id="environment-setup">Environment Setup</h2>
+<h2 id="installation-steps">Installation Steps</h2>
 <ol>
 <li>
 <p>Clone this repository:
@@ -1294,23 +1294,25 @@
 <p>Configure environment variables:
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div>
-Edit the <code>.env</code> file and add your API key:
+Edit the <code>.env</code> file and add your API keys (for <code>OpenRouter</code> and <code>Tavily</code>):
 <div class="highlight"><pre><span></span><code>OPENROUTER_API_KEY=your_openrouter_api_key
+TAVILY_API_KEY=your_tavily_api_key
 </code></pre></div></p>
 </li>
 <li>
-<p>Run the project:
-<div class="highlight"><pre><span></span><code>langgraph<span class="w"> </span>dev
-</code></pre></div></p>
+<p>Run LangGraph CLI</p>
 </li>
 </ol>
+<p>The project is configured to be compatible with the LangGraph CLI. Use the following command to start the agent:</p>
+<div class="highlight"><pre><span></span><code>langgraph<span class="w"> </span>dev
+</code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Project Best Practice</p>
-<p>In this example, we have extended the parameter list for the <code>load_chat_model</code> function in the <code>lib/models.py</code> module.
-Since <code>load_chat_model</code> (and the official <code>init_chat_model</code>) needs to support multiple model providers (like vLLM, OpenRouter, etc.), and the initialization parameters for conversational models vary across providers, this library uniformly adopts a <strong>keyword argument (kwargs)</strong> approach for passing model configurations.
-While this approach enhances universality and flexibility, it weakens the IDE's type hinting capabilities, potentially increasing the risk of parameter typos or type misuse.</p>
-<p>Therefore, it is recommended that in actual projects, once the model provider is determined, you can explicitly extend the parameter signature for its corresponding chat model integration class to restore full type hinting and improve the development experience.</p>
-<p>Additionally, in <code>lib/register.py</code>, we have encapsulated the <code>register_model_provider</code> registration logic into a function, which is imported in <code>lib/__init__.py</code>. As long as the <code>lib</code> module is imported, the model provider registration is completed.</p>
+<p>In this example, we have extended the parameter list of the <code>load_chat_model</code> function in the <code>src/utils/models.py</code> module.
+Since <code>load_chat_model</code> (and the official <code>init_chat_model</code>) needs to support multiple model providers (like vLLM, OpenRouter, etc.), and the initialization parameters for chat models vary across providers, this library uniformly adopts the <strong>keyword arguments (kwargs)</strong> approach for passing model configurations.
+While this approach enhances universality and flexibility, it weakens the IDE's type hinting capabilities, which may increase the risk of parameter typos or type misuse.</p>
+<p>Therefore, it is recommended that in actual projects, if the model provider is already determined, you can explicitly extend the parameter signature for its corresponding chat model integration class to restore full type hinting and improve the development experience.</p>
+<p>Additionally, in <code>src/utils/register.py</code>, we have encapsulated the logic for <code>register_model_provider</code> into a function, which is imported in <code>src/utils/__init__.py</code>. As long as the <code>src/utils</code> module is imported, the model provider registration is completed.</p>
 </div>
 
 
