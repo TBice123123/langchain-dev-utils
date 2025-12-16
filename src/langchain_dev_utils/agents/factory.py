@@ -7,6 +7,7 @@ from langchain.agents.middleware.types import (
     ResponseT,
     _InputAgentState,
     _OutputAgentState,
+    StateT_co,
 )
 from langchain.agents.structured_output import ResponseFormat
 from langchain_core.messages import SystemMessage
@@ -25,8 +26,8 @@ def create_agent(  # noqa: PLR0915
     tools: Sequence[BaseTool | Callable | dict[str, Any]] | None = None,
     *,
     system_prompt: str | SystemMessage | None = None,
-    middleware: Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] = (),
     response_format: ResponseFormat[ResponseT] | type[ResponseT] | None = None,
+    middleware: Sequence[AgentMiddleware[StateT_co, ContextT]] = (),
     state_schema: type[AgentState[ResponseT]] | None = None,
     context_schema: type[ContextT] | None = None,
     checkpointer: Checkpointer | None = None,
