@@ -8,6 +8,13 @@
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/"/>
     </url>
     <url>
+        <loc>https://tbice123123.github.io/langchain-dev-utils/example-project/</loc>
+        <lastmod>2025-12-16</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/example-project/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/example-project/"/>
+    </url>
+    <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/human-in-the-loop/</loc>
         <lastmod>2025-12-16</lastmod>
         <changefreq>daily</changefreq>
@@ -125,6 +132,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/"/>
+    </url>
+    <url>
+        <loc>https://tbice123123.github.io/langchain-dev-utils/zh/example-project/</loc>
+        <lastmod>2025-12-16</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/example-project/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/example-project/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/human-in-the-loop/</loc>
