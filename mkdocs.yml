@@ -84,6 +84,7 @@ plugins:
             - Message Handling Module API Reference: api-reference/message_convert.md
             - Tool Calling Handling Module API Reference: api-reference/tool_calling.md
             - State-Graph Orchestration Module API Reference: api-reference/pipeline.md
+          - Usage Examples: example-project.md
           
         - locale: zh
           name: 中文
@@ -109,5 +110,6 @@ plugins:
             - 消息处理模块 API参考: api-reference/message_convert.md
             - 工具调用处理模块 API参考: api-reference/tool_calling.md
             - 状态图编排模块 API参考: api-reference/pipeline.md
+          - 使用示例: example-project.md
           
           

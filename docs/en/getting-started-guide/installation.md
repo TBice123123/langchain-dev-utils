@@ -28,7 +28,7 @@ To install the full-featured version of `langchain-dev-utils`:
 
 === "poetry"
     ```bash
-    poetry add langchain-dev-utils[standard]
+    poetry add "langchain-dev-utils[standard]"
     ```
 
 === "uv"

@@ -29,7 +29,7 @@
 
 === "poetry"
     ```bash
-    poetry add langchain-dev-utils[standard]
+    poetry add "langchain-dev-utils[standard]"
     ```
 
 === "uv"
