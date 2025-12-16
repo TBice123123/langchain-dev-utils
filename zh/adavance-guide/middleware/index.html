@@ -1317,14 +1317,31 @@
 <ul>
 <li><code>router_model</code>：用于执行路由决策的模型。可以传入字符串（将通过 <code>load_chat_model</code> 自动加载），例如 <code>vllm:qwen3-4b</code>；或直接传入已实例化的 <code>BaseChatModel</code> 对象。</li>
 <li><code>model_list</code>：模型配置列表，每个元素为一个字典，其中可以包含以下字段：<ul>
-<li><code>model_name</code>（str）：必传，模型的唯一标识，<strong>使用 <code>provider:model-name</code> 格式</strong>，例如 <code>vllm:qwen3-4b</code> 或 <code>openrouter:qwen/qwen3-vl-32b-instruct</code>；</li>
+<li><code>model_name</code>（str）：必传，模型的唯一标识，<strong>使用 <code>provider:model-name</code> 格式</strong>，例如 <code>vllm:qwen3-4b</code>；</li>
 <li><code>model_description</code>（str）：必传，模型能力或适用场景的简要描述，供路由模型进行决策。</li>
 <li><code>tools</code>（list[BaseTool]）：可选，该模型可调用的工具白名单。若未提供，则继承全局工具列表；若设为 <code>[]</code>，则显式禁用所有工具。</li>
-<li><code>model_kwargs</code>（dict）：可选，模型加载时的额外参数（如 <code>temperature</code>、<code>max_tokens</code> 等），<strong>仅在未传入 <code>model_instance</code> 时生效</strong>。</li>
-<li><code>model_instance</code>（BaseChatModel）：可选，已实例化的模型对象。若提供，则直接使用该实例，<code>model_name</code> 仅作标识, <code>model_kwargs</code> 被忽略；若未提供，则会根据 <code>model_name</code> 和 <code>model_kwargs</code> 使用<code>load_chat_model</code>加载模型。</li>
+<li><code>model_kwargs</code>（dict）：可选，模型加载时的额外参数（如 <code>temperature</code>、<code>max_tokens</code> 等)。</li>
 <li><code>model_system_prompt</code>（str）：可选，模型的系统级提示词。</li>
+<li><code>model_instance</code>（BaseChatModel）：可选，已实例化的模型对象。</li>
 </ul>
 </li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">注意</p>
+<p>对于<code>model_instance</code>字段有如下说明：</p>
+<ul>
+<li>
+<p>若提供，则直接使用该实例，<code>model_name</code> 仅作标识, <code>model_kwargs</code> 被忽略；适用于不使用本库的对话模型管理功能的情况。</p>
+</li>
+<li>
+<p>若未提供，则会根据 <code>model_name</code> 和 <code>model_kwargs</code> 使用<code>load_chat_model</code>加载模型。</p>
+</li>
+<li>
+<p>无论哪种情况，<code>model_name</code> 的命名都推荐采用 <code>provider:model-name</code> 格式。</p>
+</li>
+</ul>
+</div>
+<ul>
 <li><code>router_prompt</code>：自定义路由模型的提示词。若为 <code>None</code>（默认），则使用内置的默认提示模板。</li>
 </ul>
 <p><strong>使用示例</strong></p>
@@ -1349,6 +1366,12 @@
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合代码生成任务&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_python_code</span><span class="p">],</span>  <span class="c1"># 仅允许使用 run_python_code 工具</span>
     <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openai:gpt-4o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合综合类高难度任务&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手，擅长处理综合类的高难度任务&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">),</span> <span class="c1"># 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略</span>
+    <span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
 <p>然后在创建 agent 时启用中间件：</p>
