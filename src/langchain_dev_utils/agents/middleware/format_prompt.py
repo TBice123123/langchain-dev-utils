@@ -32,7 +32,7 @@ def format_prompt(request: ModelRequest) -> str:
         ...     {
         ...         "messages": [HumanMessage(content="Hello")],
         ...     },
-        ...     context=Context(name="assistant", user="tbice"),
+        ...     context=Context(name="assistant", user="Tom"),
         ... )
 
     """

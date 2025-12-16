@@ -98,12 +98,24 @@ agent = create_agent(
 
 - `router_model`：用于执行路由决策的模型。可以传入字符串（将通过 `load_chat_model` 自动加载），例如 `vllm:qwen3-4b`；或直接传入已实例化的 `BaseChatModel` 对象。
 - `model_list`：模型配置列表，每个元素为一个字典，其中可以包含以下字段：
-    - `model_name`（str）：必传，模型的唯一标识，**使用 `provider:model-name` 格式**，例如 `vllm:qwen3-4b` 或 `openrouter:qwen/qwen3-vl-32b-instruct`；
+    - `model_name`（str）：必传，模型的唯一标识，**使用 `provider:model-name` 格式**，例如 `vllm:qwen3-4b`；
     - `model_description`（str）：必传，模型能力或适用场景的简要描述，供路由模型进行决策。
     - `tools`（list[BaseTool]）：可选，该模型可调用的工具白名单。若未提供，则继承全局工具列表；若设为 `[]`，则显式禁用所有工具。
-    - `model_kwargs`（dict）：可选，模型加载时的额外参数（如 `temperature`、`max_tokens` 等），**仅在未传入 `model_instance` 时生效**。
-    - `model_instance`（BaseChatModel）：可选，已实例化的模型对象。若提供，则直接使用该实例，`model_name` 仅作标识, `model_kwargs` 被忽略；若未提供，则会根据 `model_name` 和 `model_kwargs` 使用`load_chat_model`加载模型。
+    - `model_kwargs`（dict）：可选，模型加载时的额外参数（如 `temperature`、`max_tokens` 等)。
     - `model_system_prompt`（str）：可选，模型的系统级提示词。
+    - `model_instance`（BaseChatModel）：可选，已实例化的模型对象。
+
+
+!!! tip "注意"
+    对于`model_instance`字段有如下说明：
+    
+    - 若提供，则直接使用该实例，`model_name` 仅作标识, `model_kwargs` 被忽略；适用于不使用本库的对话模型管理功能的情况。
+
+    - 若未提供，则会根据 `model_name` 和 `model_kwargs` 使用`load_chat_model`加载模型。
+
+    - 无论哪种情况，`model_name` 的命名都推荐采用 `provider:model-name` 格式。
+
+
 - `router_prompt`：自定义路由模型的提示词。若为 `None`（默认），则使用内置的默认提示模板。
 
 
@@ -132,6 +144,12 @@ model_list = [
         "model_description": "适合代码生成任务",
         "tools": [run_python_code],  # 仅允许使用 run_python_code 工具
     },
+    {
+        "model_name": "openai:gpt-4o",
+        "model_description": "适合综合类高难度任务",
+        "model_system_prompt": "你是一个助手，擅长处理综合类的高难度任务",
+        "model_instance": ChatOpenAI(model_name="gpt-4o"), # 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略
+    }
 ]
 ```
 
