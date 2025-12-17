@@ -62,9 +62,6 @@ TAVILY_API_KEY=your_tavily_api_key
 ```
 
 4. Run LangGraph CLI
-
-The project is configured to be compatible with the LangGraph CLI. Use the following command to start the agent:
-
 ```bash
 langgraph dev
 ```
