@@ -1218,7 +1218,7 @@
 
 
 <h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
-<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> that demonstrates how to efficiently build two typical agent systems using the utility functions provided by <code>langchain-dev-utils</code>:</p>
+<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> designed to help developers quickly understand how to use the utility functions provided by <code>langchain-dev-utils</code> to efficiently build two typical agent systems:</p>
 <ul>
 <li><strong>Single Agent</strong>: Suitable for executing simple tasks and tasks related to long-term memory storage.</li>
 <li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.</li>
@@ -1240,7 +1240,7 @@
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div></li>
 <li>
-<p>Edit the <code>.env</code> file and fill in your API keys (requires API keys for <code>OpenRouter</code> and <code>Tavily</code>)</p>
+<p>Edit the <code>.env</code> file and enter your API keys (API keys for <code>OpenRouter</code> and <code>Tavily</code> are required)</p>
 </li>
 <li>
 <p>Start the project
@@ -1253,8 +1253,8 @@
 <p>Features from this library used:</p>
 <ul>
 <li>Chat model management: <code>register_model_provider</code>, <code>load_chat_model</code></li>
-<li>Embedding model management: <code>register_embeddings_provider</code>, <code>load_embedding_model</code></li>
-<li>Sequence formatting: <code>format_sequence</code></li>
+<li>Embedding model management: <code>register_embeddings_provider</code>, <code>load_embeddings</code></li>
+<li>Format sequence: <code>format_sequence</code></li>
 <li>Middleware: <code>format_prompt</code></li>
 </ul>
 <p><strong>Supervisor-Multi-Agent Architecture</strong>:</p>
@@ -1265,10 +1265,15 @@
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Best Practices for Model Management Features</p>
-<p>In this example, the following best practices are adopted for model management features (chat model management, embedding model management):</p>
-<p>In the example project's <code>src/utils/providers/chat_models/load.py</code> and <code>src/utils/providers/embeddings/load.py</code>, the parameter lists of the <code>load_chat_model</code> and <code>load_embeddings</code> functions are extended. Since these functions need to support multiple model providers (such as vLLM, OpenRouter, etc.), and each provider's model initialization parameters are different, this library uniformly uses <strong>keyword arguments (kwargs)</strong> to pass additional model parameters (LangChain's official functions <code>init_chat_model</code> and <code>init_embeddings</code> also adopt this approach). While this approach improves universality and flexibility, it weakens IDE type hinting capabilities and may increase the risk of parameter spelling errors or type misuse.</p>
-<p>Therefore, it is recommended that in actual projects, if the model provider to be used has been determined, you can extend the parameter signatures for its corresponding model integration classes <strong>as needed</strong> to restore complete type hints and development experience.</p>
-<p>At the same time, this library requires <code>register_model_provider</code> and <code>register_embeddings_provider</code> to be executed at project startup. Therefore, this project encapsulates the related registration logic functions in <code>src/utils/providers/chat_models/register.py</code> and <code>src/utils/providers/embeddings/register.py</code>, and automatically executes registration in their respective <code>__init__.py</code>; as long as the <code>src/utils/providers</code> module is imported, the registration of model providers can be completed.</p>
+<p>This example performs the following preprocessing for model management features (chat models/embedding models):</p>
+<ul>
+<li>1.<strong>Usage of load_chat_model and load_embeddings functions</strong></li>
+</ul>
+<p>For additional parameters of different chat model classes (or embedding model classes), the <code>load_chat_model</code> and <code>load_embeddings</code> functions receive them through keyword arguments (LangChain's corresponding two functions also adopt this approach). Although this approach enhances versatility, it weakens IDE type hints and increases the risk of parameter misuse. Therefore, if the specific provider is already determined, you can extend the parameter signatures for its integrated chat model class (or embedding model class) to restore type hints. You can refer to <code>src\utils\providers\chat_models\load.py</code> and <code>src\utils\providers\embeddings\load.py</code>.</p>
+<ul>
+<li>2.<strong>Usage of register_model_provider and register_embeddings_provider functions</strong> </li>
+</ul>
+<p>The <code>register_model_provider</code> and <code>register_embeddings_provider</code> functions need to be executed at startup. For this, you can refer to this project's <code>src\utils\providers\chat_models\register.py</code> and <code>src\utils\providers\embeddings\register.py</code>. These two files encapsulate the registration logic and are imported in <code>src/utils/providers/__init__.py</code>. Users only need to import the <code>src/utils/providers</code> module to complete the registration of all providers.</p>
 </div>
 
 
