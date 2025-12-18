@@ -1120,10 +1120,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#project-overview" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Overview
+        Quick Start
       
     </span>
   </a>
@@ -1131,21 +1131,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-structure" class="md-nav__link">
+  <a href="#features-used" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation Steps
+        Features Used
       
     </span>
   </a>
@@ -1187,10 +1176,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#project-overview" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Overview
+        Quick Start
       
     </span>
   </a>
@@ -1198,21 +1187,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-structure" class="md-nav__link">
+  <a href="#features-used" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation Steps
+        Features Used
       
     </span>
   </a>
@@ -1240,78 +1218,57 @@
 
 
 <h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
-<h2 id="project-overview">Project Overview</h2>
-<p>This <a href="https://github.com/TBice123123/langchain-dev-utils-example">example project</a> demonstrates how to efficiently build two typical types of agent systems using the tools and abstractions provided by <code>langchain-dev-utils</code>:</p>
+<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> that demonstrates how to efficiently build two typical agent systems using the utility functions provided by <code>langchain-dev-utils</code>:</p>
 <ul>
-<li>
-<p><strong>Simple Agent</strong>: Suitable for end-to-end automation of simple tasks.</p>
-</li>
-<li>
-<p><strong>Supervisor-Multi-Agent Architecture</strong>: A supervisor coordinates multiple specialized agents, suitable for complex scenarios that require division of labor, planning, and iteration.</p>
-</li>
+<li><strong>Single Agent</strong>: Suitable for executing simple tasks and tasks related to long-term memory storage.</li>
+<li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.</li>
 </ul>
-<h2 id="project-structure">Project Structure</h2>
-<div class="highlight"><pre><span></span><code>langchain-dev-utils-example/
-├── src/                          
-│   ├── agents/                   
-│   │   ├── __init__.py           
-│   │   ├── simple_agent/        
-│   │   │   ├── __init__.py       
-│   │   │   ├── agent.py         
-│   │   │   └── context.py        
-│   │   └── supervisor/           
-│   │       ├── __init__.py       
-│   │       ├── supervisor.py    
-│   │       └── subagent.py      
-│   └── utils/                    
-│       ├── __init__.py           
-│       ├── models.py             
-│       └── register.py          
-├── .env.example                  
-├── .gitignore                    
-├── .python-version               
-├── LICENSE                       
-├── README.md                     
-├── README_cn.md                  
-├── langgraph.json               
-├── pyproject.toml               
-└── uv.lock                    
-</code></pre></div>
-<h2 id="installation-steps">Installation Steps</h2>
+<p align="center">
+  <img src="../assets/graph.png" alt="graph">
+</p>
+
+<h2 id="quick-start">Quick Start</h2>
 <ol>
-<li>
-<p>Clone this repository:
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TBice123123/langchain-dev-utils-example.git
+<li>Clone this repository:
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TBice123123/langchain-dev-utils-example.git<span class="w">  </span>
 <span class="nb">cd</span><span class="w"> </span>langchain-dev-utils-example
-</code></pre></div></p>
-</li>
-<li>
-<p>Install dependencies using uv:
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--all-groups
-</code></pre></div></p>
-</li>
-<li>
-<p>Configure environment variables:
+</code></pre></div></li>
+<li>Install dependencies using uv:
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+</code></pre></div></li>
+<li>Create .env file
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-</code></pre></div>
-Edit the <code>.env</code> file and add your API keys (for <code>OpenRouter</code> and <code>Tavily</code>):
-<div class="highlight"><pre><span></span><code>OPENROUTER_API_KEY=your_openrouter_api_key
-TAVILY_API_KEY=your_tavily_api_key
-</code></pre></div></p>
+</code></pre></div></li>
+<li>
+<p>Edit the <code>.env</code> file and fill in your API keys (requires API keys for <code>OpenRouter</code> and <code>Tavily</code>)</p>
 </li>
 <li>
-<p>Run LangGraph CLI
+<p>Start the project
 <div class="highlight"><pre><span></span><code>langgraph<span class="w"> </span>dev
 </code></pre></div></p>
 </li>
 </ol>
+<h2 id="features-used">Features Used</h2>
+<p><strong>Single Agent</strong>:</p>
+<p>Features from this library used:</p>
+<ul>
+<li>Chat model management: <code>register_model_provider</code>, <code>load_chat_model</code></li>
+<li>Embedding model management: <code>register_embeddings_provider</code>, <code>load_embedding_model</code></li>
+<li>Sequence formatting: <code>format_sequence</code></li>
+<li>Middleware: <code>format_prompt</code></li>
+</ul>
+<p><strong>Supervisor-Multi-Agent Architecture</strong>:</p>
+<p>Features from this library used:</p>
+<ul>
+<li>Chat model management: <code>register_model_provider</code>, <code>load_chat_model</code></li>
+<li>Multi-agent construction: <code>wrap_agent_as_tool</code></li>
+</ul>
 <div class="admonition success">
-<p class="admonition-title">Project Best Practice</p>
-<p>In this example, we have extended the parameter list of the <code>load_chat_model</code> function in the <code>src/utils/models.py</code> module.
-Since <code>load_chat_model</code> (and the official <code>init_chat_model</code>) needs to support multiple model providers (like vLLM, OpenRouter, etc.), and the initialization parameters for chat models vary across providers, this library uniformly adopts the <strong>keyword arguments (kwargs)</strong> approach for passing model configurations.
-While this approach enhances universality and flexibility, it weakens the IDE's type hinting capabilities, which may increase the risk of parameter typos or type misuse.</p>
-<p>Therefore, it is recommended that in actual projects, if the model provider is already determined, you can explicitly extend the parameter signature for its corresponding chat model integration class to restore full type hinting and improve the development experience.</p>
-<p>Additionally, in <code>src/utils/register.py</code>, we have encapsulated the logic for <code>register_model_provider</code> into a function, which is imported in <code>src/utils/__init__.py</code>. As long as the <code>src/utils</code> module is imported, the model provider registration is completed.</p>
+<p class="admonition-title">Best Practices for Model Management Features</p>
+<p>In this example, the following best practices are adopted for model management features (chat model management, embedding model management):</p>
+<p>In the example project's <code>src/utils/providers/chat_models/load.py</code> and <code>src/utils/providers/embeddings/load.py</code>, the parameter lists of the <code>load_chat_model</code> and <code>load_embeddings</code> functions are extended. Since these functions need to support multiple model providers (such as vLLM, OpenRouter, etc.), and each provider's model initialization parameters are different, this library uniformly uses <strong>keyword arguments (kwargs)</strong> to pass additional model parameters (LangChain's official functions <code>init_chat_model</code> and <code>init_embeddings</code> also adopt this approach). While this approach improves universality and flexibility, it weakens IDE type hinting capabilities and may increase the risk of parameter spelling errors or type misuse.</p>
+<p>Therefore, it is recommended that in actual projects, if the model provider to be used has been determined, you can extend the parameter signatures for its corresponding model integration classes <strong>as needed</strong> to restore complete type hints and development experience.</p>
+<p>At the same time, this library requires <code>register_model_provider</code> and <code>register_embeddings_provider</code> to be executed at project startup. Therefore, this project encapsulates the related registration logic functions in <code>src/utils/providers/chat_models/register.py</code> and <code>src/utils/providers/embeddings/register.py</code>, and automatically executes registration in their respective <code>__init__.py</code>; as long as the <code>src/utils/providers</code> module is imported, the registration of model providers can be completed.</p>
 </div>
 
 

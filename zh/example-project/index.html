@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#langchain-dev-utils" class="md-skip">
+        <a href="#langchain-dev-utils-example-project" class="md-skip">
           跳转至
         </a>
       
@@ -1123,7 +1123,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        项目概述
+        快速开始
       
     </span>
   </a>
@@ -1134,18 +1134,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        项目结构
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        安装步骤
+        使用的功能
       
     </span>
   </a>
@@ -1190,7 +1179,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        项目概述
+        快速开始
       
     </span>
   </a>
@@ -1201,18 +1190,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        项目结构
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        安装步骤
+        使用的功能
       
     </span>
   </a>
@@ -1239,77 +1217,58 @@
   
 
 
-<h1 id="langchain-dev-utils">Langchain-dev-utils 示例项目</h1>
-<h2 id="_1">项目概述</h2>
-<p>本<a href="https://github.com/TBice123123/langchain-dev-utils-example">示例项目</a>演示了如何利用 <code>langchain-dev-utils</code> 提供的工具与抽象，高效构建两类典型智能体系统：</p>
+<h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
+<p>该仓库提供了一个示例项目<a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a>，演示了如何利用 <code>langchain-dev-utils</code> 提供的工具函数，高效构建两种典型的智能体（agent）系统：</p>
 <ul>
-<li>
-<p><strong>单智能体（Simple Agent）</strong>：适用于端到端的简单任务自动化。</p>
-</li>
-<li>
-<p><strong>主管-多智能体架构（Supervisor-Multi-Agent）</strong>：通过一个主管协调多个专业智能体，适用于需分工、规划与迭代的复杂场景。</p>
-</li>
+<li><strong>单智能体（Single Agent）</strong>：适用于执行简单任务以及长期记忆存储相关的任务。</li>
+<li><strong>监督者-多智能体架构（Supervisor-Multi-Agent Architecture）</strong>：通过一个中央监督者协调多个专业化智能体，适用于需要任务分解、规划和迭代优化的复杂场景。</li>
 </ul>
-<h2 id="_2">项目结构</h2>
-<div class="highlight"><pre><span></span><code>langchain-dev-utils-example/
-├── src/                          
-│   ├── agents/                   
-│   │   ├── __init__.py           
-│   │   ├── simple_agent/        
-│   │   │   ├── __init__.py       
-│   │   │   ├── agent.py         
-│   │   │   └── context.py        
-│   │   └── supervisor/           
-│   │       ├── __init__.py       
-│   │       ├── supervisor.py    
-│   │       └── subagent.py      
-│   └── utils/                    
-│       ├── __init__.py           
-│       ├── models.py             
-│       └── register.py          
-├── .env.example                  
-├── .gitignore                    
-├── .python-version               
-├── LICENSE                       
-├── README.md                     
-├── README_cn.md                  
-├── langgraph.json               
-├── pyproject.toml               
-└── uv.lock                    
-</code></pre></div>
-<h2 id="_3">安装步骤</h2>
+<p align="center">
+  <img src="../../assets/graph.png" alt="graph">
+</p>
+
+<h2 id="_1">快速开始</h2>
 <ol>
-<li>
-<p>克隆此仓库：
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TBice123123/langchain-dev-utils-example.git
+<li>克隆本仓库：
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TBice123123/langchain-dev-utils-example.git<span class="w">  </span>
 <span class="nb">cd</span><span class="w"> </span>langchain-dev-utils-example
-</code></pre></div></p>
-</li>
-<li>
-<p>使用 uv 安装依赖：
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--all-groups
-</code></pre></div></p>
-</li>
-<li>
-<p>配置环境变量：
-<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-</code></pre></div>
-编辑 <code>.env</code> 文件，添加您的 API 密钥 (需要<code>OpenRouter</code>和<code>Tavily</code>)
-<div class="highlight"><pre><span></span><code>OPENROUTER_API_KEY=your_openrouter_api_key
-TAVILY_API_KEY=your_tavily_api_key
-</code></pre></div></p>
-</li>
-<li>运行 LangGraph CLI
-<div class="highlight"><pre><span></span><code>langgraph<span class="w"> </span>dev
 </code></pre></div></li>
+<li>使用 uv 安装依赖：
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+</code></pre></div></li>
+<li>创建.env文件
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+</code></pre></div></li>
+<li>
+<p>编辑 <code>.env</code> 文件，填入你的 API 密钥（需要 <code>OpenRouter</code> 和 <code>Tavily</code> 的 API 密钥）</p>
+</li>
+<li>
+<p>启动项目
+<div class="highlight"><pre><span></span><code>langgraph<span class="w"> </span>dev
+</code></pre></div></p>
+</li>
 </ol>
+<h2 id="_2">使用的功能</h2>
+<p><strong>单智能体（Simple Agent）</strong>：</p>
+<p>使用的本库的功能：</p>
+<ul>
+<li>对话模型管理：<code>register_model_provider</code>、<code>load_chat_model</code></li>
+<li>嵌入模型管理：<code>register_embeddings_provider</code>、<code>load_embedding_model</code></li>
+<li>格式化序列：<code>format_sequence</code></li>
+<li>中间件：<code>format_prompt</code></li>
+</ul>
+<p><strong>监督者-多智能体架构（Supervisor-Multi-Agent Architecture）</strong>：</p>
+<p>使用的本库的功能：</p>
+<ul>
+<li>对话模型管理：<code>register_model_provider</code>、<code>load_chat_model</code></li>
+<li>多智能体构建：<code>wrap_agent_as_tool</code></li>
+</ul>
 <div class="admonition success">
-<p class="admonition-title">项目最佳实践</p>
-<p>在本示例中，我们在 <code>src/utils/models.py</code> 模块中对 <code>load_chat_model</code> 函数的参数列表进行了扩展处理。
-由于 <code>load_chat_model</code>（以及官方函数 <code>init_chat_model</code>）需要支持多种模型提供商（如 vLLM、OpenRouter 等），而各提供商的对话模型初始化参数各不相同，因此本库统一采用<strong>关键字参数（kwargs)</strong> 的方式传入模型配置。
-这种方式虽提高了通用性和灵活性，但会削弱 IDE 的类型提示能力，可能增加参数拼写错误或类型误用的风险。</p>
-<p>故推荐在实际项目中，若已确定所使用的模型提供商，可针对其对应的对话模型集成类<strong>按需</strong>扩展参数签名，以恢复完整的类型提示和开发体验。</p>
-<p>同时在 <code>src/utils/register.py</code> 中封装了 <code>register_model_provider</code> 注册逻辑的函数，并在 <code>src/utils/__init__.py</code> 中导入；只要引入 <code>src/utils</code> 模块，即可完成模型提供方的注册。</p>
+<p class="admonition-title">模型管理功能的最佳实践</p>
+<p>在本示例中，针对模型管理（对话模型管理、嵌入模型管理）功能，采用了如下最佳实践：</p>
+<p>在示例项目的<code>src/utils/providers/chat_models/load.py</code> 和 <code>src/utils/providers/embeddings/load.py</code> 中，对 <code>load_chat_model</code> 和 <code>load_embeddings</code> 函数的参数列表进行了扩展处理。由于这些函数需要支持多种模型提供商（如 vLLM、OpenRouter 等），而各提供商的模型初始化参数各不相同，因此本库在实现过程中统一采用<strong>关键字参数（kwargs）</strong>的方式传入模型额外参数（langchain官方函数<code>init_chat_model</code>、<code>init_embeddings</code>也同样采用此方式）。这种方式虽提高了通用性和灵活性，但会削弱 IDE 的类型提示能力，可能增加参数拼写错误或类型误用的风险。</p>
+<p>故推荐在实际项目中，若已确定所使用的模型提供商，可针对其对应的模型集成类<strong>按需</strong>扩展参数签名，以恢复完整的类型提示和开发体验。</p>
+<p>同时，本库要求<code>register_model_provider</code>和<code>register_embeddings_provider</code>在项目启动时就需要执行，故本项目同时在<code>src/utils/providers/chat_models/register.py</code> 和 <code>src/utils/providers/embeddings/register.py</code> 中封装了相关的注册逻辑的函数，并在各自的 <code>__init__.py</code> 中自动执行注册；只要引入 <code>src/utils/providers</code> 模块，即可完成模型提供方的注册。</p>
 </div>
 
 
