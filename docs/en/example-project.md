@@ -1,76 +1,59 @@
 # Langchain-dev-utils Example Project
 
-## Project Overview
+This repository provides an example project [`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example) that demonstrates how to efficiently build two typical agent systems using the utility functions provided by `langchain-dev-utils`:
 
-This [example project](https://github.com/TBice123123/langchain-dev-utils-example) demonstrates how to efficiently build two typical types of agent systems using the tools and abstractions provided by `langchain-dev-utils`:
+- **Single Agent**: Suitable for executing simple tasks and tasks related to long-term memory storage.
+- **Supervisor-Multi-Agent Architecture**: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.
 
-- **Simple Agent**: Suitable for end-to-end automation of simple tasks.
+<p align="center">
+  <img src="../../assets/graph.png" alt="graph">
+</p>
 
-- **Supervisor-Multi-Agent Architecture**: A supervisor coordinates multiple specialized agents, suitable for complex scenarios that require division of labor, planning, and iteration.
-
-## Project Structure
-
-```
-langchain-dev-utils-example/
-├── src/                          
-│   ├── agents/                   
-│   │   ├── __init__.py           
-│   │   ├── simple_agent/        
-│   │   │   ├── __init__.py       
-│   │   │   ├── agent.py         
-│   │   │   └── context.py        
-│   │   └── supervisor/           
-│   │       ├── __init__.py       
-│   │       ├── supervisor.py    
-│   │       └── subagent.py      
-│   └── utils/                    
-│       ├── __init__.py           
-│       ├── models.py             
-│       └── register.py          
-├── .env.example                  
-├── .gitignore                    
-├── .python-version               
-├── LICENSE                       
-├── README.md                     
-├── README_cn.md                  
-├── langgraph.json               
-├── pyproject.toml               
-└── uv.lock                    
-```
-
-## Installation Steps
+## Quick Start
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/TBice123123/langchain-dev-utils-example.git
+git clone https://github.com/TBice123123/langchain-dev-utils-example.git  
 cd langchain-dev-utils-example
 ```
-
 2. Install dependencies using uv:
 ```bash
-uv sync --all-groups
+uv sync
 ```
-
-3. Configure environment variables:
+3. Create .env file
 ```bash
 cp .env.example .env
 ```
-Edit the `.env` file and add your API keys (for `OpenRouter` and `Tavily`):
-```
-OPENROUTER_API_KEY=your_openrouter_api_key
-TAVILY_API_KEY=your_tavily_api_key
-```
+4. Edit the `.env` file and fill in your API keys (requires API keys for `OpenRouter` and `Tavily`)
 
-4. Run LangGraph CLI
+5. Start the project
 ```bash
 langgraph dev
 ```
 
-!!! success "Project Best Practice"
-    In this example, we have extended the parameter list of the `load_chat_model` function in the `src/utils/models.py` module.
-    Since `load_chat_model` (and the official `init_chat_model`) needs to support multiple model providers (like vLLM, OpenRouter, etc.), and the initialization parameters for chat models vary across providers, this library uniformly adopts the **keyword arguments (kwargs)** approach for passing model configurations.
-    While this approach enhances universality and flexibility, it weakens the IDE's type hinting capabilities, which may increase the risk of parameter typos or type misuse.
+## Features Used
 
-    Therefore, it is recommended that in actual projects, if the model provider is already determined, you can explicitly extend the parameter signature for its corresponding chat model integration class to restore full type hinting and improve the development experience.
+**Single Agent**:
 
-    Additionally, in `src/utils/register.py`, we have encapsulated the logic for `register_model_provider` into a function, which is imported in `src/utils/__init__.py`. As long as the `src/utils` module is imported, the model provider registration is completed.
+Features from this library used:
+
+- Chat model management: `register_model_provider`, `load_chat_model`
+- Embedding model management: `register_embeddings_provider`, `load_embedding_model`
+- Sequence formatting: `format_sequence`
+- Middleware: `format_prompt`
+
+**Supervisor-Multi-Agent Architecture**:
+
+Features from this library used:
+
+- Chat model management: `register_model_provider`, `load_chat_model`
+- Multi-agent construction: `wrap_agent_as_tool`
+
+!!! success "Best Practices for Model Management Features"
+    In this example, the following best practices are adopted for model management features (chat model management, embedding model management):
+
+    In the example project's `src/utils/providers/chat_models/load.py` and `src/utils/providers/embeddings/load.py`, the parameter lists of the `load_chat_model` and `load_embeddings` functions are extended. Since these functions need to support multiple model providers (such as vLLM, OpenRouter, etc.), and each provider's model initialization parameters are different, this library uniformly uses **keyword arguments (kwargs)** to pass additional model parameters (LangChain's official functions `init_chat_model` and `init_embeddings` also adopt this approach). While this approach improves universality and flexibility, it weakens IDE type hinting capabilities and may increase the risk of parameter spelling errors or type misuse.
+
+    Therefore, it is recommended that in actual projects, if the model provider to be used has been determined, you can extend the parameter signatures for its corresponding model integration classes **as needed** to restore complete type hints and development experience.
+    
+    At the same time, this library requires `register_model_provider` and `register_embeddings_provider` to be executed at project startup. Therefore, this project encapsulates the related registration logic functions in `src/utils/providers/chat_models/register.py` and `src/utils/providers/embeddings/register.py`, and automatically executes registration in their respective `__init__.py`; as long as the `src/utils/providers` module is imported, the registration of model providers can be completed.
