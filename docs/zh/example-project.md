@@ -1,6 +1,6 @@
 # Langchain-dev-utils Example Project
 
-该仓库提供了一个示例项目[`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example)，演示了如何利用 `langchain-dev-utils` 提供的工具函数，高效构建两种典型的智能体（agent）系统：
+该仓库提供了一个示例项目[`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example)，目的是为了帮助开发者快速了解如何利用 `langchain-dev-utils` 提供的工具函数，高效构建两种典型的智能体（agent）系统：
 
 - **单智能体（Single Agent）**：适用于执行简单任务以及长期记忆存储相关的任务。
 - **监督者-多智能体架构（Supervisor-Multi-Agent Architecture）**：通过一个中央监督者协调多个专业化智能体，适用于需要任务分解、规划和迭代优化的复杂场景。
@@ -40,7 +40,7 @@ langgraph dev
 使用的本库的功能：
 
 - 对话模型管理：`register_model_provider`、`load_chat_model`
-- 嵌入模型管理：`register_embeddings_provider`、`load_embedding_model`
+- 嵌入模型管理：`register_embeddings_provider`、`load_embeddings`
 - 格式化序列：`format_sequence`
 - 中间件：`format_prompt`
 
@@ -54,10 +54,12 @@ langgraph dev
 
 
 !!! success "模型管理功能的最佳实践"
-    在本示例中，针对模型管理（对话模型管理、嵌入模型管理）功能，采用了如下最佳实践：
+    本示例针对模型管理功能（对话模型/嵌入模型）进行了如下的预处理：
 
-    在示例项目的`src/utils/providers/chat_models/load.py` 和 `src/utils/providers/embeddings/load.py` 中，对 `load_chat_model` 和 `load_embeddings` 函数的参数列表进行了扩展处理。由于这些函数需要支持多种模型提供商（如 vLLM、OpenRouter 等），而各提供商的模型初始化参数各不相同，因此本库在实现过程中统一采用**关键字参数（kwargs）**的方式传入模型额外参数（langchain官方函数`init_chat_model`、`init_embeddings`也同样采用此方式）。这种方式虽提高了通用性和灵活性，但会削弱 IDE 的类型提示能力，可能增加参数拼写错误或类型误用的风险。
+    - 1.**load_chat_model和load_embeddings函数使用**
 
-    故推荐在实际项目中，若已确定所使用的模型提供商，可针对其对应的模型集成类**按需**扩展参数签名，以恢复完整的类型提示和开发体验。
-    
-    同时，本库要求`register_model_provider`和`register_embeddings_provider`在项目启动时就需要执行，故本项目同时在`src/utils/providers/chat_models/register.py` 和 `src/utils/providers/embeddings/register.py` 中封装了相关的注册逻辑的函数，并在各自的 `__init__.py` 中自动执行注册；只要引入 `src/utils/providers` 模块，即可完成模型提供方的注册。
+    对于不同对话模型类（或嵌入模型类）的额外参数，`load_chat_model`和`load_embeddings`函数采用关键字参数方式进行接收（LangChain对应的两个函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考`src\utils\providers\chat_models\load.py`以及`src\utils\providers\embeddings\load.py`。
+
+    - 2.**register_model_provider和register_embeddings_provider函数使用** 
+
+    `register_model_provider`和`register_embeddings_provider`函数需要在启动时完成执行，对此，可参考本项目的`src\utils\providers\chat_models\register.py`以及`src\utils\providers\embeddings\register.py`。这两个文件封装了注册逻辑，并在`src/utils/providers/__init__.py`中进行了导入，使用者只需引入`src/utils/providers`模块，即可完成所有提供商的注册。

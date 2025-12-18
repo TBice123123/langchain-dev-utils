@@ -1,6 +1,6 @@
 # Langchain-dev-utils Example Project
 
-This repository provides an example project [`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example) that demonstrates how to efficiently build two typical agent systems using the utility functions provided by `langchain-dev-utils`:
+This repository provides an example project [`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example) designed to help developers quickly understand how to use the utility functions provided by `langchain-dev-utils` to efficiently build two typical agent systems:
 
 - **Single Agent**: Suitable for executing simple tasks and tasks related to long-term memory storage.
 - **Supervisor-Multi-Agent Architecture**: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.
@@ -24,7 +24,7 @@ uv sync
 ```bash
 cp .env.example .env
 ```
-4. Edit the `.env` file and fill in your API keys (requires API keys for `OpenRouter` and `Tavily`)
+4. Edit the `.env` file and enter your API keys (API keys for `OpenRouter` and `Tavily` are required)
 
 5. Start the project
 ```bash
@@ -38,8 +38,8 @@ langgraph dev
 Features from this library used:
 
 - Chat model management: `register_model_provider`, `load_chat_model`
-- Embedding model management: `register_embeddings_provider`, `load_embedding_model`
-- Sequence formatting: `format_sequence`
+- Embedding model management: `register_embeddings_provider`, `load_embeddings`
+- Format sequence: `format_sequence`
 - Middleware: `format_prompt`
 
 **Supervisor-Multi-Agent Architecture**:
@@ -50,10 +50,12 @@ Features from this library used:
 - Multi-agent construction: `wrap_agent_as_tool`
 
 !!! success "Best Practices for Model Management Features"
-    In this example, the following best practices are adopted for model management features (chat model management, embedding model management):
+    This example performs the following preprocessing for model management features (chat models/embedding models):
 
-    In the example project's `src/utils/providers/chat_models/load.py` and `src/utils/providers/embeddings/load.py`, the parameter lists of the `load_chat_model` and `load_embeddings` functions are extended. Since these functions need to support multiple model providers (such as vLLM, OpenRouter, etc.), and each provider's model initialization parameters are different, this library uniformly uses **keyword arguments (kwargs)** to pass additional model parameters (LangChain's official functions `init_chat_model` and `init_embeddings` also adopt this approach). While this approach improves universality and flexibility, it weakens IDE type hinting capabilities and may increase the risk of parameter spelling errors or type misuse.
+    - 1.**Usage of load_chat_model and load_embeddings functions**
 
-    Therefore, it is recommended that in actual projects, if the model provider to be used has been determined, you can extend the parameter signatures for its corresponding model integration classes **as needed** to restore complete type hints and development experience.
-    
-    At the same time, this library requires `register_model_provider` and `register_embeddings_provider` to be executed at project startup. Therefore, this project encapsulates the related registration logic functions in `src/utils/providers/chat_models/register.py` and `src/utils/providers/embeddings/register.py`, and automatically executes registration in their respective `__init__.py`; as long as the `src/utils/providers` module is imported, the registration of model providers can be completed.
+    For additional parameters of different chat model classes (or embedding model classes), the `load_chat_model` and `load_embeddings` functions receive them through keyword arguments (LangChain's corresponding two functions also adopt this approach). Although this approach enhances versatility, it weakens IDE type hints and increases the risk of parameter misuse. Therefore, if the specific provider is already determined, you can extend the parameter signatures for its integrated chat model class (or embedding model class) to restore type hints. You can refer to `src\utils\providers\chat_models\load.py` and `src\utils\providers\embeddings\load.py`.
+
+    - 2.**Usage of register_model_provider and register_embeddings_provider functions** 
+
+    The `register_model_provider` and `register_embeddings_provider` functions need to be executed at startup. For this, you can refer to this project's `src\utils\providers\chat_models\register.py` and `src\utils\providers\embeddings\register.py`. These two files encapsulate the registration logic and are imported in `src/utils/providers/__init__.py`. Users only need to import the `src/utils/providers` module to complete the registration of all providers.
