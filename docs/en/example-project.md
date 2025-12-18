@@ -6,7 +6,7 @@ This repository provides an example project [`langchain-dev-utils-example`](http
 - **Supervisor-Multi-Agent Architecture**: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.
 
 <p align="center">
-  <img src="../../assets/graph.png" alt="graph">
+  <img src="../assets/graph.png" alt="graph">
 </p>
 
 ## Quick Start
