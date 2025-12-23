@@ -1290,14 +1290,14 @@
 
 <h1 id="middleware">Middleware</h1>
 <h2 id="overview">Overview</h2>
-<p>Middleware are components specifically built for pre-built Agents in <code>langchain</code>. The official library provides some built-in middleware. This library, based on actual requirements and usage scenarios, offers additional middleware.</p>
+<p>Middleware is specifically built for pre-built <code>langchain</code> Agents. The official library provides some built-in middleware. This library, based on practical needs and use cases, offers additional middleware.</p>
 <h2 id="task-planning">Task Planning</h2>
-<p>Task planning middleware is used for structured decomposition and process management before executing complex tasks.</p>
+<p>The task planning middleware is used for structured decomposition and process management before executing complex tasks.</p>
 <div class="admonition note">
 <p class="admonition-title">Additional Information</p>
-<p>Task planning is an efficient context engineering management strategy. Before executing a task, the large language model first breaks down the overall task into multiple ordered subtasks, forming a task planning list (called "plan" in this library). Then it executes each subtask in sequence and dynamically updates the task status after completing each step until all subtasks are finished.</p>
+<p>Task planning is an efficient context engineering management strategy. Before executing a task, the large language model first breaks down the overall task into multiple ordered subtasks, forming a task planning list (referred to as "plan" in this library). Then, it executes each subtask in sequence and dynamically updates the task status after completing each step until all subtasks are finished.</p>
 </div>
-<p>The middleware implementing task planning is <code>PlanMiddleware</code>, which accepts the following parameters:</p>
+<p>The middleware that implements task planning is <code>PlanMiddleware</code>, which accepts the following parameters:</p>
 <ul>
 <li><code>system_prompt</code>: Optional string type, system prompt. Default value is <code>None</code>, which will use the default system prompt.</li>
 <li><code>write_plan_tool_description</code>: Optional string type, description of the write plan tool. Default value is <code>None</code>, which will use the default write plan tool description.</li>
@@ -1312,7 +1312,7 @@
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">PlanMiddleware</span><span class="p">(</span>
-            <span class="n">use_read_plan_tool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># If you don&#39;t want to use the read plan tool, you can set this parameter to False</span>
+            <span class="n">use_read_plan_tool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># If you don&#39;t want to use the read plan tool, set this parameter to False</span>
         <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
@@ -1322,16 +1322,16 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><code>PlanMiddleware</code> requires the use of <code>write_plan</code> and <code>finish_sub_plan</code> tools, while the <code>read_plan</code> tool is enabled by default; if not needed, you can set the <code>use_read_plan_tool</code> parameter to <code>False</code>.</p>
-<p>This middleware is similar in functionality to LangChain's official <strong>To-do list middleware</strong>, but there are differences in tool design. The official middleware only provides a <code>write_todo</code> tool, targeting the todo list structure; while this library provides three specialized tools: <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>, specifically for writing, modifying, and querying plan lists.</p>
-<p>Whether it's <code>todo</code> or <code>plan</code>, they are essentially the same thing. Therefore, the key difference between this middleware and the official one lies in the tools provided. The official middleware handles addition and modification through one tool, while this library provides three tools: <code>write_plan</code> for writing or updating plan content, <code>finish_sub_plan</code> for updating the status after completing a subtask, and <code>read_plan</code> for querying plan content.</p>
-<p>Additionally, this library provides three functions to create these tools:</p>
+<p><code>PlanMiddleware</code> requires the use of <code>write_plan</code> and <code>finish_sub_plan</code> tools, while the <code>read_plan</code> tool is enabled by default; if not needed, the <code>use_read_plan_tool</code> parameter can be set to <code>False</code>.</p>
+<p>This middleware is similar in function to the <strong>To-do list middleware</strong> officially provided by LangChain, but there are differences in tool design. The official middleware only provides the <code>write_todo</code> tool, which is oriented towards a todo list structure; while this library provides three specialized tools: <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>, specifically for writing, modifying, and querying plan lists.</p>
+<p>Whether it's a "todo" or a "plan", their essence is the same. Therefore, the key difference between this middleware and the official one lies in the tools provided. The official middleware uses one tool for both adding and modifying, while this library provides three tools: <code>write_plan</code> for writing or updating plan content, <code>finish_sub_plan</code> for updating the status after completing a subtask, and <code>read_plan</code> for querying plan content.</p>
+<p>Additionally, this library provides three functions to create these three tools:</p>
 <ul>
 <li><code>create_write_plan_tool</code>: Function to create a tool for writing plans</li>
 <li><code>create_finish_sub_plan_tool</code>: Function to create a tool for completing subtasks</li>
 <li><code>create_read_plan_tool</code>: Function to create a tool for querying plans</li>
 </ul>
-<p>All three functions can accept a <code>description</code> parameter for customizing the tool description. If not provided, the default tool description will be used. <code>create_write_plan_tool</code> and <code>create_finish_sub_plan_tool</code> can also accept a <code>message_key</code> parameter for customizing the key for updating messages. If not provided, the default <code>messages</code> key will be used.</p>
+<p>These three functions can all accept a <code>description</code> parameter for customizing the tool's description. If not provided, the default tool description will be used. <code>create_write_plan_tool</code> and <code>create_finish_sub_plan_tool</code> can also accept a <code>message_key</code> parameter for customizing the key for updating messages. If not provided, the default <code>messages</code> key will be used.</p>
 <p><strong>Usage Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.plan</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">create_write_plan_tool</span><span class="p">,</span>
@@ -1346,33 +1346,33 @@
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_write_plan_tool</span><span class="p">(),</span> <span class="n">create_finish_sub_plan_tool</span><span class="p">(),</span> <span class="n">create_read_plan_tool</span><span class="p">()],</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Note that to use these three tools, you must ensure that the state Schema contains the plan key, otherwise an error will occur. For this, you can use the <code>PlanState</code> provided by this library to inherit the state Schema.</p>
+<p>It's important to note that to use these three tools, you must ensure that the state Schema contains the "plan" key, otherwise, an error will occur. For this, you can use the <code>PlanState</code> provided by this library to inherit the state Schema.</p>
 <div class="admonition success">
 <p class="admonition-title">Best Practices</p>
 <ol>
 <li>When using <code>create_agent</code>:</li>
 </ol>
-<p>It is recommended to directly use <code>PlanMiddleware</code> rather than manually passing in the three tools <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>.</p>
+<p>It's recommended to directly use <code>PlanMiddleware</code> instead of manually passing in the three tools <code>write_plan</code>, <code>finish_sub_plan</code>, and <code>read_plan</code>.</p>
 <p>Reason: The middleware automatically handles prompt construction and agent state management, significantly reducing usage complexity.</p>
 <p>Note: Since the model output of <code>create_agent</code> is fixed to update to the <code>messages</code> key, <code>PlanMiddleware</code> does not have a <code>message_key</code> parameter.</p>
 <ol>
 <li>When using <code>langgraph</code>:</li>
 </ol>
-<p>It is recommended to directly use these three tools (<code>write_plan</code>, <code>finish_sub_plan</code>, <code>read_plan</code>).</p>
+<p>It's recommended to directly use these three tools (<code>write_plan</code>, <code>finish_sub_plan</code>, <code>read_plan</code>).</p>
 <p>Reason: This approach better integrates with <code>langgraph</code>'s custom nodes and state management.</p>
 </div>
 <h2 id="model-routing">Model Routing</h2>
-<p><code>ModelRouterMiddleware</code> is a middleware for <strong>dynamically routing to the most suitable model based on input content</strong>. It analyzes user requests through a "routing model" and selects the most appropriate model from a predefined list for processing the current task.</p>
+<p><code>ModelRouterMiddleware</code> is a middleware for <strong>dynamically routing to the most suitable model based on input content</strong>. It analyzes user requests through a "routing model" and selects the most suitable model from a predefined list for processing the current task.</p>
 <p>Its parameters are as follows:</p>
 <ul>
-<li><code>router_model</code>: The model used to execute routing decisions. You can pass a string (which will be automatically loaded via <code>load_chat_model</code>), such as <code>vllm:qwen3-4b</code>; or directly pass an instantiated <code>BaseChatModel</code> object.</li>
-<li><code>model_list</code>: List of model configurations, where each element is a dictionary containing the following fields:<ul>
-<li><code>model_name</code> (str): Required, unique identifier of the model, <strong>using <code>provider:model-name</code> format</strong>, for example <code>vllm:qwen3-4b</code>;</li>
-<li><code>model_description</code> (str): Required, brief description of the model's capabilities or applicable scenarios for the routing model's decision-making.</li>
-<li><code>tools</code> (list[BaseTool]): Optional, whitelist of tools that the model can call. If not provided, it inherits the global tool list; if set to <code>[]</code>, it explicitly disables all tools.</li>
+<li><code>router_model</code>: The model used to execute routing decisions. Can be passed as a string (which will be automatically loaded via <code>load_chat_model</code>), such as <code>vllm:qwen3-4b</code>; or directly as an instantiated <code>BaseChatModel</code> object.</li>
+<li><code>model_list</code>: A list of model configurations, where each element is a dictionary that can contain the following fields:<ul>
+<li><code>model_name</code> (str): Required, unique identifier for the model, <strong>using <code>provider:model-name</code> format</strong>, for example <code>vllm:qwen3-4b</code>;</li>
+<li><code>model_description</code> (str): Required, a brief description of the model's capabilities or suitable scenarios for the routing model to make decisions.</li>
+<li><code>tools</code> (list[BaseTool]): Optional, a whitelist of tools that this model can call. If not provided, it inherits the global tool list; if set to <code>[]</code>, all tools are explicitly disabled.</li>
 <li><code>model_kwargs</code> (dict): Optional, additional parameters for model loading (such as <code>temperature</code>, <code>max_tokens</code>, etc.).</li>
 <li><code>model_system_prompt</code> (str): Optional, system-level prompt for the model.</li>
-<li><code>model_instance</code> (BaseChatModel): Optional, already instantiated model object.</li>
+<li><code>model_instance</code> (BaseChatModel): Optional, an already instantiated model object.</li>
 </ul>
 </li>
 </ul>
@@ -1381,46 +1381,46 @@
 <p>Regarding the <code>model_instance</code> field:</p>
 <ul>
 <li>
-<p>If provided, it directly uses this instance, <code>model_name</code> is only used as an identifier, and <code>model_kwargs</code> are ignored; suitable for cases where this library's chat model management functionality is not used.</p>
+<p>If provided, the instance is used directly, <code>model_name</code> is only for identification, and <code>model_kwargs</code> are ignored; suitable for cases where the library's conversation model management functionality is not used.</p>
 </li>
 <li>
-<p>If not provided, it will load the model using <code>load_chat_model</code> based on <code>model_name</code> and <code>model_kwargs</code>.</p>
+<p>If not provided, the model is loaded using <code>load_chat_model</code> based on <code>model_name</code> and <code>model_kwargs</code>.</p>
 </li>
 <li>
-<p>In either case, it is recommended to name <code>model_name</code> using the <code>provider:model-name</code> format.</p>
+<p>In either case, it's recommended to use the <code>provider:model-name</code> format for <code>model_name</code> naming.</p>
 </li>
 </ul>
 </div>
 <ul>
-<li><code>router_prompt</code>: Custom prompt for the routing model. If <code>None</code> (default), the built-in default prompt template will be used.</li>
+<li><code>router_prompt</code>: Custom prompt for the routing model. If <code>None</code> (default), the built-in default prompt template is used.</li>
 </ul>
 <p><strong>Usage Example</strong></p>
-<p>First define the model list:</p>
+<p>First, define the model list:</p>
 <div class="highlight"><pre><span></span><code><span class="n">model_list</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks such as dialogue, text generation, etc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks, such as conversation, text generation, etc.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
             <span class="s2">&quot;extra_body&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}</span>
         <span class="p">},</span>
-        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant, good at handling general tasks such as dialogue, text generation, etc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant, skilled at handling general tasks, such as conversation, text generation, etc.&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openrouter:qwen/qwen3-vl-32b-instruct&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for vision tasks&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># If this model doesn&#39;t need any tools, set this field to an empty list []</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openrouter:qwen/qwen3-coder-plus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-coder-flash&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for code generation tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_python_code</span><span class="p">],</span>  <span class="c1"># Only allow using run_python_code tool</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_python_code</span><span class="p">],</span>  <span class="c1"># Only allow using the run_python_code tool</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openai:gpt-4o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for comprehensive high-difficulty tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant, good at handling comprehensive high-difficulty tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">),</span> <span class="c1"># Directly pass the instance, in which case model_name is only used as an identifier, model_kwargs are ignored</span>
+        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for comprehensive and high-difficulty tasks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant, skilled at handling comprehensive and high-difficulty tasks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">),</span> <span class="c1"># Directly pass the instance, where model_name is only for identification and model_kwargs are ignored</span>
     <span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
@@ -1429,7 +1429,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># This model is only a placeholder, actually dynamically replaced by the middleware</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># This model is just a placeholder, actually dynamically replaced by the middleware</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">run_python_code</span><span class="p">,</span> <span class="n">get_current_time</span><span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">ModelRouterMiddleware</span><span class="p">(</span>
@@ -1443,13 +1443,13 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Help me write a bubble sort code&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>Through <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
+<p>With <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
 <h2 id="tool-call-repair">Tool Call Repair</h2>
-<p><code>ToolCallRepairMiddleware</code> is a middleware for <strong>automatically repairing invalid tool calls (<code>invalid_tool_calls</code>) by large models</strong>.</p>
-<p>When large models output JSON Schema for tool calls, they may generate JSON format errors (common in the <code>arguments</code> field) due to the model's own reasons, causing JSON parsing to fail. Such calls are stored in the <code>invalid_tool_calls</code> field. <code>ToolCallRepairMiddleware</code> will automatically detect <code>invalid_tool_calls</code> after the model returns results and attempt to repair them using <code>json-repair</code>, allowing tool calls to execute normally.</p>
-<p>Please ensure that <code>langchain-dev-utils[standard]</code> is installed, see the <strong>Installation Guide</strong> for details.</p>
-<p>This middleware is zero-configuration and ready to use out of the box, requiring no additional parameters.</p>
-<p><strong>Usage Example:</strong></p>
+<p><code>ToolCallRepairMiddleware</code> is a middleware that <strong>automatically repairs invalid tool calls (<code>invalid_tool_calls</code>) by the large language model</strong>.</p>
+<p>When the large language model outputs JSON Schema for tool calls, it may generate JSON format errors in the content due to the model's own reasons (errors are common in the <code>arguments</code> field), causing JSON parsing to fail. These calls are stored in the <code>invalid_tool_calls</code> field. <code>ToolCallRepairMiddleware</code> will automatically detect <code>invalid_tool_calls</code> after the model returns results and attempt to repair them using <code>json-repair</code>, allowing tool calls to execute normally.</p>
+<p>Please ensure that <code>langchain-dev-utils[standard]</code> is installed, as detailed in the <strong>Installation Guide</strong>.</p>
+<p>This middleware is zero-configuration and ready to use out of the box, without additional parameters.</p>
+<p><strong>Usage Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolCallRepairMiddleware</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -1462,14 +1462,14 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>This middleware cannot guarantee 100% repair of all invalid tool calls; the actual effect depends on the repair capability of <code>json-repair</code>. Additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.</p>
+<p>This middleware cannot guarantee 100% repair of all invalid tool calls. The actual effect depends on the repair capability of <code>json-repair</code>; additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.</p>
 </div>
 <h2 id="formatting-system-prompts">Formatting System Prompts</h2>
-<p>This middleware <code>format_prompt</code> allows you to use <code>f-string</code> style placeholders (like <code>{name}</code>) in <code>system_prompt</code> and dynamically replace them with actual values at runtime.</p>
+<p>This middleware <code>format_prompt</code> allows you to use <code>f-string</code> style placeholders (such as <code>{name}</code>) in <code>system_prompt</code>, and dynamically replace them with actual values at runtime.</p>
 <p>The values of variables in placeholders follow a clear parsing order:</p>
 <ol>
-<li><strong>Priority lookup from <code>state</code></strong>: First, it will look for fields with the same name as the placeholder in the <code>state</code> dictionary.</li>
-<li><strong>Then lookup from <code>context</code></strong>: If the field is not found in <code>state</code>, it will continue to look in the <code>context</code> object.</li>
+<li><strong>First, look up in <code>state</code></strong>: It will first look for fields with the same name as the placeholder in the <code>state</code> dictionary.</li>
+<li><strong>Then, look up in <code>context</code></strong>: If the field is not found in <code>state</code>, it will continue to look in the <code>context</code> object.</li>
 </ol>
 <p>This order means that values in <code>state</code> have higher priority and can override values with the same name in <code>context</code>.</p>
 <p>Usage examples are as follows:</p>
@@ -1509,7 +1509,7 @@
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
     <span class="c1"># {name} will be obtained from state, {user} will be obtained from context</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">. Your user is called </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">. Your user is </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span>
     <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span><span class="p">,</span>
@@ -1528,7 +1528,7 @@
 </li>
 <li>
 <p><strong>Variable Override Example</strong></p>
-<p>This example shows that when there are variables with the same name in <code>state</code> and <code>context</code>, the value in <code>state</code> takes precedence.</p>
+<p>This example shows that when <code>state</code> and <code>context</code> have variables with the same name, the value in <code>state</code> takes precedence.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="nd">@dataclass</span>
@@ -1539,13 +1539,13 @@
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">. Your user is called </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, your name is </span><span class="si">{name}</span><span class="s2">. Your user is </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span> <span class="c1"># &#39;name&#39; is also defined in state</span>
     <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># When calling, both state and context provide the value of &#39;name&#39;</span>
+<span class="c1"># When calling, both state and context provide values for &#39;name&#39;</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What&#39;s your name?&quot;</span><span class="p">)],</span>
@@ -1554,7 +1554,7 @@
     <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;assistant-2&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;Zhang San&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="c1"># The final system prompt will be &quot;You are an intelligent assistant, your name is assistant-1. Your user is called Zhang San.&quot;</span>
+<span class="c1"># The final system prompt will be &quot;You are an intelligent assistant, your name is assistant-1. Your user is Zhang San.&quot;</span>
 <span class="c1"># Because state has higher priority</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -1562,9 +1562,9 @@
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>There are two ways to implement custom middleware: decorator or class inheritance.<br />
+<p>There are two ways to implement custom middleware: decorators or class inheritance.<br />
 - Class inheritance implementation: <code>PlanMiddleware</code>, <code>ModelMiddleware</code>, <code>ToolCallRepairMiddleware</code><br />
-- Decorator implementation: <code>format_prompt</code> (the decorator directly converts the function into a middleware instance, so no manual instantiation is required)</p>
+- Decorator implementation: <code>format_prompt</code> (the decorator directly turns the function into a middleware instance, so no manual instantiation is needed)</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Note</p>
@@ -1583,7 +1583,7 @@
 <p>LLMToolEmulator</p>
 </li>
 </ul>
-<p>You just need to import these middleware from this library to use strings to specify models that have been registered by <code>register_model_provider</code>. The usage of middleware is consistent with the official middleware, for example:
+<p>You just need to import these middleware from this library to use strings to specify models that have been registered with <code>register_model_provider</code>. The middleware usage remains consistent with the official middleware, for example:
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizationMiddleware</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>

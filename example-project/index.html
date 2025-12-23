@@ -1141,6 +1141,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#how-to-customize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Customize
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Customize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-replace-chat-model-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Replace Chat Model Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-register-embedding-model-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Register Embedding Model Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-customize-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Customize Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1197,6 +1247,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#how-to-customize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Customize
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Customize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-replace-chat-model-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Replace Chat Model Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-register-embedding-model-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Register Embedding Model Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-customize-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Customize Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1218,10 +1318,10 @@
 
 
 <h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
-<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> designed to help developers quickly understand how to use the utility functions provided by <code>langchain-dev-utils</code> to efficiently build two typical agent systems:</p>
+<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> designed to help developers quickly understand how to efficiently build two typical intelligent agent (agent) systems using the utility functions provided by <code>langchain-dev-utils</code>:</p>
 <ul>
 <li><strong>Single Agent</strong>: Suitable for executing simple tasks and tasks related to long-term memory storage.</li>
-<li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.</li>
+<li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios that require task decomposition, planning, and iterative optimization.</li>
 </ul>
 <p align="center">
   <img src="../assets/graph.png" alt="graph">
@@ -1240,7 +1340,7 @@
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div></li>
 <li>
-<p>Edit the <code>.env</code> file and enter your API keys (API keys for <code>OpenRouter</code> and <code>Tavily</code> are required)</p>
+<p>Edit the <code>.env</code> file and fill in your API keys (requires API keys from <code>ZhipuAI</code> and <code>Tavily</code>).</p>
 </li>
 <li>
 <p>Start the project
@@ -1263,18 +1363,33 @@
 <li>Chat model management: <code>register_model_provider</code>, <code>load_chat_model</code></li>
 <li>Multi-agent construction: <code>wrap_agent_as_tool</code></li>
 </ul>
+<h2 id="how-to-customize">How to Customize</h2>
+<p>You can customize this project according to your actual needs.</p>
+<h3 id="1-replace-chat-model-provider">1. Replace Chat Model Provider</h3>
+<p>This project uses ZhipuAI's GLM series as the core model by default, specifically as follows:</p>
+<ul>
+<li><code>GLM-4.7</code>: Used for <code>simple-agent</code></li>
+<li><code>GLM-4.6</code>: Used for <code>supervisor-agent</code></li>
+<li><code>GLM-4.5</code>: Used for the <code>supervisor</code> of <code>supervisor-agent</code></li>
+</ul>
+<p>If you want to customize your model provider, you need to modify the content in <code>src/utils/providers/chat_models/register.py</code>, and register your model provider using the <code>register_model_provider</code> function in the <code>register_all_model_providers</code> function.</p>
+<p>It is also recommended to modify the content in <code>src/utils/providers/chat_models/load.py</code>, and add the loading logic for your model provider in the <code>load_chat_model</code> function.</p>
 <div class="admonition success">
-<p class="admonition-title">Best Practices for Model Management Features</p>
-<p>This example performs the following preprocessing for model management features (chat models/embedding models):</p>
-<ul>
-<li>1.<strong>Usage of load_chat_model and load_embeddings functions</strong></li>
-</ul>
-<p>For additional parameters of different chat model classes (or embedding model classes), the <code>load_chat_model</code> and <code>load_embeddings</code> functions receive them through keyword arguments (LangChain's corresponding two functions also adopt this approach). Although this approach enhances versatility, it weakens IDE type hints and increases the risk of parameter misuse. Therefore, if the specific provider is already determined, you can extend the parameter signatures for its integrated chat model class (or embedding model class) to restore type hints. You can refer to <code>src\utils\providers\chat_models\load.py</code> and <code>src\utils\providers\embeddings\load.py</code>.</p>
-<ul>
-<li>2.<strong>Usage of register_model_provider and register_embeddings_provider functions</strong> </li>
-</ul>
-<p>The <code>register_model_provider</code> and <code>register_embeddings_provider</code> functions need to be executed at startup. For this, you can refer to this project's <code>src\utils\providers\chat_models\register.py</code> and <code>src\utils\providers\embeddings\register.py</code>. These two files encapsulate the registration logic and are imported in <code>src/utils/providers/__init__.py</code>. Users only need to import the <code>src/utils/providers</code> module to complete the registration of all providers.</p>
+<p class="admonition-title">Chat Model Management Best Practice</p>
+<p>For additional parameters of different chat model classes, the <code>load_chat_model</code> function receives them through keyword arguments (the corresponding LangChain function also uses this method). Although this approach enhances universality, it weakens IDE type hints and increases the risk of parameter misuse. Therefore, if the specific provider is already determined, you can extend the parameter signature for its integrated chat model class (or embedding model class) to restore type hints. You can refer to the content in <code>src\utils\providers\chat_models\load.py</code> for targeted modifications.</p>
 </div>
+<h3 id="2-register-embedding-model-provider">2. Register Embedding Model Provider</h3>
+<p>Similar to chat model providers, you can also register custom embedding model providers as needed. You need to modify the content in <code>src/utils/providers/embeddings/register.py</code>, and register your embedding model provider using the <code>register_embeddings_provider</code> function in the <code>register_all_embeddings_providers</code> function.</p>
+<p>If needed, you can also modify the content in <code>src/utils/providers/embeddings/load.py</code>, and add the loading logic for your embedding model provider in the <code>load_embeddings</code> function.</p>
+<h3 id="3-customize-tools">3. Customize Tools</h3>
+<p><strong>Single Agent (simple-agent)</strong><br />
+Tool implementations are located in <code>src/agents/simple_agent/tools.py</code>, with built-in:<br />
+- <code>save_user_memory</code> - Persist user memory<br />
+- <code>get_user_memory</code> - Read user memory  </p>
+<p>For extensions, simply add corresponding tool implementations in this file.</p>
+<p><strong>Supervisor-Multi-Agent (supervisor-agent)</strong><br />
+Tool implementations are located in <code>src/agents/supervisor/subagent/tools.py</code>. These are tool implementations for sub-agents. If you need to add custom tools for sub-agents, simply add corresponding tool implementations in this file.</p>
+<p>Note: The <code>supervisor</code> only holds two tools for "calling sub-agents" by default. If you need to add custom tools for the <code>supervisor</code>, it is recommended to create a new <code>tools.py</code> under <code>src/agents/supervisor/</code>, and after writing, import it in <code>src/agents/supervisor/agent.py</code> and pass it to the <code>create_agent</code> function.</p>
 
 
 

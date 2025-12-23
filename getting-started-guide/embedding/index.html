@@ -627,10 +627,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#existing-langchain-embedding-model-classes" class="md-nav__link">
+  <a href="#existing-langchain-embedding-model-class" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing LangChain Embedding Model Classes
+        Existing LangChain Embedding Model Class
       
     </span>
   </a>
@@ -638,10 +638,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#no-langchain-embedding-model-class-available-but-provider-supports-openai-compatible-api" class="md-nav__link">
+  <a href="#no-langchain-embedding-model-class-but-provider-supports-openai-compatible-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        No LangChain Embedding Model Class Available, but Provider Supports OpenAI Compatible API
+        No LangChain Embedding Model Class, but Provider Supports OpenAI Compatible API
       
     </span>
   </a>
@@ -1282,10 +1282,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#existing-langchain-embedding-model-classes" class="md-nav__link">
+  <a href="#existing-langchain-embedding-model-class" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing LangChain Embedding Model Classes
+        Existing LangChain Embedding Model Class
       
     </span>
   </a>
@@ -1293,10 +1293,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#no-langchain-embedding-model-class-available-but-provider-supports-openai-compatible-api" class="md-nav__link">
+  <a href="#no-langchain-embedding-model-class-but-provider-supports-openai-compatible-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        No LangChain Embedding Model Class Available, but Provider Supports OpenAI Compatible API
+        No LangChain Embedding Model Class, but Provider Supports OpenAI Compatible API
       
     </span>
   </a>
@@ -1380,12 +1380,12 @@
 
 <h1 id="embedding-model-management">Embedding Model Management</h1>
 <h2 id="overview">Overview</h2>
-<p>LangChain's <code>init_embeddings</code> function only supports a limited number of embedding model providers. This library provides a more flexible embedding model management solution, particularly suitable for scenarios where you need to connect to embedding services not natively supported (such as vLLM, etc.).</p>
+<p>LangChain's <code>init_embeddings</code> function only supports a limited number of embedding model providers. This library provides a more flexible embedding model management solution, especially suitable for scenarios where you need to integrate embedding services not natively supported (such as vLLM, etc.).</p>
 <h2 id="registering-embedding-model-providers">Registering Embedding Model Providers</h2>
-<p>To register an embedding model provider, call <code>register_embeddings_provider</code>. The registration method varies slightly depending on the type of <code>embeddings_model</code>.</p>
-<h3 id="existing-langchain-embedding-model-classes">Existing LangChain Embedding Model Classes</h3>
-<p>If an embedding model provider already has a ready and suitable LangChain integration (see <a href="https://docs.langchain.com/oss/python/integrations/text_embedding">Embedding Model Integration List</a>), please pass the corresponding embedding model class directly to the <code>embeddings_model</code> parameter.</p>
-<p>Refer to the following code for specific implementation:</p>
+<p>To register an embedding model provider, you need to call <code>register_embeddings_provider</code>. The registration method varies slightly depending on the <code>embeddings_model</code> type.</p>
+<h3 id="existing-langchain-embedding-model-class">Existing LangChain Embedding Model Class</h3>
+<p>If the embedding model provider already has a suitable LangChain integration (see <a href="https://docs.langchain.com/oss/python/integrations/text_embedding">Embedding Model Integration List</a>), please pass the corresponding embedding model class directly to the <code>embeddings_model</code> parameter.</p>
+<p>For specific code, refer to the following example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.embeddings.fake</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeEmbeddings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_embeddings_provider</span>
 
@@ -1394,17 +1394,17 @@
     <span class="n">embeddings_model</span><span class="o">=</span><span class="n">FakeEmbeddings</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Additional notes regarding the above code:</p>
+<p>Additional notes for the above code:</p>
 <ul>
-<li><code>FakeEmbeddings</code> is for testing purposes only. In actual use, you must pass a functional <code>Embeddings</code> class.</li>
-<li><code>provider_name</code> represents the name of the model provider, used for subsequent reference in <code>load_chat_model</code>. The name can be customized but should not include special characters such as ":" or "-".</li>
+<li><code>FakeEmbeddings</code> is only for testing. In actual use, you must pass an <code>Embeddings</code> class with real functionality.</li>
+<li><code>provider_name</code> represents the name of the model provider, used for later reference in <code>load_chat_model</code>. The name can be customized but should not contain special characters such as ":" or "-".</li>
 </ul>
-<p>Additionally, in this case, the function also supports passing the <code>base_url</code> parameter, but <strong>you usually don't need to manually set <code>base_url</code></strong> (since the API address is already defined within the embedding model class). Only pass <code>base_url</code> explicitly when you need to override the default address; the override scope is limited to attributes with field names <code>api_base</code> or <code>base_url</code> (including aliases) in the model class.</p>
-<h3 id="no-langchain-embedding-model-class-available-but-provider-supports-openai-compatible-api">No LangChain Embedding Model Class Available, but Provider Supports OpenAI Compatible API</h3>
-<p>Similar to chat models, many embedding model providers also offer <strong>OpenAI Compatible APIs</strong>. When there's no ready LangChain integration but the protocol is supported, you can use this mode.</p>
-<p>This library will use <code>OpenAIEmbeddings</code> (from <code>langchain-openai</code>) to build the embedding model instance and automatically disable context length checking (setting <code>check_embedding_ctx_length=False</code>) to improve compatibility.</p>
-<p>In this case, besides passing the <code>provider_name</code> and <code>chat_model</code> (which must be set to <code>"openai-compatible"</code>) parameters, you also need to pass the <code>base_url</code> parameter.</p>
-<p>For the <code>base_url</code> parameter, it can be provided through either of the following methods:</p>
+<p>At the same time, in this case, the function also supports passing the <code>base_url</code> parameter, but <strong>usually you don't need to manually set <code>base_url</code></strong> (because the embedding model class already defines the API address internally). Only when you need to override the default address should you explicitly pass <code>base_url</code>; the override scope is limited to attributes with field names <code>api_base</code> or <code>base_url</code> (including aliases) in the model class.</p>
+<h3 id="no-langchain-embedding-model-class-but-provider-supports-openai-compatible-api">No LangChain Embedding Model Class, but Provider Supports OpenAI Compatible API</h3>
+<p>Similar to chat models, many embedding model providers also provide <strong>OpenAI Compatible API</strong>. When there is no ready-made LangChain integration but the protocol is supported, you can use this mode.</p>
+<p>This library will use <code>OpenAIEmbeddings</code> (from <code>langchain-openai</code>) to build an embedding model instance and automatically disable context length checking (set <code>check_embedding_ctx_length=False</code>) to improve compatibility.</p>
+<p>In this case, in addition to passing <code>provider_name</code> and <code>embeddings_model</code> (which must be <code>"openai-compatible"</code>), you also need to pass the <code>base_url</code> parameter.</p>
+<p>For the <code>base_url</code> parameter, you can provide it in either of the following ways:</p>
 <ul>
 <li><strong>Explicit parameter passing</strong>:</li>
 </ul>
@@ -1415,7 +1415,7 @@
 <span class="p">)</span>
 </code></pre></div>
 <ul>
-<li><strong>Environment variables (recommended)</strong>:</li>
+<li><strong>Environment Variable (Recommended)</strong>:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
 </code></pre></div>
@@ -1427,11 +1427,11 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>The environment variable naming convention is <code>${PROVIDER_NAME}_API_BASE</code> (all uppercase, separated by underscores).<br />
+<p>The environment variable naming rule is <code>${PROVIDER_NAME}_API_BASE</code> (all uppercase, separated by underscores).<br />
 The corresponding API Key environment variable is <code>${PROVIDER_NAME}_API_KEY</code>.</p>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Additional Information</p>
+<p class="admonition-title">Additional</p>
 <p>vLLM can deploy embedding models and expose OpenAI compatible interfaces, for example:</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-Embedding-4B<span class="w"> </span><span class="se">\</span>
 --task<span class="w"> </span>embed<span class="w"> </span><span class="se">\</span>
@@ -1461,15 +1461,15 @@ The corresponding API Key environment variable is <code>${PROVIDER_NAME}_API_KEY
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>Both registration functions are implemented based on a global dictionary. <strong>All registrations must be completed during the application startup phase</strong>. Dynamic registration during runtime is prohibited to avoid multithreading issues.</p>
+<p>Both registration functions are implemented based on a global dictionary. <strong>All registrations must be completed during the application startup phase</strong>, and dynamic registration during runtime is prohibited to avoid multi-threading issues.  </p>
 </div>
 <h2 id="loading-embedding-models">Loading Embedding Models</h2>
-<p>Use <code>load_embeddings</code> to initialize embedding model instances. The parameter rules are as follows:</p>
+<p>Use <code>load_embeddings</code> to initialize an embedding model instance. The parameter rules are as follows:</p>
 <ul>
 <li>If <code>provider</code> is not passed, then <code>model</code> must be in the format <code>provider_name:embeddings_name</code>;</li>
 <li>If <code>provider</code> is passed, then <code>model</code> is only <code>embeddings_name</code>.</li>
 </ul>
-<p><strong>Examples</strong>:</p>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Method 1</span>
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-embedding-4b&quot;</span><span class="p">)</span>
 
@@ -1492,16 +1492,16 @@ The corresponding API Key environment variable is <code>${PROVIDER_NAME}_API_KEY
 </code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Best Practice</p>
-<p>For using this module, you can choose based on the following three scenarios:</p>
+<p>For the use of this module, you can choose according to the following three situations:</p>
 <ol>
 <li>
-<p>If all embedding model providers you're connecting to are supported by the official <code>init_embeddings</code>, please use the official function directly for best compatibility.</p>
+<p>If all embedding model providers you're integrating are supported by the official <code>init_embeddings</code>, please use the official function directly to get the best compatibility.</p>
 </li>
 <li>
-<p>If some of the embedding model providers you're connecting to are not officially supported, you can use the registration and loading mechanism of this module. First, register the model provider using <code>register_embeddings_provider</code>, then load the model using <code>load_embeddings</code>.</p>
+<p>If some of the embedding model providers you're integrating are not officially supported, you can use the registration and loading mechanism of this module, first use <code>register_embeddings_provider</code> to register the model provider, then use <code>load_embeddings</code> to load the model.</p>
 </li>
 <li>
-<p>If the embedding model provider you're connecting to doesn't have a suitable integration yet, but the provider offers an OpenAI compatible API (such as vLLM, OpenRouter), it's recommended to use this module's functionality. First, register the model provider using <code>register_embeddings_provider</code> (passing <code>openai-compatible</code> to <code>embeddings_model</code>), then load the model using <code>load_embeddings</code>.</p>
+<p>If the embedding model provider you're integrating does not have a suitable integration yet, but the provider provides an OpenAI compatible API (such as vLLM), it's recommended to use the functionality of this module, first use <code>register_embeddings_provider</code> to register the model provider (pass <code>openai-compatible</code> for embeddings_model), then use <code>load_embeddings</code> to load the model.</p>
 </li>
 </ol>
 </div>

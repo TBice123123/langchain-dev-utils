@@ -1141,6 +1141,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何自定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="如何自定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 替换对话模型提供商
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 注册嵌入模型提供商
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 自定义工具
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1197,6 +1247,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何自定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="如何自定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 替换对话模型提供商
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 注册嵌入模型提供商
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 自定义工具
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1240,7 +1340,7 @@
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div></li>
 <li>
-<p>编辑 <code>.env</code> 文件，填入你的 API 密钥（需要 <code>OpenRouter</code> 和 <code>Tavily</code> 的 API 密钥）</p>
+<p>编辑 <code>.env</code> 文件，填入你的 API 密钥（需要 <code>ZhipuAI</code> 和 <code>Tavily</code> 的 API 密钥）。</p>
 </li>
 <li>
 <p>启动项目
@@ -1263,18 +1363,33 @@
 <li>对话模型管理：<code>register_model_provider</code>、<code>load_chat_model</code></li>
 <li>多智能体构建：<code>wrap_agent_as_tool</code></li>
 </ul>
+<h2 id="_3">如何自定义</h2>
+<p>可以根据实际的需求，对本项目进行自定义修改。</p>
+<h3 id="1">1. 替换对话模型提供商</h3>
+<p>本项目默认使用智谱AI的GLM系列作为核心模型，具体如下：</p>
+<ul>
+<li><code>GLM-4.7</code>：用于<code>simple-agent</code></li>
+<li><code>GLM-4.6</code>：用于<code>supervisor-agent</code></li>
+<li><code>GLM-4.5</code>：用于<code>supervisor-agent</code>的<code>supervisor</code></li>
+</ul>
+<p>如果你想自定义你的模型提供商，需要修改<code>src/utils/providers/chat_models/register.py</code>中的内容，在<code>register_all_model_providers</code>函数中使用<code>register_model_provider</code>函数注册你的模型提供商。
+同时也建议修改<code>src/utils/providers/chat_models/load.py</code>中的内容，在<code>load_chat_model</code>函数中添加你的模型提供商的加载逻辑。</p>
 <div class="admonition success">
-<p class="admonition-title">模型管理功能的最佳实践</p>
-<p>本示例针对模型管理功能（对话模型/嵌入模型）进行了如下的预处理：</p>
-<ul>
-<li>1.<strong>load_chat_model和load_embeddings函数使用</strong></li>
-</ul>
-<p>对于不同对话模型类（或嵌入模型类）的额外参数，<code>load_chat_model</code>和<code>load_embeddings</code>函数采用关键字参数方式进行接收（LangChain对应的两个函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考<code>src\utils\providers\chat_models\load.py</code>以及<code>src\utils\providers\embeddings\load.py</code>。</p>
-<ul>
-<li>2.<strong>register_model_provider和register_embeddings_provider函数使用</strong> </li>
-</ul>
-<p><code>register_model_provider</code>和<code>register_embeddings_provider</code>函数需要在启动时完成执行，对此，可参考本项目的<code>src\utils\providers\chat_models\register.py</code>以及<code>src\utils\providers\embeddings\register.py</code>。这两个文件封装了注册逻辑，并在<code>src/utils/providers/__init__.py</code>中进行了导入，使用者只需引入<code>src/utils/providers</code>模块，即可完成所有提供商的注册。</p>
+<p class="admonition-title">对话模型管理最佳实践</p>
+<p>对于不同对话模型类的额外参数，<code>load_chat_model</code>函数采用关键字参数方式进行接收（LangChain对应的函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考<code>src\utils\providers\chat_models\load.py</code>中内容进行针对性修改。</p>
 </div>
+<h3 id="2">2. 注册嵌入模型提供商</h3>
+<p>与对话模型提供商类似，你也可以根据需要注册自定义的嵌入模型提供商。需要修改<code>src/utils/providers/embeddings/register.py</code>中的内容，在<code>register_all_embeddings_providers</code>函数中使用<code>register_embeddings_provider</code>函数注册你的嵌入模型提供商。</p>
+<p>如果需要，也可以根据实际情况，修改<code>src/utils/providers/embeddings/load.py</code>中的内容，在<code>load_embeddings</code>函数中添加你的嵌入模型提供商的加载逻辑。</p>
+<h3 id="3">3. 自定义工具</h3>
+<p><strong>单智能体（simple-agent）</strong><br />
+工具实现位于 <code>src/agents/simple_agent/tools.py</code>，已内置：<br />
+- <code>save_user_memory</code> —— 持久化用户记忆<br />
+- <code>get_user_memory</code> —— 读取用户记忆  </p>
+<p>如需扩展，直接在该文件内新增对应的工具实现即可。</p>
+<p><strong>监督者-多智能体（supervisor-agent）</strong><br />
+工具实现位于 <code>src/agents/supervisor/subagent/tools.py</code>。是子智能体的工具实现，如需为子智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。</p>
+<p>注意：<code>supervisor</code> 默认仅持有“调用子智能体”的两个工具。若需为 <code>supervisor</code> 追加自定义工具，建议在 <code>src/agents/supervisor/</code> 下新建 <code>tools.py</code>，编写完成后在 <code>src/agents/supervisor/agent.py</code> 中导入并传递给 <code>create_agent</code> 函数即可。</p>
 
 
 

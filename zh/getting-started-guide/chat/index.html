@@ -1380,7 +1380,7 @@
 
 <h1 id="_1">对话模型管理</h1>
 <h2 id="_2">概述</h2>
-<p>LangChain 的 <code>init_chat_model</code> 函数仅支持有限的模型提供商。本库提供更灵活的对话模型管理方案，支持自定义模型提供商，特别适用于需要接入未内置支持的模型服务（如 vLLM、OpenRouter 等）的场景。</p>
+<p>LangChain 的 <code>init_chat_model</code> 函数仅支持有限的模型提供商。本库提供更灵活的对话模型管理方案，支持自定义模型提供商，特别适用于需要接入未内置支持的模型服务（如 vLLM等）的场景。</p>
 <h2 id="_3">注册模型提供商</h2>
 <p>注册对话模型提供商需调用 <code>register_model_provider</code>。对于不同的情况，注册步骤略有不同。</p>
 <h3 id="langchain">已有 LangChain 对话模型类</h3>
@@ -1546,11 +1546,11 @@
 </ul>
 <p>其中，<code>json_schema</code> 仅少数 OpenAI 兼容 API 提供商支持（如 <code>OpenRouter</code>、<code>TogetherAI</code>）；<code>json_mode</code> 支持度更高，多数提供商已兼容；而 <code>function_calling</code> 最为通用，只要模型支持工具调用即可使用。</p>
 <p>本参数用于声明模型提供商对于<code>response_format</code>的支持情况。默认情况下为<code>[]</code>，代表模型提供商既不支持<code>json_mode</code>也不支持<code>json_schema</code>。此时<code>with_structured_output</code>方法中的<code>method</code>参数只能传递<code>function_calling</code>(或者是<code>auto</code>,此时<code>auto</code>将被推断为<code>function_calling</code>），如果传递了<code>json_mode</code>或<code>json_schema</code>，则会自动被转化为<code>function_calling</code>。如果想要启用<code>json_mode</code>或者<code>json_schema</code>的结构化输出实现方式，则需要显示设置该参数。</p>
-<p>例如OpenRouter大多数模型同时支持<code>json_mode</code>和<code>json_schema</code>的<code>response_format</code>，则可以注册的时候进行声明：</p>
+<p>例如vLLM部署的模型支持<code>json_schema</code>的结构化输出方法，则可以注册的时候进行声明：</p>
 <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;openrouter&quot;</span><span class="p">,</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_mode&quot;</span><span class="p">,</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
 <span class="p">)</span>
 </code></pre></div>
 <div class="admonition info">
@@ -1710,13 +1710,8 @@
 而对于<strong>情况二</strong>，则模型的方法和参数如下：</p>
 <ul>
 <li>支持<code>invoke</code>、<code>ainvoke</code>、<code>stream</code>、<code>astream</code>等方法。</li>
-<li>支持<code>bind_tools</code>方法，进行工具调用。</li>
-<li>支持<code>with_structured_output</code>方法，进行结构化输出。</li>
-<li>支持传递<code>BaseChatOpenAI</code>的参数，例如<code>temperature</code>、<code>top_p</code>、<code>max_tokens</code>等。</li>
-<li>支持传递多模态数据</li>
-<li>支持 OpenAI 最新的<code>responses api</code> (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)</li>
 </ul>
-<details class="note">
+<details class="example">
 <summary>普通调用</summary>
 <p>支持<code>invoke</code>进行简单的调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
@@ -1735,7 +1730,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<details class="note">
+<details class="example">
 <summary>流式输出</summary>
 <p>支持<code>stream</code>进行流式输出：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
@@ -1754,7 +1749,10 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<details class="note">
+<ul>
+<li>支持<code>bind_tools</code>方法，进行工具调用。</li>
+</ul>
+<details class="example">
 <summary>工具调用</summary>
 <p>如果模型本身支持工具调用，那么可以直接使用<code>bind_tools</code>方法进行工具调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
@@ -1772,10 +1770,12 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<details class="note">
+<ul>
+<li>支持<code>with_structured_output</code>方法，进行结构化输出。</li>
+</ul>
+<details class="example">
 <summary>结构化输出</summary>
-<p>支持结构化输出，默认的<code>method</code>取值为<code>auto</code>，此时将会根据模型提供商的<code>supported_response_format</code>参数自动选择合适的结构化输出方法。具体为如果其中取值包含<code>json_schema</code>，则会选择<code>json_schema</code>方法；否则，则会选择<code>function_calling</code>方法。</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
@@ -1788,10 +1788,17 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;你好，我叫张三，今年25岁&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">注意</p>
+<p>默认的<code>method</code>取值为<code>auto</code>，此时将会根据模型提供商的<code>supported_response_format</code>参数自动选择合适的结构化输出方法。具体为如果其中取值包含<code>json_schema</code>，则会选择<code>json_schema</code>方法；否则，则会选择<code>function_calling</code>方法。
 相较于工具调用，<code>json_schema</code>能100%保证输出符合JSON Schema规范，避免工具调用可能产生的参数误差。故如果模型提供商支持<code>json_schema</code>，则默认会采用此方法。当模型提供商不支持时，才会回退到<code>function_calling</code>方法。
 对于<code>json_mode</code>，虽然支持度较高，但是由于其必须在提示词中引导模型输出指定Schema的JSON字符串，因此使用起来比较麻烦，故默认不采用此方法。如想要采用，则可以显示提供<code>method="json_mode"</code>（前提是注册或者实例化的时候保证<code>supported_response_format</code>取值中包含<code>json_mode</code>)。</p>
-</details>
-<details class="note">
+</div>
+<ul>
+<li>支持传递<code>BaseChatOpenAI</code>的参数，例如<code>temperature</code>、<code>top_p</code>、<code>max_tokens</code>等。</li>
+</ul>
+<details class="example">
 <summary>传递模型参数</summary>
 <p>除此之外，由于该类继承了<code>BaseChatOpenAI</code>,因此支持传递<code>BaseChatOpenAI</code>的模型参数，例如<code>temperature</code>, <code>extra_body</code>等：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
@@ -1802,7 +1809,10 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<details class="note">
+<ul>
+<li>支持传递多模态数据</li>
+</ul>
+<details class="example">
 <summary>传递多模态数据</summary>
 <p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。例如：</p>
 <p><strong>传递图片类数据</strong>：</p>
@@ -1844,6 +1854,7 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+</details>
 <div class="admonition note">
 <p class="admonition-title">补充</p>
 <p>vllm 也支持部署多模态模型，例如 <code>qwen3-vl-2b</code>：
@@ -1853,8 +1864,10 @@
 --served-model-name<span class="w"> </span>qwen3-vl-2b
 </code></pre></div></p>
 </div>
-</details>
-<details class="note">
+<ul>
+<li>支持 OpenAI 最新的<code>responses api</code> (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)</li>
+</ul>
+<details class="example">
 <summary>OpenAI 最新的<code>responses_api</code></summary>
 <p>该模型类也支持 OpenAI 最新的<code>responses_api</code>。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入<code>use_responses_api</code>参数为<code>True</code>。
 例如 vllm 支持<code>responses_api</code>，则可以这样使用：</p>
@@ -1887,7 +1900,7 @@
 <p>若接入的部分模型提供商为非官方支持，可使用本模块的功能，先利用<code>register_model_provider</code>注册模型提供商，然后使用<code>load_chat_model</code>加载模型。</p>
 </li>
 <li>
-<p>若接入的模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM、OpenRouter），则推荐使用本模块的功能，先利用<code>register_model_provider</code>注册模型提供商（chat_model传入<code>openai-compatible</code>），然后使用<code>load_chat_model</code>加载模型。</p>
+<p>若接入的模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM），则推荐使用本模块的功能，先利用<code>register_model_provider</code>注册模型提供商（chat_model传入<code>openai-compatible</code>），然后使用<code>load_chat_model</code>加载模型。</p>
 </li>
 </ol>
 </div>
