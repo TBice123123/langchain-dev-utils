@@ -126,13 +126,12 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     Base template class for OpenAI-compatible chat model implementations.
 
     This class provides a foundation for integrating various LLM providers that
-    offer OpenAI-compatible APIs (such as vLLM, OpenRouter, ZAI, Moonshot,
-    and many others). It enhances the base OpenAI functionality by:
+    offer OpenAI-compatible APIs. It enhances the base OpenAI functionality by:
 
     **1. Supports output of more types of reasoning content (reasoning_content)**
     ChatOpenAI can only output reasoning content natively supported by official
     OpenAI models, while OpenAICompatibleChatModel can output reasoning content
-    from other model providers (e.g., OpenRouter, vLLM).
+    from other model providers.
 
     **2. Dynamically adapts to choose the most suitable structured-output method**
     OpenAICompatibleChatModel adds method="auto" (default), which selects the best
@@ -593,7 +592,7 @@ def _create_openai_compatible_model(
     configuring environment variable mappings and default base URLs specific to each provider.
 
     Args:
-        provider: Provider identifier (e.g., `vllm`,`openrouter`)
+        provider: Provider identifier (e.g.`vllm`)
         base_url: Default API base URL for the provider
         compatibility_options: Optional configuration for the provider
 

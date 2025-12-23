@@ -2,7 +2,7 @@
 
 ## 概述
 
-LangChain 的 `init_chat_model` 函数仅支持有限的模型提供商。本库提供更灵活的对话模型管理方案，支持自定义模型提供商，特别适用于需要接入未内置支持的模型服务（如 vLLM、OpenRouter 等）的场景。
+LangChain 的 `init_chat_model` 函数仅支持有限的模型提供商。本库提供更灵活的对话模型管理方案，支持自定义模型提供商，特别适用于需要接入未内置支持的模型服务（如 vLLM等）的场景。
 
 ## 注册模型提供商
 
@@ -186,13 +186,13 @@ register_model_provider(
 
     本参数用于声明模型提供商对于`response_format`的支持情况。默认情况下为`[]`，代表模型提供商既不支持`json_mode`也不支持`json_schema`。此时`with_structured_output`方法中的`method`参数只能传递`function_calling`(或者是`auto`,此时`auto`将被推断为`function_calling`），如果传递了`json_mode`或`json_schema`，则会自动被转化为`function_calling`。如果想要启用`json_mode`或者`json_schema`的结构化输出实现方式，则需要显示设置该参数。
 
-    例如OpenRouter大多数模型同时支持`json_mode`和`json_schema`的`response_format`，则可以注册的时候进行声明：
+    例如vLLM部署的模型支持`json_schema`的结构化输出方法，则可以注册的时候进行声明：
 
     ```python
     register_model_provider(
-        provider_name="openrouter",
+        provider_name="vllm",
         chat_model="openai-compatible",
-        compatibility_options={"supported_response_format": ["json_mode", "json_schema"]},
+        compatibility_options={"supported_response_format": ["json_schema"]},
     )
     ``` 
 
@@ -368,13 +368,9 @@ export VLLM_API_KEY=vllm
 而对于**情况二**，则模型的方法和参数如下：
 
 - 支持`invoke`、`ainvoke`、`stream`、`astream`等方法。
-- 支持`bind_tools`方法，进行工具调用。
-- 支持`with_structured_output`方法，进行结构化输出。
-- 支持传递`BaseChatOpenAI`的参数，例如`temperature`、`top_p`、`max_tokens`等。
-- 支持传递多模态数据
-- 支持 OpenAI 最新的`responses api` (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)
 
-??? note "普通调用"
+
+??? example "普通调用"
 
     支持`invoke`进行简单的调用：
 
@@ -398,7 +394,8 @@ export VLLM_API_KEY=vllm
     print(response)
     ```
 
-??? note "流式输出"
+
+??? example "流式输出"
 
     支持`stream`进行流式输出：
 
@@ -422,7 +419,10 @@ export VLLM_API_KEY=vllm
         print(chunk)
     ```
 
-??? note "工具调用"
+- 支持`bind_tools`方法，进行工具调用。
+
+
+??? example "工具调用"
 
     如果模型本身支持工具调用，那么可以直接使用`bind_tools`方法进行工具调用：
 
@@ -442,10 +442,9 @@ export VLLM_API_KEY=vllm
     print(response)
     ```
 
+- 支持`with_structured_output`方法，进行结构化输出。
 
-??? note "结构化输出"
-
-    支持结构化输出，默认的`method`取值为`auto`，此时将会根据模型提供商的`supported_response_format`参数自动选择合适的结构化输出方法。具体为如果其中取值包含`json_schema`，则会选择`json_schema`方法；否则，则会选择`function_calling`方法。
+??? example "结构化输出"
 
     ```python
     from langchain_dev_utils.chat_models import load_chat_model
@@ -461,10 +460,16 @@ export VLLM_API_KEY=vllm
     response = model.invoke([HumanMessage("你好，我叫张三，今年25岁")])
     print(response)
     ```
+!!! tip "注意"
+    默认的`method`取值为`auto`，此时将会根据模型提供商的`supported_response_format`参数自动选择合适的结构化输出方法。具体为如果其中取值包含`json_schema`，则会选择`json_schema`方法；否则，则会选择`function_calling`方法。
     相较于工具调用，`json_schema`能100%保证输出符合JSON Schema规范，避免工具调用可能产生的参数误差。故如果模型提供商支持`json_schema`，则默认会采用此方法。当模型提供商不支持时，才会回退到`function_calling`方法。
     对于`json_mode`，虽然支持度较高，但是由于其必须在提示词中引导模型输出指定Schema的JSON字符串，因此使用起来比较麻烦，故默认不采用此方法。如想要采用，则可以显示提供`method="json_mode"`（前提是注册或者实例化的时候保证`supported_response_format`取值中包含`json_mode`)。
 
-??? note "传递模型参数"
+
+- 支持传递`BaseChatOpenAI`的参数，例如`temperature`、`top_p`、`max_tokens`等。
+
+
+??? example "传递模型参数"
 
     除此之外，由于该类继承了`BaseChatOpenAI`,因此支持传递`BaseChatOpenAI`的模型参数，例如`temperature`, `extra_body`等：
 
@@ -478,7 +483,10 @@ export VLLM_API_KEY=vllm
     ```
 
 
-??? note "传递多模态数据"
+- 支持传递多模态数据
+
+
+??? example "传递多模态数据"
 
     支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用`langchain`中的`content_block`。例如：
     
@@ -528,17 +536,19 @@ export VLLM_API_KEY=vllm
     print(response)
     ```
     
-    !!! note "补充"
-        vllm 也支持部署多模态模型，例如 `qwen3-vl-2b`：
-        ```bash
-        vllm serve Qwen/Qwen3-VL-2B-Instruct \
-        --trust-remote-code \
-        --host 0.0.0.0 --port 8000 \
-        --served-model-name qwen3-vl-2b
-        ```
+!!! note "补充"
+    vllm 也支持部署多模态模型，例如 `qwen3-vl-2b`：
+    ```bash
+    vllm serve Qwen/Qwen3-VL-2B-Instruct \
+    --trust-remote-code \
+    --host 0.0.0.0 --port 8000 \
+    --served-model-name qwen3-vl-2b
+    ```
 
 
-??? note "OpenAI 最新的`responses_api`"
+- 支持 OpenAI 最新的`responses api` (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)
+
+??? example "OpenAI 最新的`responses_api`"
 
     该模型类也支持 OpenAI 最新的`responses_api`。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入`use_responses_api`参数为`True`。
     例如 vllm 支持`responses_api`，则可以这样使用：
@@ -572,4 +582,4 @@ model = load_chat_model("gpt-4o-mini", model_provider="openai")
 
     2. 若接入的部分模型提供商为非官方支持，可使用本模块的功能，先利用`register_model_provider`注册模型提供商，然后使用`load_chat_model`加载模型。
 
-    3. 若接入的模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM、OpenRouter），则推荐使用本模块的功能，先利用`register_model_provider`注册模型提供商（chat_model传入`openai-compatible`），然后使用`load_chat_model`加载模型。
+    3. 若接入的模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM），则推荐使用本模块的功能，先利用`register_model_provider`注册模型提供商（chat_model传入`openai-compatible`），然后使用`load_chat_model`加载模型。

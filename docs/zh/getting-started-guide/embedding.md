@@ -158,4 +158,4 @@ model = load_embeddings("text-embedding-3-large", provider="openai")
 
     2. 若接入的部分嵌入模型提供商为非官方支持，可利用本模块的注册与加载机制，先利用`register_embeddings_provider`注册模型提供商，然后使用`load_embeddings`加载模型。
 
-    3. 若接入的嵌入模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM、OpenRouter），则推荐利用本模块的功能，先利用`register_embeddings_provider`注册模型提供商（embeddings_model传入`openai-compatible`），然后使用`load_embeddings`加载模型。
+    3. 若接入的嵌入模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM），则推荐利用本模块的功能，先利用`register_embeddings_provider`注册模型提供商（embeddings_model传入`openai-compatible`），然后使用`load_embeddings`加载模型。

@@ -135,12 +135,12 @@ model_list = [
         "model_system_prompt": "你是一个助手，擅长处理普通任务，如对话、文本生成等。",
     },
     {
-        "model_name": "openrouter:qwen/qwen3-vl-32b-instruct",
+        "model_name": "vllm:qwen3-vl-2b",
         "model_description": "适合视觉任务",
         "tools": [],  # 如果该模型不需要任何工具，请将此字段设置为空列表 []
     },
     {
-        "model_name": "openrouter:qwen/qwen3-coder-plus",
+        "model_name": "vllm:qwen3-coder-flash",
         "model_description": "适合代码生成任务",
         "tools": [run_python_code],  # 仅允许使用 run_python_code 工具
     },

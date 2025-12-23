@@ -26,8 +26,8 @@ uv sync
 ```bash
 cp .env.example .env
 ```
-4. 编辑 `.env` 文件，填入你的 API 密钥（需要 `OpenRouter` 和 `Tavily` 的 API 密钥）
-
+4. 编辑 `.env` 文件，填入你的 API 密钥（需要 `ZhipuAI` 和 `Tavily` 的 API 密钥）。
+  
 5. 启动项目
 ```bash
 langgraph dev
@@ -52,14 +52,41 @@ langgraph dev
 - 多智能体构建：`wrap_agent_as_tool`
 
 
+## 如何自定义
 
-!!! success "模型管理功能的最佳实践"
-    本示例针对模型管理功能（对话模型/嵌入模型）进行了如下的预处理：
+可以根据实际的需求，对本项目进行自定义修改。
 
-    - 1.**load_chat_model和load_embeddings函数使用**
+### 1. 替换对话模型提供商
 
-    对于不同对话模型类（或嵌入模型类）的额外参数，`load_chat_model`和`load_embeddings`函数采用关键字参数方式进行接收（LangChain对应的两个函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考`src\utils\providers\chat_models\load.py`以及`src\utils\providers\embeddings\load.py`。
+本项目默认使用智谱AI的GLM系列作为核心模型，具体如下：
 
-    - 2.**register_model_provider和register_embeddings_provider函数使用** 
+  - `GLM-4.7`：用于`simple-agent`
+  - `GLM-4.6`：用于`supervisor-agent`
+  - `GLM-4.5`：用于`supervisor-agent`的`supervisor`
 
-    `register_model_provider`和`register_embeddings_provider`函数需要在启动时完成执行，对此，可参考本项目的`src\utils\providers\chat_models\register.py`以及`src\utils\providers\embeddings\register.py`。这两个文件封装了注册逻辑，并在`src/utils/providers/__init__.py`中进行了导入，使用者只需引入`src/utils/providers`模块，即可完成所有提供商的注册。
+如果你想自定义你的模型提供商，需要修改`src/utils/providers/chat_models/register.py`中的内容，在`register_all_model_providers`函数中使用`register_model_provider`函数注册你的模型提供商。
+同时也建议修改`src/utils/providers/chat_models/load.py`中的内容，在`load_chat_model`函数中添加你的模型提供商的加载逻辑。
+
+!!! success "对话模型管理最佳实践"
+    对于不同对话模型类的额外参数，`load_chat_model`函数采用关键字参数方式进行接收（LangChain对应的函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考`src\utils\providers\chat_models\load.py`中内容进行针对性修改。
+
+### 2. 注册嵌入模型提供商
+
+与对话模型提供商类似，你也可以根据需要注册自定义的嵌入模型提供商。需要修改`src/utils/providers/embeddings/register.py`中的内容，在`register_all_embeddings_providers`函数中使用`register_embeddings_provider`函数注册你的嵌入模型提供商。
+
+如果需要，也可以根据实际情况，修改`src/utils/providers/embeddings/load.py`中的内容，在`load_embeddings`函数中添加你的嵌入模型提供商的加载逻辑。
+
+
+### 3. 自定义工具
+
+**单智能体（simple-agent）**  
+工具实现位于 `src/agents/simple_agent/tools.py`，已内置：  
+- `save_user_memory` —— 持久化用户记忆  
+- `get_user_memory` —— 读取用户记忆  
+
+如需扩展，直接在该文件内新增对应的工具实现即可。
+
+**监督者-多智能体（supervisor-agent）**  
+工具实现位于 `src/agents/supervisor/subagent/tools.py`。是子智能体的工具实现，如需为子智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。
+  
+注意：`supervisor` 默认仅持有“调用子智能体”的两个工具。若需为 `supervisor` 追加自定义工具，建议在 `src/agents/supervisor/` 下新建 `tools.py`，编写完成后在 `src/agents/supervisor/agent.py` 中导入并传递给 `create_agent` 函数即可。

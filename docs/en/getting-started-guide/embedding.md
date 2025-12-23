@@ -2,17 +2,17 @@
 
 ## Overview
 
-LangChain's `init_embeddings` function only supports a limited number of embedding model providers. This library provides a more flexible embedding model management solution, particularly suitable for scenarios where you need to connect to embedding services not natively supported (such as vLLM, etc.).
+LangChain's `init_embeddings` function only supports a limited number of embedding model providers. This library provides a more flexible embedding model management solution, especially suitable for scenarios where you need to integrate embedding services not natively supported (such as vLLM, etc.).
 
 ## Registering Embedding Model Providers
 
-To register an embedding model provider, call `register_embeddings_provider`. The registration method varies slightly depending on the type of `embeddings_model`.
+To register an embedding model provider, you need to call `register_embeddings_provider`. The registration method varies slightly depending on the `embeddings_model` type.
 
-### Existing LangChain Embedding Model Classes
+### Existing LangChain Embedding Model Class
 
-If an embedding model provider already has a ready and suitable LangChain integration (see [Embedding Model Integration List](https://docs.langchain.com/oss/python/integrations/text_embedding)), please pass the corresponding embedding model class directly to the `embeddings_model` parameter.
+If the embedding model provider already has a suitable LangChain integration (see [Embedding Model Integration List](https://docs.langchain.com/oss/python/integrations/text_embedding)), please pass the corresponding embedding model class directly to the `embeddings_model` parameter.
 
-Refer to the following code for specific implementation:
+For specific code, refer to the following example:
 
 ```python
 from langchain_core.embeddings.fake import FakeEmbeddings
@@ -24,22 +24,22 @@ register_embeddings_provider(
 )
 ```
 
-Additional notes regarding the above code:
+Additional notes for the above code:
 
-- `FakeEmbeddings` is for testing purposes only. In actual use, you must pass a functional `Embeddings` class.
-- `provider_name` represents the name of the model provider, used for subsequent reference in `load_chat_model`. The name can be customized but should not include special characters such as ":" or "-".
+- `FakeEmbeddings` is only for testing. In actual use, you must pass an `Embeddings` class with real functionality.
+- `provider_name` represents the name of the model provider, used for later reference in `load_chat_model`. The name can be customized but should not contain special characters such as ":" or "-".
 
-Additionally, in this case, the function also supports passing the `base_url` parameter, but **you usually don't need to manually set `base_url`** (since the API address is already defined within the embedding model class). Only pass `base_url` explicitly when you need to override the default address; the override scope is limited to attributes with field names `api_base` or `base_url` (including aliases) in the model class.
+At the same time, in this case, the function also supports passing the `base_url` parameter, but **usually you don't need to manually set `base_url`** (because the embedding model class already defines the API address internally). Only when you need to override the default address should you explicitly pass `base_url`; the override scope is limited to attributes with field names `api_base` or `base_url` (including aliases) in the model class.
 
-### No LangChain Embedding Model Class Available, but Provider Supports OpenAI Compatible API
+### No LangChain Embedding Model Class, but Provider Supports OpenAI Compatible API
 
-Similar to chat models, many embedding model providers also offer **OpenAI Compatible APIs**. When there's no ready LangChain integration but the protocol is supported, you can use this mode.
+Similar to chat models, many embedding model providers also provide **OpenAI Compatible API**. When there is no ready-made LangChain integration but the protocol is supported, you can use this mode.
 
-This library will use `OpenAIEmbeddings` (from `langchain-openai`) to build the embedding model instance and automatically disable context length checking (setting `check_embedding_ctx_length=False`) to improve compatibility.
+This library will use `OpenAIEmbeddings` (from `langchain-openai`) to build an embedding model instance and automatically disable context length checking (set `check_embedding_ctx_length=False`) to improve compatibility.
 
-In this case, besides passing the `provider_name` and `chat_model` (which must be set to `"openai-compatible"`) parameters, you also need to pass the `base_url` parameter.
+In this case, in addition to passing `provider_name` and `embeddings_model` (which must be `"openai-compatible"`), you also need to pass the `base_url` parameter.
 
-For the `base_url` parameter, it can be provided through either of the following methods:
+For the `base_url` parameter, you can provide it in either of the following ways:
 
   - **Explicit parameter passing**:
 
@@ -51,7 +51,7 @@ For the `base_url` parameter, it can be provided through either of the following
   )
   ```
 
-  - **Environment variables (recommended)**:
+  - **Environment Variable (Recommended)**:
 
   ```bash
   export VLLM_API_BASE=http://localhost:8000/v1
@@ -66,11 +66,11 @@ For the `base_url` parameter, it can be provided through either of the following
   ```
 
 !!! info "Tip"  
-    The environment variable naming convention is `${PROVIDER_NAME}_API_BASE` (all uppercase, separated by underscores).  
+    The environment variable naming rule is `${PROVIDER_NAME}_API_BASE` (all uppercase, separated by underscores).  
     The corresponding API Key environment variable is `${PROVIDER_NAME}_API_KEY`.
 
 
-!!! note "Additional Information"  
+!!! note "Additional"  
     vLLM can deploy embedding models and expose OpenAI compatible interfaces, for example:
 
     ```bash
@@ -107,17 +107,17 @@ batch_register_embeddings_provider(
 ```
 
 !!! warning "Note"  
-    Both registration functions are implemented based on a global dictionary. **All registrations must be completed during the application startup phase**. Dynamic registration during runtime is prohibited to avoid multithreading issues.
+    Both registration functions are implemented based on a global dictionary. **All registrations must be completed during the application startup phase**, and dynamic registration during runtime is prohibited to avoid multi-threading issues.  
     
 
 ## Loading Embedding Models
 
-Use `load_embeddings` to initialize embedding model instances. The parameter rules are as follows:
+Use `load_embeddings` to initialize an embedding model instance. The parameter rules are as follows:
 
 - If `provider` is not passed, then `model` must be in the format `provider_name:embeddings_name`;
 - If `provider` is passed, then `model` is only `embeddings_name`.
 
-**Examples**:
+**Example**:
 
 ```python
 # Method 1
@@ -151,10 +151,10 @@ model = load_embeddings("text-embedding-3-large", provider="openai")
 ```
 
 !!! success "Best Practice"
-    For using this module, you can choose based on the following three scenarios:
+    For the use of this module, you can choose according to the following three situations:
 
-    1. If all embedding model providers you're connecting to are supported by the official `init_embeddings`, please use the official function directly for best compatibility.
+    1. If all embedding model providers you're integrating are supported by the official `init_embeddings`, please use the official function directly to get the best compatibility.
 
-    2. If some of the embedding model providers you're connecting to are not officially supported, you can use the registration and loading mechanism of this module. First, register the model provider using `register_embeddings_provider`, then load the model using `load_embeddings`.
-    
-    3. If the embedding model provider you're connecting to doesn't have a suitable integration yet, but the provider offers an OpenAI compatible API (such as vLLM, OpenRouter), it's recommended to use this module's functionality. First, register the model provider using `register_embeddings_provider` (passing `openai-compatible` to `embeddings_model`), then load the model using `load_embeddings`.
+    2. If some of the embedding model providers you're integrating are not officially supported, you can use the registration and loading mechanism of this module, first use `register_embeddings_provider` to register the model provider, then use `load_embeddings` to load the model.
+
+    3. If the embedding model provider you're integrating does not have a suitable integration yet, but the provider provides an OpenAI compatible API (such as vLLM), it's recommended to use the functionality of this module, first use `register_embeddings_provider` to register the model provider (pass `openai-compatible` for embeddings_model), then use `load_embeddings` to load the model.

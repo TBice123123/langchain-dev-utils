@@ -22,7 +22,7 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
 
         fallback = ModelFallbackMiddleware(
             "vllm:qwen3-8b", ## Try first on error
-            "openrouter:meta-llama/llama-3.3-8b-instruct:free" #Then this
+            "vllm:gpt-oss-20b", #Then this
         )
 
         agent = create_agent(
@@ -30,7 +30,7 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
             middleware=[fallback],
         )
 
-        # If primary fails: tries qwen3-8b, then llama-3.3-8b-instruct
+        # If primary fails: tries qwen3-8b, then gpt-oss-20b
         result = await agent.invoke({"messages": [HumanMessage("Hello")]})
         ```
     """
