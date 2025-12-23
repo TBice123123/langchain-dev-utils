@@ -58,8 +58,8 @@ You can customize this project according to your actual needs.
 This project uses ZhipuAI's GLM series as the core model by default, specifically as follows:
 
   - `GLM-4.7`: Used for `simple-agent`
-  - `GLM-4.6`: Used for `supervisor-agent`
-  - `GLM-4.5`: Used for the `supervisor` of `supervisor-agent`
+  - `GLM-4.6`: Used for `supervisor-agent`'s `supervisor`
+  - `GLM-4.5`: Used for the `supervisor-agent`'s `subagent`
 
 If you want to customize your model provider, you need to modify the content in `src/utils/providers/chat_models/register.py`, and register your model provider using the `register_model_provider` function in the `register_all_model_providers` function.
 
