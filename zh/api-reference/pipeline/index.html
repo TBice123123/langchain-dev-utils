@@ -1098,6 +1098,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="create_sequential_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        函数签名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1108,6 +1147,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="create_parallel_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        函数签名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1189,6 +1267,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="create_sequential_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        函数签名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1199,6 +1316,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="create_parallel_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        函数签名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1222,9 +1378,10 @@
   
 
 
-<h1 id="pipeline-api">Pipeline 模块的 API 参考</h1>
+<h1 id="pipeline-api">Pipeline 模块 API 参考文档</h1>
 <h2 id="create_sequential_pipeline">create_sequential_pipeline</h2>
 <p>将多个状态相同的子图以串行方式组合。</p>
+<h3 id="_1">函数签名</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SubGraph</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">StateT</span><span class="p">],</span>
@@ -1237,20 +1394,84 @@
     <span class="n">cache</span><span class="p">:</span> <span class="n">BaseCache</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledStateGraph</span><span class="p">[</span><span class="n">StateT</span><span class="p">,</span> <span class="n">ContextT</span><span class="p">,</span> <span class="n">InputT</span><span class="p">,</span> <span class="n">OutputT</span><span class="p">]:</span>
 </code></pre></div>
-<p><strong>参数说明：</strong></p>
-<ul>
-<li><code>sub_graphs</code>：SubGraph 列表类型，必填，要组合的状态图列表</li>
-<li><code>state_schema</code>：StateT 类型，必填，最终生成图的 State Schema</li>
-<li><code>graph_name</code>：可选字符串类型，最终生成图的名称</li>
-<li><code>context_schema</code>：ContextT 类型或 None，可选，最终生成图的 Context Schema</li>
-<li><code>input_schema</code>：InputT 类型或 None，可选，最终生成图的输入 Schema</li>
-<li><code>output_schema</code>：OutputT 类型或 None，可选，最终生成图的输出 Schema</li>
-<li><code>checkpointer</code>：LangGraph checkpointer 类型或 None，最终生成图的 Checkpointer</li>
-<li><code>store</code>：LangGraph store 类型或 None，最终生成图的 Store</li>
-<li><code>cache</code>：LangGraph cache 类型或 None，最终生成图的 Cache</li>
-</ul>
-<p><strong>返回值：</strong> CompiledStateGraph 类型，创建的串行状态图</p>
-<p><strong>示例：</strong></p>
+<h3 id="_2">参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>必填</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sub_graphs</td>
+<td>list[SubGraph]</td>
+<td>是</td>
+<td>-</td>
+<td>要组合的状态图列表</td>
+</tr>
+<tr>
+<td>state_schema</td>
+<td>type[StateT]</td>
+<td>是</td>
+<td>-</td>
+<td>最终生成图的 State Schema</td>
+</tr>
+<tr>
+<td>graph_name</td>
+<td>Optional[str]</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的名称</td>
+</tr>
+<tr>
+<td>context_schema</td>
+<td>type[ContextT] | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Context Schema</td>
+</tr>
+<tr>
+<td>input_schema</td>
+<td>type[InputT] | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的输入 Schema</td>
+</tr>
+<tr>
+<td>output_schema</td>
+<td>type[OutputT] | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的输出 Schema</td>
+</tr>
+<tr>
+<td>checkpointer</td>
+<td>Checkpointer | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Checkpointer</td>
+</tr>
+<tr>
+<td>store</td>
+<td>BaseStore | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Store</td>
+</tr>
+<tr>
+<td>cache</td>
+<td>BaseCache | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Cache</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_3">示例</h3>
 <div class="highlight"><pre><span></span><code><span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span><span class="n">graph1</span><span class="p">,</span> <span class="n">graph2</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">State</span><span class="p">,</span>
@@ -1260,8 +1481,10 @@
     <span class="n">output_schema</span><span class="o">=</span><span class="n">Output</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
+<hr />
 <h2 id="create_parallel_pipeline">create_parallel_pipeline</h2>
 <p>将多个状态相同的子图以并行方式组合。</p>
+<h3 id="_4">函数签名</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SubGraph</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">StateT</span><span class="p">],</span>
@@ -1280,21 +1503,91 @@
     <span class="n">cache</span><span class="p">:</span> <span class="n">BaseCache</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledStateGraph</span><span class="p">[</span><span class="n">StateT</span><span class="p">,</span> <span class="n">ContextT</span><span class="p">,</span> <span class="n">InputT</span><span class="p">,</span> <span class="n">OutputT</span><span class="p">]:</span>
 </code></pre></div>
-<p><strong>参数说明：</strong></p>
-<ul>
-<li><code>sub_graphs</code>：SubGraph 列表类型，必填，要组合的状态图列表</li>
-<li><code>state_schema</code>：StateT 类型，必填，最终生成图的 State Schema</li>
-<li><code>graph_name</code>：可选字符串类型，最终生成图的名称</li>
-<li><code>branches_fn</code>：可选可调用类型，并行分支函数，返回 Send 列表控制并行执行</li>
-<li><code>context_schema</code>：ContextT 类型或 None，可选，最终生成图的 Context Schema</li>
-<li><code>input_schema</code>：InputT 类型或 None，可选，最终生成图的输入 Schema</li>
-<li><code>output_schema</code>：OutputT 类型或 None，可选，最终生成图的输出 Schema</li>
-<li><code>checkpointer</code>：LangGraph checkpointer 类型或 None，最终生成图的 Checkpointer</li>
-<li><code>store</code>：LangGraph store 类型或 None，最终生成图的 Store</li>
-<li><code>cache</code>：LangGraph cache 类型或 None，最终生成图的 Cache</li>
-</ul>
-<p><strong>返回值：</strong> CompiledStateGraph 类型，创建的并行状态图</p>
-<p><strong>示例：</strong></p>
+<h3 id="_5">参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>必填</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sub_graphs</td>
+<td>list[SubGraph]</td>
+<td>是</td>
+<td>-</td>
+<td>要组合的状态图列表</td>
+</tr>
+<tr>
+<td>state_schema</td>
+<td>type[StateT]</td>
+<td>是</td>
+<td>-</td>
+<td>最终生成图的 State Schema</td>
+</tr>
+<tr>
+<td>graph_name</td>
+<td>Optional[str]</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的名称</td>
+</tr>
+<tr>
+<td>branches_fn</td>
+<td>Optional[Union[Callable[..., list[Send]], Callable[..., Awaitable[list[Send]]]]]</td>
+<td>否</td>
+<td>None</td>
+<td>并行分支函数，返回 Send 列表控制并行执行</td>
+</tr>
+<tr>
+<td>context_schema</td>
+<td>type[ContextT] | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Context Schema</td>
+</tr>
+<tr>
+<td>input_schema</td>
+<td>type[InputT] | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的输入 Schema</td>
+</tr>
+<tr>
+<td>output_schema</td>
+<td>type[OutputT] | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的输出 Schema</td>
+</tr>
+<tr>
+<td>checkpointer</td>
+<td>Checkpointer | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Checkpointer</td>
+</tr>
+<tr>
+<td>store</td>
+<td>BaseStore | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Store</td>
+</tr>
+<tr>
+<td>cache</td>
+<td>BaseCache | None</td>
+<td>否</td>
+<td>None</td>
+<td>最终生成图的 Cache</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">示例</h3>
 <div class="highlight"><pre><span></span><code><span class="n">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span><span class="n">graph1</span><span class="p">,</span> <span class="n">graph2</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">State</span><span class="p">,</span>

@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pipeline-module-api-reference" class="md-skip">
+        <a href="#pipeline-module-api-reference-documentation" class="md-skip">
           Skip to content
         </a>
       
@@ -1098,6 +1098,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="create_sequential_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1108,6 +1147,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="create_parallel_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-signature_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1189,6 +1267,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="create_sequential_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1199,6 +1316,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="create_parallel_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-signature_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1222,9 +1378,10 @@
   
 
 
-<h1 id="pipeline-module-api-reference">Pipeline Module API Reference</h1>
+<h1 id="pipeline-module-api-reference-documentation">Pipeline Module API Reference Documentation</h1>
 <h2 id="create_sequential_pipeline">create_sequential_pipeline</h2>
-<p>Combines multiple subgraphs with identical states in a sequential manner.</p>
+<p>Combines multiple subgraphs with the same state in a sequential manner.</p>
+<h3 id="function-signature">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SubGraph</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">StateT</span><span class="p">],</span>
@@ -1237,20 +1394,84 @@
     <span class="n">cache</span><span class="p">:</span> <span class="n">BaseCache</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledStateGraph</span><span class="p">[</span><span class="n">StateT</span><span class="p">,</span> <span class="n">ContextT</span><span class="p">,</span> <span class="n">InputT</span><span class="p">,</span> <span class="n">OutputT</span><span class="p">]:</span>
 </code></pre></div>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>sub_graphs</code>: List of SubGraph type, required. List of state graphs to be combined.</li>
-<li><code>state_schema</code>: StateT type, required. State Schema for the final generated graph.</li>
-<li><code>graph_name</code>: Optional string. Name of the final generated graph.</li>
-<li><code>context_schema</code>: ContextT type or None, optional. Context Schema for the final generated graph.</li>
-<li><code>input_schema</code>: InputT type or None, optional. Input Schema for the final generated graph.</li>
-<li><code>output_schema</code>: OutputT type or None, optional. Output Schema for the final generated graph.</li>
-<li><code>checkpointer</code>: Optional LangGraph checkpointer for the final constructed graph</li>
-<li><code>store</code>: Optional LangGraph store for the final constructed graph</li>
-<li><code>cache</code>: Optional LangGraph cache for the final constructed graph</li>
-</ul>
-<p><strong>Return Value:</strong> CompiledStateGraph type, the created sequential state graph.</p>
-<p><strong>Example:</strong></p>
+<h3 id="parameters">Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sub_graphs</td>
+<td>list[SubGraph]</td>
+<td>Yes</td>
+<td>-</td>
+<td>List of state graphs to combine</td>
+</tr>
+<tr>
+<td>state_schema</td>
+<td>type[StateT]</td>
+<td>Yes</td>
+<td>-</td>
+<td>State Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>graph_name</td>
+<td>Optional[str]</td>
+<td>No</td>
+<td>None</td>
+<td>Name of the final generated graph</td>
+</tr>
+<tr>
+<td>context_schema</td>
+<td>type[ContextT] | None</td>
+<td>No</td>
+<td>None</td>
+<td>Context Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>input_schema</td>
+<td>type[InputT] | None</td>
+<td>No</td>
+<td>None</td>
+<td>Input Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>output_schema</td>
+<td>type[OutputT] | None</td>
+<td>No</td>
+<td>None</td>
+<td>Output Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>checkpointer</td>
+<td>Checkpointer | None</td>
+<td>No</td>
+<td>None</td>
+<td>Checkpointer of the final generated graph</td>
+</tr>
+<tr>
+<td>store</td>
+<td>BaseStore | None</td>
+<td>No</td>
+<td>None</td>
+<td>Store of the final generated graph</td>
+</tr>
+<tr>
+<td>cache</td>
+<td>BaseCache | None</td>
+<td>No</td>
+<td>None</td>
+<td>Cache of the final generated graph</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example</h3>
 <div class="highlight"><pre><span></span><code><span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span><span class="n">graph1</span><span class="p">,</span> <span class="n">graph2</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">State</span><span class="p">,</span>
@@ -1260,8 +1481,10 @@
     <span class="n">output_schema</span><span class="o">=</span><span class="n">Output</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
+<hr />
 <h2 id="create_parallel_pipeline">create_parallel_pipeline</h2>
-<p>Combines multiple subgraphs with identical states in a parallel manner.</p>
+<p>Combines multiple subgraphs with the same state in a parallel manner.</p>
+<h3 id="function-signature_1">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SubGraph</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">StateT</span><span class="p">],</span>
@@ -1280,21 +1503,91 @@
     <span class="n">cache</span><span class="p">:</span> <span class="n">BaseCache</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledStateGraph</span><span class="p">[</span><span class="n">StateT</span><span class="p">,</span> <span class="n">ContextT</span><span class="p">,</span> <span class="n">InputT</span><span class="p">,</span> <span class="n">OutputT</span><span class="p">]:</span>
 </code></pre></div>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>sub_graphs</code>: List of SubGraph type, required. List of state graphs to be combined.</li>
-<li><code>state_schema</code>: StateT type, required. State Schema for the final generated graph.</li>
-<li><code>graph_name</code>: Optional string. Name of the final generated graph.</li>
-<li><code>branches_fn</code>: Optional callable type. Parallel branch function that returns a list of Send to control parallel execution.</li>
-<li><code>context_schema</code>: ContextT type or None, optional. Context Schema for the final generated graph.</li>
-<li><code>input_schema</code>: InputT type or None, optional. Input Schema for the final generated graph.</li>
-<li><code>output_schema</code>: OutputT type or None, optional. Output Schema for the final generated graph.</li>
-<li><code>checkpointer</code>: Optional LangGraph checkpointer for the final constructed graph</li>
-<li><code>store</code>: Optional LangGraph store for the final constructed graph</li>
-<li><code>cache</code>: Optional LangGraph cache for the final constructed graph.</li>
-</ul>
-<p><strong>Return Value:</strong> CompiledStateGraph type, the created parallel state graph.</p>
-<p><strong>Example:</strong></p>
+<h3 id="parameters_1">Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sub_graphs</td>
+<td>list[SubGraph]</td>
+<td>Yes</td>
+<td>-</td>
+<td>List of state graphs to combine</td>
+</tr>
+<tr>
+<td>state_schema</td>
+<td>type[StateT]</td>
+<td>Yes</td>
+<td>-</td>
+<td>State Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>graph_name</td>
+<td>Optional[str]</td>
+<td>No</td>
+<td>None</td>
+<td>Name of the final generated graph</td>
+</tr>
+<tr>
+<td>branches_fn</td>
+<td>Optional[Union[Callable[..., list[Send]], Callable[..., Awaitable[list[Send]]]]]</td>
+<td>No</td>
+<td>None</td>
+<td>Parallel branch function, returns a list of <code>Send</code> objects to control parallel execution</td>
+</tr>
+<tr>
+<td>context_schema</td>
+<td>type[ContextT] | None</td>
+<td>No</td>
+<td>None</td>
+<td>Context Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>input_schema</td>
+<td>type[InputT] | None</td>
+<td>No</td>
+<td>None</td>
+<td>Input Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>output_schema</td>
+<td>type[OutputT] | None</td>
+<td>No</td>
+<td>None</td>
+<td>Output Schema of the final generated graph</td>
+</tr>
+<tr>
+<td>checkpointer</td>
+<td>Checkpointer | None</td>
+<td>No</td>
+<td>None</td>
+<td>Checkpointer of the final generated graph</td>
+</tr>
+<tr>
+<td>store</td>
+<td>BaseStore | None</td>
+<td>No</td>
+<td>None</td>
+<td>Store of the final generated graph</td>
+</tr>
+<tr>
+<td>cache</td>
+<td>BaseCache | None</td>
+<td>No</td>
+<td>None</td>
+<td>Cache of the final generated graph</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_1">Example</h3>
 <div class="highlight"><pre><span></span><code><span class="n">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span><span class="n">graph1</span><span class="p">,</span> <span class="n">graph2</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">State</span><span class="p">,</span>
