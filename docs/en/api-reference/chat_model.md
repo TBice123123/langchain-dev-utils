@@ -1,8 +1,10 @@
-# ChatModel Module API Reference
+# ChatModel Module API Reference Documentation
 
 ## register_model_provider
 
-Register a provider for chat models.
+Register a chat model provider.
+
+### Function Signature
 
 ```python
 def register_model_provider(
@@ -14,24 +16,30 @@ def register_model_provider(
 ) -> None:
 ```
 
-**Parameter Description:**
+### Parameters
 
-- `provider_name`: String type, required, custom provider name
-- `chat_model`: ChatModel class or supported provider string type, required
-- `base_url`: Optional string type, provider's BaseURL
-- `model_profiles`: Optional dictionary type, profiles of models supported by the provider, in format `{model_name: model_profile}`
-- `compatibility_options`: Optional CompatibilityOptions type, compatibility options
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| provider_name | str | Yes | - | Custom provider name |
+| chat_model | ChatModelType | Yes | - | ChatModel class or supported provider string type |
+| base_url | Optional[str] | No | None | Base URL of the provider |
+| model_profiles | Optional[dict[str, dict[str, Any]]] | No | None | Profiles of models supported by the provider, format: `{model_name: model_profile}` |
+| compatibility_options | Optional[CompatibilityOptions] | No | None | Compatibility options |
 
-**Example:**
+### Example
 
 ```python
-register_model_provider("fakechat",FakeChatModel)
+register_model_provider("fakechat", FakeChatModel)
 register_model_provider("vllm", "openai-compatible", base_url="http://localhost:8000/v1")
 ```
+
+---
 
 ## batch_register_model_provider
 
 Batch register model providers.
+
+### Function Signature
 
 ```python
 def batch_register_model_provider(
@@ -39,11 +47,13 @@ def batch_register_model_provider(
 ) -> None:
 ```
 
-**Parameter Description:**
+### Parameters
 
-- `providers`: ChatModelProvider list type, required, list of provider configurations
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| providers | list[ChatModelProvider] | Yes | - | List of provider configurations |
 
-**Example:**
+### Example
 
 ```python
 batch_register_model_provider([
@@ -52,9 +62,13 @@ batch_register_model_provider([
 ])
 ```
 
+---
+
 ## load_chat_model
 
 Load a chat model from registered providers.
+
+### Function Signature
 
 ```python
 def load_chat_model(
@@ -65,54 +79,75 @@ def load_chat_model(
 ) -> BaseChatModel:
 ```
 
-**Parameter Description:**
+### Parameters
 
-- `model`: String type, required, model name, in format `model_name` or `provider_name:model_name`
-- `model_provider`: Optional string type, model provider name
-- `**kwargs`: Any type, optional, additional model parameters
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| model | str | Yes | - | Model name, format: `model_name` or `provider_name:model_name` |
+| model_provider | Optional[str] | No | None | Model provider name |
+| **kwargs | Any | No | - | Additional model parameters |
 
-**Return Value:** BaseChatModel type, loaded chat model instance
-
-**Example:**
+### Example
 
 ```python
 model = load_chat_model("vllm:qwen3-4b")
 ```
 
+---
+
 ## ChatModelType
 
 Types supported for the `chat_model` parameter when registering a model provider.
+
+### Type Definition
 
 ```python
 ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
 ```
 
+---
+
 ## ToolChoiceType
 
 Types supported for the `tool_choice` parameter.
+
+### Type Definition
 
 ```python
 ToolChoiceType = list[Literal["auto", "none", "required", "specific"]]
 ```
 
+---
+
 ## ResponseFormatType
 
 Types supported for `response_format`.
+
+### Type Definition
+
 ```python
 ResponseFormatType = list[Literal["json_schema", "json_mode"]]
 ```
+
+---
 
 ## ReasoningKeepPolicy
 
 Retention policy for the reasoning_content field in the messages list.
 
+### Type Definition
+
 ```python
 ReasoningKeepPolicy = Literal["never", "current", "all"]
 ```
 
+---
+
 ## CompatibilityOptions
 
 Compatibility options for model providers.
+
+### Class Definition
 
 ```python
 class CompatibilityOptions(TypedDict):
@@ -122,16 +157,22 @@ class CompatibilityOptions(TypedDict):
     include_usage: NotRequired[bool]
 ```
 
-**Field Description:**
+### Field Description
 
-- `supported_tool_choice`: List of supported `tool_choice` strategies
-- `supported_response_format`: List of supported `response_format` methods
-- `reasoning_keep_policy`: Retention policy for the `reasoning_content` field in historical messages (messages) passed to the model. Optional values are `never`, `current`, `all`
-- `include_usage`: Whether to include `usage` information in the last streaming response result
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| supported_tool_choice | NotRequired[ToolChoiceType] | No | List of supported `tool_choice` strategies |
+| supported_response_format | NotRequired[ResponseFormatType] | No | List of supported `response_format` methods |
+| reasoning_keep_policy | NotRequired[ReasoningKeepPolicy] | No | Retention policy for the `reasoning_content` field in historical messages (messages) passed to the model. Optional values are `never`, `current`, `all` |
+| include_usage | NotRequired[bool] | No | Whether to include `usage` information in the last streaming response result |
+
+---
 
 ## ChatModelProvider
 
-Configuration type for chat model providers.
+Chat model provider configuration type.
+
+### Class Definition
 
 ```python
 class ChatModelProvider(TypedDict):
@@ -142,10 +183,12 @@ class ChatModelProvider(TypedDict):
     compatibility_options: NotRequired[CompatibilityOptions]
 ```
 
-**Field Description:**
+### Field Description
 
-- `provider_name`: String type, required, provider name
-- `chat_model`: BaseChatModel type or string type, required, supports passing a chat model class or string (currently only supports `openai-compatible`)
-- `base_url`: Optional string type, base URL
-- `model_profiles`: Optional dictionary type, profiles of models supported by the provider, in format `{model_name: model_profile}`
-- `compatibility_options`: Optional CompatibilityOptions type, representing model provider compatibility options
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| provider_name | str | Yes | Provider name |
+| chat_model | ChatModelType | Yes | Supports passing a chat model class or string (currently only supports `openai-compatible`) |
+| base_url | NotRequired[str] | No | Base URL |
+| model_profiles | NotRequired[dict[str, dict[str, Any]]] | No | Profiles of models supported by the provider, format: `{model_name: model_profile}` |
+| compatibility_options | NotRequired[CompatibilityOptions] | No | Model provider compatibility options |

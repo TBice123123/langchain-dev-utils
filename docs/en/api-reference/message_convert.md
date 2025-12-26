@@ -1,24 +1,26 @@
-# Message Convert Module API Reference
+# Message Convert Module API Reference Documentation
 
 ## convert_reasoning_content_for_ai_message
 
-Merges reasoning chain into the final response.
+Merges reasoning content into the final response.
+
+### Function Signature
 
 ```python
 def convert_reasoning_content_for_ai_message(
     model_response: AIMessage,
-    think_tag: Tuple[str, str] = ("<think>", "</think>"),
+    think_tag: Tuple[str, str] = ("", ""),
 ) -> AIMessage
 ```
 
-**Parameters:**
+### Parameters
 
-- `model_response`: AIMessage type, required, AI message containing reasoning content
-- `think_tag`: String tuple type, optional, start and end tags for reasoning content, default `("<think>", "</think>")`
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| model_response | AIMessage | Yes | - | AI message containing reasoning content |
+| think_tag | Tuple[str, str] | No | ("", "") | Start and end tags for reasoning content |
 
-**Return Value:** AIMessage type, message with merged reasoning content
-
-**Example:**
+### Example
 
 ```python
 response = convert_reasoning_content_for_ai_message(
@@ -26,63 +28,75 @@ response = convert_reasoning_content_for_ai_message(
 )
 ```
 
+---
+
 ## convert_reasoning_content_for_chunk_iterator
 
 Merges reasoning content for streaming message chunks.
 
+### Function Signature
+
 ```python
 def convert_reasoning_content_for_chunk_iterator(
     model_response: Iterator[AIMessageChunk | AIMessage],
-    think_tag: Tuple[str, str] = ("<think>", "</think>"),
+    think_tag: Tuple[str, str] = ("", ""),
 ) -> Iterator[AIMessageChunk | AIMessage]
 ```
 
-**Parameters:**
+### Parameters
 
-- `model_response`: Iterator of AIMessageChunk or AIMessage type, required, iterator of message chunks
-- `think_tag`: String tuple type, optional, start and end tags for reasoning content, default `("<think>", "</think>")`
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| model_response | Iterator[AIMessageChunk \| AIMessage] | Yes | - | Iterator of message chunks |
+| think_tag | Tuple[str, str] | No | ("", "") | Start and end tags for reasoning content |
 
-**Return Value:** Iterator of AIMessageChunk or AIMessage type, processed message chunk iterator
-
-**Example:**
+### Example
 
 ```python
 for chunk in convert_reasoning_content_for_chunk_iterator(
-    model.stream("Hello"), think_tag=("<think>", "</think>")
+    model.stream("Hello"), think_tag=("", "")
 ):
     print(chunk.content, end="", flush=True)
 ```
 
+---
+
 ## aconvert_reasoning_content_for_chunk_iterator
 
-Asynchronous version of `convert_reasoning_content_for_chunk_iterator`.
+Async version of `convert_reasoning_content_for_chunk_iterator`.
+
+### Function Signature
 
 ```python
 async def aconvert_reasoning_content_for_chunk_iterator(
     model_response: AsyncIterator[AIMessageChunk | AIMessage],
-    think_tag: Tuple[str, str] = ("<think>", "</think>"),
+    think_tag: Tuple[str, str] = ("", ""),
 ) -> AsyncIterator[AIMessageChunk | AIMessage]
 ```
 
-**Parameters:**
+### Parameters
 
-- `model_response`: AsyncIterator of AIMessageChunk or AIMessage type, required, asynchronous iterator of message chunks
-- `think_tag`: String tuple type, optional, start and end tags for reasoning content, default `("<think>", "</think>")`
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| model_response | AsyncIterator[AIMessageChunk \| AIMessage] | Yes | - | Async iterator of message chunks |
+| think_tag | Tuple[str, str] | No | ("", "") | Start and end tags for reasoning content |
 
-**Return Value:** AsyncIterator of BaseMessageChunk type, processed asynchronous message chunk iterator
-
-**Example:**
+### Example
 
 ```python
 async for chunk in aconvert_reasoning_content_for_chunk_iterator(
-    model.astream("Hello"), think_tag=("<think>", "</think>")
+    model.astream("Hello"), think_tag=("", "")
 ):
     print(chunk.content, end="", flush=True)
 ```
 
+---
+
 ## merge_ai_message_chunk
 
 Merges streaming output chunks into a single AIMessage.
+
+### Function Signature
 
 ```python
 def merge_ai_message_chunk(
@@ -90,22 +104,26 @@ def merge_ai_message_chunk(
 ) -> AIMessage
 ```
 
-**Parameters:**
+### Parameters
 
-- `chunks`: Sequence of AIMessageChunk type, required, list of message chunks to merge
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| chunks | Sequence[AIMessageChunk] | Yes | - | List of message chunks to be merged |
 
-**Return Value:** AIMessage type, merged message
-
-**Example:**
+### Example
 
 ```python
 chunks = list(model.stream("Hello"))
 merged = merge_ai_message_chunk(chunks)
 ```
 
+---
+
 ## format_sequence
 
-Formats a list of BaseMessage, Document, or strings into a single string.
+Formats a list of BaseMessage, Document, or string into a single string.
+
+### Function Signature
 
 ```python
 def format_sequence(
@@ -115,16 +133,16 @@ def format_sequence(
 ) -> str
 ```
 
-**Parameters:**
+### Parameters
 
-- `inputs`: List of Message, Document, or strings type, required, list of items to format
-- `separator`: String type, optional, separator string, default "-"
-- `with_num`: Boolean type, optional, whether to add numeric prefix, default False
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| inputs | List[Union[BaseMessage, Document, str]] | Yes | - | List of items to format |
+| separator | str | No | "-" | Separator string |
+| with_num | bool | No | False | Whether to add numeric prefix |
 
-**Return Value:** String type, formatted string
-
-**Example:**
+### Example
 
 ```python
-formatted = message_format(messages, separator="\n", with_num=True)
+formatted = format_sequence(messages, separator="\n", with_num=True)
 ```

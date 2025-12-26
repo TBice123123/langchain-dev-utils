@@ -1,8 +1,10 @@
-# Pipeline 模块的 API 参考
+# Pipeline 模块 API 参考文档
 
 ## create_sequential_pipeline
 
 将多个状态相同的子图以串行方式组合。
+
+### 函数签名
 
 ```python
 def create_sequential_pipeline(
@@ -18,21 +20,21 @@ def create_sequential_pipeline(
 ) -> CompiledStateGraph[StateT, ContextT, InputT, OutputT]:
 ```
 
-**参数说明：**
+### 参数
 
-- `sub_graphs`：SubGraph 列表类型，必填，要组合的状态图列表
-- `state_schema`：StateT 类型，必填，最终生成图的 State Schema
-- `graph_name`：可选字符串类型，最终生成图的名称
-- `context_schema`：ContextT 类型或 None，可选，最终生成图的 Context Schema
-- `input_schema`：InputT 类型或 None，可选，最终生成图的输入 Schema
-- `output_schema`：OutputT 类型或 None，可选，最终生成图的输出 Schema
-- `checkpointer`：LangGraph checkpointer 类型或 None，最终生成图的 Checkpointer
-- `store`：LangGraph store 类型或 None，最终生成图的 Store
-- `cache`：LangGraph cache 类型或 None，最终生成图的 Cache
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| sub_graphs | list[SubGraph] | 是 | - | 要组合的状态图列表 |
+| state_schema | type[StateT] | 是 | - | 最终生成图的 State Schema |
+| graph_name | Optional[str] | 否 | None | 最终生成图的名称 |
+| context_schema | type[ContextT] \| None | 否 | None | 最终生成图的 Context Schema |
+| input_schema | type[InputT] \| None | 否 | None | 最终生成图的输入 Schema |
+| output_schema | type[OutputT] \| None | 否 | None | 最终生成图的输出 Schema |
+| checkpointer | Checkpointer \| None | 否 | None | 最终生成图的 Checkpointer |
+| store | BaseStore \| None | 否 | None | 最终生成图的 Store |
+| cache | BaseCache \| None | 否 | None | 最终生成图的 Cache |
 
-**返回值：** CompiledStateGraph 类型，创建的串行状态图
-
-**示例：**
+### 示例
 
 ```python
 create_sequential_pipeline(
@@ -45,9 +47,13 @@ create_sequential_pipeline(
 )
 ```
 
+---
+
 ## create_parallel_pipeline
 
 将多个状态相同的子图以并行方式组合。
+
+### 函数签名
 
 ```python
 def create_parallel_pipeline(
@@ -69,22 +75,23 @@ def create_parallel_pipeline(
 ) -> CompiledStateGraph[StateT, ContextT, InputT, OutputT]:
 ```
 
-**参数说明：**
+### 参数
 
-- `sub_graphs`：SubGraph 列表类型，必填，要组合的状态图列表
-- `state_schema`：StateT 类型，必填，最终生成图的 State Schema
-- `graph_name`：可选字符串类型，最终生成图的名称
-- `branches_fn`：可选可调用类型，并行分支函数，返回 Send 列表控制并行执行
-- `context_schema`：ContextT 类型或 None，可选，最终生成图的 Context Schema
-- `input_schema`：InputT 类型或 None，可选，最终生成图的输入 Schema
-- `output_schema`：OutputT 类型或 None，可选，最终生成图的输出 Schema
-- `checkpointer`：LangGraph checkpointer 类型或 None，最终生成图的 Checkpointer
-- `store`：LangGraph store 类型或 None，最终生成图的 Store
-- `cache`：LangGraph cache 类型或 None，最终生成图的 Cache
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| sub_graphs | list[SubGraph] | 是 | - | 要组合的状态图列表 |
+| state_schema | type[StateT] | 是 | - | 最终生成图的 State Schema |
+| graph_name | Optional[str] | 否 | None | 最终生成图的名称 |
+| branches_fn | Optional[Union[Callable[..., list[Send]], Callable[..., Awaitable[list[Send]]]]] | 否 | None | 并行分支函数，返回 Send 列表控制并行执行 |
+| context_schema | type[ContextT] \| None | 否 | None | 最终生成图的 Context Schema |
+| input_schema | type[InputT] \| None | 否 | None | 最终生成图的输入 Schema |
+| output_schema | type[OutputT] \| None | 否 | None | 最终生成图的输出 Schema |
+| checkpointer | Checkpointer \| None | 否 | None | 最终生成图的 Checkpointer |
+| store | BaseStore \| None | 否 | None | 最终生成图的 Store |
+| cache | BaseCache \| None | 否 | None | 最终生成图的 Cache |
 
-**返回值：** CompiledStateGraph 类型，创建的并行状态图
 
-**示例：**
+### 示例
 
 ```python
 create_parallel_pipeline(

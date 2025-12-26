@@ -1,8 +1,10 @@
-# Embeddings Module API Reference
+# Embeddings Module API Reference Documentation
 
 ## register_embeddings_provider
 
-Registers a provider for embeddings models.
+Register a provider for embedding models.
+
+### Function Signature
 
 ```python
 def register_embeddings_provider(
@@ -12,22 +14,28 @@ def register_embeddings_provider(
 ) -> None:
 ```
 
-**Parameters:**
+### Parameters
 
-- `provider_name`: string, required, custom provider name
-- `embeddings_model`: embeddings model class or supported provider string type, required
-- `base_url`: optional string, provider's BaseURL
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| provider_name | str | Yes | - | Custom provider name |
+| embeddings_model | EmbeddingsType | Yes | - | Embedding model class or supported provider string type |
+| base_url | Optional[str] | No | None | Base URL of the provider |
 
-**Examples:**
+### Example
 
 ```python
 register_embeddings_provider("fakeembeddings", FakeEmbeddings)
 register_embeddings_provider("vllm", "openai-compatible", base_url="http://localhost:8000/v1")
 ```
 
+---
+
 ## batch_register_embeddings_provider
 
-Batch registers embeddings model providers.
+Batch register embedding model providers.
+
+### Function Signature
 
 ```python
 def batch_register_embeddings_provider(
@@ -35,11 +43,13 @@ def batch_register_embeddings_provider(
 ) -> None:
 ```
 
-**Parameters:**
+### Parameters
 
-- `providers`: EmbeddingProvider list type, required, list of provider configurations
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| providers | list[EmbeddingProvider] | Yes | - | List of provider configurations |
 
-**Examples:**
+### Example
 
 ```python
 batch_register_embeddings_provider([
@@ -48,44 +58,56 @@ batch_register_embeddings_provider([
 ])
 ```
 
+---
+
 ## load_embeddings
 
-Loads an embeddings model from a registered provider.
+Load an embedding model from registered providers.
+
+### Function Signature
 
 ```python
 def load_embeddings(
     model: str,
     *,
-    model_provider: Optional[str] = None,
+    provider: Optional[str] = None,
     **kwargs: Any,
 ) -> Embeddings:
 ```
 
-**Parameters:**
+### Parameters
 
-- `model`: string, required, model name in format `model_name` or `provider_name:model_name`
-- `model_provider`: optional string, model provider name
-- `**kwargs`: any type, optional, additional model parameters
+| Parameter | Type | Required | Default | Description |
+|------|------|------|--------|------|
+| model | str | Yes | - | Model name, format as `model_name` or `provider_name:model_name` |
+| provider | Optional[str] | No | None | Model provider name |
+| **kwargs | Any | No | - | Additional model parameters |
 
-**Returns:** Embeddings type, loaded embeddings model instance
-
-**Examples:**
+### Example
 
 ```python
 embeddings = load_embeddings("vllm:qwen3-embedding-4b")
 ```
 
+---
+
 ## EmbeddingsType
 
-Supported types for the `embeddings_model` parameter when registering an embeddings provider.
+Types supported for the `embeddings_model` parameter when registering an embedding provider.
+
+### Type Definition
 
 ```python
 EmbeddingsType = Union[type[Embeddings], Literal["openai-compatible"]]
 ```
 
+---
+
 ## EmbeddingProvider
 
-Embeddings model provider configuration type.
+Configuration type for embedding model providers.
+
+### Class Definition
 
 ```python
 class EmbeddingProvider(TypedDict):
@@ -94,8 +116,10 @@ class EmbeddingProvider(TypedDict):
     base_url: NotRequired[str]
 ```
 
-**Field Descriptions:**
+### Field Description
 
-- `provider_name`: string, required, provider name
-- `embeddings_model`: Embeddings type or string type, required, embeddings model class or string
-- `base_url`: optional string, base URL
+| Field | Type | Required | Description |
+|------|------|------|------|
+| provider_name | str | Yes | Provider name |
+| embeddings_model | EmbeddingsType | Yes | Embedding model class or string |
+| base_url | NotRequired[str] | No | Base URL |

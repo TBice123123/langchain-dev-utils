@@ -5,9 +5,9 @@ from langchain.agents.middleware.types import (
     AgentMiddleware,
     AgentState,
     ResponseT,
+    StateT_co,
     _InputAgentState,
     _OutputAgentState,
-    StateT_co,
 )
 from langchain.agents.structured_output import ResponseFormat
 from langchain_core.messages import SystemMessage

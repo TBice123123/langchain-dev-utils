@@ -1,8 +1,10 @@
-# Agent 模块的 API 参考
+# Agent 模块 API 参考文档
 
 ## create_agent
 
-预构建智能体函数，提供与 langchain 官方 `create_agent` 完全相同的功能，但拓展了字符串指定模型。
+创建一个智能体，提供与 langchain 官方 `create_agent` 完全相同的功能，但拓展了字符串指定模型。
+
+### 函数签名
 
 ```python
 def create_agent(  # noqa: PLR0915
@@ -10,8 +12,8 @@ def create_agent(  # noqa: PLR0915
     tools: Sequence[BaseTool | Callable | dict[str, Any]] | None = None,
     *,
     system_prompt: str | SystemMessage | None = None,
-    middleware: Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] = (),
     response_format: ResponseFormat[ResponseT] | type[ResponseT] | None = None,
+    middleware: Sequence[AgentMiddleware[StateT_co, ContextT]] = (),
     state_schema: type[AgentState[ResponseT]] | None = None,
     context_schema: type[ContextT] | None = None,
     checkpointer: Checkpointer | None = None,
@@ -21,37 +23,48 @@ def create_agent(  # noqa: PLR0915
     debug: bool = False,
     name: str | None = None,
     cache: BaseCache | None = None,
-) -> CompiledStateGraph:
+) -> CompiledStateGraph[
+    AgentState[ResponseT], ContextT, _InputAgentState, _OutputAgentState[ResponseT]
+]:
 ```
 
-**参数说明：**
+### 参数
 
-- `model`：字符串类型，必填，可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式
-- `tools`：BaseTool、Callable 或字典序列，或 ToolNode 类型，必填，智能体可用的工具列表
-- `system_prompt`：可选字符串类型，智能体的自定义系统提示词
-- `middleware`：可选 AgentMiddleware 类型，智能体的中间件
-- `response_format`：可选 ResponseFormat 类型，智能体的响应格式
-- `state_schema`：可选 StateSchemaType 类型，智能体的状态模式
-- `context_schema`：可选任意类型，智能体的上下文模式
-- `checkpointer`：可选 Checkpointer 类型，状态持久化的检查点
-- `store`：可选 BaseStore 类型，数据持久化的存储
-- `interrupt_before`：可选字符串列表类型，执行前要中断的节点
-- `interrupt_after`：可选字符串列表类型，执行后要中断的节点
-- `debug`：布尔类型，可选，启用调试模式，默认为 False
-- `name`：可选字符串类型，智能体名称
-- `cache`：可选 BaseCache 类型，缓存
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| model | str | 是 | - | 可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式 |
+| tools | Sequence[BaseTool \| Callable \| dict[str, Any]] \| None | 否 | None | 智能体可用的工具列表 |
+| system_prompt | str \| SystemMessage \| None | 否 | None | 智能体的自定义系统提示词 |
+| middleware | Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] | 否 | () | 智能体的中间件 |
+| response_format | ResponseFormat[ResponseT] \| type[ResponseT] \| None | 否 | None | 智能体的响应格式 |
+| state_schema | type[AgentState[ResponseT]] \| None | 否 | None | 智能体的状态模式 |
+| context_schema | type[ContextT] \| None | 否 | None | 智能体的上下文模式 |
+| checkpointer | Checkpointer \| None | 否 | None | 状态持久化的检查点 |
+| store | BaseStore \| None | 否 | None | 数据持久化的存储 |
+| interrupt_before | list[str] \| None | 否 | None | 执行前要中断的节点 |
+| interrupt_after | list[str] \| None | 否 | None | 执行后要中断的节点 |
+| debug | bool | 否 | False | 启用调试模式 |
+| name | str \| None | 否 | None | 智能体名称 |
+| cache | BaseCache \| None | 否 | None | 缓存 |
 
-**返回值：** CompiledStateGraph 类型
 
-**注意：** 此函数提供与 `langchain` 官方 `create_agent` 完全相同的功能，但拓展了模型选择。主要区别在于 `model` 参数必须是可由 `load_chat_model` 函数加载的字符串，允许使用注册的模型提供者进行更灵活的模型选择。
+### 注意事项
 
-**示例：**
+此函数提供与 `langchain` 官方 `create_agent` 完全相同的功能，但拓展了模型选择。主要区别在于 `model` 参数必须是可由 `load_chat_model` 函数加载的字符串，允许使用注册的模型提供者进行更灵活的模型选择。
+
+### 示例
 
 ```python
 agent = create_agent(model="vllm:qwen3-4b", tools=[get_current_time])
 ```
 
+---
+
 ## wrap_agent_as_tool
+
+将智能体包装为工具。
+
+### 函数签名
 
 ```python
 def wrap_agent_as_tool(
@@ -72,98 +85,117 @@ def wrap_agent_as_tool(
         ]
         | Callable[[str, list[AnyMessage], ToolRuntime], Any]
     ] = None,
-) -> BaseTool:
+) -> BaseTool
 ```
 
-**参数说明：**
+### 参数
 
-- `agent`：CompiledStateGraph 类型，必填，智能体
-- `tool_name`：可选字符串类型，工具名称
-- `tool_description`：可选字符串类型，工具描述
-- `pre_input_hooks`：可选元组类型或者函数类型，Agent 输入预处理函数
-- `post_output_hooks`：可选元组类型或者函数类型，Agent 输出后处理函数
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| agent | CompiledStateGraph | 是 | - | 智能体 |
+| tool_name | Optional[str] | 否 | None | 工具名称 |
+| tool_description | Optional[str] | 否 | None | 工具描述 |
+| pre_input_hooks | Optional[tuple[Callable[[str, ToolRuntime], str], Callable[[str, ToolRuntime], Awaitable[str]]] \| Callable[[str, ToolRuntime], str]] | 否 | None | Agent 输入预处理函数 |
+| post_output_hooks | Optional[tuple[Callable[[str, list[AnyMessage], ToolRuntime], Any], Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]]] \| Callable[[str, list[AnyMessage], ToolRuntime], Any]] | 否 | None | Agent 输出后处理函数 |
 
-**返回值：** BaseTool 类型，工具实例
 
-**示例：**
+### 示例
 
 ```python
 tool = wrap_agent_as_tool(agent)
 ```
 
+---
+
 ## create_write_plan_tool
 
 创建用于写计划或者更新计划的工具。
+
+### 函数签名
 
 ```python
 def create_write_plan_tool(
     description: Optional[str] = None,
     message_key: Optional[str] = None,
-) -> BaseTool:
+) -> BaseTool
 ```
 
-**参数说明：**
+### 参数
 
-- `description`：可选字符串类型，工具描述
-- `message_key`：可选字符串类型，用于更新 messages 的键，默认 "messages"
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| description | Optional[str] | 否 | None | 工具描述 |
+| message_key | Optional[str] | 否 | None | 用于更新 messages 的键，默认 "messages" |
 
-**返回值：** BaseTool 类型，工具实例
 
-**示例：**
+### 示例
 
 ```python
 write_plan_tool = create_write_plan_tool()
 ```
 
+---
+
 ## create_finish_sub_plan_tool
 
 创建用于完成子任务后更新执行状态的工具。
+
+### 函数签名
 
 ```python
 def create_finish_sub_plan_tool(
     description: Optional[str] = None,
     message_key: Optional[str] = None,
-) -> BaseTool:
+) -> BaseTool
 ```
 
-**参数说明：**
+### 参数
 
-- `description`：可选字符串类型，工具描述
-- `message_key`：可选字符串类型，用于更新 messages 的键，默认 "messages"
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| description | Optional[str] | 否 | None | 工具描述 |
+| message_key | Optional[str] | 否 | None | 用于更新 messages 的键，默认 "messages" |
 
-**返回值：** BaseTool 类型，工具实例
-
-**示例：**
+### 示例
 
 ```python
 finish_sub_plan_tool = create_finish_sub_plan_tool()
 ```
 
+---
+
 ## create_read_plan_tool
 
 创建用于读取执行状态的工具。
 
+### 函数签名
+
 ```python
 def create_read_plan_tool(
     description: Optional[str] = None,
-) -> BaseTool:
+) -> BaseTool
 ```
 
-**参数说明：**
+### 参数
 
-- `description`：可选字符串类型，工具描述
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| description | Optional[str] | 否 | None | 工具描述 |
 
-**返回值：** BaseTool 类型，工具实例
 
-**示例：**
+### 示例
 
 ```python
 read_plan_tool = create_read_plan_tool()
 ```
 
+---
+
 ## SummarizationMiddleware
 
 用于智能体上下文摘要的中间件。
+
+### 类定义
 
 ```python
 class SummarizationMiddleware(_SummarizationMiddleware):
@@ -177,27 +209,33 @@ class SummarizationMiddleware(_SummarizationMiddleware):
         summary_prompt: str = DEFAULT_SUMMARY_PROMPT,
         trim_tokens_to_summarize: int | None = _DEFAULT_TRIM_TOKEN_LIMIT,
         **deprecated_kwargs: Any,
-    ) -> None:
+    ) -> None
 ```
 
-**参数说明：**
+### 参数
 
-- `model`：字符串类型，必填，可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式
-- `trigger`：可选 ContextSize 类型或者列表类型，触发摘要的上下文大小
-- `keep`：可选 ContextSize 类型，保留的上下文大小
-- `token_counter`：可选 TokenCounter 类型，token 计数器
-- `summary_prompt`：可选字符串类型，摘要提示词
-- `trim_tokens_to_summarize`：可选整数类型，摘要前要截取的 token 数
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| model | str | 是 | - | 可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式 |
+| trigger | ContextSize \| list[ContextSize] \| None | 否 | None | 触发摘要的上下文大小 |
+| keep | ContextSize | 否 | ("messages", _DEFAULT_MESSAGES_TO_KEEP) | 保留的上下文大小 |
+| token_counter | TokenCounter | 否 | count_tokens_approximately | token 计数器 |
+| summary_prompt | str | 否 | DEFAULT_SUMMARY_PROMPT | 摘要提示词 |
+| trim_tokens_to_summarize | int \| None | 否 | _DEFAULT_TRIM_TOKEN_LIMIT | 摘要前要截取的 token 数 |
 
-**示例：**
+### 示例
 
 ```python
 summarization_middleware = SummarizationMiddleware(model="vllm:qwen3-4b")
 ```
 
+---
+
 ## LLMToolSelectorMiddleware
 
 用于智能体工具选择的中间件。
+
+### 类定义
 
 ```python
 class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
@@ -208,25 +246,31 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         system_prompt: Optional[str] = None,
         max_tools: Optional[int] = None,
         always_include: Optional[list[str]] = None,
-    ) -> None:
+    ) -> None
 ```
 
-**参数说明：**
+### 参数
 
-- `model`：字符串类型，必填，可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式
-- `system_prompt`：可选字符串类型，系统提示词
-- `max_tools`：可选整数类型，最大工具数
-- `always_include`：可选字符串列表类型，总是包含的工具
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| model | str | 是 | - | 可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式 |
+| system_prompt | Optional[str] | 否 | None | 系统提示词 |
+| max_tools | Optional[int] | 否 | None | 最大工具数 |
+| always_include | Optional[list[str]] | 否 | None | 总是包含的工具 |
 
-**示例：**
+### 示例
 
 ```python
 llm_tool_selector_middleware = LLMToolSelectorMiddleware(model="vllm:qwen3-4b")
 ```
 
+---
+
 ## PlanMiddleware
 
 用于智能体计划管理的中间件。
+
+### 类定义
 
 ```python
 class PlanMiddleware(AgentMiddleware):
@@ -239,26 +283,32 @@ class PlanMiddleware(AgentMiddleware):
         finish_sub_plan_tool_description: Optional[str] = None,
         read_plan_tool_description: Optional[str] = None,
         use_read_plan_tool: bool = True
-    ) -> None:
+    ) -> None
 ```
 
-**参数说明：**
+### 参数
 
-- `system_prompt`：可选字符串类型，系统提示词
-- `write_plan_tool_description`：可选字符串类型，写计划工具的描述
-- `finish_sub_plan_tool_description`：可选字符串类型，完成子计划工具的描述
-- `read_plan_tool_description`：可选字符串类型，读计划工具的描述
-- `use_read_plan_tool`：可选布尔类型，是否使用读计划工具
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| system_prompt | Optional[str] | 否 | None | 系统提示词 |
+| write_plan_tool_description | Optional[str] | 否 | None | 写计划工具的描述 |
+| finish_sub_plan_tool_description | Optional[str] | 否 | None | 完成子计划工具的描述 |
+| read_plan_tool_description | Optional[str] | 否 | None | 读计划工具的描述 |
+| use_read_plan_tool | bool | 否 | True | 是否使用读计划工具 |
 
-**示例：**
+### 示例
 
 ```python
 plan_middleware = PlanMiddleware()
 ```
 
+---
+
 ## ModelFallbackMiddleware
 
 用于智能体模型回退的中间件。
+
+### 类定义
 
 ```python
 class ModelFallbackMiddleware(_ModelFallbackMiddleware):
@@ -266,15 +316,17 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
         self,
         first_model: str,
         *additional_models: str,
-    ) -> None:
+    ) -> None
 ```
 
-**参数说明：**
+### 参数
 
-- `first_model`：字符串类型，必填，可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式
-- `additional_models`：可选字符串列表类型，备用模型列表
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| first_model | str | 是 | - | 可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式 |
+| additional_models | str | 否 | - | 备用模型列表 |
 
-**示例：**
+### 示例
 
 ```python
 model_fallback_middleware = ModelFallbackMiddleware(
@@ -283,9 +335,13 @@ model_fallback_middleware = ModelFallbackMiddleware(
 )
 ```
 
+---
+
 ## LLMToolEmulator
 
 用于使用大模型来模拟工具调用的中间件。
+
+### 类定义
 
 ```python
 class LLMToolEmulator(_LLMToolEmulator):
@@ -294,23 +350,29 @@ class LLMToolEmulator(_LLMToolEmulator):
         *,
         model: str,
         tools: list[str | BaseTool] | None = None,
-    ) -> None:
+    ) -> None
 ```
 
-**参数说明：**
+### 参数
 
-- `model`：字符串类型，必填，可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式
-- `tools`：可选 BaseTool 列表类型，工具列表
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| model | str | 是 | - | 可由 `load_chat_model` 加载的模型标识符字符串。可指定为 "provider:model-name" 格式 |
+| tools | list[str \| BaseTool] \| None | 否 | None | 工具列表 |
 
-**示例：**
+### 示例
 
 ```python
 llm_tool_emulator = LLMToolEmulator(model="vllm:qwen3-4b", tools=[get_current_time])
 ```
 
+---
+
 ## ModelRouterMiddleware
 
 用于根据输入内容动态路由到合适模型的中间件。
+
+### 类定义
 
 ```python
 class ModelRouterMiddleware(AgentMiddleware):
@@ -320,16 +382,18 @@ class ModelRouterMiddleware(AgentMiddleware):
         router_model: str | BaseChatModel,
         model_list: list[ModelDict],
         router_prompt: Optional[str] = None,
-    ) -> None:
+    ) -> None
 ```
 
-**参数说明：**
+### 参数
 
-- `router_model`: 用于路由的模型,接收字符串类型（使用`load_chat_model`加载）或者直接传入 ChatModel
-- `model_list`：模型列表，每个模型需要包含 `model_name` 和 `model_description` 两个键，同时也可以选择性地包含 `tools`、`model_kwargs` 、`model_instance`、`model_system_prompt` 这四个键，分别代表模型可用的工具（如果不传则默认是使用全部工具）、传递给模型的额外参数（例如：temperature、top_p 等）、以及该模型对应的模型实例和该模型的系统提示词。
-- `router_prompt`: 路由模型的提示词，如果为 None 则使用默认的提示词
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| router_model | str \| BaseChatModel | 是 | - | 用于路由的模型，接收字符串类型（使用`load_chat_model`加载）或者直接传入 ChatModel |
+| model_list | list[ModelDict] | 是 | - | 模型列表，每个模型需要包含 `model_name` 和 `model_description` 两个键，同时也可以选择性地包含 `tools`、`model_kwargs`、`model_instance`、`model_system_prompt` 这四个键 |
+| router_prompt | Optional[str] | 否 | None | 路由模型的提示词，如果为 None 则使用默认的提示词 |
 
-**示例：**
+### 示例
 
 ```python
 model_router_middleware = ModelRouterMiddleware(
@@ -347,34 +411,44 @@ model_router_middleware = ModelRouterMiddleware(
 )
 ```
 
+---
+
 ## ToolCallRepairMiddleware
 
 用于修复无效工具调用的中间件。
+
+### 类定义
 
 ```python
 class ToolCallRepairMiddleware(AgentMiddleware):
 ```
 
-**示例：**
+### 示例
 
 ```python
 tool_call_repair_middleware = ToolCallRepairMiddleware()
 ```
 
+---
+
 ## format_prompt
 
 用于格式化提示词的中间件。
 
+### 函数签名
+
 ```python
 @dynamic_prompt
-def format_prompt(request: ModelRequest) -> str:
+def format_prompt(request: ModelRequest) -> str
 ```
 
-
+---
 
 ## PlanState
 
 用于 Plan 的状态 Schema。
+
+### 类定义
 
 ```python
 class Plan(TypedDict):
@@ -386,13 +460,21 @@ class PlanState(AgentState):
     plan: NotRequired[list[Plan]]
 ```
 
-- `plan`：可选列表类型，计划列表
-- `plan.content`：计划内容
-- `plan.status`：计划状态,取值为`pending`、`in_progress`、`done`
+### 属性
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| plan | NotRequired[list[Plan]] | 计划列表 |
+| plan.content | str | 计划内容 |
+| plan.status | Literal["pending", "in_progress", "done"] | 计划状态，取值为`pending`、`in_progress`、`done` |
+
+---
 
 ## ModelDict
 
 模型列表的类型。
+
+### 类定义
 
 ```python
 class ModelDict(TypedDict):
@@ -404,9 +486,24 @@ class ModelDict(TypedDict):
     model_system_prompt: NotRequired[str]
 ```
 
+### 属性
+
+| 属性 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| model_name | str | 是 | 模型名称 |
+| model_description | str | 是 | 模型描述 |
+| tools | NotRequired[list[BaseTool \| dict[str, Any]]] | 否 | 模型可用的工具 |
+| model_kwargs | NotRequired[dict[str, Any]] | 否 | 传递给模型的额外参数 |
+| model_instance | NotRequired[BaseChatModel] | 否 | 模型实例 |
+| model_system_prompt | NotRequired[str] | 否 | 模型的系统提示词 |
+
+---
+
 ## SelectModel
 
 用于选择模型的工具类。
+
+### 类定义
 
 ```python
 class SelectModel(BaseModel):
@@ -417,3 +514,9 @@ class SelectModel(BaseModel):
         description="Selected model name (must be the full model name, for example, openai:gpt-4o)",
     )
 ```
+
+### 属性
+
+| 属性 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| model_name | str | 是 | 选择的模型名称（必须是完整的模型名称，例如，openai:gpt-4o） |

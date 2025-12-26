@@ -1,8 +1,10 @@
-# Tool Calling Module API Reference
+# Tool Calling Module API Reference Documentation
 
 ## has_tool_calling
 
-Checks if a message contains tool calls.
+Checks if a message contains a tool call.
+
+### Function Signature
 
 ```python
 def has_tool_calling(
@@ -10,23 +12,27 @@ def has_tool_calling(
 ) -> bool
 ```
 
-**Parameters:**
+### Parameters
 
-- `message`: AIMessage type, required. The message to be checked.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| message | AIMessage | Yes | - | The message to check |
 
-**Return Value:** Boolean type, returns True if the message contains tool calls, otherwise returns False.
-
-**Example:**
+### Example
 
 ```python
 if has_tool_calling(response):
-    # Handle tool calls
+    # Handle tool call
     pass
 ```
+
+---
 
 ## parse_tool_calling
 
 Parses tool call arguments from a message.
+
+### Function Signature
 
 ```python
 def parse_tool_calling(
@@ -34,14 +40,14 @@ def parse_tool_calling(
 ) -> Union[tuple[str, dict], list[tuple[str, dict]]]
 ```
 
-**Parameters:**
+### Parameters
 
-- `message`: AIMessage type, required. The message to be parsed.
-- `first_tool_call_only`: Boolean type, optional. Whether to return only the first tool call, defaults to False.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| message | AIMessage | Yes | - | The message to parse |
+| first_tool_call_only | bool | No | False | Whether to return only the first tool call |
 
-**Return Value:** A tuple of tool call name and parameters, or a list of tuples containing tool call names and parameters.
-
-**Example:**
+### Example
 
 ```python
 # Get all tool calls
@@ -51,9 +57,13 @@ tool_calls = parse_tool_calling(response)
 name, args = parse_tool_calling(response, first_tool_call_only=True)
 ```
 
+---
+
 ## human_in_the_loop
 
-A decorator that adds "human-in-the-loop" manual review capability to **synchronous tool functions**.
+A decorator to add "human-in-the-loop" manual review capability to **synchronous tool functions**.
+
+### Function Signature
 
 ```python
 def human_in_the_loop(
@@ -63,25 +73,29 @@ def human_in_the_loop(
 ) -> Union[Callable[[Callable], BaseTool], BaseTool]
 ```
 
-**Parameters:**
+### Parameters
 
-- `func`: Optional callable type. The synchronous function to be decorated (decorator syntax sugar).
-- `handler`: Optional HumanInterruptHandler type. Custom interrupt handler function.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| func | Optional[Callable] | No | None | The synchronous function to be decorated (decorator syntactic sugar) |
+| handler | Optional[HumanInterruptHandler] | No | None | Custom interrupt handler function |
 
-**Return Value:** BaseTool type, the decorated tool instance.
-
-**Example:**
+### Example
 
 ```python
 @human_in_the_loop
 def get_current_time():
-    """Get current time"""
+    """Get the current time"""
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 ```
 
+---
+
 ## human_in_the_loop_async
 
-A decorator that adds "human-in-the-loop" manual review capability to **asynchronous tool functions**.
+A decorator to add "human-in-the-loop" manual review capability to **asynchronous tool functions**.
+
+### Function Signature
 
 ```python
 def human_in_the_loop_async(
@@ -91,25 +105,29 @@ def human_in_the_loop_async(
 ) -> Union[Callable[[Callable], BaseTool], BaseTool]
 ```
 
-**Parameters:**
+### Parameters
 
-- `func`: Optional callable type. The asynchronous function to be decorated (decorator syntax sugar).
-- `handler`: Optional HumanInterruptHandler type. Custom interrupt handler function.
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| func | Optional[Callable] | No | None | The asynchronous function to be decorated (decorator syntactic sugar) |
+| handler | Optional[HumanInterruptHandler] | No | None | Custom interrupt handler function |
 
-**Return Value:** BaseTool type, the decorated asynchronous tool instance.
-
-**Example:**
+### Example
 
 ```python
 @human_in_the_loop_async
 async def get_current_time():
-    """Get current time"""
+    """Get the current time"""
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 ```
 
+---
+
 ## InterruptParams
 
-Parameter type passed to interrupt handler functions.
+The type of parameters passed to the interrupt handler function.
+
+### Class Definition
 
 ```python
 class InterruptParams(TypedDict):
@@ -118,15 +136,21 @@ class InterruptParams(TypedDict):
     tool: BaseTool
 ```
 
-**Field Descriptions:**
+### Field Description
 
-- `tool_call_name`: String type. Tool call name.
-- `tool_call_args`: Dictionary mapping strings to any values. Tool call arguments.
-- `tool`: BaseTool type. Tool instance.
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| tool_call_name | str | Yes | The name of the tool call |
+| tool_call_args | Dict[str, Any] | Yes | The arguments of the tool call |
+| tool | BaseTool | Yes | The tool instance |
+
+---
 
 ## HumanInterruptHandler
 
-Type alias for interrupt handler functions.
+Type alias for the interrupt handler function.
+
+### Type Definition
 
 ```python
 HumanInterruptHandler = Callable[[InterruptParams], Any]
