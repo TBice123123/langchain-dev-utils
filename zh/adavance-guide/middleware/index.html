@@ -838,6 +838,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#handoffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handoffs 中间件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1247,6 +1258,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#handoffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handoffs 中间件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1392,13 +1414,15 @@
 </ul>
 <p><strong>使用示例</strong></p>
 <p>首先定义模型列表：</p>
-<div class="highlight"><pre><span></span><code><span class="n">model_list</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.model_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelDict</span>
+
+<span class="n">model_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合普通任务，如对话、文本生成等&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
-            <span class="s2">&quot;extra_body&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}</span>
+            <span class="s2">&quot;extra_body&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
         <span class="p">},</span>
         <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手，擅长处理普通任务，如对话、文本生成等。&quot;</span><span class="p">,</span>
     <span class="p">},</span>
@@ -1416,8 +1440,10 @@
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openai:gpt-4o&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合综合类高难度任务&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手，擅长处理综合类的高难度任务&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">),</span> <span class="c1"># 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略</span>
-    <span class="p">}</span>
+        <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
+            <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
+        <span class="p">),</span>  <span class="c1"># 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略</span>
+    <span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div>
 <p>然后在创建 agent 时启用中间件：</p>
@@ -1440,6 +1466,100 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>通过 <code>ModelRouterMiddleware</code>，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。</p>
+<h2 id="handoffs">Handoffs 中间件</h2>
+<p><code>HandoffsAgentMiddleware</code> 是一个用于<strong>在多个子 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>
+<p>其参数如下：</p>
+<ul>
+<li><code>agents_config</code>：智能体配置字典，键为智能体名称，值为智能体配置字典。<ul>
+<li><code>model</code>（str | BaseChatModel）：可选，指定该智能体使用的模型；若不传，则沿用 <code>create_agent</code> 的 <code>model</code> 参数对应的模型。支持字符串（须为 <code>provider:model-name</code> 格式，如 <code>vllm:qwen3-4b</code>）或 <code>BaseChatModel</code> 实例。  </li>
+<li><code>prompt</code>（str | SystemMessage）：必填，智能体的系统提示词。  </li>
+<li><code>tools</code>（list[BaseTool]）：必填，智能体可调用的工具列表。  </li>
+<li><code>default</code>（bool）：可选，是否设为默认智能体；缺省为 <code>False</code>。全部配置中必须且只能有一个智能体设为 <code>True</code>。</li>
+</ul>
+</li>
+</ul>
+<p>对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具，本库提供了一个工具方法 <code>create_handoffs_tool</code> 用于创建交接工具。该工具函数接收三个参数，具体如下：</p>
+<ul>
+<li><code>agent_name</code>：必传，代表目标智能体的名称；</li>
+<li><code>tool_name</code>：可选，代表工具名称，默认值为<code>transfer_to_{agent_name}</code>；</li>
+<li><code>tool_description</code>：可选，代表工具描述，若不传则使用默认的工具描述。</li>
+</ul>
+<p><strong>使用示例</strong></p>
+<p>本示例中，将使用四个智能体：<code>time_agent</code>、<code>weather_agent</code>、<code>code_agent</code> 和 <code>default_agent</code>。</p>
+<p>则首先需要创建对应的四个交接工具：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_handoffs_tool</span>
+
+<span class="n">transfer_to_time_agent</span> <span class="o">=</span> <span class="n">create_handoffs_tool</span><span class="p">(</span><span class="s2">&quot;time_agent&quot;</span><span class="p">)</span>
+<span class="n">transfer_to_weather_agent</span> <span class="o">=</span> <span class="n">create_handoffs_tool</span><span class="p">(</span><span class="s2">&quot;weather_agent&quot;</span><span class="p">)</span>
+<span class="n">transfer_to_code_agent</span> <span class="o">=</span> <span class="n">create_handoffs_tool</span><span class="p">(</span><span class="s2">&quot;code_agent&quot;</span><span class="p">)</span>
+<span class="n">transfer_to_default_agent</span> <span class="o">=</span> <span class="n">create_handoffs_tool</span><span class="p">(</span><span class="s2">&quot;default_agent&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>接下来要创建对应智能体的配置字典 <code>agent_config</code>，需要注意每个智能体的名称（即字典的键）必须与创建的交接工具的 <code>agent_name</code> 参数一致。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.handoffs</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
+
+<span class="n">agent_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AgentConfig</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个时间助手&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">get_current_time</span><span class="p">,</span>
+            <span class="n">transfer_to_weather_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_default_agent</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个天气助手&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">get_current_weather</span><span class="p">,</span>
+            <span class="n">get_current_city</span><span class="p">,</span>
+            <span class="n">transfer_to_default_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_time_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-coder-flash&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个代码助手&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">run_code</span><span class="p">,</span>
+            <span class="n">transfer_to_default_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_time_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_weather_agent</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">transfer_to_time_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_weather_agent</span><span class="p">,</span>
+            <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>最终将这个配置传递给 <code>HandoffsAgentMiddleware</code> 即可。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffsAgentMiddleware</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">transfer_to_time_agent</span><span class="p">,</span>
+        <span class="n">transfer_to_weather_agent</span><span class="p">,</span>
+        <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+        <span class="n">transfer_to_default_agent</span><span class="p">,</span>
+        <span class="n">get_current_time</span><span class="p">,</span>
+        <span class="n">get_current_weather</span><span class="p">,</span>
+        <span class="n">get_current_city</span><span class="p">,</span>
+        <span class="n">run_code</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">HandoffsAgentMiddleware</span><span class="p">(</span><span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">)],</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;当前时间是多少？&quot;</span><span class="p">)]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="_5">工具调用修复</h2>
 <p><code>ToolCallRepairMiddleware</code> 是一个<strong>自动修复大模型无效工具调用（<code>invalid_tool_calls</code>）</strong>的中间件。</p>
 <p>大模型在输出工具调用的 JSON Schema 时，可能因模型自身原因生成JSON格式错误的内容(错误的内容常见于<code>arguments</code> 字段)，导致 JSON 解析失败。这类调用会被存到 <code>invalid_tool_calls</code>字段中。<code>ToolCallRepairMiddleware</code> 会在模型返回结果后自动检测 <code>invalid_tool_calls</code>，并尝试调用 <code>json-repair</code> 进行修复，使工具调用得以正常执行。</p>
@@ -1559,7 +1679,7 @@
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
 <p>自定义中间件有两种实现方式：装饰器或继承类。<br />
-- 继承类实现：<code>PlanMiddleware</code>、<code>ModelMiddleware</code>、<code>ToolCallRepairMiddleware</code><br />
+- 继承类实现：<code>PlanMiddleware</code>、<code>ModelMiddleware</code>、<code>HandoffsAgentMiddleware</code>、<code>ToolCallRepairMiddleware</code><br />
 - 装饰器实现：<code>format_prompt</code>（装饰器会把函数直接变成中间件实例，因此无需手动实例化即可使用）</p>
 </div>
 <div class="admonition info">
