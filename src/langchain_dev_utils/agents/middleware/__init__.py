@@ -1,4 +1,5 @@
 from .format_prompt import format_prompt
+from .handoffs import HandoffsAgentMiddleware, create_handoffs_tool
 from .model_fallback import ModelFallbackMiddleware
 from .model_router import ModelRouterMiddleware
 from .plan import (
@@ -24,4 +25,6 @@ __all__ = [
     "ModelRouterMiddleware",
     "ToolCallRepairMiddleware",
     "format_prompt",
+    "create_handoffs_tool",
+    "HandoffsAgentMiddleware",
 ]

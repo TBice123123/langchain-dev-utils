@@ -191,6 +191,37 @@ read_plan_tool = create_read_plan_tool()
 
 ---
 
+## create_handoffs_tool
+
+创建用于切换智能体的工具。
+
+### 函数签名
+
+```python
+def create_handoffs_tool(
+    agent_name: str,
+    tool_name: Optional[str] = None,
+    tool_description: Optional[str] = None,
+) -> BaseTool
+```
+
+### 参数
+
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| agent_name | str | 是 | - | 目标智能体名称 |
+| tool_name | Optional[str] | 否 | None | 工具名称 |
+| tool_description | Optional[str] | 否 | None | 工具描述 |
+
+
+### 示例
+
+```python
+handoffs_tool = create_handoffs_tool(agent_name="time_agent")
+```
+
+---
+
 ## SummarizationMiddleware
 
 用于智能体上下文摘要的中间件。
@@ -413,6 +444,43 @@ model_router_middleware = ModelRouterMiddleware(
 
 ---
 
+## HandoffsAgentMiddleware
+
+用于实现多智能体切换（handoffs）的中间件。
+
+### 类定义
+
+```python
+class HandoffsAgentMiddleware(AgentMiddleware):
+    state_schema = MultiAgentState
+    def __init__(self, agents_config: dict[str, AgentConfig]) -> None:
+```
+
+### 参数
+
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| agents_config | dict[str, AgentConfig] | 是 | - | 智能体配置字典，键为智能体名称，值为智能体配置 |
+
+### 示例
+
+```python
+handoffs_agent_middleware = HandoffsAgentMiddleware({
+    "time_agent":{
+        "model":"vllm:qwen3-4b",
+        "prompt":"你是一个时间智能体，负责回答时间相关的问题。",
+        "tools":[get_current_time, transfer_to_default_agent]
+    },
+    "default_agent":{
+        "model":"vllm:qwen3-8b",
+        "prompt":"你是一个复杂任务智能体，负责回答复杂任务相关的问题。",
+        "tools":[transfer_to_time_agent]
+    }
+})
+```
+
+---
+
 ## ToolCallRepairMiddleware
 
 用于修复无效工具调用的中间件。
@@ -520,3 +588,49 @@ class SelectModel(BaseModel):
 | 属性 | 类型 | 必填 | 描述 |
 |------|------|------|------|
 | model_name | str | 是 | 选择的模型名称（必须是完整的模型名称，例如，openai:gpt-4o） |
+
+---
+
+## MultiAgentState
+
+用于多智能体切换的状态 Schema。
+
+### 类定义
+
+```python
+class MultiAgentState(AgentState):
+    active_agent: NotRequired[str]
+```
+
+### 属性
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| active_agent | NotRequired[str] | 当前激活的智能体名称 |
+
+---
+
+## AgentConfig
+
+智能体配置的类型。
+
+### 类定义
+
+```python
+class AgentConfig(TypedDict):
+    model: NotRequired[str | BaseChatModel]
+    prompt: str | SystemMessage
+    tools: list[BaseTool | dict[str, Any]]
+    default: NotRequired[bool]
+```
+
+### 属性
+
+| 属性 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| model | NotRequired[str \| BaseChatModel] | 否 | 模型名称或模型实例 |
+| prompt | str \| SystemMessage | 是 | 智能体的提示词 |
+| tools | list[BaseTool \| dict[str, Any]] | 是 | 智能体可用的工具 |
+| default | NotRequired[bool] | 否 | 是否为默认智能体 |
+
+

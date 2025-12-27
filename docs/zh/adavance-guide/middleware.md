@@ -124,13 +124,15 @@ agent = create_agent(
 首先定义模型列表：
 
 ```python
-model_list = [
+from langchain_dev_utils.agents.middleware.model_router import ModelDict
+
+model_list: list[ModelDict] = [
     {
         "model_name": "vllm:qwen3-8b",
         "model_description": "适合普通任务，如对话、文本生成等",
         "model_kwargs": {
             "temperature": 0.7,
-            "extra_body": {"chat_template_kwargs": {"enable_thinking": False}}
+            "extra_body": {"chat_template_kwargs": {"enable_thinking": False}},
         },
         "model_system_prompt": "你是一个助手，擅长处理普通任务，如对话、文本生成等。",
     },
@@ -148,8 +150,10 @@ model_list = [
         "model_name": "openai:gpt-4o",
         "model_description": "适合综合类高难度任务",
         "model_system_prompt": "你是一个助手，擅长处理综合类的高难度任务",
-        "model_instance": ChatOpenAI(model_name="gpt-4o"), # 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略
-    }
+        "model_instance": ChatOpenAI(
+            model_name="gpt-4o"
+        ),  # 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略
+    },
 ]
 ```
 
@@ -179,6 +183,111 @@ print(response)
 通过 `ModelRouterMiddleware`，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。
 
 
+## Handoffs 中间件
+`HandoffsAgentMiddleware` 是一个用于**在多个子 Agent 之间灵活切换**的中间件，完整实现了 LangChain 官方的 `handoffs` 多智能体协作方案。
+
+其参数如下：
+
+- `agents_config`：智能体配置字典，键为智能体名称，值为智能体配置字典。
+    - `model`（str | BaseChatModel）：可选，指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen3-4b`）或 `BaseChatModel` 实例。  
+    - `prompt`（str | SystemMessage）：必填，智能体的系统提示词。  
+    - `tools`（list[BaseTool]）：必填，智能体可调用的工具列表。  
+    - `default`（bool）：可选，是否设为默认智能体；缺省为 `False`。全部配置中必须且只能有一个智能体设为 `True`。
+
+
+对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具，本库提供了一个工具方法 `create_handoffs_tool` 用于创建交接工具。该工具函数接收三个参数，具体如下：
+
+- `agent_name`：必传，代表目标智能体的名称；
+- `tool_name`：可选，代表工具名称，默认值为`transfer_to_{agent_name}`；
+- `tool_description`：可选，代表工具描述，若不传则使用默认的工具描述。
+
+
+**使用示例**
+
+本示例中，将使用四个智能体：`time_agent`、`weather_agent`、`code_agent` 和 `default_agent`。
+
+则首先需要创建对应的四个交接工具：
+
+```python
+from langchain_dev_utils.agents.middleware import create_handoffs_tool
+
+transfer_to_time_agent = create_handoffs_tool("time_agent")
+transfer_to_weather_agent = create_handoffs_tool("weather_agent")
+transfer_to_code_agent = create_handoffs_tool("code_agent")
+transfer_to_default_agent = create_handoffs_tool("default_agent")
+```
+
+接下来要创建对应智能体的配置字典 `agent_config`，需要注意每个智能体的名称（即字典的键）必须与创建的交接工具的 `agent_name` 参数一致。
+
+```python
+from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
+
+agent_config: dict[str, AgentConfig] = {
+    "time_agent": {
+        "model": "vllm:qwen3-8b",
+        "prompt": "你是一个时间助手",
+        "tools": [
+            get_current_time,
+            transfer_to_weather_agent,
+            transfer_to_code_agent,
+            transfer_to_default_agent,
+        ],
+    },
+    "weather_agent": {
+        "prompt": "你是一个天气助手",
+        "tools": [
+            get_current_weather,
+            get_current_city,
+            transfer_to_default_agent,
+            transfer_to_time_agent,
+            transfer_to_code_agent,
+        ],
+    },
+    "code_agent": {
+        "model": load_chat_model("vllm:qwen3-coder-flash"),
+        "prompt": "你是一个代码助手",
+        "tools": [
+            run_code,
+            transfer_to_default_agent,
+            transfer_to_time_agent,
+            transfer_to_weather_agent,
+        ],
+    },
+    "default_agent": {
+        "prompt": "你是一个助手",
+        "tools": [
+            transfer_to_time_agent,
+            transfer_to_weather_agent,
+            transfer_to_code_agent,
+        ],
+        "default": True,
+    },
+}
+```
+
+最终将这个配置传递给 `HandoffsAgentMiddleware` 即可。
+
+```python
+from langchain_dev_utils.agents.middleware import HandoffsAgentMiddleware
+
+agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[
+        transfer_to_time_agent,
+        transfer_to_weather_agent,
+        transfer_to_code_agent,
+        transfer_to_default_agent,
+        get_current_time,
+        get_current_weather,
+        get_current_city,
+        run_code,
+    ],
+    middleware=[HandoffsAgentMiddleware(agents_config=agent_config)],
+)
+
+response = agent.invoke({"messages":[HumanMessage(content="当前时间是多少？")]})
+print(response)
+```
 
 ## 工具调用修复
 `ToolCallRepairMiddleware` 是一个**自动修复大模型无效工具调用（`invalid_tool_calls`）**的中间件。
@@ -205,8 +314,6 @@ agent = create_agent(
 
 !!! warning "注意"
     本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 `json-repair` 的修复能力；此外，它仅作用于 `invalid_tool_calls` 字段中的无效工具调用内容。
-
-
 
 
 ## 格式化系统提示词
@@ -314,7 +421,7 @@ agent = create_agent(
 
 !!! warning "注意"
     自定义中间件有两种实现方式：装饰器或继承类。  
-    - 继承类实现：`PlanMiddleware`、`ModelMiddleware`、`ToolCallRepairMiddleware`  
+    - 继承类实现：`PlanMiddleware`、`ModelMiddleware`、`HandoffsAgentMiddleware`、`ToolCallRepairMiddleware`  
     - 装饰器实现：`format_prompt`（装饰器会把函数直接变成中间件实例，因此无需手动实例化即可使用）
 
 
