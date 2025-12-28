@@ -104,9 +104,14 @@ class PlanState(AgentState):
     plan: NotRequired[list[Plan]]
 
 
-def create_write_plan_tool(
+class PlanToolDescription(TypedDict):
+    write_plan: NotRequired[str]
+    finish_sub_plan: NotRequired[str]
+    read_plan: NotRequired[str]
+
+
+def _create_write_plan_tool(
     description: Optional[str] = None,
-    message_key: Optional[str] = None,
 ) -> BaseTool:
     """Create a tool for writing initial plan.
 
@@ -116,22 +121,15 @@ def create_write_plan_tool(
 
     Args:
         description: The description of the tool. Uses default description if not provided.
-        message_key: The key of the message to be updated. Defaults to "messages".
 
     Returns:
         BaseTool: The tool for writing initial plan.
-
-    Example:
-        Basic usage:
-        >>> from langchain_dev_utils.agents.middleware import create_write_plan_tool
-        >>> write_plan_tool = create_write_plan_tool()
     """
 
     @tool(
         description=description or _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION,
     )
     def write_plan(plan: list[str], runtime: ToolRuntime):
-        msg_key = message_key or "messages"
         return Command(
             update={
                 "plan": [
@@ -141,7 +139,7 @@ def create_write_plan_tool(
                     }
                     for index, content in enumerate(plan)
                 ],
-                msg_key: [
+                "messages": [
                     ToolMessage(
                         content=f"Plan successfully written, please first execute the {plan[0]} sub-plan (no need to change the status to in_process)",
                         tool_call_id=runtime.tool_call_id,
@@ -153,9 +151,8 @@ def create_write_plan_tool(
     return write_plan
 
 
-def create_finish_sub_plan_tool(
+def _create_finish_sub_plan_tool(
     description: Optional[str] = None,
-    message_key: Optional[str] = None,
 ) -> BaseTool:
     """Create a tool for finishing sub-plan tasks.
 
@@ -164,15 +161,9 @@ def create_finish_sub_plan_tool(
 
     Args:
         description: The description of the tool. Uses default description if not provided.
-        message_key: The key of the message to be updated. Defaults to "messages".
 
     Returns:
         BaseTool: The tool for finishing sub-plan tasks.
-
-    Example:
-        Basic usage:
-        >>> from langchain_dev_utils.agents.middleware import create_finish_sub_plan_tool
-        >>> finish_sub_plan_tool = create_finish_sub_plan_tool()
     """
 
     @tool(
@@ -181,7 +172,6 @@ def create_finish_sub_plan_tool(
     def finish_sub_plan(
         runtime: ToolRuntime,
     ):
-        msg_key = message_key or "messages"
         plan_list = runtime.state.get("plan", [])
 
         sub_finish_plan = ""
@@ -200,7 +190,7 @@ def create_finish_sub_plan_tool(
         return Command(
             update={
                 "plan": plan_list,
-                msg_key: [
+                "messages": [
                     ToolMessage(
                         content=sub_finish_plan + sub_next_plan,
                         tool_call_id=runtime.tool_call_id,
@@ -212,7 +202,7 @@ def create_finish_sub_plan_tool(
     return finish_sub_plan
 
 
-def create_read_plan_tool(
+def _create_read_plan_tool(
     description: Optional[str] = None,
 ):
     """Create a tool for reading all sub-plans.
@@ -225,11 +215,6 @@ def create_read_plan_tool(
 
     Returns:
         BaseTool: The tool for reading all sub-plans.
-
-    Example:
-        Basic usage:
-        >>> from langchain_dev_utils.agents.middleware import create_read_plan_tool
-        >>> read_plan_tool = create_read_plan_tool()
     """
 
     @tool(
@@ -287,12 +272,8 @@ class PlanMiddleware(AgentMiddleware):
             tool. If not provided, uses the default `_PLAN_SYSTEM_PROMPT` or
             `_PLAN_SYSTEM_PROMPT_NOT_READ_PLAN` based on the `use_read_plan_tool`
             parameter.
-        write_plan_tool_description: Description of the `write_plan` tool.
-            If not provided, uses the default `_DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION`.
-        finish_sub_plan_tool_description: Description of the `finish_sub_plan` tool.
-            If not provided, uses the default `_DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION`.
-        read_plan_tool_description: Description of the `read_plan` tool.
-            If not provided, uses the default `_DEFAULT_READ_PLAN_TOOL_DESCRIPTION`.
+        custom_plan_tool_descriptions: Custom descriptions for the plan tools.
+            If not provided, uses the default descriptions.
         use_read_plan_tool: Whether to use the `read_plan` tool.
             If not provided, uses the default `True`.
 
@@ -316,31 +297,34 @@ class PlanMiddleware(AgentMiddleware):
         self,
         *,
         system_prompt: Optional[str] = None,
-        write_plan_tool_description: Optional[str] = None,
-        finish_sub_plan_tool_description: Optional[str] = None,
-        read_plan_tool_description: Optional[str] = None,
+        custom_plan_tool_descriptions: Optional[PlanToolDescription] = None,
         use_read_plan_tool: bool = True,
     ) -> None:
         super().__init__()
 
-        write_plan_tool_description = (
-            write_plan_tool_description or _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION
+        if not custom_plan_tool_descriptions:
+            custom_plan_tool_descriptions = {}
+
+        write_plan_tool_description = custom_plan_tool_descriptions.get(
+            "write_plan",
+            _DEFAULT_WRITE_PLAN_TOOL_DESCRIPTION,
         )
-        finish_sub_plan_tool_description = (
-            finish_sub_plan_tool_description
-            or _DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION
+        finish_sub_plan_tool_description = custom_plan_tool_descriptions.get(
+            "finish_sub_plan",
+            _DEFAULT_FINISH_SUB_PLAN_TOOL_DESCRIPTION,
         )
-        read_plan_tool_description = (
-            read_plan_tool_description or _DEFAULT_READ_PLAN_TOOL_DESCRIPTION
+        read_plan_tool_description = custom_plan_tool_descriptions.get(
+            "read_plan",
+            _DEFAULT_READ_PLAN_TOOL_DESCRIPTION,
         )
 
         tools = [
-            create_write_plan_tool(description=write_plan_tool_description),
-            create_finish_sub_plan_tool(description=finish_sub_plan_tool_description),
+            _create_write_plan_tool(description=write_plan_tool_description),
+            _create_finish_sub_plan_tool(description=finish_sub_plan_tool_description),
         ]
 
         if use_read_plan_tool:
-            tools.append(create_read_plan_tool(description=read_plan_tool_description))
+            tools.append(_create_read_plan_tool(description=read_plan_tool_description))
 
         if system_prompt is None:
             if use_read_plan_tool:

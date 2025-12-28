@@ -2,7 +2,7 @@
 
 ## create_agent
 
-Creates an agent, providing the exact same functionality as the official langchain `create_agent`, but with expanded string model specification.
+Creates an agent, providing the exact same functionality as the official LangChain `create_agent`, but with extended string model specification.
 
 ### Function Signature
 
@@ -35,7 +35,7 @@ def create_agent(  # noqa: PLR0915
 | model | str | Yes | - | Model identifier string that can be loaded by `load_chat_model`. Can be specified in "provider:model-name" format |
 | tools | Sequence[BaseTool \| Callable \| dict[str, Any]] \| None | No | None | List of tools available to the agent |
 | system_prompt | str \| SystemMessage \| None | No | None | Custom system prompt for the agent |
-| middleware | Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] | No | () | Middleware for the agent |
+| middleware | Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] | No | () | Agent middleware |
 | response_format | ResponseFormat[ResponseT] \| type[ResponseT] \| None | No | None | Response format for the agent |
 | state_schema | type[AgentState[ResponseT]] \| None | No | None | State schema for the agent |
 | context_schema | type[ContextT] \| None | No | None | Context schema for the agent |
@@ -50,7 +50,7 @@ def create_agent(  # noqa: PLR0915
 
 ### Notes
 
-This function provides the exact same functionality as the official `langchain` `create_agent`, but with expanded model selection. The main difference is that the `model` parameter must be a string that can be loaded by the `load_chat_model` function, allowing for more flexible model selection using registered model providers.
+This function provides the exact same functionality as the official `langchain` `create_agent`, but with extended model selection. The main difference is that the `model` parameter must be a string that can be loaded by the `load_chat_model` function, allowing for more flexible model selection using registered model providers.
 
 ### Example
 
@@ -107,121 +107,6 @@ tool = wrap_agent_as_tool(agent)
 
 ---
 
-## create_write_plan_tool
-
-Creates a tool for writing or updating plans.
-
-### Function Signature
-
-```python
-def create_write_plan_tool(
-    description: Optional[str] = None,
-    message_key: Optional[str] = None,
-) -> BaseTool
-```
-
-### Parameters
-
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| description | Optional[str] | No | None | Tool description |
-| message_key | Optional[str] | No | None | Key for updating messages, default "messages" |
-
-
-### Example
-
-```python
-write_plan_tool = create_write_plan_tool()
-```
-
----
-
-## create_finish_sub_plan_tool
-
-Creates a tool for updating execution status after completing subtasks.
-
-### Function Signature
-
-```python
-def create_finish_sub_plan_tool(
-    description: Optional[str] = None,
-    message_key: Optional[str] = None,
-) -> BaseTool
-```
-
-### Parameters
-
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| description | Optional[str] | No | None | Tool description |
-| message_key | Optional[str] | No | None | Key for updating messages, default "messages" |
-
-### Example
-
-```python
-finish_sub_plan_tool = create_finish_sub_plan_tool()
-```
-
----
-
-## create_read_plan_tool
-
-Creates a tool for reading execution status.
-
-### Function Signature
-
-```python
-def create_read_plan_tool(
-    description: Optional[str] = None,
-) -> BaseTool
-```
-
-### Parameters
-
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| description | Optional[str] | No | None | Tool description |
-
-
-### Example
-
-```python
-read_plan_tool = create_read_plan_tool()
-```
-
----
-
-## create_handoffs_tool
-
-Creates a tool for switching between agents.
-
-### Function Signature
-
-```python
-def create_handoffs_tool(
-    agent_name: str,
-    tool_name: Optional[str] = None,
-    tool_description: Optional[str] = None,
-) -> BaseTool
-```
-
-### Parameters
-
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| agent_name | str | Yes | - | Target agent name |
-| tool_name | Optional[str] | No | None | Tool name |
-| tool_description | Optional[str] | No | None | Tool description |
-
-
-### Example
-
-```python
-handoffs_tool = create_handoffs_tool(agent_name="time_agent")
-```
-
----
-
 ## SummarizationMiddleware
 
 Middleware for agent context summarization.
@@ -252,7 +137,7 @@ class SummarizationMiddleware(_SummarizationMiddleware):
 | keep | ContextSize | No | ("messages", _DEFAULT_MESSAGES_TO_KEEP) | Context size to keep |
 | token_counter | TokenCounter | No | count_tokens_approximately | Token counter |
 | summary_prompt | str | No | DEFAULT_SUMMARY_PROMPT | Summary prompt |
-| trim_tokens_to_summarize | int \| None | No | _DEFAULT_TRIM_TOKEN_LIMIT | Number of tokens to trim before summarization |
+| trim_tokens_to_summarize: int | None | No | _DEFAULT_TRIM_TOKEN_LIMIT | Number of tokens to trim before summarizing |
 
 ### Example
 
@@ -310,11 +195,9 @@ class PlanMiddleware(AgentMiddleware):
         self,
         *,
         system_prompt: Optional[str] = None,
-        write_plan_tool_description: Optional[str] = None,
-        finish_sub_plan_tool_description: Optional[str] = None,
-        read_plan_tool_description: Optional[str] = None,
-        use_read_plan_tool: bool = True
-    ) -> None
+        custom_plan_tool_descriptions: Optional[PlanToolDescription] = None,
+        use_read_plan_tool: bool = True,
+    ) -> None:
 ```
 
 ### Parameters
@@ -322,10 +205,9 @@ class PlanMiddleware(AgentMiddleware):
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | system_prompt | Optional[str] | No | None | System prompt |
-| write_plan_tool_description | Optional[str] | No | None | Description of the write plan tool |
-| finish_sub_plan_tool_description | Optional[str] | No | None | Description of the finish sub plan tool |
-| read_plan_tool_description | Optional[str] | No | None | Description of the read plan tool |
+| custom_plan_tool_descriptions | Optional[PlanToolDescription] | No | None | Custom plan tool descriptions |
 | use_read_plan_tool | bool | No | True | Whether to use the read plan tool |
+
 
 ### Example
 
@@ -370,7 +252,7 @@ model_fallback_middleware = ModelFallbackMiddleware(
 
 ## LLMToolEmulator
 
-Middleware for using large models to simulate tool calls.
+Middleware for using large language models to simulate tool calls.
 
 ### Class Definition
 
@@ -421,8 +303,8 @@ class ModelRouterMiddleware(AgentMiddleware):
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | router_model | str \| BaseChatModel | Yes | - | Model for routing, accepts string type (loaded with `load_chat_model`) or directly passed ChatModel |
-| model_list | list[ModelDict] | Yes | - | List of models, each model needs to contain `model_name` and `model_description` keys, and can optionally include `tools`, `model_kwargs`, `model_instance`, `model_system_prompt` these four keys |
-| router_prompt | Optional[str] | No | None | Prompt for the routing model, if None then the default prompt is used |
+| model_list | list[ModelDict] | Yes | - | List of models, each model needs to contain `model_name` and `model_description` keys, and can optionally include `tools`, `model_kwargs`, `model_instance`, `model_system_prompt` keys |
+| router_prompt | Optional[str] | No | None | Prompt for the routing model, if None, the default prompt is used |
 
 ### Example
 
@@ -451,16 +333,21 @@ Middleware for implementing multi-agent switching (handoffs).
 ### Class Definition
 
 ```python
-class HandoffsAgentMiddleware(AgentMiddleware):
+class HandoffAgentMiddleware(AgentMiddleware):
     state_schema = MultiAgentState
-    def __init__(self, agents_config: dict[str, AgentConfig]) -> None:
+    def __init__(
+        self,
+        agents_config: dict[str, AgentConfig],
+        custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
+    ) -> None:
 ```
 
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| agents_config | dict[str, AgentConfig] | Yes | - | Dictionary of agent configurations, keys are agent names, values are agent configurations |
+| agents_config | dict[str, AgentConfig] | Yes | - | Agent configuration dictionary, keys are agent names, values are agent configurations |
+| custom_handoffs_tool_descriptions | Optional[dict[str, str]] | No | None | Custom tool descriptions for handing off to other agents |
 
 ### Example
 
@@ -468,13 +355,15 @@ class HandoffsAgentMiddleware(AgentMiddleware):
 handoffs_agent_middleware = HandoffsAgentMiddleware({
     "time_agent":{
         "model":"vllm:qwen3-4b",
-        "prompt":"You are a time agent, responsible for answering time-related questions.",
-        "tools":[get_current_time, transfer_to_default_agent]
+        "prompt":"You are a time agent responsible for answering time-related questions.",
+        "tools":[get_current_time, transfer_to_default_agent],
+        "handoffs":["default_agent"]
     },
     "default_agent":{
         "model":"vllm:qwen3-8b",
-        "prompt":"You are a complex task agent, responsible for answering complex task-related questions.",
-        "tools":[transfer_to_time_agent]
+        "prompt":"You are a complex task agent responsible for answering complex task-related questions.",
+        "default":True,
+        "handoffs":["time_agent"]
     }
 })
 ```
@@ -514,7 +403,7 @@ def format_prompt(request: ModelRequest) -> str
 
 ## PlanState
 
-Schema for Plan state.
+State Schema for Plan.
 
 ### Class Definition
 
@@ -528,10 +417,10 @@ class PlanState(AgentState):
     plan: NotRequired[list[Plan]]
 ```
 
-### Attributes
+### Properties
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
+| Property | Type | Description |
+|----------|------|-------------|
 | plan | NotRequired[list[Plan]] | List of plans |
 | plan.content | str | Plan content |
 | plan.status | Literal["pending", "in_progress", "done"] | Plan status, values are `pending`, `in_progress`, `done` |
@@ -554,10 +443,10 @@ class ModelDict(TypedDict):
     model_system_prompt: NotRequired[str]
 ```
 
-### Attributes
+### Properties
 
-| Attribute | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
 | model_name | str | Yes | Model name |
 | model_description | str | Yes | Model description |
 | tools | NotRequired[list[BaseTool \| dict[str, Any]]] | No | Tools available to the model |
@@ -583,17 +472,17 @@ class SelectModel(BaseModel):
     )
 ```
 
-### Attributes
+### Properties
 
-| Attribute | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
 | model_name | str | Yes | Selected model name (must be the full model name, for example, openai:gpt-4o) |
 
 ---
 
 ## MultiAgentState
 
-Schema for multi-agent switching state.
+State Schema for multi-agent switching.
 
 ### Class Definition
 
@@ -602,10 +491,10 @@ class MultiAgentState(AgentState):
     active_agent: NotRequired[str]
 ```
 
-### Attributes
+### Properties
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
+| Property | Type | Description |
+|----------|------|-------------|
 | active_agent | NotRequired[str] | Name of the currently active agent |
 
 ---
@@ -620,15 +509,17 @@ Type for agent configuration.
 class AgentConfig(TypedDict):
     model: NotRequired[str | BaseChatModel]
     prompt: str | SystemMessage
-    tools: list[BaseTool | dict[str, Any]]
+    tools: NotRequired[list[BaseTool | dict[str, Any]]]
     default: NotRequired[bool]
+    handoffs: list[str] | Literal["all"]
 ```
 
-### Attributes
+### Properties
 
-| Attribute | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
 | model | NotRequired[str \| BaseChatModel] | No | Model name or model instance |
 | prompt | str \| SystemMessage | Yes | Prompt for the agent |
 | tools | list[BaseTool \| dict[str, Any]] | Yes | Tools available to the agent |
-| default | NotRequired[bool] | No | Whether it is the default agent |
+| default | NotRequired[bool] | No | Whether it's the default agent |
+| handoffs | list[str] \| Literal["all"] | Yes | List of agent names that can be handed off to, or "all" for all agents |

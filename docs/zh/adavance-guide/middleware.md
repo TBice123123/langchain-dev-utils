@@ -15,9 +15,10 @@
 实现任务规划的中间件为`PlanMiddleware`，其中接收以下参数：
 
 - `system_prompt`：可选字符串类型，系统提示词。默认值为 `None`，将使用默认的系统提示词。
-- `write_plan_tool_description`：可选字符串类型，写计划工具的描述。默认值为 `None`，将使用默认的写计划工具描述。
-- `finish_sub_plan_tool_description`：可选字符串类型，完成子计划工具的描述。默认值为 `None`，将使用默认的完成子计划工具描述。
-- `read_plan_tool_description`：可选字符串类型，读计划工具的描述。默认值为 `None`，将使用默认的读计划工具描述。
+- `custom_plan_tool_descriptions`：可选字典，用于自定义计划相关工具的描述。其键可取以下三个值：
+    - `write_plan`：写计划工具的描述  
+    - `finish_sub_plan`：完成子计划工具的描述  
+    - `read_plan`：读计划工具的描述  
 - `use_read_plan_tool`：可选布尔类型，是否使用读计划工具。默认值为 `True`，将启用读计划工具。
 
 
@@ -30,6 +31,11 @@ agent = create_agent(
     model="vllm:qwen3-4b",
     middleware=[
         PlanMiddleware(
+            custom_plan_tool_descriptions={
+                "write_plan": "用于写计划，将任务拆解为多个有序的子任务。",
+                "finish_sub_plan": "用于完成子任务，更新子任务状态为已完成。",
+                "read_plan": "用于查询当前的任务规划列表。"
+            },
             use_read_plan_tool=True, #如果不使用读计划工具，可以设置此参数为False
         )
     ],
@@ -46,49 +52,6 @@ print(response)
 本中间件与 LangChain 官方提供的 **To-do list 中间件**功能定位相似，但在工具设计上存在差异。官方中间件仅提供 `write_todo` 工具，面向的是待办清单（todo list）结构；而本库则提供了 `write_plan` 、`finish_sub_plan`、`read_plan` 三个专用工具，专门用于对规划列表（plan list）进行写入、修改、查询等操作。
 
 无论是`todo`还是`plan`其本质都是同一个，因此本中间件区别于官方的关键点在于提供的工具，官方的添加和修改是通过一个工具来完成的，而本库则提供了三个工具，其中`write_plan`可用于写入计划或者更新计划内容，`finish_sub_plan`则用于在完成某个子任务后更新其状态，`read_plan`用于查询计划内容。
-
-同时，本库还提供了三个函数来创建上述这三个工具:
-
-- `create_write_plan_tool`：创建一个用于写计划的工具的函数
-- `create_finish_sub_plan_tool`：创建一个用于完成子任务的工具的函数
-- `create_read_plan_tool`：创建一个用于查询计划的工具的函数
-
-这三个函数都可以接收一个`description`参数,用于自定义工具的描述。如果不传入,则采用默认的工具描述。其中`create_write_plan_tool`和`create_finish_sub_plan_tool`还可以接收一个`message_key`参数,用于自定义更新 messages 的键。如果不传入,则采用默认的`messages`键。
-
-**使用示例**：
-
-```python
-from langchain_dev_utils.agents.middleware.plan import (
-    create_write_plan_tool,
-    create_finish_sub_plan_tool,
-    create_read_plan_tool,
-    PlanState,
-)
-
-agent = create_agent(
-    model="vllm:qwen3-4b",
-    state_schema=PlanState,
-    tools=[create_write_plan_tool(), create_finish_sub_plan_tool(), create_read_plan_tool()],
-)
-```
-
-需要注意的是,要使用这三个工具,你必须要保证状态 Schema 中包含 plan 这个键,否则会报错,对此你可以使用本库提供的`PlanState`来继承状态 Schema。
-
-!!! success "最佳实践"
-    一、使用 `create_agent` 时：
-
-    推荐直接使用 `PlanMiddleware`，而不是手动传入 `write_plan`、`finish_sub_plan`、`read_plan` 这三个工具。
-
-    原因：中间件已自动处理提示词构造和智能体状态管理，能显著降低使用复杂度。
-
-    注意：由于 `create_agent` 的模型输出固定更新到 `messages` 键，因此 `PlanMiddleware` 没有 `message_key` 参数。
-
-    二、使用 `langgraph` 时：
-
-    推荐直接使用这三个工具 (`write_plan`, `finish_sub_plan`, `read_plan`)。
-
-    原因：这种方式能更好地融入 `langgraph` 的自定义节点和状态管理。
-
 
 ## 模型路由
 
@@ -184,40 +147,27 @@ print(response)
 
 
 ## Handoffs 中间件
-`HandoffsAgentMiddleware` 是一个用于**在多个子 Agent 之间灵活切换**的中间件，完整实现了 LangChain 官方的 `handoffs` 多智能体协作方案。
+`HandoffAgentMiddleware` 是一个用于**在多个子 Agent 之间灵活切换**的中间件，完整实现了 LangChain 官方的 `handoffs` 多智能体协作方案。
 
 其参数如下：
 
 - `agents_config`：智能体配置字典，键为智能体名称，值为智能体配置字典。
     - `model`（str | BaseChatModel）：可选，指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen3-4b`）或 `BaseChatModel` 实例。  
     - `prompt`（str | SystemMessage）：必填，智能体的系统提示词。  
-    - `tools`（list[BaseTool]）：必填，智能体可调用的工具列表。  
+    - `tools`（list[BaseTool]）：可选，智能体可调用的工具列表。  
     - `default`（bool）：可选，是否设为默认智能体；缺省为 `False`。全部配置中必须且只能有一个智能体设为 `True`。
+    - `handoffs`（list[str] | str）：必选，该智能体可交接给的其它智能体名称列表。若设为 `"all"`，则表示该智能体可交接给所有其它智能体。
+- `custom_handoffs_tool_descriptions`（dict[str, str]）：可选，自定义交接工具的描述。键为智能体名称，值为对应的交接工具的描述。若未提供（即默认值 `None`），则使用系统内置的默认描述。
 
 
-对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具，本库提供了一个工具方法 `create_handoffs_tool` 用于创建交接工具。该工具函数接收三个参数，具体如下：
-
-- `agent_name`：必传，代表目标智能体的名称；
-- `tool_name`：可选，代表工具名称，默认值为`transfer_to_{agent_name}`；
-- `tool_description`：可选，代表工具描述，若不传则使用默认的工具描述。
+对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具。本中间件利用每个智能体的 `handoffs` 配置，自动为每个智能体创建对应的交接工具。如果要自定义交接工具的描述，则可以通过 `custom_handoffs_tool_descriptions` 参数实现。
 
 
 **使用示例**
 
 本示例中，将使用四个智能体：`time_agent`、`weather_agent`、`code_agent` 和 `default_agent`。
 
-则首先需要创建对应的四个交接工具：
-
-```python
-from langchain_dev_utils.agents.middleware import create_handoffs_tool
-
-transfer_to_time_agent = create_handoffs_tool("time_agent")
-transfer_to_weather_agent = create_handoffs_tool("weather_agent")
-transfer_to_code_agent = create_handoffs_tool("code_agent")
-transfer_to_default_agent = create_handoffs_tool("default_agent")
-```
-
-接下来要创建对应智能体的配置字典 `agent_config`，需要注意每个智能体的名称（即字典的键）必须与创建的交接工具的 `agent_name` 参数一致。
+接下来要创建对应智能体的配置字典 `agent_config`。
 
 ```python
 from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
@@ -226,67 +176,75 @@ agent_config: dict[str, AgentConfig] = {
     "time_agent": {
         "model": "vllm:qwen3-8b",
         "prompt": "你是一个时间助手",
-        "tools": [
-            get_current_time,
-            transfer_to_weather_agent,
-            transfer_to_code_agent,
-            transfer_to_default_agent,
-        ],
+        "tools": [get_current_time],
+        "handoffs": ["default_agent"],  # 该智能体只能交接到default_agent
     },
     "weather_agent": {
         "prompt": "你是一个天气助手",
-        "tools": [
-            get_current_weather,
-            get_current_city,
-            transfer_to_default_agent,
-            transfer_to_time_agent,
-            transfer_to_code_agent,
-        ],
+        "tools": [get_current_weather, get_current_city],
+        "handoffs": ["default_agent"],
     },
     "code_agent": {
         "model": load_chat_model("vllm:qwen3-coder-flash"),
         "prompt": "你是一个代码助手",
         "tools": [
             run_code,
-            transfer_to_default_agent,
-            transfer_to_time_agent,
-            transfer_to_weather_agent,
         ],
+        "handoffs": ["default_agent"],
     },
     "default_agent": {
         "prompt": "你是一个助手",
-        "tools": [
-            transfer_to_time_agent,
-            transfer_to_weather_agent,
-            transfer_to_code_agent,
-        ],
-        "default": True,
+        "default": True, # 设为默认智能体
+        "handoffs": "all",  # 该智能体可以交接到所有其它智能体
     },
 }
 ```
 
-最终将这个配置传递给 `HandoffsAgentMiddleware` 即可。
+最终将这个配置传递给 `HandoffAgentMiddleware` 即可。
 
 ```python
-from langchain_dev_utils.agents.middleware import HandoffsAgentMiddleware
+from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
 
 agent = create_agent(
     model="vllm:qwen3-4b",
     tools=[
-        transfer_to_time_agent,
-        transfer_to_weather_agent,
-        transfer_to_code_agent,
-        transfer_to_default_agent,
         get_current_time,
         get_current_weather,
         get_current_city,
         run_code,
     ],
-    middleware=[HandoffsAgentMiddleware(agents_config=agent_config)],
+    middleware=[HandoffAgentMiddleware(agents_config=agent_config)],
 )
 
-response = agent.invoke({"messages":[HumanMessage(content="当前时间是多少？")]})
+response = agent.invoke({"messages": [HumanMessage(content="当前时间是多少？")]})
 print(response)
+```
+
+如果想要自定义交接工具的描述，可以传递第二个参数 `custom_handoffs_tool_descriptions`。
+
+```python
+from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
+
+agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[
+        get_current_time,
+        get_current_weather,
+        get_current_city,
+        run_code,
+    ],
+    middleware=[
+        HandoffAgentMiddleware(
+            agents_config=agent_config,
+            custom_handoffs_tool_descriptions={
+                "time_agent": "此工具用于交接到时间助手去解决时间查询问题",
+                "weather_agent": "此工具用于交接到天气助手去解决天气查询问题",
+                "code_agent": "此工具用于交接到代码助手去解决代码问题",
+                "default_agent": "此工具用于交接到默认的助手",
+            },
+        )
+    ],
+)
 ```
 
 ## 工具调用修复
@@ -421,7 +379,7 @@ agent = create_agent(
 
 !!! warning "注意"
     自定义中间件有两种实现方式：装饰器或继承类。  
-    - 继承类实现：`PlanMiddleware`、`ModelMiddleware`、`HandoffsAgentMiddleware`、`ToolCallRepairMiddleware`  
+    - 继承类实现：`PlanMiddleware`、`ModelMiddleware`、`HandoffAgentMiddleware`、`ToolCallRepairMiddleware`  
     - 装饰器实现：`format_prompt`（装饰器会把函数直接变成中间件实例，因此无需手动实例化即可使用）
 
 

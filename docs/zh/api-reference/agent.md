@@ -107,121 +107,6 @@ tool = wrap_agent_as_tool(agent)
 
 ---
 
-## create_write_plan_tool
-
-创建用于写计划或者更新计划的工具。
-
-### 函数签名
-
-```python
-def create_write_plan_tool(
-    description: Optional[str] = None,
-    message_key: Optional[str] = None,
-) -> BaseTool
-```
-
-### 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 描述 |
-|------|------|------|--------|------|
-| description | Optional[str] | 否 | None | 工具描述 |
-| message_key | Optional[str] | 否 | None | 用于更新 messages 的键，默认 "messages" |
-
-
-### 示例
-
-```python
-write_plan_tool = create_write_plan_tool()
-```
-
----
-
-## create_finish_sub_plan_tool
-
-创建用于完成子任务后更新执行状态的工具。
-
-### 函数签名
-
-```python
-def create_finish_sub_plan_tool(
-    description: Optional[str] = None,
-    message_key: Optional[str] = None,
-) -> BaseTool
-```
-
-### 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 描述 |
-|------|------|------|--------|------|
-| description | Optional[str] | 否 | None | 工具描述 |
-| message_key | Optional[str] | 否 | None | 用于更新 messages 的键，默认 "messages" |
-
-### 示例
-
-```python
-finish_sub_plan_tool = create_finish_sub_plan_tool()
-```
-
----
-
-## create_read_plan_tool
-
-创建用于读取执行状态的工具。
-
-### 函数签名
-
-```python
-def create_read_plan_tool(
-    description: Optional[str] = None,
-) -> BaseTool
-```
-
-### 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 描述 |
-|------|------|------|--------|------|
-| description | Optional[str] | 否 | None | 工具描述 |
-
-
-### 示例
-
-```python
-read_plan_tool = create_read_plan_tool()
-```
-
----
-
-## create_handoffs_tool
-
-创建用于切换智能体的工具。
-
-### 函数签名
-
-```python
-def create_handoffs_tool(
-    agent_name: str,
-    tool_name: Optional[str] = None,
-    tool_description: Optional[str] = None,
-) -> BaseTool
-```
-
-### 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 描述 |
-|------|------|------|--------|------|
-| agent_name | str | 是 | - | 目标智能体名称 |
-| tool_name | Optional[str] | 否 | None | 工具名称 |
-| tool_description | Optional[str] | 否 | None | 工具描述 |
-
-
-### 示例
-
-```python
-handoffs_tool = create_handoffs_tool(agent_name="time_agent")
-```
-
----
-
 ## SummarizationMiddleware
 
 用于智能体上下文摘要的中间件。
@@ -310,11 +195,9 @@ class PlanMiddleware(AgentMiddleware):
         self,
         *,
         system_prompt: Optional[str] = None,
-        write_plan_tool_description: Optional[str] = None,
-        finish_sub_plan_tool_description: Optional[str] = None,
-        read_plan_tool_description: Optional[str] = None,
-        use_read_plan_tool: bool = True
-    ) -> None
+        custom_plan_tool_descriptions: Optional[PlanToolDescription] = None,
+        use_read_plan_tool: bool = True,
+    ) -> None:
 ```
 
 ### 参数
@@ -322,10 +205,9 @@ class PlanMiddleware(AgentMiddleware):
 | 参数 | 类型 | 必填 | 默认值 | 描述 |
 |------|------|------|--------|------|
 | system_prompt | Optional[str] | 否 | None | 系统提示词 |
-| write_plan_tool_description | Optional[str] | 否 | None | 写计划工具的描述 |
-| finish_sub_plan_tool_description | Optional[str] | 否 | None | 完成子计划工具的描述 |
-| read_plan_tool_description | Optional[str] | 否 | None | 读计划工具的描述 |
+| custom_plan_tool_descriptions | Optional[PlanToolDescription] | 否 | None | 自定义计划工具的描述 |
 | use_read_plan_tool | bool | 否 | True | 是否使用读计划工具 |
+
 
 ### 示例
 
@@ -451,9 +333,13 @@ model_router_middleware = ModelRouterMiddleware(
 ### 类定义
 
 ```python
-class HandoffsAgentMiddleware(AgentMiddleware):
+class HandoffAgentMiddleware(AgentMiddleware):
     state_schema = MultiAgentState
-    def __init__(self, agents_config: dict[str, AgentConfig]) -> None:
+    def __init__(
+        self,
+        agents_config: dict[str, AgentConfig],
+        custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
+    ) -> None:
 ```
 
 ### 参数
@@ -461,6 +347,7 @@ class HandoffsAgentMiddleware(AgentMiddleware):
 | 参数 | 类型 | 必填 | 默认值 | 描述 |
 |------|------|------|--------|------|
 | agents_config | dict[str, AgentConfig] | 是 | - | 智能体配置字典，键为智能体名称，值为智能体配置 |
+| custom_handoffs_tool_descriptions | Optional[dict[str, str]] | 否 | None | 自定义交接到其它智能体的工具描述 |
 
 ### 示例
 
@@ -469,12 +356,14 @@ handoffs_agent_middleware = HandoffsAgentMiddleware({
     "time_agent":{
         "model":"vllm:qwen3-4b",
         "prompt":"你是一个时间智能体，负责回答时间相关的问题。",
-        "tools":[get_current_time, transfer_to_default_agent]
+        "tools":[get_current_time, transfer_to_default_agent],
+        "handoffs":["default_agent"]
     },
     "default_agent":{
         "model":"vllm:qwen3-8b",
         "prompt":"你是一个复杂任务智能体，负责回答复杂任务相关的问题。",
-        "tools":[transfer_to_time_agent]
+        "default":True,
+        "handoffs":["time_agent"]
     }
 })
 ```
@@ -620,8 +509,9 @@ class MultiAgentState(AgentState):
 class AgentConfig(TypedDict):
     model: NotRequired[str | BaseChatModel]
     prompt: str | SystemMessage
-    tools: list[BaseTool | dict[str, Any]]
+    tools: NotRequired[list[BaseTool | dict[str, Any]]]
     default: NotRequired[bool]
+    handoffs: list[str] | Literal["all"]
 ```
 
 ### 属性
@@ -632,5 +522,6 @@ class AgentConfig(TypedDict):
 | prompt | str \| SystemMessage | 是 | 智能体的提示词 |
 | tools | list[BaseTool \| dict[str, Any]] | 是 | 智能体可用的工具 |
 | default | NotRequired[bool] | 否 | 是否为默认智能体 |
+| handoffs | list[str] \| Literal["all"] | 是 | 可以交接到的智能体名称列表，或"all"表示所有智能体 |
 
 

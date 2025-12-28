@@ -105,8 +105,6 @@ register_model_provider(
 !!! info "提示"
     此情况下，模型提供商的 API 端点的环境变量的命名规则是`${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。对应的 API_KEY 环境变量的命名规则是`${PROVIDER_NAME}_API_KEY`（全大写，下划线分隔）。
 
-
-
 !!! note "补充"
     vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API，例如本例子中的 Qwen3-4B：
 
@@ -184,7 +182,7 @@ register_model_provider(
 
     其中，`json_schema` 仅少数 OpenAI 兼容 API 提供商支持（如 `OpenRouter`、`TogetherAI`）；`json_mode` 支持度更高，多数提供商已兼容；而 `function_calling` 最为通用，只要模型支持工具调用即可使用。
 
-    本参数用于声明模型提供商对于`response_format`的支持情况。默认情况下为`[]`，代表模型提供商既不支持`json_mode`也不支持`json_schema`。此时`with_structured_output`方法中的`method`参数只能传递`function_calling`(或者是`auto`,此时`auto`将被推断为`function_calling`），如果传递了`json_mode`或`json_schema`，则会自动被转化为`function_calling`。如果想要启用`json_mode`或者`json_schema`的结构化输出实现方式，则需要显示设置该参数。
+    本参数用于声明模型提供商对于`response_format`的支持情况。默认情况下为`[]`，代表模型提供商既不支持`json_mode`也不支持`json_schema`。此时`with_structured_output`方法中的`method`参数只能传递`function_calling`，如果传递了`json_mode`或`json_schema`，则会自动被转化为`function_calling`。如果想要启用`json_mode`或者`json_schema`的结构化输出实现方式，则需要显示设置该参数。
 
     例如vLLM部署的模型支持`json_schema`的结构化输出方法，则可以注册的时候进行声明：
 
@@ -197,7 +195,7 @@ register_model_provider(
     ``` 
 
     !!! info "提示"
-        通常一般情况下也无需配置。仅在需要使用`with_structured_output`方法时需要考虑进行配置，此时，如果模型提供商支持`json_schema`，则可以考虑配置本参数。以保证结构化输出的稳定性。对于`json_mode`，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置`response_format={"type":"json_object"}`时，才需要配置本参数包含`json_mode`。
+        通常一般情况下也无需配置。仅在需要使用`with_structured_output`方法时需要考虑进行配置，此时，如果模型提供商支持`json_schema`，则可以考虑配置本参数（因为`json_schema`的结构化输出稳定性要优于`function_calling`）。以保证结构化输出的稳定性。对于`json_mode`，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置`response_format={"type":"json_object"}`时，才需要配置本参数包含`json_mode`。
         
         同样，该参数既可在 `register_model_provider` 中统一设置，也可在 `load_chat_model` 时针对单模型动态覆盖；推荐在 `register_model_provider` 中一次性声明该提供商的大多数模型的`response_format`支持情况，而对于部分支持情况不同的模型，则在 `load_chat_model` 中单独指定。
 
@@ -421,10 +419,9 @@ export VLLM_API_KEY=vllm
 
 - 支持`bind_tools`方法，进行工具调用。
 
+如果模型本身支持工具调用，那么可以直接使用`bind_tools`方法进行工具调用：
 
 ??? example "工具调用"
-
-    如果模型本身支持工具调用，那么可以直接使用`bind_tools`方法进行工具调用：
 
     ```python
     from langchain_dev_utils.chat_models import load_chat_model
@@ -444,6 +441,8 @@ export VLLM_API_KEY=vllm
 
 - 支持`with_structured_output`方法，进行结构化输出。
 
+如果该模型类的`supported_response_format`参数中包含`json_schema`，则`with_structured_output` 优先使用 `json_schema`进行结构化输出，否则回退 `function_calling`；如需 `json_mode`，显式指定 `method="json_mode"` 并确保注册时包含 `json_mode`。
+
 ??? example "结构化输出"
 
     ```python
@@ -460,18 +459,14 @@ export VLLM_API_KEY=vllm
     response = model.invoke([HumanMessage("你好，我叫张三，今年25岁")])
     print(response)
     ```
-!!! tip "注意"
-    默认的`method`取值为`auto`，此时将会根据模型提供商的`supported_response_format`参数自动选择合适的结构化输出方法。具体为如果其中取值包含`json_schema`，则会选择`json_schema`方法；否则，则会选择`function_calling`方法。
-    相较于工具调用，`json_schema`能100%保证输出符合JSON Schema规范，避免工具调用可能产生的参数误差。故如果模型提供商支持`json_schema`，则默认会采用此方法。当模型提供商不支持时，才会回退到`function_calling`方法。
-    对于`json_mode`，虽然支持度较高，但是由于其必须在提示词中引导模型输出指定Schema的JSON字符串，因此使用起来比较麻烦，故默认不采用此方法。如想要采用，则可以显示提供`method="json_mode"`（前提是注册或者实例化的时候保证`supported_response_format`取值中包含`json_mode`)。
+    
 
 
 - 支持传递`BaseChatOpenAI`的参数，例如`temperature`、`top_p`、`max_tokens`等。
 
+除此之外，由于该类继承了`BaseChatOpenAI`,因此支持传递`BaseChatOpenAI`的模型参数，例如`temperature`, `extra_body`等：
 
 ??? example "传递模型参数"
-
-    除此之外，由于该类继承了`BaseChatOpenAI`,因此支持传递`BaseChatOpenAI`的模型参数，例如`temperature`, `extra_body`等：
 
     ```python
     from langchain_dev_utils.chat_models import load_chat_model
@@ -485,11 +480,10 @@ export VLLM_API_KEY=vllm
 
 - 支持传递多模态数据
 
+支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用`langchain`中的`content_block`。
 
 ??? example "传递多模态数据"
 
-    支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用`langchain`中的`content_block`。例如：
-    
     **传递图片类数据**：
 
     ```python
@@ -548,10 +542,10 @@ export VLLM_API_KEY=vllm
 
 - 支持 OpenAI 最新的`responses api` (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)
 
-??? example "OpenAI 最新的`responses_api`"
-
-    该模型类也支持 OpenAI 最新的`responses_api`。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入`use_responses_api`参数为`True`。
+该模型类也支持 OpenAI 最新的`responses_api`。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入`use_responses_api`参数为`True`。
     例如 vllm 支持`responses_api`，则可以这样使用：
+
+??? example "OpenAI 最新的`responses_api`"
 
     ```python
     from langchain_dev_utils.chat_models import load_chat_model

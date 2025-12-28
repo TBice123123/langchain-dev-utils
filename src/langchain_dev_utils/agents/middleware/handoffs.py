@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Callable
+from typing import Any, Awaitable, Callable, Literal
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
@@ -19,35 +19,24 @@ class MultiAgentState(AgentState):
 class AgentConfig(TypedDict):
     model: NotRequired[str | BaseChatModel]
     prompt: str | SystemMessage
-    tools: list[BaseTool | dict[str, Any]]
+    tools: NotRequired[list[BaseTool | dict[str, Any]]]
     default: NotRequired[bool]
+    handoffs: list[str] | Literal["all"]
 
 
-def create_handoffs_tool(
-    agent_name: str,
-    tool_name: Optional[str] = None,
-    tool_description: Optional[str] = None,
-):
+def _create_handoffs_tool(agent_name: str, tool_description: Optional[str] = None):
     """Create a tool for handoffs to a specified agent.
 
     Args:
         agent_name (str): The name of the agent to transfer to.
-        tool_name (Optional[str], optional): The name of the tool. Defaults to None.
-        tool_description (Optional[str], optional): The description of the tool. Defaults to None.
 
     Returns:
         BaseTool: A tool instance for handoffs to the specified agent.
-
-    Example:
-        Basic usage
-        >>> from langchain_dev_utils.agents.middleware import create_handoffs_tool
-        >>> handoffs_tool = create_handoffs_tool("time_agent")
     """
-    if tool_name is None:
-        tool_name = f"transfer_to_{agent_name}"
-        if not tool_name.endswith("_agent"):
-            tool_name += "_agent"
 
+    tool_name = f"transfer_to_{agent_name}"
+    if not tool_name.endswith("_agent"):
+        tool_name += "_agent"
     if tool_description is None:
         tool_description = f"Transfer to the {agent_name}"
 
@@ -75,30 +64,92 @@ def _get_default_active_agent(state: dict[str, AgentConfig]) -> Optional[str]:
     return None
 
 
-class HandoffsAgentMiddleware(AgentMiddleware):
+def _transform_agent_config(
+    config: dict[str, AgentConfig],
+    handoffs_tools: list[BaseTool],
+) -> dict[str, AgentConfig]:
+    """Transform the agent config to add handoffs tools.
+
+    Args:
+        config (dict[str, AgentConfig]): The agent config.
+        handoffs_tools (list[BaseTool]): The list of handoffs tools.
+
+    Returns:
+        dict[str, AgentConfig]: The transformed agent config.
+    """
+
+    for agent_name, _cfg in config.items():
+        handoffs = _cfg.get("handoffs", [])
+        if handoffs == "all":
+            handoff_tools = [
+                handoff_tool
+                for handoff_tool in handoffs_tools
+                if handoff_tool.name != f"transfer_to_{agent_name}"
+            ]
+        else:
+            if not isinstance(handoffs, list):
+                raise ValueError(
+                    f"handoffs for agent {agent_name} must be a list of agent names or 'all'"
+                )
+
+            handoff_tools = [
+                handoff_tool
+                for handoff_tool in handoffs_tools
+                if handoff_tool.name
+                in [
+                    f"transfer_to_{_handoff_agent_name}"
+                    for _handoff_agent_name in handoffs
+                ]
+            ]
+
+        _cfg["tools"] = [*_cfg.get("tools", []), *handoff_tools]
+    return config
+
+
+class HandoffAgentMiddleware(AgentMiddleware):
     """Agent middleware for switching between multiple agents.
     This middleware dynamically replaces model call parameters based on the currently active agent configuration, enabling seamless switching between different agents.
 
     Args:
         agents_config (dict[str, AgentConfig]): A dictionary of agent configurations.
+        custom_handoffs_tool_descriptions (Optional[dict[str, str]]): A dictionary of custom tool descriptions for handoffs tools. Defaults to None.
 
     Examples:
         ```python
-        from langchain_dev_utils.agents.middleware import HandoffsAgentMiddleware
-        middleware = HandoffsAgentMiddleware(agents_config)
+        from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
+        middleware = HandoffAgentMiddleware(agents_config)
         ```
     """
 
     state_schema = MultiAgentState
 
-    def __init__(self, agents_config: dict[str, AgentConfig]):
+    def __init__(
+        self,
+        agents_config: dict[str, AgentConfig],
+        custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
+    ) -> None:
         default_agent_name = _get_default_active_agent(agents_config)
         if default_agent_name is None:
             raise ValueError(
                 "No default agent found, you must set one by set default=True"
             )
+
+        if custom_handoffs_tool_descriptions is None:
+            custom_handoffs_tool_descriptions = {}
+
+        handoffs_tools = [
+            _create_handoffs_tool(
+                agent_name,
+                custom_handoffs_tool_descriptions.get(agent_name),
+            )
+            for agent_name in agents_config.keys()
+        ]
         self.default_agent_name = default_agent_name
-        self.agents_config = agents_config
+        self.agents_config = _transform_agent_config(
+            agents_config,
+            handoffs_tools,
+        )
+        self.tools = handoffs_tools
 
     def _get_active_agent_config(self, request: ModelRequest) -> dict[str, Any]:
         active_agent_name = request.state.get("active_agent", self.default_agent_name)

@@ -134,9 +134,8 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     from other model providers.
 
     **2. Dynamically adapts to choose the most suitable structured-output method**
-    OpenAICompatibleChatModel adds method="auto" (default), which selects the best
-    structured-output method (function_calling or json_schema) based on the actual
-    capabilities of the model provider.
+    OpenAICompatibleChatModel selects the best structured-output method (function_calling or json_schema)
+    based on the actual capabilities of the model provider.
 
     **3. Supports configuration of related parameters**
     For cases where parameters differ from the official OpenAI API, this library
@@ -527,11 +526,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         schema: Optional[_DictOrPydanticClass] = None,
         *,
         method: Literal[
-            "auto",
             "function_calling",
             "json_mode",
             "json_schema",
-        ] = "auto",
+        ] = "json_schema",
         include_raw: bool = False,
         strict: Optional[bool] = None,
         **kwargs: Any,
@@ -545,7 +543,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
         Args:
             schema: Output schema (Pydantic model class or dictionary definition)
-            method: Extraction method - defaults to auto,it will choice best method based on provider supported response format
+            method: Extraction method - defaults to json_schema, it the provider doesn't support json_schema, it will fallback to function_calling
             include_raw: Whether to include raw model response alongside parsed output
             strict: Schema enforcement strictness (provider-dependent)
             **kwargs: Additional structured output parameters
@@ -553,16 +551,11 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         Returns:
             Runnable configured for structured output extraction
         """
-        if method not in ["auto", "function_calling", "json_mode", "json_schema"]:
+        if method not in ["function_calling", "json_mode", "json_schema"]:
             raise ValueError(
-                f"Unsupported method: {method}. Please choose from 'auto', 'function_calling', 'json_mode', 'json_schema'."
+                f"Unsupported method: {method}. Please choose from 'function_calling', 'json_mode', 'json_schema'."
             )
-        if method == "auto":
-            if "json_schema" in self.supported_response_format:
-                method = "json_schema"
-            else:
-                method = "function_calling"
-        elif (
+        if (
             method == "json_schema"
             and "json_schema" not in self.supported_response_format
         ):
