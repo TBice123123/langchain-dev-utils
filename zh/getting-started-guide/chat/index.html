@@ -71,7 +71,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -127,7 +127,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -137,7 +137,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -1545,7 +1545,7 @@
 <li><code>json_mode</code>：是某些提供商在推出<code>json_schema</code>之前提供的一种功能，它能生成有效的 JSON，但 schema 必须在提示（prompt）中进行描述。在 OpenAI 兼容 API 中，具体为 <code>response_format={"type": "json_object"}</code>）。</li>
 </ul>
 <p>其中，<code>json_schema</code> 仅少数 OpenAI 兼容 API 提供商支持（如 <code>OpenRouter</code>、<code>TogetherAI</code>）；<code>json_mode</code> 支持度更高，多数提供商已兼容；而 <code>function_calling</code> 最为通用，只要模型支持工具调用即可使用。</p>
-<p>本参数用于声明模型提供商对于<code>response_format</code>的支持情况。默认情况下为<code>[]</code>，代表模型提供商既不支持<code>json_mode</code>也不支持<code>json_schema</code>。此时<code>with_structured_output</code>方法中的<code>method</code>参数只能传递<code>function_calling</code>(或者是<code>auto</code>,此时<code>auto</code>将被推断为<code>function_calling</code>），如果传递了<code>json_mode</code>或<code>json_schema</code>，则会自动被转化为<code>function_calling</code>。如果想要启用<code>json_mode</code>或者<code>json_schema</code>的结构化输出实现方式，则需要显示设置该参数。</p>
+<p>本参数用于声明模型提供商对于<code>response_format</code>的支持情况。默认情况下为<code>[]</code>，代表模型提供商既不支持<code>json_mode</code>也不支持<code>json_schema</code>。此时<code>with_structured_output</code>方法中的<code>method</code>参数只能传递<code>function_calling</code>，如果传递了<code>json_mode</code>或<code>json_schema</code>，则会自动被转化为<code>function_calling</code>。如果想要启用<code>json_mode</code>或者<code>json_schema</code>的结构化输出实现方式，则需要显示设置该参数。</p>
 <p>例如vLLM部署的模型支持<code>json_schema</code>的结构化输出方法，则可以注册的时候进行声明：</p>
 <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
     <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
@@ -1555,7 +1555,7 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
-<p>通常一般情况下也无需配置。仅在需要使用<code>with_structured_output</code>方法时需要考虑进行配置，此时，如果模型提供商支持<code>json_schema</code>，则可以考虑配置本参数。以保证结构化输出的稳定性。对于<code>json_mode</code>，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置<code>response_format={"type":"json_object"}</code>时，才需要配置本参数包含<code>json_mode</code>。</p>
+<p>通常一般情况下也无需配置。仅在需要使用<code>with_structured_output</code>方法时需要考虑进行配置，此时，如果模型提供商支持<code>json_schema</code>，则可以考虑配置本参数（因为<code>json_schema</code>的结构化输出稳定性要优于<code>function_calling</code>）。以保证结构化输出的稳定性。对于<code>json_mode</code>，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置<code>response_format={"type":"json_object"}</code>时，才需要配置本参数包含<code>json_mode</code>。</p>
 <p>同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；推荐在 <code>register_model_provider</code> 中一次性声明该提供商的大多数模型的<code>response_format</code>支持情况，而对于部分支持情况不同的模型，则在 <code>load_chat_model</code> 中单独指定。</p>
 </div>
 <div class="admonition warning">
@@ -1752,9 +1752,9 @@
 <ul>
 <li>支持<code>bind_tools</code>方法，进行工具调用。</li>
 </ul>
+<p>如果模型本身支持工具调用，那么可以直接使用<code>bind_tools</code>方法进行工具调用：</p>
 <details class="example">
 <summary>工具调用</summary>
-<p>如果模型本身支持工具调用，那么可以直接使用<code>bind_tools</code>方法进行工具调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
@@ -1773,6 +1773,7 @@
 <ul>
 <li>支持<code>with_structured_output</code>方法，进行结构化输出。</li>
 </ul>
+<p>如果该模型类的<code>supported_response_format</code>参数中包含<code>json_schema</code>，则<code>with_structured_output</code> 优先使用 <code>json_schema</code>进行结构化输出，否则回退 <code>function_calling</code>；如需 <code>json_mode</code>，显式指定 <code>method="json_mode"</code> 并确保注册时包含 <code>json_mode</code>。</p>
 <details class="example">
 <summary>结构化输出</summary>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
@@ -1789,18 +1790,12 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<div class="admonition tip">
-<p class="admonition-title">注意</p>
-<p>默认的<code>method</code>取值为<code>auto</code>，此时将会根据模型提供商的<code>supported_response_format</code>参数自动选择合适的结构化输出方法。具体为如果其中取值包含<code>json_schema</code>，则会选择<code>json_schema</code>方法；否则，则会选择<code>function_calling</code>方法。
-相较于工具调用，<code>json_schema</code>能100%保证输出符合JSON Schema规范，避免工具调用可能产生的参数误差。故如果模型提供商支持<code>json_schema</code>，则默认会采用此方法。当模型提供商不支持时，才会回退到<code>function_calling</code>方法。
-对于<code>json_mode</code>，虽然支持度较高，但是由于其必须在提示词中引导模型输出指定Schema的JSON字符串，因此使用起来比较麻烦，故默认不采用此方法。如想要采用，则可以显示提供<code>method="json_mode"</code>（前提是注册或者实例化的时候保证<code>supported_response_format</code>取值中包含<code>json_mode</code>)。</p>
-</div>
 <ul>
 <li>支持传递<code>BaseChatOpenAI</code>的参数，例如<code>temperature</code>、<code>top_p</code>、<code>max_tokens</code>等。</li>
 </ul>
+<p>除此之外，由于该类继承了<code>BaseChatOpenAI</code>,因此支持传递<code>BaseChatOpenAI</code>的模型参数，例如<code>temperature</code>, <code>extra_body</code>等：</p>
 <details class="example">
 <summary>传递模型参数</summary>
-<p>除此之外，由于该类继承了<code>BaseChatOpenAI</code>,因此支持传递<code>BaseChatOpenAI</code>的模型参数，例如<code>temperature</code>, <code>extra_body</code>等：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
@@ -1812,9 +1807,9 @@
 <ul>
 <li>支持传递多模态数据</li>
 </ul>
+<p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。</p>
 <details class="example">
 <summary>传递多模态数据</summary>
-<p>支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用<code>langchain</code>中的<code>content_block</code>。例如：</p>
 <p><strong>传递图片类数据</strong>：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1867,10 +1862,10 @@
 <ul>
 <li>支持 OpenAI 最新的<code>responses api</code> (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)</li>
 </ul>
+<p>该模型类也支持 OpenAI 最新的<code>responses_api</code>。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入<code>use_responses_api</code>参数为<code>True</code>。
+    例如 vllm 支持<code>responses_api</code>，则可以这样使用：</p>
 <details class="example">
 <summary>OpenAI 最新的<code>responses_api</code></summary>
-<p>该模型类也支持 OpenAI 最新的<code>responses_api</code>。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入<code>use_responses_api</code>参数为<code>True</code>。
-例如 vllm 支持<code>responses_api</code>，则可以这样使用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
