@@ -78,7 +78,19 @@ def _transform_agent_config(
         dict[str, AgentConfig]: The transformed agent config.
     """
 
+    new_config = {}
     for agent_name, _cfg in config.items():
+        new_config[agent_name] = {}
+
+        if "model" in _cfg:
+            new_config[agent_name]["model"] = _cfg["model"]
+        if "prompt" in _cfg:
+            new_config[agent_name]["prompt"] = _cfg["prompt"]
+        if "default" in _cfg:
+            new_config[agent_name]["default"] = _cfg["default"]
+        if "tools" in _cfg:
+            new_config[agent_name]["tools"] = _cfg["tools"]
+
         handoffs = _cfg.get("handoffs", [])
         if handoffs == "all":
             handoff_tools = [
@@ -102,8 +114,11 @@ def _transform_agent_config(
                 ]
             ]
 
-        _cfg["tools"] = [*_cfg.get("tools", []), *handoff_tools]
-    return config
+        new_config[agent_name]["tools"] = [
+            *new_config[agent_name].get("tools", []),
+            *handoff_tools,
+        ]
+    return new_config
 
 
 class HandoffAgentMiddleware(AgentMiddleware):

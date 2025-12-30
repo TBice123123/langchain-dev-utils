@@ -9,7 +9,7 @@
 ```python
 def convert_reasoning_content_for_ai_message(
     model_response: AIMessage,
-    think_tag: Tuple[str, str] = ("", ""),
+    think_tag: Tuple[str, str] = ("<think>", "</think>"),
 ) -> AIMessage
 ```
 
@@ -18,7 +18,7 @@ def convert_reasoning_content_for_ai_message(
 | 参数 | 类型 | 必填 | 默认值 | 描述 |
 |------|------|------|--------|------|
 | model_response | AIMessage | 是 | - | 包含推理内容的 AI 消息 |
-| think_tag | Tuple[str, str] | 否 | ("", "") | 推理内容的开始和结束标签 |
+| think_tag | Tuple[str, str] | 否 | `("<think>","</think>")` | 推理内容的开始和结束标签 |
 
 
 ### 示例
@@ -40,7 +40,7 @@ response = convert_reasoning_content_for_ai_message(
 ```python
 def convert_reasoning_content_for_chunk_iterator(
     model_response: Iterator[AIMessageChunk | AIMessage],
-    think_tag: Tuple[str, str] = ("", ""),
+    think_tag: Tuple[str, str] = ("<think>", "</think>"),
 ) -> Iterator[AIMessageChunk | AIMessage]
 ```
 
@@ -49,14 +49,14 @@ def convert_reasoning_content_for_chunk_iterator(
 | 参数 | 类型 | 必填 | 默认值 | 描述 |
 |------|------|------|--------|------|
 | model_response | Iterator[AIMessageChunk \| AIMessage] | 是 | - | 消息块的迭代器 |
-| think_tag | Tuple[str, str] | 否 | ("", "") | 推理内容的开始和结束标签 |
+| think_tag | Tuple[str, str] | 否 | `("<think>","</think>")` | 推理内容的开始和结束标签 |
 
 
 ### 示例
 
 ```python
 for chunk in convert_reasoning_content_for_chunk_iterator(
-    model.stream("Hello"), think_tag=("", "")
+    model.stream("Hello"), think_tag=("<think>", "</think>")
 ):
     print(chunk.content, end="", flush=True)
 ```
@@ -72,7 +72,7 @@ for chunk in convert_reasoning_content_for_chunk_iterator(
 ```python
 async def aconvert_reasoning_content_for_chunk_iterator(
     model_response: AsyncIterator[AIMessageChunk | AIMessage],
-    think_tag: Tuple[str, str] = ("", ""),
+    think_tag: Tuple[str, str] = ("<think>", "</think>"),
 ) -> AsyncIterator[AIMessageChunk | AIMessage]
 ```
 
@@ -81,14 +81,14 @@ async def aconvert_reasoning_content_for_chunk_iterator(
 | 参数 | 类型 | 必填 | 默认值 | 描述 |
 |------|------|------|--------|------|
 | model_response | AsyncIterator[AIMessageChunk \| AIMessage] | 是 | - | 消息块的异步迭代器 |
-| think_tag | Tuple[str, str] | 否 | ("", "") | 推理内容的开始和结束标签 |
+| think_tag | Tuple[str, str] | 否 | `("<think>","</think>")` | 推理内容的开始和结束标签 |
 
 
 ### 示例
 
 ```python
 async for chunk in aconvert_reasoning_content_for_chunk_iterator(
-    model.astream("Hello"), think_tag=("", "")
+    model.astream("Hello"), think_tag=("<think>", "</think>")
 ):
     print(chunk.content, end="", flush=True)
 ```

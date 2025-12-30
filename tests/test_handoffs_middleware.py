@@ -11,6 +11,9 @@ from langchain_dev_utils.agents.middleware import (
 from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
 
 from langchain_dev_utils.chat_models import load_chat_model
+import os
+
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
 
 
 @tool
@@ -25,46 +28,43 @@ def run_code(code: str) -> str:
     return "Running code successfully"
 
 
-def get_config() -> tuple[dict[str, AgentConfig], dict[str, str]]:
-    agents_config: dict[str, AgentConfig] = {
-        "time_agent": {
-            "model": "zai:glm-4.5",
-            "prompt": (
-                "You are a time assistant. You can answer users' time-related questions. "
-                "If the current question is not time-related, please transfer to another assistant."
-            ),
-            "tools": [get_current_time],
-            "handoffs": ["talk_agent"],
-        },
-        "talk_agent": {
-            "prompt": (
-                "You are a conversational assistant. You can answer users' questions. "
-                "If the current question is a time query, please transfer to the time assistant; "
-                "if it's a code-related question, please transfer to the code assistant."
-            ),
-            "default": True,
-            "handoffs": "all",
-        },
-        "code_agent": {
-            "model": load_chat_model("dashscope:qwen3-coder-plus"),
-            "prompt": (
-                "You are a code assistant. You can answer users' code-related questions. "
-                "If the current question is not code-related, please transfer to another assistant."
-            ),
-            "tools": [run_code],
-            "handoffs": ["talk_agent"],
-        },
-    }
-    custom_tool_descriptions: dict[str, str] = {
-        "time_agent": "transfer to the time agent to answer time-related questions",
-        "talk_agent": "transfer to the talk agent to answer user questions",
-        "code_agent": "transfer to the code agent to answer code-related questions",
-    }
-    return agents_config, custom_tool_descriptions
+agents_config: dict[str, AgentConfig] = {
+    "time_agent": {
+        "model": "zai:glm-4.5",
+        "prompt": (
+            "You are a time assistant. You can answer users' time-related questions. "
+            "If the current question is not time-related, please transfer to another assistant."
+        ),
+        "tools": [get_current_time],
+        "handoffs": ["talk_agent"],
+    },
+    "talk_agent": {
+        "prompt": (
+            "You are a conversational assistant. You can answer users' questions. "
+            "If the current question is a time query, please transfer to the time assistant; "
+            "if it's a code-related question, please transfer to the code assistant."
+        ),
+        "default": True,
+        "handoffs": "all",
+    },
+    "code_agent": {
+        "model": load_chat_model("dashscope:qwen3-coder-plus"),
+        "prompt": (
+            "You are a code assistant. You can answer users' code-related questions. "
+            "If the current question is not code-related, please transfer to another assistant."
+        ),
+        "tools": [run_code],
+        "handoffs": ["talk_agent"],
+    },
+}
+custom_tool_descriptions: dict[str, str] = {
+    "time_agent": "transfer to the time agent to answer time-related questions",
+    "talk_agent": "transfer to the talk agent to answer user questions",
+    "code_agent": "transfer to the code agent to answer code-related questions",
+}
 
 
 def test_handoffs_middleware():
-    agents_config, custom_tool_descriptions = get_config()
     agent = create_agent(
         model="dashscope:qwen3-max",
         middleware=[HandoffAgentMiddleware(agents_config, custom_tool_descriptions)],
@@ -103,7 +103,6 @@ def test_handoffs_middleware():
 
 
 async def test_handoffs_middleware_async():
-    agents_config, custom_tool_descriptions = get_config()
     agent = create_agent(
         model="dashscope:qwen3-max",
         middleware=[HandoffAgentMiddleware(agents_config, custom_tool_descriptions)],
