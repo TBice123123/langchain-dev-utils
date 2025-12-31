@@ -1680,11 +1680,11 @@
 
 <h1 id="message-convert-module-api-reference-documentation">Message Convert Module API Reference Documentation</h1>
 <h2 id="convert_reasoning_content_for_ai_message">convert_reasoning_content_for_ai_message</h2>
-<p>Merges reasoning content into the final response.</p>
+<p>Merges the chain of thought into the final response.</p>
 <h3 id="function-signature">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_reasoning_content_for_ai_message</span><span class="p">(</span>
     <span class="n">model_response</span><span class="p">:</span> <span class="n">AIMessage</span><span class="p">,</span>
-    <span class="n">think_tag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="n">think_tag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&lt;think&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;/think&gt;&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span>
 </code></pre></div>
 <h3 id="parameters">Parameters</h3>
@@ -1710,7 +1710,7 @@
 <td>think_tag</td>
 <td>Tuple[str, str]</td>
 <td>No</td>
-<td>("", "")</td>
+<td><code>("&lt;think&gt;","&lt;/think&gt;")</code></td>
 <td>Start and end tags for reasoning content</td>
 </tr>
 </tbody>
@@ -1726,7 +1726,7 @@
 <h3 id="function-signature_1">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_reasoning_content_for_chunk_iterator</span><span class="p">(</span>
     <span class="n">model_response</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">AIMessageChunk</span> <span class="o">|</span> <span class="n">AIMessage</span><span class="p">],</span>
-    <span class="n">think_tag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="n">think_tag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;think&quot;</span><span class="p">,</span> <span class="s2">&quot;think&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">AIMessageChunk</span> <span class="o">|</span> <span class="n">AIMessage</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="parameters_1">Parameters</h3>
@@ -1752,24 +1752,24 @@
 <td>think_tag</td>
 <td>Tuple[str, str]</td>
 <td>No</td>
-<td>("", "")</td>
+<td><code>("&lt;think&gt;","&lt;/think&gt;")</code></td>
 <td>Start and end tags for reasoning content</td>
 </tr>
 </tbody>
 </table>
 <h3 id="example_1">Example</h3>
 <div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">convert_reasoning_content_for_chunk_iterator</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">),</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">),</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;think&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;/think&gt;&quot;</span><span class="p">)</span>
 <span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="aconvert_reasoning_content_for_chunk_iterator">aconvert_reasoning_content_for_chunk_iterator</h2>
-<p>Async version of <code>convert_reasoning_content_for_chunk_iterator</code>.</p>
+<p>Asynchronous version of <code>convert_reasoning_content_for_chunk_iterator</code>.</p>
 <h3 id="function-signature_2">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">aconvert_reasoning_content_for_chunk_iterator</span><span class="p">(</span>
     <span class="n">model_response</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">AIMessageChunk</span> <span class="o">|</span> <span class="n">AIMessage</span><span class="p">],</span>
-    <span class="n">think_tag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="n">think_tag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;think&quot;</span><span class="p">,</span> <span class="s2">&quot;think&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">AIMessageChunk</span> <span class="o">|</span> <span class="n">AIMessage</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="parameters_2">Parameters</h3>
@@ -1795,14 +1795,14 @@
 <td>think_tag</td>
 <td>Tuple[str, str]</td>
 <td>No</td>
-<td>("", "")</td>
+<td><code>("&lt;think&gt;","&lt;/think&gt;")</code></td>
 <td>Start and end tags for reasoning content</td>
 </tr>
 </tbody>
 </table>
 <h3 id="example_2">Example</h3>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">aconvert_reasoning_content_for_chunk_iterator</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">),</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">),</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;think&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;/think&gt;&quot;</span><span class="p">)</span>
 <span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
@@ -1831,7 +1831,7 @@
 <td>Sequence[AIMessageChunk]</td>
 <td>Yes</td>
 <td>-</td>
-<td>List of message chunks to be merged</td>
+<td>List of message chunks to merge</td>
 </tr>
 </tbody>
 </table>
@@ -1841,7 +1841,7 @@
 </code></pre></div>
 <hr />
 <h2 id="format_sequence">format_sequence</h2>
-<p>Formats a list of BaseMessage, Document, or string into a single string.</p>
+<p>Formats a list of BaseMessage, Document, or strings into a single string.</p>
 <h3 id="function-signature_4">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_sequence</span><span class="p">(</span>
     <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">BaseMessage</span><span class="p">,</span> <span class="n">Document</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
@@ -1880,7 +1880,7 @@
 <td>bool</td>
 <td>No</td>
 <td>False</td>
-<td>Whether to add numeric prefix</td>
+<td>Whether to add number prefix</td>
 </tr>
 </tbody>
 </table>

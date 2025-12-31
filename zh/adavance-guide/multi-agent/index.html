@@ -791,15 +791,60 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        封装单个智能体为工具
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="封装单个智能体为工具">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用示例
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        封装多个智能体封装为单一工具
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="封装多个智能体封装为单一工具">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         钩子函数
@@ -1234,15 +1279,60 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        封装单个智能体为工具
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="封装单个智能体为工具">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用示例
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        封装多个智能体封装为单一工具
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="封装多个智能体封装为单一工具">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         钩子函数
@@ -1302,8 +1392,25 @@
 
 <h1 id="_1">多智能体构建</h1>
 <h2 id="_2">概述</h2>
-<p>将智能体封装为工具是多智能体系统中的一种常见实现模式，LangChain 官方文档对此有详细阐述。为此，本库提供了预构建函数 <code>wrap_agent_as_tool</code> 来实现此模式，该函数能够将一个智能体实例封装成一个可供其它智能体调用的工具。</p>
-<h2 id="_3">使用示例</h2>
+<p>将智能体封装为工具是多智能体系统中的一种实现模式，LangChain 官方文档将其称为<code>subagents</code>模式。该模式通过将子智能体（subagents）封装为工具，使主智能体能够根据任务需求动态委派给专门的子智能体处理，从而实现任务的专业化分工和协作。</p>
+<p>本库提供了两个预构建函数来实现此模式：</p>
+<ul>
+<li>
+<p><code>wrap_agent_as_tool</code>：将单个智能体实例封装为一个独立工具</p>
+</li>
+<li>
+<p><code>wrap_all_agents_as_tool</code>：将多个智能体实例封装为一个统一工具，通过参数指定调用哪个子智能体</p>
+</li>
+</ul>
+<h2 id="_3">封装单个智能体为工具</h2>
+<p>封装单个智能体只需三步：<br />
+1. 导入 <code>wrap_agent_as_tool</code><br />
+2. 把智能体实例作为参数传入<br />
+3. 获得可直接被其他智能体调用的工具对象  </p>
+<p>函数第一个参数 <code>agent</code> 为必填项，需传入一个 <code>CompiledStateGraph</code> 实例；同时，该实例必须已定义 <code>name</code> 属性。<br />
+可选参数 <code>tool_name</code> 与 <code>tool_description</code> 可分别指定工具的名称与描述；若留空，工具名默认取 <code>transfer_to_{agent_name}</code>，描述默认为 <code>This tool transforms input to {agent_name}</code>。<br />
+此外，还可额外传入钩子函数，在智能体执行前后插入自定义逻辑。</p>
+<h3 id="_4">使用示例</h3>
 <p>下面，我们以官方示例中的 <code>supervisor</code> 智能体为基础，介绍如何通过 <code>wrap_agent_as_tool</code> 将其快速改造成可被其它智能体调用的工具。</p>
 <p>首先实现两个子智能体，一个用于发送邮件，一个用于日程查询和安排。</p>
 <p><strong>邮件智能体</strong>
@@ -1389,24 +1496,22 @@
 <div class="highlight"><pre><span></span><code><span class="n">schedule_event</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
     <span class="n">calendar_agent</span><span class="p">,</span>
     <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;schedule_event&quot;</span><span class="p">,</span>
-    <span class="n">tool_description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;使用自然语言安排日历事件。</span>
-
-<span class="s2">    在用户想要创建、修改或检查日历约会时使用此功能。</span>
-<span class="s2">    能够处理日期/时间解析、查询可用时间和创建事件。</span>
-
-<span class="s2">    输入：自然语言日历安排请求（例如&#39;与设计团队下个星期二下午2点的会议&#39;）</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tool_description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;使用自然语言安排日历事件。&quot;</span>
+        <span class="s2">&quot;在用户想要创建、修改或检查日历约会时使用此功能。&quot;</span>
+        <span class="s2">&quot;能够处理日期/时间解析、查询可用时间和创建事件。&quot;</span>
+        <span class="s2">&quot;输入：自然语言日历安排请求（例如&#39;与设计团队下个星期二下午2点的会议&#39;）&quot;</span>
+    <span class="p">),</span>
 <span class="p">)</span>
 <span class="n">manage_email</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
     <span class="n">email_agent</span><span class="p">,</span>
     <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;manage_email&quot;</span><span class="p">,</span>
-    <span class="n">tool_description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;使用自然语言发送电子邮件。</span>
-
-<span class="s2">    在用户想要发送通知、提醒或任何电子邮件通信时使用此功能。</span>
-<span class="s2">    能够提取收件人信息、主题生成和电子邮件撰写。</span>
-
-<span class="s2">    输入：自然语言电子邮件请求（例如&#39;向他们发送会议提醒&#39;）</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tool_description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;使用自然语言发送电子邮件。&quot;</span>
+        <span class="s2">&quot;在用户想要发送通知、提醒或任何电子邮件通信时使用此功能。&quot;</span>
+        <span class="s2">&quot;能够提取收件人信息、主题生成和电子邮件撰写。&quot;</span>
+        <span class="s2">&quot;输入：自然语言电子邮件请求（例如&#39;向他们发送会议提醒&#39;）&quot;</span>
+    <span class="p">),</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>最终创建一个<code>supervisor_agent</code>，它可以调用这两个工具。</p>
@@ -1423,9 +1528,8 @@
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">schedule_event</span><span class="p">,</span> <span class="n">manage_email</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">SUPERVISOR_PROMPT</span><span class="p">,</span>
 <span class="p">)</span>
-</code></pre></div>
-<p>测试一下功能：</p>
-<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span>
+
+<span class="nb">print</span><span class="p">(</span>
     <span class="n">supervisor_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查询明天的空闲时间&quot;</span><span class="p">)]})</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
@@ -1438,8 +1542,46 @@
 <p class="admonition-title">注意</p>
 <p>上述示例中，我们是从<code>langchain_dev_utils.agents</code>中导入了<code>create_agent</code>函数，而不是<code>langchain.agents</code>，这是因为本库也提供了一个与官方<code>create_agent</code>函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。使得可以直接使用<code>register_model_provider</code>注册的模型，而无需初始化模型实例后传入。</p>
 </div>
-<h2 id="_4">钩子函数</h2>
-<p>本函数提供了几个钩子函数，用于在调用智能体前后进行一些操作。</p>
+<h2 id="_5">封装多个智能体封装为单一工具</h2>
+<p>将多个智能体封装为单一工具只需三步：<br />
+1. 导入 <code>wrap_all_agents_as_tool</code><br />
+2. 把多个智能体实例作为列表一次性传入<br />
+3. 获得可直接被其他智能体调用的统一工具对象  </p>
+<p>函数第一个参数 <code>agents</code> 必须提供；可选参数 <code>tool_name</code> 与 <code>tool_description</code> 可自定义工具名称与描述。若省略，工具名默认为 <code>task</code>，描述默认为 <code>Launch an ephemeral subagent for a task.\nAvailable agents:\n {all_available_agents}</code>。  </p>
+<p>同样支持也支持传入钩子函数，用于在智能体调用前或后执行自定义逻辑。</p>
+<h3 id="_6">使用示例</h3>
+<p>对于上一个示例的<code>calendar_agent</code>和<code>email_agent</code>，我们可以将它们封装为一个工具<code>call_subagent</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">call_subagent_tool</span> <span class="o">=</span> <span class="n">wrap_all_agents_as_tool</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">calendar_agent</span><span class="p">,</span> <span class="n">email_agent</span><span class="p">],</span>
+    <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;call_subagent&quot;</span><span class="p">,</span>
+    <span class="n">tool_description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;调用子智能体执行任务。&quot;</span>
+        <span class="s2">&quot;可以使用的智能体有：&quot;</span>
+        <span class="s2">&quot;- calendar_agent：用于安排日历事件&quot;</span>
+        <span class="s2">&quot;- email_agent：用于发送电子邮件&quot;</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">MAIN_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;你是一个有用的个人助手。&quot;</span>
+    <span class="s2">&quot;你可以使用**call_subagent**工具调用子智能体执行任务。&quot;</span>
+    <span class="s2">&quot;将用户请求分解为适当的工具调用，并协调结果。&quot;</span>
+    <span class="s2">&quot;当请求涉及多个操作时，请使用多个工具按顺序操作。&quot;</span>
+<span class="p">)</span>
+
+<span class="n">main_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">call_subagent_tool</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="n">MAIN_AGENT_PROMPT</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">注意</p>
+<p>除了使用本库提供的<code>wrap_all_agents_as_tool</code>将多个智能体封装为单一工具外，你还可以使用<code>deepagents</code>库提供的<code>SubAgentMiddleware</code>中间件实现类似的效果</p>
+</div>
+<h2 id="_7">钩子函数</h2>
+<p>本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。<br />
+该机制同时适用于 <code>wrap_agent_as_tool</code> 与 <code>wrap_all_agents_as_tool</code>，下文以 <code>wrap_agent_as_tool</code> 为例进行说明。</p>
 <h4 id="1-pre_input_hooks">1. pre_input_hooks</h4>
 <p>在智能体运行前对输入进行预处理。可用于输入增强、上下文注入、格式校验、权限检查等。</p>
 <p>支持传入以下类型：</p>
@@ -1510,7 +1652,6 @@
 <li>若未提供 <code>post_output_hooks</code>，默认返回 <code>response["messages"][-1].content</code>（即最后一条消息的文本内容）。</li>
 </ul>
 <p>注意，上述的例子比较简单，实际上你可以根据<code>runtime</code>里面的<code>state</code>或者<code>context</code>添加更复杂的逻辑。</p>
-<p><strong>注意</strong>：当该 Agent（CompiledStateGraph）作为 <code>wrap_agent_as_tool</code> 的 agent 参数时，该 Agent 必须定义 name 属性。</p>
 
 
 
