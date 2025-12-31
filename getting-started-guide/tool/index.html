@@ -699,24 +699,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#detecting-tool-calls" class="md-nav__link">
+  <a href="#detect-tool-calls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detecting Tool Calls
+        Detect Tool Calls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detect Tool Calls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#parsing-tool-call-parameters" class="md-nav__link">
+  <a href="#parse-tool-call-arguments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parsing Tool Call Parameters
+        Parse Tool Call Arguments
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Parse Tool Call Arguments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1203,24 +1237,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#detecting-tool-calls" class="md-nav__link">
+  <a href="#detect-tool-calls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detecting Tool Calls
+        Detect Tool Calls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detect Tool Calls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#parsing-tool-call-parameters" class="md-nav__link">
+  <a href="#parse-tool-call-arguments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parsing Tool Call Parameters
+        Parse Tool Call Arguments
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Parse Tool Call Arguments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1246,10 +1314,10 @@
 
 <h1 id="tool-call-processing">Tool Call Processing</h1>
 <h2 id="overview">Overview</h2>
-<p>Provides utility tools for detecting and parsing tool call parameters.</p>
-<h2 id="detecting-tool-calls">Detecting Tool Calls</h2>
+<p>Provides utilities for detecting and parsing tool call arguments.</p>
+<h2 id="detect-tool-calls">Detect Tool Calls</h2>
 <p>Detects whether a message contains a tool call. The core function is <code>has_tool_calling</code>.</p>
-<p>Usage example:</p>
+<h3 id="code-example">Code Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_tool_calling</span>
@@ -1262,9 +1330,9 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;What time is it now?&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">has_tool_calling</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="parsing-tool-call-parameters">Parsing Tool Call Parameters</h2>
-<p>Provides a utility function to parse tool call parameters, extracting parameter information from a message. The core function is <code>parse_tool_calling</code>.</p>
-<p>Usage example:</p>
+<h2 id="parse-tool-call-arguments">Parse Tool Call Arguments</h2>
+<p>Provides a utility function to parse tool call arguments, extracting parameter information from a message. The core function is <code>parse_tool_calling</code>.</p>
+<h3 id="code-example_1">Code Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_tool_calling</span><span class="p">,</span> <span class="n">parse_tool_calling</span>

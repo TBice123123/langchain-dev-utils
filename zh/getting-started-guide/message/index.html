@@ -679,6 +679,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="合并推理内容至最终回复">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -689,6 +717,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="合并流式输出的 Chunks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1211,6 +1267,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="合并推理内容至最终回复">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1221,6 +1305,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="合并流式输出的 Chunks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1248,22 +1360,35 @@
 <h2 id="_2">概述</h2>
 <p>主要功能包括：</p>
 <ul>
-<li>
-<p>合并推理内容至最终回复</p>
-</li>
-<li>
-<p>合并流式输出的 Chunks</p>
-</li>
+<li>合并推理内容至最终回复</li>
+<li>合并流式输出的 Chunks</li>
 </ul>
 <h2 id="_3">合并推理内容至最终回复</h2>
 <p>用于将推理内容（<code>reasoning_content</code>）合并至最终回复（<code>content</code>）。</p>
-<p>具体如下</p>
-<ul>
-<li><code>convert_reasoning_content_for_ai_message</code>：将 AIMessage 中的推理内容合并到内容字段（用于模型的 invoke 和 ainvoke）</li>
-<li><code>convert_reasoning_content_for_chunk_iterator</code>：将流式响应中的推理内容合并到内容字段 (用于模型的 stream)</li>
-<li><code>aconvert_reasoning_content_for_chunk_iterator</code>：<code>convert_reasoning_content_for_chunk_iterator</code> 的异步版本，用于异步流式处理(用于模型的 astream)</li>
-</ul>
-<p>使用示例:</p>
+<h3 id="_4">功能说明</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>convert_reasoning_content_for_ai_message</code></td>
+<td>将 AIMessage 中的推理内容合并到内容字段（用于模型的 invoke 和 ainvoke）</td>
+</tr>
+<tr>
+<td><code>convert_reasoning_content_for_chunk_iterator</code></td>
+<td>将流式响应中的推理内容合并到内容字段（用于模型的 stream）</td>
+</tr>
+<tr>
+<td><code>aconvert_reasoning_content_for_chunk_iterator</code></td>
+<td><code>convert_reasoning_content_for_chunk_iterator</code> 的异步版本，用于异步流式处理（用于模型的 astream）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">代码示例</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">convert_reasoning_content_for_ai_message</span><span class="p">,</span>
     <span class="n">convert_reasoning_content_for_chunk_iterator</span><span class="p">,</span>
@@ -1281,12 +1406,23 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="chunks">合并流式输出的 Chunks</h2>
-<p>提供将多个因为流式输出而产生的 AIMessageChunk 合并为单个 AIMessage 的工具函数。
-核心函数为：</p>
-<ul>
-<li><code>merge_ai_message_chunk</code>：合并 AI 消息块</li>
-</ul>
-<p>使用示例:</p>
+<p>提供将多个因为流式输出而产生的 AIMessageChunk 合并为单个 AIMessage 的工具函数。</p>
+<h3 id="_6">核心函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>merge_ai_message_chunk</code></td>
+<td>合并 AI 消息块</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">代码示例</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge_ai_message_chunk</span>
 
 <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>

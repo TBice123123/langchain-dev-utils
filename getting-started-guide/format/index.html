@@ -663,6 +663,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -674,6 +702,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-result_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -684,6 +740,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="String">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-result_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1251,6 +1335,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1262,6 +1374,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-result_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1272,6 +1412,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="String">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-result_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1302,10 +1470,10 @@
 
 <h1 id="formatting-sequence">Formatting Sequence</h1>
 <h2 id="overview">Overview</h2>
-<p>Used to format a list composed of Documents, Messages, or strings into a single text string. The specific function is <code>format_sequence</code>.</p>
+<p>Used to format a list consisting of Documents, Messages, or strings into a single text string. The specific function is <code>format_sequence</code>.</p>
 <h2 id="usage-examples">Usage Examples</h2>
-<p>Usage examples are as follows:</p>
 <h3 id="message">Message</h3>
+<h4 id="code-example">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.documents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_sequence</span>
@@ -1319,12 +1487,13 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">formated1</span><span class="p">)</span>
 </code></pre></div>
-<p>Output result:</p>
+<h4 id="output-result">Output Result</h4>
 <div class="highlight"><pre><span></span><code>-Hello1
 -Hello2
 -Hello3
 </code></pre></div>
 <h3 id="document">Document</h3>
+<h4 id="code-example_1">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="n">format2</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;content1&quot;</span><span class="p">),</span>
@@ -1335,12 +1504,13 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">format2</span><span class="p">)</span>
 </code></pre></div>
-<p>Output result:</p>
+<h4 id="output-result_1">Output Result</h4>
 <div class="highlight"><pre><span></span><code>&gt;content1
 &gt;content2
 &gt;content3
 </code></pre></div>
 <h3 id="string">String</h3>
+<h4 id="code-example_2">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="n">format3</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="s2">&quot;str1&quot;</span><span class="p">,</span>
@@ -1352,7 +1522,7 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">format3</span><span class="p">)</span>
 </code></pre></div>
-<p>Output result:</p>
+<h4 id="output-result_2">Output Result</h4>
 <div class="highlight"><pre><span></span><code>&gt;1. str1
 &gt;2. str2
 &gt;3. str3

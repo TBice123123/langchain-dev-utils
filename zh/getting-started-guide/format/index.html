@@ -663,6 +663,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -674,6 +702,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -684,6 +740,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="String">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1251,6 +1335,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1262,6 +1374,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1272,6 +1412,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="String">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1302,10 +1470,10 @@
 
 <h1 id="_1">格式化序列</h1>
 <h2 id="_2">概述</h2>
-<p>用于将由 Document、Message 或字符串组成的列表格式化为单个文本字符串。具体函数为<code>format_sequence</code>。</p>
+<p>用于将由 Document、Message 或字符串组成的列表格式化为单个文本字符串。具体函数为 <code>format_sequence</code>。</p>
 <h2 id="_3">使用示例</h2>
-<p>使用示例如下：</p>
 <h3 id="message">Message</h3>
+<h4 id="_4">代码示例</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.documents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_sequence</span>
@@ -1319,12 +1487,13 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">formated1</span><span class="p">)</span>
 </code></pre></div>
-<p>输出结果：</p>
+<h4 id="_5">输出结果</h4>
 <div class="highlight"><pre><span></span><code>-Hello1
 -Hello2
 -Hello3
 </code></pre></div>
 <h3 id="document">Document</h3>
+<h4 id="_6">代码示例</h4>
 <div class="highlight"><pre><span></span><code><span class="n">format2</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;content1&quot;</span><span class="p">),</span>
@@ -1335,12 +1504,13 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">format2</span><span class="p">)</span>
 </code></pre></div>
-<p>输出结果：</p>
+<h4 id="_7">输出结果</h4>
 <div class="highlight"><pre><span></span><code>&gt;content1
 &gt;content2
 &gt;content3
 </code></pre></div>
 <h3 id="string">String</h3>
+<h4 id="_8">代码示例</h4>
 <div class="highlight"><pre><span></span><code><span class="n">format3</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="s2">&quot;str1&quot;</span><span class="p">,</span>
@@ -1352,7 +1522,7 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">format3</span><span class="p">)</span>
 </code></pre></div>
-<p>输出结果：</p>
+<h4 id="_9">输出结果</h4>
 <div class="highlight"><pre><span></span><code>&gt;1. str1
 &gt;2. str2
 &gt;3. str3

@@ -852,6 +852,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Sequential Orchestration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-application-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Application Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Flow Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-engineering-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Engineering Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -867,10 +917,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#simple-example" class="md-nav__link">
+  <a href="#typical-application-scenarios_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Simple Example
+        Typical Application Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow-diagram_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Flow Diagram
       
     </span>
   </a>
@@ -885,6 +957,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Using Branch Functions to Specify Parallelly Executed Subgraphs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1239,6 +1328,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Sequential Orchestration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-application-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Application Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Flow Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-engineering-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Engineering Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1254,10 +1393,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#simple-example" class="md-nav__link">
+  <a href="#typical-application-scenarios_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Simple Example
+        Typical Application Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow-diagram_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Flow Diagram
       
     </span>
   </a>
@@ -1272,6 +1433,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Using Branch Functions to Specify Parallelly Executed Subgraphs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1302,47 +1480,73 @@
 
 <h1 id="state-graph-orchestration">State Graph Orchestration</h1>
 <h2 id="overview">Overview</h2>
-<p>Provides practical utilities for state graph orchestration. Mainly includes the following features:</p>
-<ul>
-<li>Orchestrating multiple state graphs in sequence to form sequential workflows.</li>
-<li>Orchestrating multiple state graphs in parallel to form parallel workflows.</li>
-</ul>
+<p>In LangGraph, state graph orchestration is a key technology for building complex AI applications. By combining multiple state graphs according to specific patterns, you can create powerful workflows with clear logic.</p>
+<p>This library provides the following two orchestration methods:</p>
+<table>
+<thead>
+<tr>
+<th>Orchestration Method</th>
+<th>Function Description</th>
+<th>Applicable Scenarios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sequential Orchestration</strong></td>
+<td>Combines multiple state graphs in a sequential manner to form a sequential workflow</td>
+<td>Tasks need to be executed step by step, with each step depending on the output of the previous step</td>
+</tr>
+<tr>
+<td><strong>Parallel Orchestration</strong></td>
+<td>Combines multiple state graphs in a parallel manner to form a parallel workflow</td>
+<td>Multiple tasks are independent of each other and can be executed simultaneously to improve efficiency</td>
+</tr>
+</tbody>
+</table>
 <h2 id="sequential-orchestration">Sequential Orchestration</h2>
-<p>Used for building agent sequential pipelines. This is a work pattern that decomposes complex tasks into a series of continuous, ordered sub-tasks, handled by different specialized agents in sequence.</p>
-<p>Multiple state graphs can be combined through sequential orchestration using <code>create_sequential_pipeline</code>.</p>
-<p><strong>Usage Example</strong>:</p>
-<p>Developing a software project typically follows a strict linear process:</p>
-<ol>
-<li>
-<p>Requirements Analysis: First, the product manager must clarify "what to do" and produce a detailed Product Requirements Document (PRD).</p>
-</li>
-<li>
-<p>Architecture Design: Then, the architect designs "how to do it" based on the PRD, planning the system blueprint and technology selection.</p>
-</li>
-<li>
-<p>Code Writing: Next, the development engineer implements the blueprint into specific code according to the architecture design.</p>
-</li>
-<li>
-<p>Testing and Quality Assurance: Finally, the testing engineer verifies the code to ensure its quality meets requirements.</p>
-</li>
-</ol>
-<p>This process is interconnected and the order cannot be reversed.</p>
-<p>For the above four processes, each process is handled by a specialized agent:</p>
-<ol>
-<li>
-<p>Product Manager Agent: Receives vague user requirements and outputs a structured Product Requirements Document (PRD).</p>
-</li>
-<li>
-<p>Architect Agent: Receives the PRD and outputs system architecture diagrams and technical solutions.</p>
-</li>
-<li>
-<p>Development Engineer Agent: Receives the architecture solution and outputs executable source code.</p>
-</li>
-<li>
-<p>Testing Engineer Agent: Receives the source code and outputs test reports and optimization suggestions.</p>
-</li>
-</ol>
-<p>Through the <code>create_sequential_pipeline</code> function, these four agents can be seamlessly connected to form a highly automated software development pipeline with clear responsibilities.</p>
+<p>Sequential Orchestration (Sequential Pipeline) is a work pattern that decomposes complex tasks into a series of continuous, ordered sub-tasks, which are then processed sequentially by different specialized agents.</p>
+<p>Multiple state graphs can be combined in a sequential orchestration manner through <code>create_sequential_pipeline</code>.</p>
+<h3 id="typical-application-scenarios">Typical Application Scenarios</h3>
+<p>Taking the software development process as an example, it usually follows a strict linear process:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Responsible Role</th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Requirements Analysis</td>
+<td>Product Manager</td>
+<td>User Requirements</td>
+<td>Product Requirements Document (PRD)</td>
+</tr>
+<tr>
+<td>2. Architecture Design</td>
+<td>Architect</td>
+<td>PRD</td>
+<td>System Architecture Diagram and Technical Solution</td>
+</tr>
+<tr>
+<td>3. Code Writing</td>
+<td>Development Engineer</td>
+<td>Architecture Solution</td>
+<td>Executable Source Code</td>
+</tr>
+<tr>
+<td>4. Testing &amp; Quality Assurance</td>
+<td>Test Engineer</td>
+<td>Source Code</td>
+<td>Test Report and Optimization Suggestions</td>
+</tr>
+</tbody>
+</table>
+<p>This process is interconnected and the order cannot be reversed. Through the <code>create_sequential_pipeline</code> function, these four agents can be seamlessly connected to form a highly automated software development pipeline with clear responsibilities.</p>
+<h3 id="basic-example">Basic Example</h3>
+<p>The following code shows how to use <code>create_sequential_pipeline</code> to build a software development pipeline:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
@@ -1360,7 +1564,7 @@
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyze_requirements</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze user requirements and generate detailed product requirements document&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Based on user request &#39;</span><span class="si">{</span><span class="n">user_request</span><span class="si">}</span><span class="s2">&#39;, a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria.&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Based on the user request &#39;</span><span class="si">{</span><span class="n">user_request</span><span class="si">}</span><span class="s2">&#39;, a detailed product requirements document has been generated, including feature list, user stories, and acceptance criteria.&quot;</span>
 
 
 <span class="nd">@tool</span>
@@ -1405,15 +1609,15 @@
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coding_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Testing Engineer Agent</span>
+<span class="c1"># Test Engineer Agent</span>
 <span class="n">testing_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a testing engineer responsible for creating comprehensive test cases for the generated code.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a test engineer responsible for creating comprehensive test cases for the generated code.&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Build automated software development sequential workflow (pipeline)</span>
+<span class="c1"># Build an automated software development sequential workflow (pipeline)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
         <span class="n">requirements_agent</span><span class="p">,</span>
@@ -1429,20 +1633,36 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>The generated graph is as follows:</p>
+<h3 id="execution-flow-diagram">Execution Flow Diagram</h3>
+<p>The generated diagram is as follows:</p>
 <p><img alt="Sequential Pipeline" src="../../assets/sequential.png" /></p>
-<p>The above example is for reference only. In practice, this example passes the complete context of all previous agents to the current agent in sequence, which may lead to context expansion, affecting performance and effectiveness. It is recommended to adopt either of the following solutions to simplify the context:</p>
-<ol>
-<li>
-<p>Use <code>create_agent</code> with <code>middleware</code> to extract and pass only necessary information;</p>
-</li>
-<li>
-<p>Completely customize the state graph based on <code>LangGraph</code> to explicitly control state fields and message flow.</p>
-</li>
-</ol>
+<h3 id="context-engineering-optimization">Context Engineering Optimization</h3>
+<p>The basic example above is for reference only. In practice, this example passes the complete context of all previous agents to the current agent, which may lead to context inflation, affecting performance and effectiveness.</p>
+<p>It is recommended to adopt either of the following solutions to streamline the context:</p>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Description</th>
+<th>Advantages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Using Middleware</strong></td>
+<td>Use <code>create_agent</code> with middleware to extract and pass only necessary information</td>
+<td>Simple implementation, minimal code changes</td>
+</tr>
+<tr>
+<td><strong>Custom State Graph</strong></td>
+<td>Completely customize the state graph based on <code>LangGraph</code>, explicitly control state fields and message flow</td>
+<td>High flexibility, precise control</td>
+</tr>
+</tbody>
+</table>
 <details class="example">
-<summary>Reference code for solving with middleware</summary>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<summary>Click to view reference code for solving with middleware</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMiddleware</span>
@@ -1509,17 +1729,17 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)],</span>
 <span class="p">)</span>
 
-<span class="c1"># Testing Engineer Agent</span>
+<span class="c1"># Test Engineer Agent</span>
 <span class="n">testing_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_tests</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a testing engineer responsible for creating comprehensive test cases for the generated code.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a test engineer responsible for creating comprehensive test cases for the generated code.&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testing_agent&quot;</span><span class="p">,</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">DeveloperState</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;tests&quot;</span><span class="p">)],</span>
 <span class="p">)</span>
 
-<span class="c1"># Build automated software development sequential workflow (pipeline)</span>
+<span class="c1"># Build an automated software development sequential workflow (pipeline)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
         <span class="n">requirements_agent</span><span class="p">,</span>
@@ -1535,32 +1755,67 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-In the optimized code, we added four fields <code>requirement</code>, <code>architecture</code>, <code>code</code>, and <code>tests</code> to the agent's State Schema to store the final output results of corresponding agents.</p>
-<p>At the same time, we customized a middleware <code>ClearAgentContextMiddleware</code> to clear the current execution context after each agent finishes and save the final result (final_message.content) to the corresponding key.</p>
-<p>Finally, we use the built-in <code>format_prompt</code> middleware to dynamically concatenate the output of preceding agents into the <code>system_prompt</code> as needed at runtime.</p>
+<p><strong>Implementation Notes</strong>:</p>
+<ol>
+<li>
+<p><strong>Extended State Schema</strong>: Added four fields <code>requirement</code>, <code>architecture</code>, <code>code</code>, and <code>tests</code> to the agent's State Schema to store the final output results of corresponding agents.</p>
+</li>
+<li>
+<p><strong>Custom Middleware</strong>: Created the <code>ClearAgentContextMiddleware</code> middleware, which after each agent finishes:</p>
+</li>
+<li>Clears the current execution context (using <code>RemoveMessage</code>)</li>
+<li>
+<p>Saves the final result (<code>final_message.content</code>) to the corresponding field</p>
+</li>
+<li>
+<p><strong>Dynamic Prompt Formatting</strong>: Uses the built-in <code>format_prompt</code> middleware to dynamically concatenate the output of previous agents into the <code>system_prompt</code> at runtime</p>
+</li>
+</ol>
 </details>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For serially combined graphs, langgraph's StateGraph provides the add_sequence method as a convenient shorthand. This method is most suitable when nodes are functions (rather than subgraphs). If nodes are subgraphs, the code might look like:</p>
+<div class="admonition info">
+<p class="admonition-title">Tip</p>
+<p>For serially combined graphs, LangGraph's <code>StateGraph</code> provides the <code>add_sequence</code> method as a convenient syntax. This method is most suitable when nodes are functions (rather than subgraphs).</p>
 <div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">AgentState</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add_sequence</span><span class="p">([(</span><span class="s2">&quot;graph1&quot;</span><span class="p">,</span> <span class="n">graph1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph2&quot;</span><span class="p">,</span> <span class="n">graph2</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph3&quot;</span><span class="p">,</span> <span class="n">graph3</span><span class="p">)])</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;__start__&quot;</span><span class="p">,</span> <span class="s2">&quot;graph1&quot;</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 </code></pre></div>
-<p>However, the above writing is still somewhat cumbersome. Therefore, it is more recommended to use the <code>create_sequential_pipeline</code> function, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.</p>
+<p>However, the above syntax is still somewhat cumbersome. Therefore, it is more recommended to use the <code>create_sequential_pipeline</code> function, which can quickly build a serial execution graph with one line of code, making it more concise and efficient.</p>
 </div>
 <h2 id="parallel-orchestration">Parallel Orchestration</h2>
-<p>Used for building agent parallel workflows. Its working principle is to combine multiple state graphs in parallel, executing tasks concurrently for each state graph, thereby improving task execution efficiency.</p>
+<p>Parallel Orchestration (Parallel Pipeline) improves task execution efficiency by combining multiple state graphs in parallel and executing tasks concurrently on each state graph.</p>
 <p>Through the <code>create_parallel_pipeline</code> function, multiple state graphs can be combined in a parallel orchestration manner to achieve the effect of parallel task execution.</p>
-<h3 id="simple-example">Simple Example</h3>
-<p><strong>Usage Example</strong>:</p>
-<p>In software development, when the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.</p>
-<p>Suppose we want to develop an e-commerce website, whose core functions can be divided into three independent modules:
-1. User module (registration, login, personal center)
-2. Product module (display, search, classification)
-3. Order module (placing orders, payment, status query)</p>
-<p>If developed serially, the time required would be the sum of all three. But if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.</p>
-<p>Through the <code>create_parallel_pipeline</code> function, assign a specialized module development agent to each module, allowing them to work in parallel.</p>
+<h3 id="typical-application-scenarios_1">Typical Application Scenarios</h3>
+<p>In software development, after the system architecture design is completed, different functional modules can often be developed simultaneously by different teams or engineers because they are relatively independent of each other. This is a typical scenario for parallel work.</p>
+<p>Suppose we want to develop an e-commerce website, whose core functions can be divided into three independent modules:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Function</th>
+<th>Development Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User Module</td>
+<td>User Management</td>
+<td>Registration, Login, Personal Center</td>
+</tr>
+<tr>
+<td>Product Module</td>
+<td>Product Management</td>
+<td>Display, Search, Classification</td>
+</tr>
+<tr>
+<td>Order Module</td>
+<td>Order Management</td>
+<td>Placing Orders, Payment, Status Query</td>
+</tr>
+</tbody>
+</table>
+<p>If developed serially, the time required would be the sum of all three. However, if developed in parallel, the total time will be approximately equal to the development time of the longest module, greatly improving efficiency.</p>
+<h3 id="basic-example_1">Basic Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_pipeline</span>
 
 
@@ -1606,7 +1861,7 @@ In the optimized code, we added four fields <code>requirement</code>, <code>arch
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_module_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Build frontend module development parallel workflow (pipeline)</span>
+<span class="c1"># Build a parallel workflow (pipeline) for frontend module development</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
     <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
         <span class="n">user_module_agent</span><span class="p">,</span>
@@ -1618,13 +1873,14 @@ In the optimized code, we added four fields <code>requirement</code>, <code>arch
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Parallel development of three core modules of an e-commerce website&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>The generated graph is as follows:</p>
+<h3 id="execution-flow-diagram_1">Execution Flow Diagram</h3>
+<p>The generated diagram is as follows:</p>
 <p><img alt="Parallel Pipeline" src="../../assets/parallel.png" /></p>
 <h3 id="using-branch-functions-to-specify-parallelly-executed-subgraphs">Using Branch Functions to Specify Parallelly Executed Subgraphs</h3>
-<p>Sometimes it is necessary to specify which subgraphs to execute in parallel based on conditions. In such cases, a branch function can be used.
-The branch function needs to return a list of <code>Send</code>.</p>
-<p>For example, in the above case, suppose the modules to be developed are specified by the user, then only the specified modules will be executed in parallel.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Build parallel pipeline (select subgraphs to execute in parallel based on conditions)</span>
+<p>Sometimes it is necessary to specify which subgraphs are executed in parallel based on conditions. In this case, branch functions can be used. The branch function needs to return a list of <code>Send</code>.</p>
+<h4 id="application-scenario">Application Scenario</h4>
+<p>For example, in the above case, assuming the modules to be developed are specified by the user, only the specified modules will be executed in parallel.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build a parallel pipeline (select subgraphs to execute in parallel based on conditions)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 
 
@@ -1675,17 +1931,19 @@ The branch function needs to return a list of <code>Send</code>.</p>
 
 <span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Develop some modules of the e-commerce website&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Develop some modules of an e-commerce website&quot;</span><span class="p">)],</span>
         <span class="s2">&quot;selected_modules&quot;</span><span class="p">:</span> <span class="n">select_modules</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Important Notes</strong></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <ul>
-<li>When the <code>branches_fn</code> parameter is not passed, all subgraphs will be executed in parallel.</li>
-<li>When the <code>branches_fn</code> parameter is passed, which subgraphs to execute is determined by the return value of this function.</li>
+<li><strong>When not passing the <code>branches_fn</code> parameter</strong>: All subgraphs will be executed in parallel</li>
+<li><strong>When passing the <code>branches_fn</code> parameter</strong>: Which subgraphs are executed is determined by the return value of this function</li>
 </ul>
+</div>
 
 
 

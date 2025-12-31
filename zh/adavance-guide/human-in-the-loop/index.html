@@ -875,6 +875,17 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        参数说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用示例
       
     </span>
@@ -895,7 +906,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         异步工具示例
@@ -907,6 +918,45 @@
         
           <li class="md-nav__item">
   <a href="#handler_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        默认 handler 的实现
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="默认 handler 的实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中断请求格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中断响应格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handler_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         自定义 Handler 示例
@@ -1234,6 +1284,17 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        参数说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用示例
       
     </span>
@@ -1254,7 +1315,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         异步工具示例
@@ -1266,6 +1327,45 @@
         
           <li class="md-nav__item">
   <a href="#handler_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        默认 handler 的实现
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="默认 handler 的实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中断请求格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中断响应格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handler_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         自定义 Handler 示例
@@ -1302,17 +1402,47 @@
 
 <h1 id="_1">为工具调用添加人工审核</h1>
 <h2 id="_2">概述</h2>
-<p>提供装饰器函数，用于为工具调用添加“人在回路”审核支持，在工具执行期间启用人工审核。
-具体表现为两个装饰器：</p>
-<ul>
-<li>
-<p><code>human_in_the_loop</code>：用于同步工具函数</p>
-</li>
-<li>
-<p><code>human_in_the_loop_async</code>：用于异步工具函数</p>
-</li>
-</ul>
-<h2 id="_3">使用示例</h2>
+<p>本库提供了装饰器函数，用于为工具调用添加"人在回路"审核支持，在工具执行期间启用人工审核。</p>
+<table>
+<thead>
+<tr>
+<th>装饰器</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>human_in_the_loop</code></td>
+<td>用于同步工具函数</td>
+</tr>
+<tr>
+<td><code>human_in_the_loop_async</code></td>
+<td>用于异步工具函数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">参数说明</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>必填</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>handler</code></td>
+<td><code>Callable</code></td>
+<td>否</td>
+<td><code>None</code></td>
+<td>自定义处理函数，若为 <code>None</code> 则使用默认处理函数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">使用示例</h2>
 <h3 id="handler">使用默认的 handler</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -1323,7 +1453,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;获取当前时间戳&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 </code></pre></div>
-<h3 id="_4">异步工具示例</h3>
+<h3 id="_5">异步工具示例</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -1335,9 +1465,8 @@
     <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">默认的 handler</p>
-<p>如下是默认的 handler 实现：
+<h3 id="handler_1">默认 handler 的实现</h3>
+<p>默认 handler 的实现如下：</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_get_human_in_the_loop_request</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">InterruptParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;action_request&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1366,11 +1495,75 @@
         <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported interrupt response type: </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div></p>
-<p>中断的时候会发送一个 JSON Schema 内容如上<code>_get_human_in_the_loop_request</code>返回的值,回复的时候需要返回一个 JSON Schema 内容，要有一个键为 <code>type</code>，值为 <code>accept</code>/<code>edit</code>/<code>response</code>。</p>
-</div>
-<h3 id="handler_1">自定义 Handler 示例</h3>
-<p>你可以完全控制中断行为，例如只允许“接受/拒绝”，或自定义提示语：</p>
+</code></pre></div>
+<h4 id="_6">中断请求格式</h4>
+<p>中断时会发送如下 JSON Schema 格式的请求：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action_request.action</code></td>
+<td><code>str</code></td>
+<td>工具调用名称</td>
+</tr>
+<tr>
+<td><code>action_request.args</code></td>
+<td><code>dict</code></td>
+<td>工具调用参数</td>
+</tr>
+<tr>
+<td><code>config.allow_accept</code></td>
+<td><code>bool</code></td>
+<td>是否允许接受操作</td>
+</tr>
+<tr>
+<td><code>config.allow_edit</code></td>
+<td><code>bool</code></td>
+<td>是否允许编辑参数</td>
+</tr>
+<tr>
+<td><code>config.allow_respond</code></td>
+<td><code>bool</code></td>
+<td>是否允许直接响应</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code></td>
+<td>操作描述</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_7">中断响应格式</h4>
+<p>响应时需要返回如下 JSON Schema 格式的数据：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td><code>str</code></td>
+<td>响应类型，可选值为 <code>accept</code>、<code>edit</code>、<code>response</code></td>
+</tr>
+<tr>
+<td><code>args</code></td>
+<td><code>dict</code></td>
+<td>当 <code>type</code> 为 <code>edit</code> 或 <code>response</code> 时，包含更新后的参数或响应内容</td>
+</tr>
+</tbody>
+</table>
+<h3 id="handler_2">自定义 Handler 示例</h3>
+<p>你可以完全控制中断行为，例如只允许"接受/拒绝"，或自定义提示语：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span><span class="p">,</span> <span class="n">InterruptParams</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">interrupt</span>
@@ -1395,7 +1588,7 @@
 </code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">最佳实践</p>
-<p>该装饰器在实现自定义人在回路逻辑时，需要传入handler参数。此handler参数是一个函数，内部必须使用LangGraph的interrupt函数来执行中断操作。因此，如果仅为单个工具添加自定义的人在回路逻辑，建议直接使用LangGraph的interrupt函数。当多个工具需要相同自定义人在回路逻辑时，使用本装饰器可以有效避免代码重复。</p>
+<p>该装饰器在实现自定义人在回路逻辑时，需要传入 <code>handler</code> 参数。此 <code>handler</code> 参数是一个函数，内部必须使用 LangGraph 的 <code>interrupt</code> 函数来执行中断操作。因此，如果仅为单个工具添加自定义的人在回路逻辑，建议直接使用 LangGraph 的 <code>interrupt</code> 函数。当多个工具需要相同自定义人在回路逻辑时，使用本装饰器可以有效避免代码重复。</p>
 </div>
 
 

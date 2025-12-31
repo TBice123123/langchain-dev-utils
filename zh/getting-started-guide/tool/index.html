@@ -707,16 +707,50 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="检测工具调用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         解析工具调用参数
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="解析工具调用参数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1211,16 +1245,50 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="检测工具调用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         解析工具调用参数
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="解析工具调用参数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码示例
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1248,8 +1316,8 @@
 <h2 id="_2">概述</h2>
 <p>提供检测以及解析工具调用参数的实用工具。</p>
 <h2 id="_3">检测工具调用</h2>
-<p>检测消息是否包含工具调用，核心函数是<code>has_tool_calling</code>。</p>
-<p>使用示例:</p>
+<p>检测消息是否包含工具调用，核心函数是 <code>has_tool_calling</code>。</p>
+<h3 id="_4">代码示例</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_tool_calling</span>
@@ -1262,9 +1330,9 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;现在几点了？&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">has_tool_calling</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="_4">解析工具调用参数</h2>
-<p>提供一个实用函数来解析工具调用参数，从消息中提取参数信息，核心函数是<code>parse_tool_calling</code>。</p>
-<p>使用示例:</p>
+<h2 id="_5">解析工具调用参数</h2>
+<p>提供一个实用函数来解析工具调用参数，从消息中提取参数信息，核心函数是 <code>parse_tool_calling</code>。</p>
+<h3 id="_6">代码示例</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_tool_calling</span><span class="p">,</span> <span class="n">parse_tool_calling</span>

@@ -671,24 +671,80 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merging-reasoning-content-into-final-replies" class="md-nav__link">
+  <a href="#merge-reasoning-content-into-final-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merging Reasoning Content into Final Replies
+        Merge Reasoning Content into Final Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Merge Reasoning Content into Final Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Description
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#merging-streamed-output-chunks" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merging Streamed Output Chunks
+        Code Example
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-streaming-output-chunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Streaming Output Chunks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Merge Streaming Output Chunks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1203,24 +1259,80 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merging-reasoning-content-into-final-replies" class="md-nav__link">
+  <a href="#merge-reasoning-content-into-final-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merging Reasoning Content into Final Replies
+        Merge Reasoning Content into Final Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Merge Reasoning Content into Final Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Description
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#merging-streamed-output-chunks" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Merging Streamed Output Chunks
+        Code Example
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-streaming-output-chunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Streaming Output Chunks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Merge Streaming Output Chunks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1246,51 +1358,75 @@
 
 <h1 id="message-processing">Message Processing</h1>
 <h2 id="overview">Overview</h2>
-<p>Main functions include:</p>
+<p>Main features include:</p>
 <ul>
-<li>
-<p>Merging reasoning content into final replies</p>
-</li>
-<li>
-<p>Merging streamed output Chunks</p>
-</li>
+<li>Merge reasoning content into final responses</li>
+<li>Merge streaming output Chunks</li>
 </ul>
-<h2 id="merging-reasoning-content-into-final-replies">Merging Reasoning Content into Final Replies</h2>
-<p>Used to merge reasoning content (<code>reasoning_content</code>) into the final reply (<code>content</code>).</p>
-<p>Specifically:</p>
-<ul>
-<li><code>convert_reasoning_content_for_ai_message</code>: Merges reasoning content in AIMessage into the content field (used for model's invoke and ainvoke)</li>
-<li><code>convert_reasoning_content_for_chunk_iterator</code>: Merges reasoning content in streaming responses into the content field (used for model's stream)</li>
-<li><code>aconvert_reasoning_content_for_chunk_iterator</code>: Asynchronous version of <code>convert_reasoning_content_for_chunk_iterator</code>, used for asynchronous streaming processing (used for model's astream)</li>
-</ul>
-<p>Usage examples:</p>
+<h2 id="merge-reasoning-content-into-final-response">Merge Reasoning Content into Final Response</h2>
+<p>Used to merge reasoning content (<code>reasoning_content</code>) into the final response (<code>content</code>).</p>
+<h3 id="function-description">Function Description</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>convert_reasoning_content_for_ai_message</code></td>
+<td>Merge reasoning content in AIMessage into the content field (for model's invoke and ainvoke)</td>
+</tr>
+<tr>
+<td><code>convert_reasoning_content_for_chunk_iterator</code></td>
+<td>Merge reasoning content in streaming responses into the content field (for model's stream)</td>
+</tr>
+<tr>
+<td><code>aconvert_reasoning_content_for_chunk_iterator</code></td>
+<td>Async version of <code>convert_reasoning_content_for_chunk_iterator</code>, for async streaming processing (for model's astream)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="code-example">Code Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">convert_reasoning_content_for_ai_message</span><span class="p">,</span>
     <span class="n">convert_reasoning_content_for_chunk_iterator</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">)</span>
 <span class="n">converted_response</span> <span class="o">=</span> <span class="n">convert_reasoning_content_for_ai_message</span><span class="p">(</span>
     <span class="n">response</span><span class="p">,</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;start&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;end&gt;&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">converted_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">convert_reasoning_content_for_chunk_iterator</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">),</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;start&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;end&gt;&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">),</span> <span class="n">think_tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;start&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;end&gt;&quot;</span><span class="p">)</span>
 <span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="merging-streamed-output-chunks">Merging Streamed Output Chunks</h2>
-<p>Provides utility functions to merge multiple AIMessageChunks generated from streaming output into a single AIMessage.
-Core function:</p>
-<ul>
-<li><code>merge_ai_message_chunk</code>: Merges AI message chunks</li>
-</ul>
-<p>Usage example:</p>
+<h2 id="merge-streaming-output-chunks">Merge Streaming Output Chunks</h2>
+<p>Provides utility functions to merge multiple AIMessageChunks generated due to streaming output into a single AIMessage.</p>
+<h3 id="core-functions">Core Functions</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>merge_ai_message_chunk</code></td>
+<td>Merge AI message chunks</td>
+</tr>
+</tbody>
+</table>
+<h3 id="code-example_1">Code Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge_ai_message_chunk</span>
 
 <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">):</span>
     <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
 <span class="n">merged_message</span> <span class="o">=</span> <span class="n">merge_ai_message_chunk</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
