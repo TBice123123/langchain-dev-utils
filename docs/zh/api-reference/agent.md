@@ -107,6 +107,53 @@ tool = wrap_agent_as_tool(agent)
 
 ---
 
+## wrap_all_agents_as_tool
+
+将所有智能体包装为单个工具。
+
+### 函数签名
+
+```python
+def wrap_all_agents_as_tool(
+    agents: list[CompiledStateGraph],
+    tool_name: Optional[str] = None,
+    tool_description: Optional[str] = None,
+    pre_input_hooks: Optional[
+        tuple[
+            Callable[[str, ToolRuntime], str],
+            Callable[[str, ToolRuntime], Awaitable[str]],
+        ]
+        | Callable[[str, ToolRuntime], str]
+    ] = None,
+    post_output_hooks: Optional[
+        tuple[
+            Callable[[str, list[AnyMessage], ToolRuntime], Any],
+            Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]],
+        ]
+        | Callable[[str, list[AnyMessage], ToolRuntime], Any]
+    ] = None,
+) -> BaseTool:
+```
+
+
+### 参数
+
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| agents | list[CompiledStateGraph] | 是 | - | 智能体列表(至少包含2个，且每个智能体必须有唯一的名称) |
+| tool_name | Optional[str] | 否 | None | 工具名称 |
+| tool_description | Optional[str] | 否 | None | 工具描述 |
+| pre_input_hooks | Optional[tuple[Callable[[str, ToolRuntime], str], Callable[[str, ToolRuntime], Awaitable[str]]] \| Callable[[str, ToolRuntime], str]] | 否 | None | Agent 输入预处理函数 |
+| post_output_hooks | Optional[tuple[Callable[[str, list[AnyMessage], ToolRuntime], Any], Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]]] \| Callable[[str, list[AnyMessage], ToolRuntime], Any]] | 否 | None | Agent 输出后处理函数 |
+
+### 示例
+
+```python
+tool = wrap_all_agents_as_tool([time_agent, weather_agent])
+```
+
+---
+
 ## SummarizationMiddleware
 
 用于智能体上下文摘要的中间件。
@@ -326,7 +373,7 @@ model_router_middleware = ModelRouterMiddleware(
 
 ---
 
-## HandoffsAgentMiddleware
+## HandoffAgentMiddleware
 
 用于实现多智能体切换（handoffs）的中间件。
 

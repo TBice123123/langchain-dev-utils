@@ -3,9 +3,26 @@
 
 ## 概述
 
-将智能体封装为工具是多智能体系统中的一种常见实现模式，LangChain 官方文档对此有详细阐述。为此，本库提供了预构建函数 `wrap_agent_as_tool` 来实现此模式，该函数能够将一个智能体实例封装成一个可供其它智能体调用的工具。
+将智能体封装为工具是多智能体系统中的一种实现模式，LangChain 官方文档将其称为`subagents`模式。该模式通过将子智能体（subagents）封装为工具，使主智能体能够根据任务需求动态委派给专门的子智能体处理，从而实现任务的专业化分工和协作。
 
-## 使用示例
+本库提供了两个预构建函数来实现此模式：
+
+- `wrap_agent_as_tool`：将单个智能体实例封装为一个独立工具
+
+- `wrap_all_agents_as_tool`：将多个智能体实例封装为一个统一工具，通过参数指定调用哪个子智能体
+
+## 封装单个智能体为工具
+
+封装单个智能体只需三步：  
+1. 导入 `wrap_agent_as_tool`  
+2. 把智能体实例作为参数传入  
+3. 获得可直接被其他智能体调用的工具对象  
+
+函数第一个参数 `agent` 为必填项，需传入一个 `CompiledStateGraph` 实例；同时，该实例必须已定义 `name` 属性。  
+可选参数 `tool_name` 与 `tool_description` 可分别指定工具的名称与描述；若留空，工具名默认取 `transfer_to_{agent_name}`，描述默认为 `This tool transforms input to {agent_name}`。  
+此外，还可额外传入钩子函数，在智能体执行前后插入自定义逻辑。
+
+### 使用示例
 
 下面，我们以官方示例中的 `supervisor` 智能体为基础，介绍如何通过 `wrap_agent_as_tool` 将其快速改造成可被其它智能体调用的工具。
 
@@ -100,24 +117,22 @@ calendar_agent = create_agent(
 schedule_event = wrap_agent_as_tool(
     calendar_agent,
     tool_name="schedule_event",
-    tool_description="""使用自然语言安排日历事件。
-
-    在用户想要创建、修改或检查日历约会时使用此功能。
-    能够处理日期/时间解析、查询可用时间和创建事件。
-
-    输入：自然语言日历安排请求（例如'与设计团队下个星期二下午2点的会议'）
-    """,
+    tool_description=(
+        "使用自然语言安排日历事件。"
+        "在用户想要创建、修改或检查日历约会时使用此功能。"
+        "能够处理日期/时间解析、查询可用时间和创建事件。"
+        "输入：自然语言日历安排请求（例如'与设计团队下个星期二下午2点的会议'）"
+    ),
 )
 manage_email = wrap_agent_as_tool(
     email_agent,
     tool_name="manage_email",
-    tool_description="""使用自然语言发送电子邮件。
-
-    在用户想要发送通知、提醒或任何电子邮件通信时使用此功能。
-    能够提取收件人信息、主题生成和电子邮件撰写。
-
-    输入：自然语言电子邮件请求（例如'向他们发送会议提醒'）
-    """,
+    tool_description=(
+        "使用自然语言发送电子邮件。"
+        "在用户想要发送通知、提醒或任何电子邮件通信时使用此功能。"
+        "能够提取收件人信息、主题生成和电子邮件撰写。"
+        "输入：自然语言电子邮件请求（例如'向他们发送会议提醒'）"
+    ),
 )
 ```
 
@@ -137,11 +152,7 @@ supervisor_agent = create_agent(
     tools=[schedule_event, manage_email],
     system_prompt=SUPERVISOR_PROMPT,
 )
-```
 
-测试一下功能：
-
-```python
 print(
     supervisor_agent.invoke({"messages": [HumanMessage(content="查询明天的空闲时间")]})
 )
@@ -156,9 +167,53 @@ print(
     上述示例中，我们是从`langchain_dev_utils.agents`中导入了`create_agent`函数，而不是`langchain.agents`，这是因为本库也提供了一个与官方`create_agent`函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。使得可以直接使用`register_model_provider`注册的模型，而无需初始化模型实例后传入。
 
 
+## 封装多个智能体封装为单一工具
+将多个智能体封装为单一工具只需三步：  
+1. 导入 `wrap_all_agents_as_tool`  
+2. 把多个智能体实例作为列表一次性传入  
+3. 获得可直接被其他智能体调用的统一工具对象  
+
+函数第一个参数 `agents` 必须提供；可选参数 `tool_name` 与 `tool_description` 可自定义工具名称与描述。若省略，工具名默认为 `task`，描述默认为 `Launch an ephemeral subagent for a task.\nAvailable agents:\n {all_available_agents}`。  
+
+同样支持也支持传入钩子函数，用于在智能体调用前或后执行自定义逻辑。
+
+### 使用示例
+
+对于上一个示例的`calendar_agent`和`email_agent`，我们可以将它们封装为一个工具`call_subagent`
+
+```python
+call_subagent_tool = wrap_all_agents_as_tool(
+    [calendar_agent, email_agent],
+    tool_name="call_subagent",
+    tool_description=(
+        "调用子智能体执行任务。"
+        "可以使用的智能体有："
+        "- calendar_agent：用于安排日历事件"
+        "- email_agent：用于发送电子邮件"
+    ),
+)
+
+MAIN_AGENT_PROMPT = (
+    "你是一个有用的个人助手。"
+    "你可以使用**call_subagent**工具调用子智能体执行任务。"
+    "将用户请求分解为适当的工具调用，并协调结果。"
+    "当请求涉及多个操作时，请使用多个工具按顺序操作。"
+)
+
+main_agent = create_agent(
+    "vllm:qwen3-4b",
+    tools=[call_subagent_tool],
+    system_prompt=MAIN_AGENT_PROMPT,
+)
+```
+
+!!! info "注意"
+    除了使用本库提供的`wrap_all_agents_as_tool`将多个智能体封装为单一工具外，你还可以使用`deepagents`库提供的`SubAgentMiddleware`中间件实现类似的效果
+
 ## 钩子函数
 
-本函数提供了几个钩子函数，用于在调用智能体前后进行一些操作。
+本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。  
+该机制同时适用于 `wrap_agent_as_tool` 与 `wrap_all_agents_as_tool`，下文以 `wrap_agent_as_tool` 为例进行说明。
 
 #### 1. pre_input_hooks
 
@@ -244,4 +299,3 @@ call_agent_tool = wrap_agent_as_tool(
 注意，上述的例子比较简单，实际上你可以根据`runtime`里面的`state`或者`context`添加更复杂的逻辑。
 
 
-**注意**：当该 Agent（CompiledStateGraph）作为 `wrap_agent_as_tool` 的 agent 参数时，该 Agent 必须定义 name 属性。

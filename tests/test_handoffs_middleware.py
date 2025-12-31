@@ -11,9 +11,6 @@ from langchain_dev_utils.agents.middleware import (
 from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
 
 from langchain_dev_utils.chat_models import load_chat_model
-import os
-
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
 
 
 @tool
