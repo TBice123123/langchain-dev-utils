@@ -13,7 +13,15 @@ LangChain 的 `init_embeddings` 函数仅支持有限的嵌入模型提供商。
 
 若嵌入模型提供商已有现成且合适的 LangChain 集成（详见 [嵌入模型集成列表](https://docs.langchain.com/oss/python/integrations/text_embedding)），请将相应的嵌入模型类直接传入 `embeddings_model` 参数。
 
-具体代码可以参考如下：
+#### 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `provider_name` | `str` | 是 | - | 模型提供商名称，用于后续在 `load_embeddings` 中引用 |
+| `embeddings_model` | `type[Embeddings]` | 是 | - | LangChain 嵌入模型类 |
+| `base_url` | `str` | 否 | `None` | API 基础地址，通常无需手动设置 |
+
+#### 代码示例
 
 ```python
 from langchain_core.embeddings.fake import FakeEmbeddings
@@ -25,12 +33,11 @@ register_embeddings_provider(
 )
 ```
 
-对于上述代码有以下几点补充：
+#### 使用说明
 
 - `FakeEmbeddings` 仅用于测试。实际使用中必须传入具备真实功能的 `Embeddings` 类。
-- `provider_name` 代表模型提供商的名称，用于后续在 `load_chat_model` 中引用。名称可自定义，但不要包含":"、"-"等特殊字符。
-
-同时，本情况下该函数还支持传入`base_url`参数，只是**通常无需手动设置 `base_url`**（因为嵌入模型类内部已定义 API 地址）。仅当需要覆盖默认地址时，才显式传入 `base_url`；覆盖范围仅限模型类中字段名为 `api_base` 或 `base_url`（含别名）的属性。
+- `provider_name` 代表模型提供商的名称，用于后续在 `load_embeddings` 中引用。名称可自定义，但不要包含 `:`、`-` 等特殊字符。
+- `base_url` 参数通常无需手动设置（因为嵌入模型类内部已定义 API 地址）。仅当需要覆盖默认地址时，才显式传入 `base_url`；覆盖范围仅限模型类中字段名为 `api_base` 或 `base_url`（含别名）的属性。
 
 ### 未有 LangChain 嵌入模型类，但提供商支持 OpenAI 兼容 API
 
@@ -38,36 +45,49 @@ register_embeddings_provider(
 
 本库将使用 `OpenAIEmbeddings`（来自 `langchain-openai`）构建嵌入模型实例，并自动禁用上下文长度检查（设置 `check_embedding_ctx_length=False`）以提升兼容性。
 
-此情况下，除了要传入 `provider_name`以及`chat_model`（取值必须为`"openai-compatible"`）参数外，还需传入 `base_url` 参数。
+#### 参数说明
 
-对于`base_url`参数，可通过以下任一方式提供：
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `provider_name` | `str` | 是 | - | 模型提供商名称 |
+| `embeddings_model` | `str` | 是 | - | 固定取值 `"openai-compatible"` |
+| `base_url` | `str` | 否 | `None` | API 基础地址 |
 
-  - **显式传参**：
+#### 代码示例
 
-  ```python
-  register_embeddings_provider(
-      provider_name="vllm",
-      embeddings_model="openai-compatible",
-      base_url="http://localhost:8000/v1"
-  )
-  ```
+**方式一：显式传参**
 
-  - **环境变量（推荐）**：
+```python
+register_embeddings_provider(
+    provider_name="vllm",
+    embeddings_model="openai-compatible",
+    base_url="http://localhost:8000/v1"
+)
+```
 
-  ```bash
-  export VLLM_API_BASE=http://localhost:8000/v1
-  ```
+**方式二：环境变量（推荐）**
 
-  ```python
-  register_embeddings_provider(
-      provider_name="vllm",
-      embeddings_model="openai-compatible"
-      # 自动读取 VLLM_API_BASE
-  )
-  ```
+```bash
+export VLLM_API_BASE=http://localhost:8000/v1
+```
 
-!!! info "提示"  
-    环境变量命名规则为 `${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。  
+```python
+register_embeddings_provider(
+    provider_name="vllm",
+    embeddings_model="openai-compatible"
+    # 自动读取 VLLM_API_BASE
+)
+```
+
+#### 环境变量说明
+
+| 环境变量 | 说明 |
+|----------|------|
+| `${PROVIDER_NAME}_API_BASE` | API 基础地址（全大写，下划线分隔） |
+| `${PROVIDER_NAME}_API_KEY` | API 密钥 |
+
+!!! info "提示"
+    环境变量命名规则为 `${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。
     对应的 API Key 环境变量为 `${PROVIDER_NAME}_API_KEY`。
 
 
@@ -86,7 +106,15 @@ register_embeddings_provider(
 
 ## 批量注册
 
-若需注册多个提供商，可使用 `batch_register_embeddings_provider`：
+若需注册多个提供商，可使用 `batch_register_embeddings_provider`。
+
+#### 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `providers` | `list[dict]` | 是 | - | 提供商配置列表，每个字典包含注册参数 |
+
+#### 代码示例
 
 ```python
 from langchain_dev_utils.embeddings import batch_register_embeddings_provider
@@ -107,24 +135,35 @@ batch_register_embeddings_provider(
 )
 ```
 
-!!! warning "注意"  
+!!! warning "注意"
     两个注册函数均基于全局字典实现。**必须在应用启动阶段完成所有注册**，禁止运行时动态注册，以避免多线程问题。  
     
 
 ## 加载嵌入模型
 
-使用 `load_embeddings` 初始化嵌入模型实例。参数规则如下：
+使用 `load_embeddings` 初始化嵌入模型实例。
+
+#### 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `model` | `str` | 是 | - | 模型名称 |
+| `provider` | `str` | 否 | `None` | 模型提供商名称 |
+
+**除此之外，还可以传入任意数量的关键字参数，用于传递嵌入模型类的额外参数。**
+
+#### 参数规则
 
 - 若未传 `provider`，则 `model` 必须为 `provider_name:embeddings_name` 格式；
 - 若传 `provider`，则 `model` 仅为 `embeddings_name`。
 
-**示例**：
+#### 代码示例
 
 ```python
-# 方式一
+# 方式一：model 包含 provider 信息
 embedding = load_embeddings("vllm:qwen3-embedding-4b")
 
-# 方式二
+# 方式二：单独指定 provider
 embedding = load_embeddings("qwen3-embedding-4b", provider="vllm")
 ```
 

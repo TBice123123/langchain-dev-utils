@@ -2,14 +2,13 @@
 
 ## 概述
 
-用于将由 Document、Message 或字符串组成的列表格式化为单个文本字符串。具体函数为`format_sequence`。
-
+用于将由 Document、Message 或字符串组成的列表格式化为单个文本字符串。具体函数为 `format_sequence`。
 
 ## 使用示例
 
-使用示例如下：
-
 ### Message
+
+#### 代码示例
 
 ```python
 from langchain_core.documents import Document
@@ -26,7 +25,7 @@ formated1 = format_sequence(
 print(formated1)
 ```
 
-输出结果：
+#### 输出结果
 
 ```
 -Hello1
@@ -35,6 +34,8 @@ print(formated1)
 ```
 
 ### Document
+
+#### 代码示例
 
 ```python
 format2 = format_sequence(
@@ -46,10 +47,9 @@ format2 = format_sequence(
     separator=">",
 )
 print(format2)
-
 ```
 
-输出结果：
+#### 输出结果
 
 ```
 >content1
@@ -58,6 +58,8 @@ print(format2)
 ```
 
 ### String
+
+#### 代码示例
 
 ```python
 format3 = format_sequence(
@@ -72,7 +74,7 @@ format3 = format_sequence(
 print(format3)
 ```
 
-输出结果：
+#### 输出结果
 
 ```
 >1. str1

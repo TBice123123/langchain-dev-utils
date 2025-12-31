@@ -6,9 +6,9 @@
 
 ## 检测工具调用
 
-检测消息是否包含工具调用，核心函数是`has_tool_calling`。
+检测消息是否包含工具调用，核心函数是 `has_tool_calling`。
 
-使用示例:
+### 代码示例
 
 ```python
 import datetime
@@ -26,9 +26,9 @@ print(has_tool_calling(response))
 
 ## 解析工具调用参数
 
-提供一个实用函数来解析工具调用参数，从消息中提取参数信息，核心函数是`parse_tool_calling`。
+提供一个实用函数来解析工具调用参数，从消息中提取参数信息，核心函数是 `parse_tool_calling`。
 
-使用示例:
+### 代码示例
 
 ```python
 import datetime

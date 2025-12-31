@@ -2,13 +2,13 @@
 
 ## Overview
 
-Used to format a list composed of Documents, Messages, or strings into a single text string. The specific function is `format_sequence`.
+Used to format a list consisting of Documents, Messages, or strings into a single text string. The specific function is `format_sequence`.
 
 ## Usage Examples
 
-Usage examples are as follows:
-
 ### Message
+
+#### Code Example
 
 ```python
 from langchain_core.documents import Document
@@ -25,7 +25,7 @@ formated1 = format_sequence(
 print(formated1)
 ```
 
-Output result:
+#### Output Result
 
 ```
 -Hello1
@@ -34,6 +34,8 @@ Output result:
 ```
 
 ### Document
+
+#### Code Example
 
 ```python
 format2 = format_sequence(
@@ -45,10 +47,9 @@ format2 = format_sequence(
     separator=">",
 )
 print(format2)
-
 ```
 
-Output result:
+#### Output Result
 
 ```
 >content1
@@ -57,6 +58,8 @@ Output result:
 ```
 
 ### String
+
+#### Code Example
 
 ```python
 format3 = format_sequence(
@@ -71,7 +74,7 @@ format3 = format_sequence(
 print(format3)
 ```
 
-Output result:
+#### Output Result
 
 ```
 >1. str1

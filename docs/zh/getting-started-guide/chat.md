@@ -12,7 +12,17 @@ LangChain 的 `init_chat_model` 函数仅支持有限的模型提供商。本库
 
 若模型提供商已有现成且合适的 LangChain 集成（详见[对话模型类集成](https://docs.langchain.com/oss/python/integrations/chat)），请将相应的集成对话模型类作为 chat_model 参数传入。
 
-具体代码可参考如下：
+#### 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `provider_name` | `str` | 是 | - | 模型提供商名称，用于后续在 `load_chat_model` 中引用 |
+| `chat_model` | `type[BaseChatModel]` | 是 | - | LangChain 对话模型类 |
+| `base_url` | `str` | 否 | `None` | API 基础地址，通常无需手动设置 |
+| `model_profiles` | `dict` | 否 | `None` | 模型配置信息字典 |
+
+#### 代码示例
+
 ```python
 from langchain_core.language_models.fake_chat_models import FakeChatModel
 from langchain_dev_utils.chat_models import register_model_provider
@@ -22,18 +32,19 @@ register_model_provider(
     chat_model=FakeChatModel,
 )
 ```
-对于上述代码有以下几点补充：
+
+#### 使用说明
 
 - `FakeChatModel` 仅用于测试。实际使用中必须传入具备真实功能的 `ChatModel` 类。
-- `provider_name` 代表模型提供商的名称，用于后续在 `load_chat_model` 中引用。名称可自定义，但不要包含":"、"-"等特殊字符。
+- `provider_name` 代表模型提供商的名称，用于后续在 `load_chat_model` 中引用。名称可自定义，但不要包含 `:`、`-` 等特殊字符。
 
-除此之外，本情况下，该函数还接收以下参数：
+#### 可选参数说明
 
-- **base_url**
+**base_url**
 
-**此参数通常无需设置（因为模型类内部一般已定义默认的API 地址）**，仅当需要覆盖模型类默认地址时才传入 `base_url`，且仅对字段名为 `api_base` 或 `base_url`（含别名）的属性生效。
+此参数通常无需设置（因为模型类内部一般已定义默认的 API 地址），仅当需要覆盖模型类默认地址时才传入 `base_url`，且仅对字段名为 `api_base` 或 `base_url`（含别名）的属性生效。
 
-- **model_profiles**
+**model_profiles**
 
 如果你的 LangChain 集成对话模型类已全面支持 `profile` 参数（即可以通过 `model.profile` 直接访问模型的相关属性，例如 `max_input_tokens`、`tool_calling` 等），则无需额外设置 `model_profiles`。
 
@@ -63,45 +74,63 @@ register_model_provider(
 
 ### 未有 LangChain 对话模型类，但模型提供商支持 OpenAI 兼容 API
 
-
 很多模型提供商都支持 **OpenAI 兼容 API** 的服务，例如：[vLLM](https://github.com/vllm-project/vllm)、[OpenRouter](https://openrouter.ai/)、[Together AI](https://www.together.ai/)等。当你接入的模型提供商未有合适的 LangChain 对话模型类时，但提供商支持 OpenAI 兼容 API 时，可以考虑使用此情况。
 
-!!!tip "提示"
+!!! tip "提示"
     一种常见的接入 OpenAI 兼容 API 的做法是直接使用 `langchain-openai` 中的 `ChatOpenAI`，只需传入 `base_url` 与 `api_key` 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题：无法显示非OpenAI官方的推理模型的思维链(`reasoning_content`)、不支持使用视频类型的content_block、结构化输出默认策略覆盖率低等。为此，本库专门提供了此功能，用于解决上述问题。因此，如果对于比较简单的场景（尤其是是对兼容性要求低的场景）可以完全使用`ChatOpenAI`而无需使用本功能。
-    
+
 本库会根据用户的相关输入，使用内置 `BaseChatOpenAICompatible` 类构建对应于特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并增强以下能力：
 
 - **支持更多格式的推理内容**： 相较于`ChatOpenAI` 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如`vLLM`）。
 - **支持`video`类型 content_block**： `ChatOpenAI` 无法转换 `type=video` 的 `content_block`，本实现已完成支持。
-- **动态适配并选择最合适的结构化输出方法**：默认情况下，能够根据模型提供商的实际支持情况，自动选择最优的结构化输出方法（`function_calling` 或 `json_schema`）。  
+- **动态适配并选择最合适的结构化输出方法**：默认情况下，能够根据模型提供商的实际支持情况，自动选择最优的结构化输出方法（`function_calling` 或 `json_schema`）。
 - **通过 compatibility_options 精细适配差异**： 通过配置提供商兼容性选项，解决`tool_choice`、`response_format` 等参数的支持差异。
 
-**注意**：使用此情况时，必须安装 standard 版本的 `langchain-dev-utils` 库。具体可以参考安装部分的介绍。
+!!! warning "注意"
+    使用此情况时，必须安装 standard 版本的 `langchain-dev-utils` 库。具体可以参考安装部分的介绍。
 
-此情况下，除了要传入 `provider_name`以及`chat_model`（取值必须为`"openai-compatible"`）参数外，还需传入 `base_url` 参数。
+#### 参数说明
 
-对于`base_url`参数，可通过以下任一方式提供：
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `provider_name` | `str` | 是 | - | 模型提供商名称 |
+| `chat_model` | `str` | 是 | - | 固定取值 `"openai-compatible"` |
+| `base_url` | `str` | 否 | `None` | API 基础地址 |
+| `model_profiles` | `dict` | 否 | `None` | 模型配置信息字典 |
+| `compatibility_options` | `dict` | 否 | `None` | 兼容性选项配置 |
 
-  - **显式传参**：
-    ```python
-    register_model_provider(
-        provider_name="vllm",
-        chat_model="openai-compatible",
-        base_url="http://localhost:8000/v1"
-    )
-    ```
-  - **通过环境变量**（推荐用于配置管理）：
-    ```bash
-    export VLLM_API_BASE=http://localhost:8000/v1
-    ```
-    代码中可省略 `base_url`：
-    ```python
-    register_model_provider(
-        provider_name="vllm",
-        chat_model="openai-compatible"
-        # 自动读取 VLLM_API_BASE
-    )
-    ``` 
+#### 代码示例
+
+**方式一：显式传参**
+
+```python
+register_model_provider(
+    provider_name="vllm",
+    chat_model="openai-compatible",
+    base_url="http://localhost:8000/v1"
+)
+```
+
+**方式二：通过环境变量（推荐用于配置管理）**
+
+```bash
+export VLLM_API_BASE=http://localhost:8000/v1
+```
+
+```python
+register_model_provider(
+    provider_name="vllm",
+    chat_model="openai-compatible"
+    # 自动读取 VLLM_API_BASE
+)
+``` 
+#### 环境变量说明
+
+| 环境变量 | 说明 |
+|----------|------|
+| `${PROVIDER_NAME}_API_BASE` | API 基础地址（全大写，下划线分隔） |
+| `${PROVIDER_NAME}_API_KEY` | API 密钥 |
+
 !!! info "提示"
     此情况下，模型提供商的 API 端点的环境变量的命名规则是`${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。对应的 API_KEY 环境变量的命名规则是`${PROVIDER_NAME}_API_KEY`（全大写，下划线分隔）。
 
@@ -115,25 +144,26 @@ register_model_provider(
     --host 0.0.0.0 --port 8000 \
     --served-model-name qwen3-4b
     ```
-    服务地址为 `http://localhost:8000/v1`。  
+    服务地址为 `http://localhost:8000/v1`。
 
+#### 可选参数说明
 
-同时，本情况下，还可以设置以下两个可选参数：
-
-- **model_profiles**
+**model_profiles**
 
 这种情况下，若未手动设置 `model_profiles`，则 `model.profile` 将返回一个空字典 `{}`。因此，若需通过 `model.profile` 获取指定模型的配置信息，必须先显式设置 `model_profiles`。
 
-
-- **compatibility_options**
+**compatibility_options**
 
 仅在此情况下有效。用于**声明**该提供商对**OpenAI API**的部分特性的支持情况，以提高兼容性和稳定性。
+
 目前支持以下配置项：
 
-- `supported_tool_choice`：支持的 `tool_choice` 策略列表，默认为`["auto"]`；
-- `supported_response_format`：支持的 `response_format` 格式列表(`json_schema`、`json_object`)，默认为 `[]`；
-- `reasoning_keep_policy`：传给模型的历史消息（messages）中 `reasoning_content` 字段的保留策略。可选值有`never`、`current`、`all`。默认为`never`。
-- `include_usage`：是否在最后一条流式返回结果中包含 `usage` 信息，默认为 `True`。
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `supported_tool_choice` | `list[str]` | `["auto"]` | 支持的 `tool_choice` 策略列表 |
+| `supported_response_format` | `list[str]` | `[]` | 支持的 `response_format` 格式列表(`json_schema`、`json_object`) |
+| `reasoning_keep_policy` | `str` | `"never"` | 历史消息中 `reasoning_content` 字段的保留策略 |
+| `include_usage` | `bool` | `True` | 是否在流式返回结果中包含 `usage` 信息 |
 
 !!! info "补充"
     因为同一模型提供商的不同模型对于`tool_choice`、`response_format`等参数的支持情况有所差异。故该四个兼容性选项最终会作为该类的**实例属性**。注册时可传值作为全局默认值（代表该提供商的大部分模型支持的配置），加载时如需微调，在 `load_chat_model` 中覆盖同名参数即可。
@@ -314,6 +344,14 @@ register_model_provider(
 
 若需注册多个提供商，可使用 `batch_register_model_provider` 避免重复调用。
 
+#### 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `providers` | `list[dict]` | 是 | - | 提供商配置列表，每个字典包含注册参数 |
+
+#### 代码示例
+
 ```python
 from langchain_dev_utils.chat_models import batch_register_model_provider
 from langchain_core.language_models.fake_chat_models import FakeChatModel
@@ -339,18 +377,29 @@ batch_register_model_provider(
 
 ## 加载对话模型
 
-使用 `load_chat_model` 函数加载对话模型（初始化对话模型实例）。其中，参数的规则如下：
+使用 `load_chat_model` 函数加载对话模型（初始化对话模型实例）。
+
+#### 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `model` | `str` | 是 | - | 模型名称 |
+| `model_provider` | `str` | 否 | `None` | 模型提供商名称 |
+
+**除此之外，还可以传入任意数量的关键字参数，用于传递对话模型类的额外参数。**
+
+#### 参数规则
 
 - 若未传 `model_provider`，则 `model` 必须为 `provider_name:model_name` 格式；
 - 若传 `model_provider`，则 `model` 必须仅为 `model_name`。
 
-**示例**：
+#### 代码示例
 
 ```python
-# 方式一
+# 方式一：model 包含 provider 信息
 model = load_chat_model("vllm:qwen3-4b")
 
-# 方式二
+# 方式二：单独指定 provider
 model = load_chat_model("qwen3-4b", model_provider="vllm")
 ```
 
@@ -362,7 +411,7 @@ export VLLM_API_KEY=vllm
 
 ### 模型方法和参数
 
-对于**情况一**，其所有方法与参数均与该对应的对话模型类保持一致。  
+对于**情况一**，其所有方法与参数均与该对应的对话模型类保持一致。
 而对于**情况二**，则模型的方法和参数如下：
 
 - 支持`invoke`、`ainvoke`、`stream`、`astream`等方法。

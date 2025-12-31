@@ -1,34 +1,43 @@
 # 多智能体构建
 
-
 ## 概述
 
-将智能体封装为工具是多智能体系统中的一种实现模式，LangChain 官方文档将其称为`subagents`模式。该模式通过将子智能体（subagents）封装为工具，使主智能体能够根据任务需求动态委派给专门的子智能体处理，从而实现任务的专业化分工和协作。
+在构建复杂的 AI 应用时，多智能体协作是一种强大的架构模式。通过将不同职责分配给专门的智能体，可以实现任务的专业化分工和高效协作。
 
-本库提供了两个预构建函数来实现此模式：
+实现多智能体协作有多种方式，其中**工具调用**是一种常用且灵活的实现方式。通过将子智能体（subagents）封装为工具，主智能体可以根据任务需求动态委派给专门的子智能体处理。
 
-- `wrap_agent_as_tool`：将单个智能体实例封装为一个独立工具
+本库提供了两个预构建函数来简化这种实现方式：
 
-- `wrap_all_agents_as_tool`：将多个智能体实例封装为一个统一工具，通过参数指定调用哪个子智能体
+| 函数名 | 功能描述 |
+|--------|----------|
+| `wrap_agent_as_tool` | 将单个智能体实例封装为一个独立工具 |
+| `wrap_all_agents_as_tool` | 将多个智能体实例封装为一个统一工具，通过参数指定调用哪个子智能体 |
 
 ## 封装单个智能体为工具
 
-封装单个智能体只需三步：  
-1. 导入 `wrap_agent_as_tool`  
-2. 把智能体实例作为参数传入  
-3. 获得可直接被其他智能体调用的工具对象  
+封装单个智能体只需三步：
 
-函数第一个参数 `agent` 为必填项，需传入一个 `CompiledStateGraph` 实例；同时，该实例必须已定义 `name` 属性。  
-可选参数 `tool_name` 与 `tool_description` 可分别指定工具的名称与描述；若留空，工具名默认取 `transfer_to_{agent_name}`，描述默认为 `This tool transforms input to {agent_name}`。  
-此外，还可额外传入钩子函数，在智能体执行前后插入自定义逻辑。
+1. 导入 `wrap_agent_as_tool`
+2. 把智能体实例作为参数传入
+3. 获得可直接被其他智能体调用的工具对象
+
+### 函数参数说明
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `agent` | `CompiledStateGraph` | 是 | 智能体实例，必须已定义 `name` 属性 |
+| `tool_name` | `str` | 否 | 工具名称，默认为 `transfer_to_{agent_name}` |
+| `tool_description` | `str` | 否 | 工具描述，默认为 `This tool transforms input to {agent_name}` |
+| `pre_input_hooks` | `tuple` | 否 | 智能体运行前的钩子函数 |
+| `post_output_hooks` | `tuple` | 否 | 智能体运行后的钩子函数 |
 
 ### 使用示例
 
-下面，我们以官方示例中的 `supervisor` 智能体为基础，介绍如何通过 `wrap_agent_as_tool` 将其快速改造成可被其它智能体调用的工具。
+下面我们以 `supervisor` 智能体为例，介绍如何通过 `wrap_agent_as_tool` 将子智能体封装为工具。
 
 首先实现两个子智能体，一个用于发送邮件，一个用于日程查询和安排。
 
-**邮件智能体**
+#### 邮件智能体
 ```python
 from langchain_core.tools import tool
 from langchain_dev_utils.chat_models import register_model_provider
@@ -69,7 +78,7 @@ email_agent = create_agent(
 )
 ```
 
-**日程智能体**
+#### 日程智能体
 ```python
 @tool
 def create_calendar_event(
@@ -111,7 +120,7 @@ calendar_agent = create_agent(
 )
 ```
 
-接下来，使用`wrap_agent_as_tool`将该两个子智能体封装为工具。
+接下来，使用 `wrap_agent_as_tool` 将这两个子智能体封装为工具。
 
 ```python
 schedule_event = wrap_agent_as_tool(
@@ -136,7 +145,7 @@ manage_email = wrap_agent_as_tool(
 )
 ```
 
-最终创建一个`supervisor_agent`，它可以调用这两个工具。
+最终创建一个 `supervisor_agent`，它可以调用这两个工具。
 
 ```python
 SUPERVISOR_PROMPT = (
@@ -163,23 +172,32 @@ print(
 )
 ```
 
-!!! info "注意"
-    上述示例中，我们是从`langchain_dev_utils.agents`中导入了`create_agent`函数，而不是`langchain.agents`，这是因为本库也提供了一个与官方`create_agent`函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。使得可以直接使用`register_model_provider`注册的模型，而无需初始化模型实例后传入。
+!!! info "提示"
+
+    上述示例中，我们是从 `langchain_dev_utils.agents` 中导入了 `create_agent` 函数，而不是 `langchain.agents`。这是因为本库也提供了一个与官方 `create_agent` 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 `register_model_provider` 注册的模型，而无需初始化模型实例后传入。
 
 
-## 封装多个智能体封装为单一工具
-将多个智能体封装为单一工具只需三步：  
-1. 导入 `wrap_all_agents_as_tool`  
-2. 把多个智能体实例作为列表一次性传入  
-3. 获得可直接被其他智能体调用的统一工具对象  
+## 封装多个智能体为单一工具
 
-函数第一个参数 `agents` 必须提供；可选参数 `tool_name` 与 `tool_description` 可自定义工具名称与描述。若省略，工具名默认为 `task`，描述默认为 `Launch an ephemeral subagent for a task.\nAvailable agents:\n {all_available_agents}`。  
+将多个智能体封装为单一工具只需三步：
 
-同样支持也支持传入钩子函数，用于在智能体调用前或后执行自定义逻辑。
+1. 导入 `wrap_all_agents_as_tool`
+2. 把多个智能体实例作为列表一次性传入
+3. 获得可直接被其他智能体调用的统一工具对象
+
+### 函数参数说明
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `agents` | `list[CompiledStateGraph]` | 是 | 智能体实例列表 |
+| `tool_name` | `str` | 否 | 工具名称，默认为 `task` |
+| `tool_description` | `str` | 否 | 工具描述，默认包含所有可用智能体信息 |
+| `pre_input_hooks` | `tuple` | 否 | 智能体运行前的钩子函数 |
+| `post_output_hooks` | `tuple` | 否 | 智能体运行后的钩子函数 |
 
 ### 使用示例
 
-对于上一个示例的`calendar_agent`和`email_agent`，我们可以将它们封装为一个工具`call_subagent`
+对于上一个示例的 `calendar_agent` 和 `email_agent`，我们可以将它们封装为一个工具 `call_subagent`：
 
 ```python
 call_subagent_tool = wrap_all_agents_as_tool(
@@ -207,33 +225,40 @@ main_agent = create_agent(
 )
 ```
 
-!!! info "注意"
-    除了使用本库提供的`wrap_all_agents_as_tool`将多个智能体封装为单一工具外，你还可以使用`deepagents`库提供的`SubAgentMiddleware`中间件实现类似的效果
+!!! info "提示"
+
+    除了使用本库提供的 `wrap_all_agents_as_tool` 将多个智能体封装为单一工具外，你还可以使用 `deepagents` 库提供的 `SubAgentMiddleware` 中间件实现类似的效果。
 
 ## 钩子函数
 
-本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。  
-该机制同时适用于 `wrap_agent_as_tool` 与 `wrap_all_agents_as_tool`，下文以 `wrap_agent_as_tool` 为例进行说明。
+本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。该机制同时适用于 `wrap_agent_as_tool` 与 `wrap_all_agents_as_tool`，下文以 `wrap_agent_as_tool` 为例进行说明。
 
-#### 1. pre_input_hooks
+### 1. pre_input_hooks
 
 在智能体运行前对输入进行预处理。可用于输入增强、上下文注入、格式校验、权限检查等。
 
-支持传入以下类型：
+#### 支持的传入类型
 
-- 若传入 **单个同步函数**，则该函数同时用于同步（`invoke`）和异步（`ainvoke`）调用路径（异步路径中不会 `await`，直接调用）。
-- 若传入 **二元组 `(sync_func, async_func)`**：
-  - 第一个函数用于同步调用路径；
-  - 第二个函数（必须是 `async def`）用于异步调用路径，并会被 `await`。
+| 类型 | 说明 |
+|------|------|
+| 单个同步函数 | 同时用于同步（`invoke`）和异步（`ainvoke`）调用路径（异步路径中不会 `await`，直接调用） |
+| 二元组 `(sync_func, async_func)` | 第一个函数用于同步调用路径；第二个函数（必须是 `async def`）用于异步调用路径，并会被 `await` |
 
-你传入的函数接收两个参数：
+#### 函数签名
 
-- `request: str`：原始工具调用输入；
-- `runtime: ToolRuntime`：`langchain`的`ToolRuntime`。
+```python
+def pre_input_hook(request: str, runtime: ToolRuntime) -> str:
+    """
+    参数:
+        request: 原始工具调用输入
+        runtime: langchain 的 ToolRuntime
+    
+    返回:
+        处理后的 str，作为 agent 的实际输入
+    """
+```
 
-你传入的函数必须返回处理后的 `str`，作为 agent 的实际输入。
-
-**示例**：
+#### 使用示例
 
 ```python
 def process_input(request: str, runtime: ToolRuntime) -> str:
@@ -250,28 +275,37 @@ call_agent_tool = wrap_agent_as_tool(
 )
 ```
 
-注意，上述的例子比较简单，实际上你可以根据`runtime`里面的`state`或者`context`添加更复杂的逻辑。
+!!! tip "提示"
 
-#### 2. post_output_hooks
+    上述的例子比较简单，实际上你可以根据 `runtime` 里面的 `state` 或者 `context` 添加更复杂的逻辑。
+
+### 2. post_output_hooks
 
 在智能体运行完成后，对其返回的完整消息列表进行后处理，以生成工具的最终返回值。可用于结果提取、结构化转换等。
 
-支持传入以下类型：
+#### 支持的传入类型
 
-- 若传入 **单个函数**，该函数用于同步和异步路径（异步路径中不 `await`）。
-- 若传入 **二元组 `(sync_func, async_func)`**：
-  - 第一个用于同步路径；
-  - 第二个（`async def`）用于异步路径，并会被 `await`。
+| 类型 | 说明 |
+|------|------|
+| 单个函数 | 同时用于同步和异步路径（异步路径中不 `await`） |
+| 二元组 `(sync_func, async_func)` | 第一个用于同步路径；第二个（`async def`）用于异步路径，并会被 `await` |
 
-你传入的函数接收三个参数：
+#### 函数签名
 
-- `request: str`：（可能已处理的）原始输入；
-- `messages: List[AnyMessage]`：agent 返回的完整消息历史（来自 `response["messages"]`）；
-- `runtime: ToolRuntime`：`langchain`的`ToolRuntime`。
+```python
+def post_output_hook(request: str, messages: list, runtime: ToolRuntime) -> Union[str, Command]:
+    """
+    参数:
+        request: （可能已处理的）原始输入
+        messages: agent 返回的完整消息历史（来自 response["messages"]）
+        runtime: langchain 的 ToolRuntime
+    
+    返回:
+        能够被序列化为字符串的值，或者是 Command 对象
+    """
+```
 
-你传入的函数返回的值可以是能够被序列化为一个字符串或者是`Command`对象。
-
-**示例**：
+#### 使用示例
 
 ```python
 from langgraph.types import Command
@@ -293,9 +327,13 @@ call_agent_tool = wrap_agent_as_tool(
 )
 ```
 
-- 若未提供 `pre_input_hooks`，输入原样传递；
-- 若未提供 `post_output_hooks`，默认返回 `response["messages"][-1].content`（即最后一条消息的文本内容）。
+!!! tip "提示"
 
-注意，上述的例子比较简单，实际上你可以根据`runtime`里面的`state`或者`context`添加更复杂的逻辑。
+    上述的例子比较简单，实际上你可以根据 `runtime` 里面的 `state` 或者 `context` 添加更复杂的逻辑。
+
+### 默认行为
+
+- 若未提供 `pre_input_hooks`，输入原样传递
+- 若未提供 `post_output_hooks`，默认返回 `response["messages"][-1].content`（即最后一条消息的文本内容）
 
 

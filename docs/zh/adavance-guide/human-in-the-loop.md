@@ -2,12 +2,18 @@
 
 ## 概述
 
-提供装饰器函数，用于为工具调用添加“人在回路”审核支持，在工具执行期间启用人工审核。
-具体表现为两个装饰器：
+本库提供了装饰器函数，用于为工具调用添加"人在回路"审核支持，在工具执行期间启用人工审核。
 
-- `human_in_the_loop`：用于同步工具函数
+| 装饰器 | 适用场景 |
+|--------|----------|
+| `human_in_the_loop` | 用于同步工具函数 |
+| `human_in_the_loop_async` | 用于异步工具函数 |
 
-- `human_in_the_loop_async`：用于异步工具函数
+## 参数说明
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `handler` | `Callable` | 否 | `None` | 自定义处理函数，若为 `None` 则使用默认处理函数 |
 
 ## 使用示例
 
@@ -39,45 +45,67 @@ async def async_get_current_time() -> str:
     return str(datetime.datetime.now().timestamp())
 ```
 
-!!! note "默认的 handler"
-    如下是默认的 handler 实现：
-    ```python
-    def _get_human_in_the_loop_request(params: InterruptParams) -> dict[str, Any]:
-        return {
-            "action_request": {
-                "action": params["tool_call_name"],
-                "args": params["tool_call_args"],
-            },
-            "config": {
-                "allow_accept": True,
-                "allow_edit": True,
-                "allow_respond": True,
-            },
-            "description": f"Please review tool call: {params['tool_call_name']}",
-        }
+### 默认 handler 的实现
+
+默认 handler 的实现如下：
+
+```python
+def _get_human_in_the_loop_request(params: InterruptParams) -> dict[str, Any]:
+    return {
+        "action_request": {
+            "action": params["tool_call_name"],
+            "args": params["tool_call_args"],
+        },
+        "config": {
+            "allow_accept": True,
+            "allow_edit": True,
+            "allow_respond": True,
+        },
+        "description": f"Please review tool call: {params['tool_call_name']}",
+    }
 
 
-    def default_handler(params: InterruptParams) -> Any:
-        request = _get_human_in_the_loop_request(params)
-        response = interrupt(request)
+def default_handler(params: InterruptParams) -> Any:
+    request = _get_human_in_the_loop_request(params)
+    response = interrupt(request)
 
-        if response["type"] == "accept":
-            return params["tool"].invoke(params["tool_call_args"])
-        elif response["type"] == "edit":
-            updated_args = response["args"]
-            return params["tool"].invoke(updated_args)
-        elif response["type"] == "response":
-            return response["args"]
-        else:
-            raise ValueError(f"Unsupported interrupt response type: {response['type']}")
-    ```
+    if response["type"] == "accept":
+        return params["tool"].invoke(params["tool_call_args"])
+    elif response["type"] == "edit":
+        updated_args = response["args"]
+        return params["tool"].invoke(updated_args)
+    elif response["type"] == "response":
+        return response["args"]
+    else:
+        raise ValueError(f"Unsupported interrupt response type: {response['type']}")
+```
 
-    中断的时候会发送一个 JSON Schema 内容如上`_get_human_in_the_loop_request`返回的值,回复的时候需要返回一个 JSON Schema 内容，要有一个键为 `type`，值为 `accept`/`edit`/`response`。
+#### 中断请求格式
+
+中断时会发送如下 JSON Schema 格式的请求：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `action_request.action` | `str` | 工具调用名称 |
+| `action_request.args` | `dict` | 工具调用参数 |
+| `config.allow_accept` | `bool` | 是否允许接受操作 |
+| `config.allow_edit` | `bool` | 是否允许编辑参数 |
+| `config.allow_respond` | `bool` | 是否允许直接响应 |
+| `description` | `str` | 操作描述 |
+
+#### 中断响应格式
+
+响应时需要返回如下 JSON Schema 格式的数据：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `type` | `str` | 响应类型，可选值为 `accept`、`edit`、`response` |
+| `args` | `dict` | 当 `type` 为 `edit` 或 `response` 时，包含更新后的参数或响应内容 |
 
 
 ### 自定义 Handler 示例
 
-你可以完全控制中断行为，例如只允许“接受/拒绝”，或自定义提示语：
+你可以完全控制中断行为，例如只允许"接受/拒绝"，或自定义提示语：
 
 ```python
 from typing import Any
@@ -104,4 +132,4 @@ async def get_weather(city: str) -> str:
 ```
 
 !!! success "最佳实践"
-    该装饰器在实现自定义人在回路逻辑时，需要传入handler参数。此handler参数是一个函数，内部必须使用LangGraph的interrupt函数来执行中断操作。因此，如果仅为单个工具添加自定义的人在回路逻辑，建议直接使用LangGraph的interrupt函数。当多个工具需要相同自定义人在回路逻辑时，使用本装饰器可以有效避免代码重复。
+    该装饰器在实现自定义人在回路逻辑时，需要传入 `handler` 参数。此 `handler` 参数是一个函数，内部必须使用 LangGraph 的 `interrupt` 函数来执行中断操作。因此，如果仅为单个工具添加自定义的人在回路逻辑，建议直接使用 LangGraph 的 `interrupt` 函数。当多个工具需要相同自定义人在回路逻辑时，使用本装饰器可以有效避免代码重复。

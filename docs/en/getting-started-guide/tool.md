@@ -2,13 +2,13 @@
 
 ## Overview
 
-Provides utility tools for detecting and parsing tool call parameters.
+Provides utilities for detecting and parsing tool call arguments.
 
-## Detecting Tool Calls
+## Detect Tool Calls
 
 Detects whether a message contains a tool call. The core function is `has_tool_calling`.
 
-Usage example:
+### Code Example
 
 ```python
 import datetime
@@ -24,11 +24,11 @@ response = model.bind_tools([get_current_time]).invoke("What time is it now?")
 print(has_tool_calling(response))
 ```
 
-## Parsing Tool Call Parameters
+## Parse Tool Call Arguments
 
-Provides a utility function to parse tool call parameters, extracting parameter information from a message. The core function is `parse_tool_calling`.
+Provides a utility function to parse tool call arguments, extracting parameter information from a message. The core function is `parse_tool_calling`.
 
-Usage example:
+### Code Example
 
 ```python
 import datetime

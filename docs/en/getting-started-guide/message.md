@@ -1,23 +1,25 @@
 # Message Processing
 
 ## Overview
-Main functions include:
 
-- Merging reasoning content into final replies
+Main features include:
 
-- Merging streamed output Chunks
+- Merge reasoning content into final responses
+- Merge streaming output Chunks
 
-## Merging Reasoning Content into Final Replies
+## Merge Reasoning Content into Final Response
 
-Used to merge reasoning content (`reasoning_content`) into the final reply (`content`).
+Used to merge reasoning content (`reasoning_content`) into the final response (`content`).
 
-Specifically:
+### Function Description
 
-- `convert_reasoning_content_for_ai_message`: Merges reasoning content in AIMessage into the content field (used for model's invoke and ainvoke)
-- `convert_reasoning_content_for_chunk_iterator`: Merges reasoning content in streaming responses into the content field (used for model's stream)
-- `aconvert_reasoning_content_for_chunk_iterator`: Asynchronous version of `convert_reasoning_content_for_chunk_iterator`, used for asynchronous streaming processing (used for model's astream)
+| Function | Description |
+|----------|-------------|
+| `convert_reasoning_content_for_ai_message` | Merge reasoning content in AIMessage into the content field (for model's invoke and ainvoke) |
+| `convert_reasoning_content_for_chunk_iterator` | Merge reasoning content in streaming responses into the content field (for model's stream) |
+| `aconvert_reasoning_content_for_chunk_iterator` | Async version of `convert_reasoning_content_for_chunk_iterator`, for async streaming processing (for model's astream) |
 
-Usage examples:
+### Code Example
 
 ```python
 from langchain_dev_utils.message_convert import (
@@ -25,32 +27,35 @@ from langchain_dev_utils.message_convert import (
     convert_reasoning_content_for_chunk_iterator,
 )
 
-response = model.invoke("Hello")
+response = model.invoke("你好")
 converted_response = convert_reasoning_content_for_ai_message(
     response, think_tag=("<start>", "<end>")
 )
 print(converted_response.content)
 
 for chunk in convert_reasoning_content_for_chunk_iterator(
-    model.stream("Hello"), think_tag=("<start>", "<end>")
+    model.stream("你好"), think_tag=("<start>", "<end>")
 ):
     print(chunk.content, end="", flush=True)
 ```
 
-## Merging Streamed Output Chunks
+## Merge Streaming Output Chunks
 
-Provides utility functions to merge multiple AIMessageChunks generated from streaming output into a single AIMessage.
-Core function:
+Provides utility functions to merge multiple AIMessageChunks generated due to streaming output into a single AIMessage.
 
-- `merge_ai_message_chunk`: Merges AI message chunks
+### Core Functions
 
-Usage example:
+| Function | Description |
+|----------|-------------|
+| `merge_ai_message_chunk` | Merge AI message chunks |
+
+### Code Example
 
 ```python
 from langchain_dev_utils.message_convert import merge_ai_message_chunk
 
 chunks = []
-for chunk in model.stream("Hello"):
+for chunk in model.stream("你好"):
     chunks.append(chunk)
 
 merged_message = merge_ai_message_chunk(chunks)
