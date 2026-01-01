@@ -69,6 +69,7 @@ plugins:
             - Message Processing: getting-started-guide/message.md
             - Tool Calling Processing: getting-started-guide/tool.md
           - Advanced Guides:
+            - OpenAI Compatible API Integration: adavance-guide/openai-compatible.md
             - Multi-Agent Construction: adavance-guide/multi-agent.md
             - Middleware: adavance-guide/middleware.md
             - State-Graph Orchestration: adavance-guide/pipeline.md
@@ -95,6 +96,7 @@ plugins:
             - 消息处理: getting-started-guide/message.md
             - 工具调用处理: getting-started-guide/tool.md
           - 高级指南:
+            - OpenAI 兼容 API 集成: adavance-guide/openai-compatible.md
             - 多智能体构建: adavance-guide/multi-agent.md
             - 中间件: adavance-guide/middleware.md
             - 状态图编排: adavance-guide/pipeline.md

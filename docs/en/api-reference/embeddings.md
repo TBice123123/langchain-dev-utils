@@ -17,10 +17,10 @@ def register_embeddings_provider(
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|------|------|------|--------|------|
+|-----------|------|----------|---------|-------------|
 | provider_name | str | Yes | - | Custom provider name |
 | embeddings_model | EmbeddingsType | Yes | - | Embedding model class or supported provider string type |
-| base_url | Optional[str] | No | None | Base URL of the provider |
+| base_url | Optional[str] | No | None | BaseURL of the provider |
 
 ### Example
 
@@ -46,7 +46,7 @@ def batch_register_embeddings_provider(
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|------|------|------|--------|------|
+|-----------|------|----------|---------|-------------|
 | providers | list[EmbeddingProvider] | Yes | - | List of provider configurations |
 
 ### Example
@@ -78,8 +78,8 @@ def load_embeddings(
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|------|------|------|--------|------|
-| model | str | Yes | - | Model name, format as `model_name` or `provider_name:model_name` |
+|-----------|------|----------|---------|-------------|
+| model | str | Yes | - | Model name, format: `model_name` or `provider_name:model_name` |
 | provider | Optional[str] | No | None | Model provider name |
 | **kwargs | Any | No | - | Additional model parameters |
 
@@ -91,9 +91,48 @@ embeddings = load_embeddings("vllm:qwen3-embedding-4b")
 
 ---
 
+## create_openai_compatible_embedding
+
+Create an OpenAI compatible embedding model class.
+
+### Function Signature
+
+```python
+def create_openai_compatible_embedding(
+    embedding_provider: str,
+    base_url: Optional[str] = None,
+    embedding_model_cls_name: Optional[str] = None,
+) -> type[Embeddings]:
+```
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| embedding_provider | str | Yes | - | Embedding model provider name |
+| base_url | Optional[str] | No | None | BaseURL of the model provider |
+| embedding_model_cls_name | Optional[str] | No | None | Custom embedding model class name |
+
+### Return Value
+
+| Type | Description |
+|------|-------------|
+| type[Embeddings] | Dynamically created OpenAI compatible embedding model class |
+
+### Example
+
+```python
+VLLMEmbeddings = create_openai_compatible_embedding(
+    embedding_provider="vllm",
+    base_url="http://localhost:8000/v1",
+    embedding_model_cls_name="VLLMEmbeddings",
+)
+```
+---
+
 ## EmbeddingsType
 
-Types supported for the `embeddings_model` parameter when registering an embedding provider.
+Types supported by the `embeddings_model` parameter when registering embedding providers.
 
 ### Type Definition
 
@@ -105,7 +144,7 @@ EmbeddingsType = Union[type[Embeddings], Literal["openai-compatible"]]
 
 ## EmbeddingProvider
 
-Configuration type for embedding model providers.
+Embedding model provider configuration type.
 
 ### Class Definition
 
@@ -119,7 +158,7 @@ class EmbeddingProvider(TypedDict):
 ### Field Description
 
 | Field | Type | Required | Description |
-|------|------|------|------|
+|-------|------|----------|-------------|
 | provider_name | str | Yes | Provider name |
 | embeddings_model | EmbeddingsType | Yes | Embedding model class or string |
 | base_url | NotRequired[str] | No | Base URL |

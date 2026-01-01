@@ -41,9 +41,7 @@ register_embeddings_provider(
 
 ### 未有 LangChain 嵌入模型类，但提供商支持 OpenAI 兼容 API
 
-类似于对话模型，很多嵌入模型提供商也提供 **OpenAI 兼容 API**。当无现成 LangChain 集成但支持该协议时，可使用此模式。
-
-本库将使用 `OpenAIEmbeddings`（来自 `langchain-openai`）构建嵌入模型实例，并自动禁用上下文长度检查（设置 `check_embedding_ctx_length=False`）以提升兼容性。
+这种情况下的参数说明如下：
 
 #### 参数说明
 
@@ -79,29 +77,7 @@ register_embeddings_provider(
 )
 ```
 
-#### 环境变量说明
-
-| 环境变量 | 说明 |
-|----------|------|
-| `${PROVIDER_NAME}_API_BASE` | API 基础地址（全大写，下划线分隔） |
-| `${PROVIDER_NAME}_API_KEY` | API 密钥 |
-
-!!! info "提示"
-    环境变量命名规则为 `${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。
-    对应的 API Key 环境变量为 `${PROVIDER_NAME}_API_KEY`。
-
-
-!!! note "补充"  
-    vLLM 可部署嵌入模型并暴露 OpenAI 兼容接口，例如：
-
-    ```bash
-    vllm serve Qwen/Qwen3-Embedding-4B \
-    --task embed \
-    --served-model-name qwen3-embedding-4b \
-    --host 0.0.0.0 --port 8000
-    ```
-
-    服务地址为 `http://localhost:8000/v1`。
+**注意**：关于这部分更多的细节，请参考[OpenAI 兼容 API 集成](../adavance-guide/openai-compatible.md)。
 
 
 ## 批量注册
@@ -167,18 +143,10 @@ embedding = load_embeddings("vllm:qwen3-embedding-4b")
 embedding = load_embeddings("qwen3-embedding-4b", provider="vllm")
 ```
 
-### 额外参数支持
+## 模型方法和参数
 
-可传递任意关键字参数，例如：
+对于支持的模型方法和参数，需要参考对应的嵌入模型类的使用说明。如果采用的是第二种情况，则支持所有的`OpenAIEmbeddings` 类的方法和参数。
 
-```python
-embedding = load_embeddings(
-    "fake_provider:fake-emb",
-    size=1024  # FakeEmbeddings 所需参数
-)
-```
-
-对于 `"openai-compatible"` 类型，支持 `OpenAIEmbeddings` 的所有参数。
 
 ### 兼容官方提供商
 

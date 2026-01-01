@@ -7,7 +7,13 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_tests.integration_tests.chat_models import ChatModelIntegrationTests
 
+from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 from langchain_dev_utils.chat_models.base import load_chat_model
+
+ChatZAI = create_openai_compatible_model(
+    model_provider="zai",
+    chat_model_cls_name="ChatZAI",
+)
 
 
 class TestStandard(ChatModelIntegrationTests):
@@ -27,12 +33,12 @@ class TestStandard(ChatModelIntegrationTests):
 
     @property
     def chat_model_class(self) -> type[BaseChatModel]:
-        return cast("type[BaseChatModel]", load_chat_model)
+        return cast("type[BaseChatModel]", ChatZAI)
 
     @property
     def chat_model_params(self) -> dict:
         return {
-            "model": "zai:glm-4.5",
+            "model": "glm-4.5",
             "extra_body": {
                 "thinking": {
                     "type": "disabled",

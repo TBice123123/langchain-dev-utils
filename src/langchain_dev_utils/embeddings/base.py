@@ -1,7 +1,7 @@
 from typing import Any, Literal, NotRequired, Optional, TypedDict, Union
 
 from langchain.embeddings.base import _SUPPORTED_PROVIDERS, Embeddings, init_embeddings
-from langchain_core.utils import from_env, secret_from_env
+from langchain_core.utils import from_env
 
 from langchain_dev_utils._utils import (
     _check_pkg_install,
@@ -101,12 +101,16 @@ def register_embeddings_provider(
             )
 
         _check_pkg_install("langchain_openai")
+        from .adapters.openai_compatible import _create_openai_compatible_embedding
 
+        embeddings_model = _create_openai_compatible_embedding(
+            provider=provider_name,
+            base_url=base_url,
+        )
         _EMBEDDINGS_PROVIDERS_DICT.update(
             {
                 provider_name: {
                     "embeddings_model": embeddings_model,
-                    "base_url": base_url,
                 }
             }
         )
@@ -220,28 +224,10 @@ def load_embeddings(
 
     if provider in _EMBEDDINGS_PROVIDERS_DICT:
         embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]
-        if isinstance(embeddings, str):
-            if not (api_key := kwargs.get("api_key")):
-                api_key = secret_from_env(f"{provider.upper()}_API_KEY", default=None)()
-                if not api_key:
-                    raise ValueError(
-                        f"API key for {provider} not found. Please set it in the environment."
-                    )
-                kwargs["api_key"] = api_key
-                if embeddings == "openai-compatible":
-                    kwargs["check_embedding_ctx_length"] = False
-                    embeddings = "openai"
-            return init_embeddings(
-                model=model,
-                provider=embeddings,
-                base_url=_EMBEDDINGS_PROVIDERS_DICT[provider]["base_url"],
-                **kwargs,
-            )
-        else:
-            if base_url := _EMBEDDINGS_PROVIDERS_DICT[provider].get("base_url"):
-                url_key = _get_base_url_field_name(embeddings)
-                if url_key is not None:
-                    kwargs.update({url_key: base_url})
-            return embeddings(model=model, **kwargs)
+        if base_url := _EMBEDDINGS_PROVIDERS_DICT[provider].get("base_url"):
+            url_key = _get_base_url_field_name(embeddings)
+            if url_key is not None:
+                kwargs.update({url_key: base_url})
+        return embeddings(model=model, **kwargs)
     else:
         return init_embeddings(model, provider=provider, **kwargs)

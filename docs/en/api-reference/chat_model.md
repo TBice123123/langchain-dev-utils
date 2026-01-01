@@ -2,7 +2,7 @@
 
 ## register_model_provider
 
-Register a chat model provider.
+Register a provider for chat models.
 
 ### Function Signature
 
@@ -22,7 +22,7 @@ def register_model_provider(
 |-----------|------|----------|---------|-------------|
 | provider_name | str | Yes | - | Custom provider name |
 | chat_model | ChatModelType | Yes | - | ChatModel class or supported provider string type |
-| base_url | Optional[str] | No | None | Base URL of the provider |
+| base_url | Optional[str] | No | None | BaseURL of the provider |
 | model_profiles | Optional[dict[str, dict[str, Any]]] | No | None | Profiles of models supported by the provider, format: `{model_name: model_profile}` |
 | compatibility_options | Optional[CompatibilityOptions] | No | None | Compatibility options |
 
@@ -95,9 +95,53 @@ model = load_chat_model("vllm:qwen3-4b")
 
 ---
 
-## ChatModelType
+## create_openai_compatible_model
 
-Types supported for the `chat_model` parameter when registering a model provider.
+Create an OpenAI compatible chat model class.
+
+### Function Signature
+
+```python
+def create_openai_compatible_model(
+    model_provider: str,
+    base_url: Optional[str] = None,
+    compatibility_options: Optional[CompatibilityOptions] = None,
+    model_profiles: Optional[dict[str, dict[str, Any]]] = None,
+    chat_model_cls_name: Optional[str] = None,
+) -> type[BaseChatModel]:
+```
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| model_provider | str | Yes | - | Model provider name |
+| base_url | Optional[str] | No | None | BaseURL of the model provider |
+| compatibility_options | Optional[CompatibilityOptions] | No | None | Compatibility options |
+| model_profiles | Optional[dict[str, dict[str, Any]]] | No | None | Profiles of models supported by the provider, format: `{model_name: model_profile}` |
+| chat_model_cls_name | Optional[str] | No | None | Custom chat model class name |
+
+### Return Value
+
+| Type | Description |
+|------|-------------|
+| type[BaseChatModel] | Dynamically created OpenAI compatible chat model class |
+
+### Example
+
+```python
+ChatVLLM = create_openai_compatible_model(
+    model_provider="vllm",
+    base_url="http://localhost:8000/v1",
+    chat_model_cls_name="ChatVLLM",
+)
+```
+
+---
+
+### ChatModelType
+
+Types supported by the `chat_model` parameter when registering model providers.
 
 ### Type Definition
 
@@ -109,7 +153,7 @@ ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
 
 ## ToolChoiceType
 
-Types supported for the `tool_choice` parameter.
+Types supported by the `tool_choice` parameter.
 
 ### Type Definition
 
@@ -121,7 +165,7 @@ ToolChoiceType = list[Literal["auto", "none", "required", "specific"]]
 
 ## ResponseFormatType
 
-Types supported for `response_format`.
+Types supported by `response_format`.
 
 ### Type Definition
 
@@ -188,7 +232,7 @@ class ChatModelProvider(TypedDict):
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | provider_name | str | Yes | Provider name |
-| chat_model | ChatModelType | Yes | Supports passing a chat model class or string (currently only supports `openai-compatible`) |
+| chat_model | ChatModelType | Yes | Support passing chat model class or string (currently only supports `openai-compatible`) |
 | base_url | NotRequired[str] | No | Base URL |
 | model_profiles | NotRequired[dict[str, dict[str, Any]]] | No | Profiles of models supported by the provider, format: `{model_name: model_profile}` |
 | compatibility_options | NotRequired[CompatibilityOptions] | No | Model provider compatibility options |

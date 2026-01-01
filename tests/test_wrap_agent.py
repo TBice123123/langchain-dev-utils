@@ -1,11 +1,14 @@
 from typing import Any, cast
 
 import pytest
-from langchain.agents import create_agent
 from langchain.tools import ToolRuntime, tool
 from langchain_core.messages import HumanMessage, ToolMessage
 
-from langchain_dev_utils.agents import wrap_agent_as_tool, wrap_all_agents_as_tool
+from langchain_dev_utils.agents import (
+    create_agent,
+    wrap_agent_as_tool,
+    wrap_all_agents_as_tool,
+)
 
 
 @tool
@@ -44,7 +47,7 @@ async def process_output_async(
 
 def test_wrap_agent():
     agent = create_agent(
-        model="deepseek:deepseek-chat", tools=[get_time], name="time_agent"
+        model="dashscope:qwen-flash", tools=[get_time], name="time_agent"
     )
     call_agent_tool = wrap_agent_as_tool(
         agent, "call_time_agent", "call the agent to query the time"
@@ -52,7 +55,7 @@ def test_wrap_agent():
     assert call_agent_tool.name == "call_time_agent"
     assert call_agent_tool.description == "call the agent to query the time"
 
-    supervisor = create_agent(model="deepseek:deepseek-chat", tools=[call_agent_tool])
+    supervisor = create_agent(model="dashscope:qwen3-max", tools=[call_agent_tool])
     response = supervisor.invoke(
         {"messages": [HumanMessage(content="What time is it now?")]}
     )
@@ -84,7 +87,7 @@ async def test_wrap_agent_async(
     post_output_hooks: Any,
 ):
     agent = create_agent(
-        model="deepseek:deepseek-chat", tools=[get_time], name="time_agent"
+        model="dashscope:qwen-flash", tools=[get_time], name="time_agent"
     )
     call_agent_tool = wrap_agent_as_tool(
         agent, pre_input_hooks=pre_input_hooks, post_output_hooks=post_output_hooks
@@ -92,7 +95,7 @@ async def test_wrap_agent_async(
     assert call_agent_tool.name == "transfor_to_time_agent"
     assert call_agent_tool.description
 
-    supervisor = create_agent(model="deepseek:deepseek-chat", tools=[call_agent_tool])
+    supervisor = create_agent(model="dashscope:qwen3-max", tools=[call_agent_tool])
     response = await supervisor.ainvoke(
         {"messages": [HumanMessage(content="What time is it now?")]}
     )
@@ -112,17 +115,17 @@ async def test_wrap_agent_async(
 
 def test_wrap_all_agents():
     time_agent = create_agent(
-        model="deepseek:deepseek-chat", tools=[get_time], name="time_agent"
+        model="dashscope:qwen-flash", tools=[get_time], name="time_agent"
     )
     weather_agent = create_agent(
-        model="deepseek:deepseek-chat", tools=[get_weather], name="weather_agent"
+        model="dashscope:qwen-flash", tools=[get_weather], name="weather_agent"
     )
     call_agent_tool = wrap_all_agents_as_tool(
         [time_agent, weather_agent], "call_sub_agents"
     )
     assert call_agent_tool.name == "call_sub_agents"
 
-    main_agent = create_agent(model="deepseek:deepseek-chat", tools=[call_agent_tool])
+    main_agent = create_agent(model="dashscope:qwen3-max", tools=[call_agent_tool])
     response = main_agent.invoke(
         {"messages": [HumanMessage(content="What time is it now?")]}
     )
@@ -154,10 +157,10 @@ async def test_wrap_all_agents_async(
     post_output_hooks: Any,
 ):
     time_agent = create_agent(
-        model="deepseek:deepseek-chat", tools=[get_time], name="time_agent"
+        model="dashscope:qwen-flash", tools=[get_time], name="time_agent"
     )
     weather_agent = create_agent(
-        model="deepseek:deepseek-chat", tools=[get_weather], name="weather_agent"
+        model="dashscope:qwen-flash", tools=[get_weather], name="weather_agent"
     )
     call_agent_tool = wrap_all_agents_as_tool(
         [time_agent, weather_agent],
@@ -167,7 +170,7 @@ async def test_wrap_all_agents_async(
     )
     assert call_agent_tool.name == "call_sub_agents"
 
-    main_agent = create_agent(model="deepseek:deepseek-chat", tools=[call_agent_tool])
+    main_agent = create_agent(model="dashscope:qwen3-max", tools=[call_agent_tool])
     response = await main_agent.ainvoke(
         {"messages": [HumanMessage(content="What time is it now?")]}
     )

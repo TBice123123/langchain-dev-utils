@@ -12,6 +12,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    cast,
 )
 
 import openai
@@ -19,7 +20,11 @@ from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
 )
-from langchain_core.language_models import LangSmithParams, LanguageModelInput
+from langchain_core.language_models import (
+    LangSmithParams,
+    LanguageModelInput,
+    ModelProfile,
+)
 from langchain_core.messages import (
     AIMessage,
     AIMessageChunk,
@@ -50,6 +55,10 @@ from ..types import (
     ReasoningKeepPolicy,
     ResponseFormatType,
     ToolChoiceType,
+)
+from .register_profiles import (
+    _get_profile_by_provider_and_model,
+    _register_profile_with_provider,
 )
 
 _BM = TypeVar("_BM", bound=BaseModel)
@@ -152,7 +161,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     Note: This is a template class and should not be exported or instantiated
     directly. Instead, use it as a base class and provide the specific provider
     name through inheritance or the factory function
-    `_create_openai_compatible_model()`.
+    `create_openai_compatible_model()`.
     """
 
     model_name: str = Field(alias="model", default="openai compatible model")
@@ -283,7 +292,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     def _set_model_profile(self) -> Self:
         """Set model profile if not overridden."""
         if self.profile is None:
-            self.profile = {}
+            self.profile = cast(
+                ModelProfile,
+                _get_profile_by_provider_and_model(self._provider, self.model_name),
+            )
         return self
 
     def _create_chat_result(
@@ -578,6 +590,8 @@ def _create_openai_compatible_model(
     provider: str,
     base_url: str,
     compatibility_options: Optional[CompatibilityOptions] = None,
+    profiles: Optional[dict[str, dict[str, Any]]] = None,
+    chat_model_cls_name: Optional[str] = None,
 ) -> Type[_BaseChatOpenAICompatible]:
     """Factory function for creating provider-specific OpenAI-compatible model classes.
 
@@ -588,13 +602,18 @@ def _create_openai_compatible_model(
         provider: Provider identifier (e.g.`vllm`)
         base_url: Default API base URL for the provider
         compatibility_options: Optional configuration for the provider
+        profiles: Optional profiles for the provider
+        chat_model_cls_name: Optional name for the model class
 
     Returns:
         Configured model class ready for instantiation with provider-specific settings
     """
-    chat_model_cls_name = f"Chat{provider.title()}"
+    chat_model_cls_name = chat_model_cls_name or f"Chat{provider.title()}"
     if compatibility_options is None:
         compatibility_options = {}
+
+    if profiles is not None:
+        _register_profile_with_provider(provider, profiles)
 
     return create_model(
         chat_model_cls_name,

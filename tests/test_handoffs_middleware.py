@@ -9,7 +9,6 @@ from langchain_dev_utils.agents.middleware import (
     HandoffAgentMiddleware,
 )
 from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
-
 from langchain_dev_utils.chat_models import load_chat_model
 
 

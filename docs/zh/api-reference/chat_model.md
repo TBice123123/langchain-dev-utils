@@ -96,7 +96,52 @@ model = load_chat_model("vllm:qwen3-4b")
 
 ---
 
-## ChatModelType
+## create_openai_compatible_model
+
+创建一个 OpenAI 兼容的聊天模型类。
+
+### 函数签名
+
+```python
+def create_openai_compatible_model(
+    model_provider: str,
+    base_url: Optional[str] = None,
+    compatibility_options: Optional[CompatibilityOptions] = None,
+    model_profiles: Optional[dict[str, dict[str, Any]]] = None,
+    chat_model_cls_name: Optional[str] = None,
+) -> type[BaseChatModel]:
+```
+
+### 参数
+
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| model_provider | str | 是 | - | 模型提供者名称 |
+| base_url | Optional[str] | 否 | None | 模型提供者的 BaseURL |
+| compatibility_options | Optional[CompatibilityOptions] | 否 | None | 兼容性选项 |
+| model_profiles | Optional[dict[str, dict[str, Any]]] | 否 | None | 模型提供者所支持的模型的profile，格式为 `{model_name: model_profile}` |
+| chat_model_cls_name | Optional[str] | 否 | None | 自定义的聊天模型类名 |
+
+### 返回值
+
+| 类型 | 描述 |
+|------|------|
+| type[BaseChatModel] | 动态创建的 OpenAI 兼容聊天模型类 |
+
+
+### 示例
+
+```python
+ChatVLLM = create_openai_compatible_model(
+    model_provider="vllm",
+    base_url="http://localhost:8000/v1",
+    chat_model_cls_name="ChatVLLM",
+)
+```
+
+---
+
+### ChatModelType
 
 注册模型提供商时`chat_model`参数支持的类型。
 

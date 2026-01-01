@@ -141,19 +141,12 @@ def register_model_provider(
                 "when chat_model is a string, the value must be 'openai-compatible'"
             )
         chat_model = _create_openai_compatible_model(
-            provider_name,
-            base_url,
+            provider=provider_name,
+            base_url=base_url,
             compatibility_options=compatibility_options,
+            profiles=model_profiles,
         )
-        _MODEL_PROVIDERS_DICT.update(
-            {
-                provider_name: {
-                    "chat_model": chat_model,
-                    "base_url": base_url,
-                    "model_profiles": model_profiles,
-                }
-            }
-        )
+        _MODEL_PROVIDERS_DICT.update({provider_name: {"chat_model": chat_model}})
     else:
         if base_url is not None:
             _MODEL_PROVIDERS_DICT.update(
