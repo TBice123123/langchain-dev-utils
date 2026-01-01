@@ -2018,7 +2018,7 @@
 </details>
 <details class="note">
 <summary>3. reasoning_keep_policy</summary>
-<p>用于控制历史消息（messages）中<code>reasoning_content</code> 字段的保留策略。</p>
+<p>用于控制历史消息（messages）中<code>reasoning_content</code> 字段的保留策略，主要适配于不同模型提供商的模型的不同的思考模式。</p>
 <p>支持以下取值：</p>
 <ul>
 <li>
@@ -2103,7 +2103,7 @@
 <li>若仅要求在<strong>本轮工具调用</strong>中保留，设为 <code>current</code>；  </li>
 <li>若无特殊要求，保持默认 <code>never</code> 即可。  </li>
 </ul>
-<p>同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；若需要保留<code>reasoning_content</code>的情况的模型较少，推荐在 <code>load_chat_model</code> 中单独指定，此时<code>register_model_provider</code>无需设置。</p>
+<p>同样，该参数既可在 <code>register_model_provider</code> 中统一设置，也可在 <code>load_chat_model</code> 时针对单模型动态覆盖；一般推荐在 <code>load_chat_model</code> 中单独指定，此时<code>register_model_provider</code>无需设置。</p>
 </div>
 </details>
 <details class="note">
@@ -2163,6 +2163,7 @@
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
 <p>两个注册函数均基于全局字典实现。为避免多线程问题，<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册。  </p>
+<p>此外，注册时若将 <code>chat_model</code> 设为 <code>openai-compatible</code>，内部会通过 <code>pydantic.create_model</code> 动态创建新的模型类（以 <code>BaseChatOpenAICompatible</code> 为基类，生成对应的对话模型集成类，此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。</p>
 </div>
 <h2 id="_15">加载对话模型</h2>
 <p>使用 <code>load_chat_model</code> 函数加载对话模型（初始化对话模型实例）。</p>
