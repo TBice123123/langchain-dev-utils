@@ -299,7 +299,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../adavance-guide/multi-agent/" class="md-tabs__link">
+        <a href="../../adavance-guide/openai-compatible/" class="md-tabs__link">
           
   
   
@@ -706,6 +706,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adavance-guide/openai-compatible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenAI Compatible API Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1128,6 +1156,62 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#create_openai_compatible_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_openai_compatible_model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="create_openai_compatible_model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-signature_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#chatmodeltype" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1136,8 +1220,7 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ChatModelType">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#type-definition" class="md-nav__link">
@@ -1649,6 +1732,62 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#create_openai_compatible_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_openai_compatible_model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="create_openai_compatible_model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-signature_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#chatmodeltype" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1657,8 +1796,7 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ChatModelType">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#type-definition" class="md-nav__link">
@@ -1860,7 +1998,7 @@
 
 <h1 id="chatmodel-module-api-reference-documentation">ChatModel Module API Reference Documentation</h1>
 <h2 id="register_model_provider">register_model_provider</h2>
-<p>Register a chat model provider.</p>
+<p>Register a provider for chat models.</p>
 <h3 id="function-signature">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">register_model_provider</span><span class="p">(</span>
     <span class="n">provider_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1901,7 +2039,7 @@
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>Base URL of the provider</td>
+<td>BaseURL of the provider</td>
 </tr>
 <tr>
 <td>model_profiles</td>
@@ -2008,20 +2146,103 @@
 <div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
-<h2 id="chatmodeltype">ChatModelType</h2>
-<p>Types supported for the <code>chat_model</code> parameter when registering a model provider.</p>
+<h2 id="create_openai_compatible_model">create_openai_compatible_model</h2>
+<p>Create an OpenAI compatible chat model class.</p>
+<h3 id="function-signature_3">Function Signature</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_openai_compatible_model</span><span class="p">(</span>
+    <span class="n">model_provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CompatibilityOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">model_profiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chat_model_cls_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]:</span>
+</code></pre></div>
+<h3 id="parameters_3">Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model_provider</td>
+<td>str</td>
+<td>Yes</td>
+<td>-</td>
+<td>Model provider name</td>
+</tr>
+<tr>
+<td>base_url</td>
+<td>Optional[str]</td>
+<td>No</td>
+<td>None</td>
+<td>BaseURL of the model provider</td>
+</tr>
+<tr>
+<td>compatibility_options</td>
+<td>Optional[CompatibilityOptions]</td>
+<td>No</td>
+<td>None</td>
+<td>Compatibility options</td>
+</tr>
+<tr>
+<td>model_profiles</td>
+<td>Optional[dict[str, dict[str, Any]]]</td>
+<td>No</td>
+<td>None</td>
+<td>Profiles of models supported by the provider, format: <code>{model_name: model_profile}</code></td>
+</tr>
+<tr>
+<td>chat_model_cls_name</td>
+<td>Optional[str]</td>
+<td>No</td>
+<td>None</td>
+<td>Custom chat model class name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="return-value">Return Value</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type[BaseChatModel]</td>
+<td>Dynamically created OpenAI compatible chat model class</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_3">Example</h3>
+<div class="highlight"><pre><span></span><code><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
+    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="chatmodeltype">ChatModelType</h3>
+<p>Types supported by the <code>chat_model</code> parameter when registering model providers.</p>
 <h3 id="type-definition">Type Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="n">ChatModelType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">]]</span>
 </code></pre></div>
 <hr />
 <h2 id="toolchoicetype">ToolChoiceType</h2>
-<p>Types supported for the <code>tool_choice</code> parameter.</p>
+<p>Types supported by the <code>tool_choice</code> parameter.</p>
 <h3 id="type-definition_1">Type Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="n">ToolChoiceType</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]]</span>
 </code></pre></div>
 <hr />
 <h2 id="responseformattype">ResponseFormatType</h2>
-<p>Types supported for <code>response_format</code>.</p>
+<p>Types supported by <code>response_format</code>.</p>
 <h3 id="type-definition_2">Type Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="n">ResponseFormatType</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">,</span> <span class="s2">&quot;json_mode&quot;</span><span class="p">]]</span>
 </code></pre></div>
@@ -2110,7 +2331,7 @@
 <td>chat_model</td>
 <td>ChatModelType</td>
 <td>Yes</td>
-<td>Supports passing a chat model class or string (currently only supports <code>openai-compatible</code>)</td>
+<td>Support passing chat model class or string (currently only supports <code>openai-compatible</code>)</td>
 </tr>
 <tr>
 <td>base_url</td>

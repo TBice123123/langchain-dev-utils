@@ -36,6 +36,13 @@
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/multi-agent/"/>
     </url>
     <url>
+        <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/</loc>
+        <lastmod>2026-01-01</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/"/>
+    </url>
+    <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/pipeline/</loc>
         <lastmod>2026-01-01</lastmod>
         <changefreq>daily</changefreq>
@@ -160,6 +167,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/multi-agent/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/multi-agent/"/>
+    </url>
+    <url>
+        <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/</loc>
+        <lastmod>2026-01-01</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/pipeline/</loc>
