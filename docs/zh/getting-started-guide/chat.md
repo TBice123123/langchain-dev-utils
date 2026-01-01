@@ -234,7 +234,7 @@ register_model_provider(
 
 ??? note "3. reasoning_keep_policy"
 
-    用于控制历史消息（messages）中`reasoning_content` 字段的保留策略。
+    用于控制历史消息（messages）中`reasoning_content` 字段的保留策略，主要适配于不同模型提供商的模型的不同的思考模式。
 
     支持以下取值：
 
@@ -321,7 +321,7 @@ register_model_provider(
         - 若仅要求在**本轮工具调用**中保留，设为 `current`；  
         - 若无特殊要求，保持默认 `never` 即可。  
 
-        同样，该参数既可在 `register_model_provider` 中统一设置，也可在 `load_chat_model` 时针对单模型动态覆盖；若需要保留`reasoning_content`的情况的模型较少，推荐在 `load_chat_model` 中单独指定，此时`register_model_provider`无需设置。
+        同样，该参数既可在 `register_model_provider` 中统一设置，也可在 `load_chat_model` 时针对单模型动态覆盖；一般推荐在 `load_chat_model` 中单独指定，此时`register_model_provider`无需设置。
 
 
 
@@ -373,6 +373,8 @@ batch_register_model_provider(
 
 !!! warning "注意"
     两个注册函数均基于全局字典实现。为避免多线程问题，**必须在应用启动阶段完成所有注册**，禁止运行时动态注册。  
+
+    此外，注册时若将 `chat_model` 设为 `openai-compatible`，内部会通过 `pydantic.create_model` 动态创建新的模型类（以 `BaseChatOpenAICompatible` 为基类，生成对应的对话模型集成类，此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。
 
 
 ## 加载对话模型

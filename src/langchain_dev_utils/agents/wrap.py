@@ -171,7 +171,7 @@ def wrap_all_agents_as_tool(
     Example:
         >>> from langchain_dev_utils.agents import wrap_all_agents_as_tool, create_agent
         >>>
-        >>> call_time_agent_tool = wrap_all_agents_as_tool(
+        >>> call_agent_tool = wrap_all_agents_as_tool(
         ...     [time_agent,weather_agent],
         ...     tool_name="call_sub_agents",
         ...     tool_description="Used to invoke the sub-agents to perform tasks"
