@@ -29,11 +29,11 @@
 
 ### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `system_prompt` | `str` | 否 | `None` | 系统提示词，若为 `None` 则使用默认提示词 |
-| `custom_plan_tool_descriptions` | `dict` | 否 | `None` | 自定义计划相关工具的描述 |
-| `use_read_plan_tool` | `bool` | 否 | `True` | 是否启用读计划工具 |
+| 参数 | 说明 |
+|------|------|
+| `system_prompt` | 系统提示词，若为 `None` 则使用默认提示词。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `custom_plan_tool_descriptions` | 自定义计划相关工具的描述。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `use_read_plan_tool` | 是否启用读计划工具。<br><br>**类型**: `bool`<br>**必填**: 否<br>**默认值**: `True` |
 
 `custom_plan_tool_descriptions` 字典的键可取以下三个值：
 
@@ -95,24 +95,25 @@ print(response)
 
 ### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `router_model` | `str` \| `BaseChatModel` | 是 | - | 用于执行路由决策的模型 |
-| `model_list` | `list[ModelDict]` | 是 | - | 模型配置列表 |
-| `router_prompt` | `str` | 否 | `None` | 自定义路由模型的提示词 |
+| 参数 | 说明 |
+|------|------|
+| `router_model` | 用于执行路由决策的模型。<br><br>**类型**: `str` \| `BaseChatModel`<br>**必填**: 是 |
+| `model_list` | 模型配置列表。<br><br>**类型**: `list[ModelDict]`<br>**必填**: 是 |
+| `router_prompt` | 自定义路由模型的提示词。<br><br>**类型**: `str`<br>**必填**: 否 |
 
 #### `model_list` 配置说明
 
 每个模型配置为一个字典，包含以下字段：
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `model_name` | `str` | 是 | 模型的唯一标识，使用 `provider:model-name` 格式 |
-| `model_description` | `str` | 是 | 模型能力或适用场景的简要描述 |
-| `tools` | `list[BaseTool]` | 否 | 该模型可调用的工具白名单 |
-| `model_kwargs` | `dict` | 否 | 模型加载时的额外参数 |
-| `model_system_prompt` | `str` | 否 | 模型的系统级提示词 |
-| `model_instance` | `BaseChatModel` | 否 | 已实例化的模型对象 |
+| 字段 | 说明 |
+|------|------|
+| `model_name` | 模型的唯一标识，使用 `provider:model-name` 格式。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `model_description` | 模型能力或适用场景的简要描述。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `tools` | 该模型可调用的工具白名单。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
+| `model_kwargs` | 模型加载时的额外参数。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `model_system_prompt` | 模型的系统级提示词。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `model_instance` | 已实例化的模型对象。<br><br>**类型**: `BaseChatModel`<br>**必填**: 否 |
+
 
 !!! tip "model_instance 字段说明"
 
@@ -190,22 +191,22 @@ print(response)
 
 ### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `agents_config` | `dict[str, AgentConfig]` | 是 | - | 智能体配置字典，键为智能体名称，值为智能体配置字典 |
-| `custom_handoffs_tool_descriptions` | `dict[str, str]` | 否 | `None` | 自定义交接工具的描述，键为智能体名称，值为对应的交接工具描述 |
+| 参数 | 说明 |
+|------|------|
+| `agents_config` | 智能体配置字典，键为智能体名称，值为智能体配置字典。<br><br>**类型**: `dict[str, AgentConfig]`<br>**必填**: 是 |
+| `custom_handoffs_tool_descriptions` | 自定义交接工具的描述，键为智能体名称，值为对应的交接工具描述。<br><br>**类型**: `dict[str, str]`<br>**必填**: 否 |
 
 #### `agents_config` 配置说明
 
 每个智能体配置为一个字典，包含以下字段：
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `model` | `str` \| `BaseChatModel` | 否 | 指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen3-4b`）或 `BaseChatModel` 实例 |
-| `prompt` | `str` \| `SystemMessage` | 是 | 智能体的系统提示词 |
-| `tools` | `list[BaseTool]` | 否 | 智能体可调用的工具列表 |
-| `default` | `bool` | 否 | 是否设为默认智能体；缺省为 `False`。全部配置中必须且只能有一个智能体设为 `True` |
-| `handoffs` | `list[str]` \| `str` | 是 | 该智能体可交接给的其它智能体名称列表。若设为 `"all"`，则表示该智能体可交接给所有其它智能体 |
+| 字段 | 说明 |
+|------|------|
+| `model` | 指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen3-4b`）或 `BaseChatModel` 实例。<br><br>**类型**: `str` \| `BaseChatModel`<br>**必填**: 否 |
+| `prompt` | 智能体的系统提示词。<br><br>**类型**: `str` \| `SystemMessage`<br>**必填**: 是 |
+| `tools` | 智能体可调用的工具列表。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
+| `default` | 是否设为默认智能体；缺省为 `False`。全部配置中必须且只能有一个智能体设为 `True`。<br><br>**类型**: `bool`<br>**必填**: 否 |
+| `handoffs` | 该智能体可交接给的其它智能体名称列表。若设为 `"all"`，则表示该智能体可交接给所有其它智能体。<br><br>**类型**: `list[str]` \| `str`<br>**必填**: 是 |
 
 对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具。本中间件利用每个智能体的 `handoffs` 配置，自动为每个智能体创建对应的交接工具。如果要自定义交接工具的描述，则可以通过 `custom_handoffs_tool_descriptions` 参数实现。
 

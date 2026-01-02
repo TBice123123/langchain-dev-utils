@@ -15,11 +15,11 @@ LangChain 的 `init_embeddings` 函数仅支持有限的嵌入模型提供商。
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `provider_name` | `str` | 是 | - | 模型提供商名称，用于后续在 `load_embeddings` 中引用 |
-| `embeddings_model` | `type[Embeddings]` | 是 | - | LangChain 嵌入模型类 |
-| `base_url` | `str` | 否 | `None` | API 基础地址，通常无需手动设置 |
+| 参数 | 说明 |
+|------|------|
+| `provider_name` | 模型提供商名称，用于后续在 `load_embeddings` 中引用。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `embeddings_model` | LangChain 嵌入模型类。<br><br>**类型**: `type[Embeddings]`<br>**必填**: 是 |
+| `base_url` | API 基础地址，通常无需手动设置。<br><br>**类型**: `str`<br>**必填**: 否 |
 
 #### 代码示例
 
@@ -45,11 +45,13 @@ register_embeddings_provider(
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `provider_name` | `str` | 是 | - | 模型提供商名称 |
-| `embeddings_model` | `str` | 是 | - | 固定取值 `"openai-compatible"` |
-| `base_url` | `str` | 否 | `None` | API 基础地址 |
+| 参数 | 说明 |
+|------|------|
+| `provider_name` | 模型提供商名称，用于后续在 `load_embeddings` 中引用。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `embeddings_model` | 固定取值 `"openai-compatible"`。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `base_url` | API 基础地址。<br><br>**类型**: `str`<br>**必填**: 否 |
+
+
 
 #### 代码示例
 
@@ -86,9 +88,9 @@ register_embeddings_provider(
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `providers` | `list[dict]` | 是 | - | 提供商配置列表，每个字典包含注册参数 |
+| 参数 | 说明 |
+|------|------|
+| `providers` | 提供商配置列表，每个字典包含注册参数。<br><br>**类型**: `list[dict]`<br>**必填**: 是 |
 
 #### 代码示例
 
@@ -112,7 +114,9 @@ batch_register_embeddings_provider(
 ```
 
 !!! warning "注意"
-    两个注册函数均基于全局字典实现。**必须在应用启动阶段完成所有注册**，禁止运行时动态注册，以避免多线程问题。  
+    两个注册函数均基于全局字典实现。**必须在应用启动阶段完成所有注册**，禁止运行时动态注册，以避免多线程问题。 
+     
+    此外，注册时若将 `embeddings_model` 设为 `openai-compatible`，内部会通过 `pydantic.create_model` 动态创建新的模型类（以 `BaseEmbeddingOpenAICompatible` 为基类，生成对应的嵌入模型集成类），此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。
     
 
 ## 加载嵌入模型

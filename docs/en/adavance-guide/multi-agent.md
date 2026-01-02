@@ -2,20 +2,20 @@
 
 ## Overview
 
-When building complex AI applications, multi-agent collaboration is a powerful architectural pattern. By assigning different responsibilities to specialized agents, you can achieve task specialization and efficient collaboration.
+When building complex AI applications, multi-agent collaboration is a powerful architectural pattern. By assigning different responsibilities to specialized agents, specialized division of labor and efficient collaboration can be achieved.
 
-There are multiple ways to implement multi-agent collaboration, with **tool calling** being a common and flexible implementation approach. By encapsulating sub-agents as tools, a main agent can dynamically delegate tasks to specialized sub-agents based on requirements.
+There are various ways to implement multi-agent collaboration, among which **tool calling** is a common and flexible approach. By encapsulating subagents as tools, a master agent can dynamically delegate tasks to specialized subagents based on requirements.
 
 This library provides two pre-built functions to simplify this implementation:
 
 | Function Name | Description |
-|--------------|-------------|
+|---------------|-------------|
 | `wrap_agent_as_tool` | Wraps a single agent instance as an independent tool |
-| `wrap_all_agents_as_tool` | Wraps multiple agent instances as a unified tool, specifying which sub-agent to call through parameters |
+| `wrap_all_agents_as_tool` | Wraps multiple agent instances as a unified tool, specifying which subagent to call via parameters |
 
 ## Wrapping a Single Agent as a Tool
 
-Wrapping a single agent requires just three steps:
+Wrapping a single agent involves just three steps:
 
 1. Import `wrap_agent_as_tool`
 2. Pass the agent instance as a parameter
@@ -23,19 +23,19 @@ Wrapping a single agent requires just three steps:
 
 ### Function Parameter Description
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `agent` | `CompiledStateGraph` | Yes | Agent instance, must have a defined `name` attribute |
-| `tool_name` | `str` | No | Tool name, defaults to `transfer_to_{agent_name}` |
-| `tool_description` | `str` | No | Tool description, defaults to `This tool transforms input to {agent_name}` |
-| `pre_input_hooks` | `tuple` | No | Hook functions to run before the agent executes |
-| `post_output_hooks` | `tuple` | No | Hook functions to run after the agent executes |
+| Parameter | Description |
+|-----------|-------------|
+| `agent` | The agent instance, must have a `name` attribute defined.<br><br>**Type**: `CompiledStateGraph`<br>**Required**: Yes |
+| `tool_name` | The tool name, defaults to `transfer_to_{agent_name}`.<br><br>**Type**: `str`<br>**Required**: No |
+| `tool_description` | The tool description, defaults to `This tool transforms input to {agent_name}`.<br><br>**Type**: `str`<br>**Required**: No |
+| `pre_input_hooks` | Hook functions before the agent runs.<br><br>**Type**: `tuple`<br>**Required**: No |
+| `post_output_hooks` | Hook functions after the agent runs.<br><br>**Type**: `tuple`<br>**Required**: No |
 
 ### Usage Example
 
-Below, we'll use the `supervisor` agent as an example to demonstrate how to wrap sub-agents as tools using `wrap_agent_as_tool`.
+Below, we use the `supervisor` agent as an example to introduce how to wrap subagents as tools using `wrap_agent_as_tool`.
 
-First, let's implement two sub-agents: one for sending emails and another for calendar queries and scheduling.
+First, implement two subagents: one for sending emails and one for calendar query and scheduling.
 
 #### Email Agent
 ```python
@@ -57,17 +57,17 @@ def send_email(
     body: str,
     cc: list[str] = [],
 ) -> str:
-    """Send an email through the email API. Requires properly formatted addresses."""
-    # Stub: In a real application, this would call SendGrid, Gmail API, etc.
+    """Send emails via the Email API. Requires properly formatted addresses."""
+    # Stub: In a real application, SendGrid, Gmail API, etc. would be called here
     return f"Email sent to {', '.join(to)} - Subject: {subject}"
 
 
 EMAIL_AGENT_PROMPT = (
     "You are an email assistant. "
-    "Compose professional emails based on natural language requests. "
+    "Draft professional emails based on natural language requests. "
     "Extract recipient information and create appropriate subject lines and body content. "
     "Use send_email to send the email. "
-    "Always confirm what was sent in your final response."
+    "Always confirm what was sent in the final reply."
 )
 
 email_agent = create_agent(
@@ -89,7 +89,7 @@ def create_calendar_event(
     location: str = "",
 ) -> str:
     """Create a calendar event. Requires precise ISO date-time format."""
-    # Stub: In a real application, this would call Google Calendar API, Outlook API, etc.
+    # Stub: In a real application, Google Calendar API, Outlook API, etc. would be called here
     return f"Event created: {title} from {start_time} to {end_time} with {len(attendees)} participants"
 
 
@@ -100,16 +100,16 @@ def get_available_time_slots(
     duration_minutes: int,
 ) -> list[str]:
     """Query calendar availability for attendees on a specific date."""
-    # Stub: In a real application, this would query calendar APIs
+    # Stub: In a real application, the calendar API would be queried here
     return ["09:00", "14:00", "16:00"]
 
 
 CALENDAR_AGENT_PROMPT = (
     "You are a calendar scheduling assistant. "
-    "Parse natural language scheduling requests (e.g., 'next Tuesday at 2 PM') into proper ISO date-time formats. "
+    "Parse natural language scheduling requests (e.g., 'next Tuesday at 2 PM') into the correct ISO date-time format. "
     "Use get_available_time_slots to check availability when needed. "
     "Use create_calendar_event to schedule events. "
-    "Always confirm what was scheduled in your final response."
+    "Always confirm what was scheduled in the final reply."
 )
 
 calendar_agent = create_agent(
@@ -120,7 +120,7 @@ calendar_agent = create_agent(
 )
 ```
 
-Next, use `wrap_agent_as_tool` to wrap these two sub-agents as tools.
+Next, use `wrap_agent_as_tool` to wrap these two subagents as tools.
 
 ```python
 schedule_event = wrap_agent_as_tool(
@@ -128,9 +128,9 @@ schedule_event = wrap_agent_as_tool(
     tool_name="schedule_event",
     tool_description=(
         "Schedule calendar events using natural language. "
-        "Use this when users want to create, modify, or check calendar appointments. "
-        "Capable of handling date/time parsing, querying availability, and creating events. "
-        "Input: Natural language calendar scheduling request (e.g., 'Meeting with design team next Tuesday at 2 PM')"
+        "Use this when the user wants to create, modify, or check calendar appointments. "
+        "Can handle date/time parsing, querying available times, and creating events. "
+        "Input: Natural language scheduling request (e.g., 'meeting with design team next Tuesday at 2 PM')"
     ),
 )
 manage_email = wrap_agent_as_tool(
@@ -138,9 +138,9 @@ manage_email = wrap_agent_as_tool(
     tool_name="manage_email",
     tool_description=(
         "Send emails using natural language. "
-        "Use this when users want to send notifications, reminders, or any email communication. "
-        "Capable of extracting recipient information, subject generation, and email composition. "
-        "Input: Natural language email request (e.g., 'Send them a meeting reminder')"
+        "Use this when the user wants to send notifications, reminders, or any email communication. "
+        "Capable of extracting recipient info, subject generation, and email drafting. "
+        "Input: Natural language email request (e.g., 'send them a meeting reminder')"
     ),
 )
 ```
@@ -151,8 +151,8 @@ Finally, create a `supervisor_agent` that can call these two tools.
 SUPERVISOR_PROMPT = (
     "You are a helpful personal assistant. "
     "You can schedule calendar events and send emails. "
-    "Break down user requests into appropriate tool calls and coordinate the results. "
-    "When a request involves multiple operations, use multiple tools sequentially."
+    "Break down user requests into appropriate tool calls and coordinate results. "
+    "When a request involves multiple operations, please use multiple tools sequentially."
 )
 
 
@@ -163,23 +163,23 @@ supervisor_agent = create_agent(
 )
 
 print(
-    supervisor_agent.invoke({"messages": [HumanMessage(content="Check available time for tomorrow")]})
+    supervisor_agent.invoke({"messages": [HumanMessage(content="Query free time for tomorrow")]})
 )
 print(
     supervisor_agent.invoke(
-        {"messages": [HumanMessage(content="Send a meeting reminder to test@123.com")]}
+        {"messages": [HumanMessage(content="Send an email meeting reminder to test@123.com")]}
     )
 )
 ```
 
 !!! info "Tip"
 
-    In the example above, we imported the `create_agent` function from `langchain_dev_utils.agents` instead of `langchain.agents`. This is because this library also provides a function with exactly the same functionality as the official `create_agent` function, but with the added ability to specify models through strings. This allows direct use of models registered with `register_model_provider` without needing to initialize model instances first.
+    In the example above, we imported `create_agent` from `langchain_dev_utils.agents` instead of `langchain.agents`. This is because this library also provides a function with exactly the same functionality as the official `create_agent`, but with the added capability to specify models via strings. This allows direct use of models registered via `register_model_provider` without needing to initialize and pass in model instances.
 
 
 ## Wrapping Multiple Agents as a Single Tool
 
-Wrapping multiple agents as a single tool requires just three steps:
+Wrapping multiple agents as a single tool involves just three steps:
 
 1. Import `wrap_all_agents_as_tool`
 2. Pass multiple agent instances as a list at once
@@ -187,35 +187,35 @@ Wrapping multiple agents as a single tool requires just three steps:
 
 ### Function Parameter Description
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `agents` | `list[CompiledStateGraph]` | Yes | List of agent instances |
-| `tool_name` | `str` | No | Tool name, defaults to `task` |
-| `tool_description` | `str` | No | Tool description, defaults to include information about all available agents |
-| `pre_input_hooks` | `tuple` | No | Hook functions to run before agents execute |
-| `post_output_hooks` | `tuple` | No | Hook functions to run after agents execute |
+| Parameter | Description |
+|-----------|-------------|
+| `agents` | List of agent instances.<br><br>**Type**: `list[CompiledStateGraph]`<br>**Required**: Yes |
+| `tool_name` | The tool name, defaults to `task`.<br><br>**Type**: `str`<br>**Required**: No |
+| `tool_description` | The tool description, defaults to containing information about all available agents.<br><br>**Type**: `str`<br>**Required**: No |
+| `pre_input_hooks` | Hook functions before the agent runs.<br><br>**Type**: `tuple`<br>**Required**: No |
+| `post_output_hooks` | Hook functions after the agent runs.<br><br>**Type**: `tuple`<br>**Required**: No |
 
 ### Usage Example
 
-For the `calendar_agent` and `email_agent` from the previous example, we can wrap them as a single tool `call_subagent`:
+For the `calendar_agent` and `email_agent` from the previous example, we can wrap them into a single tool `call_subagent`:
 
 ```python
 call_subagent_tool = wrap_all_agents_as_tool(
     [calendar_agent, email_agent],
     tool_name="call_subagent",
     tool_description=(
-        "Call sub-agents to perform tasks. "
-        "Available agents: "
-        "- calendar_agent: For scheduling calendar events"
-        "- email_agent: For sending emails"
+        "Call subagents to execute tasks. "
+        "Available agents are: "
+        "- calendar_agent: for scheduling calendar events"
+        "- email_agent: for sending emails"
     ),
 )
 
 MAIN_AGENT_PROMPT = (
     "You are a helpful personal assistant. "
-    "You can use the **call_subagent** tool to call sub-agents to perform tasks. "
-    "Break down user requests into appropriate tool calls and coordinate the results. "
-    "When a request involves multiple operations, use multiple tools sequentially."
+    "You can use the **call_subagent** tool to call subagents to execute tasks. "
+    "Break down user requests into appropriate tool calls and coordinate results. "
+    "When a request involves multiple operations, please use multiple tools sequentially."
 )
 
 main_agent = create_agent(
@@ -227,34 +227,34 @@ main_agent = create_agent(
 
 !!! info "Tip"
 
-    Besides using the `wrap_all_agents_as_tool` provided by this library to wrap multiple agents as a single tool, you can also use the `SubAgentMiddleware` middleware provided by the `deepagents` library to achieve similar effects.
+    In addition to using `wrap_all_agents_as_tool` provided by this library to wrap multiple agents into a single tool, you can also use the `SubAgentMiddleware` middleware provided by the `deepagents` library to achieve a similar effect.
 
 ## Hook Functions
 
-This library has a built-in flexible hook mechanism that allows inserting custom logic before and after sub-agent execution. This mechanism applies to both `wrap_agent_as_tool` and `wrap_all_agents_as_tool`. The following section uses `wrap_agent_as_tool` as an example for explanation.
+This library has a built-in flexible hook mechanism that allows inserting custom logic before and after subagent execution. This mechanism applies to both `wrap_agent_as_tool` and `wrap_all_agents_as_tool`. The following section uses `wrap_agent_as_tool` as an example for illustration.
 
 ### 1. pre_input_hooks
 
-Preprocess the input before the agent runs. Can be used for input enhancement, context injection, format validation, permission checking, etc.
+Preprocess the input before the agent runs. Useful for input augmentation, context injection, format validation, permission checks, etc.
 
 #### Supported Input Types
 
 | Type | Description |
 |------|-------------|
-| Single synchronous function | Used for both synchronous (`invoke`) and asynchronous (`ainvoke`) call paths (will not be `awaited` in the async path, called directly) |
-| Binary tuple `(sync_func, async_func)` | The first function is used for the synchronous call path; the second function (must be `async def`) is used for the asynchronous call path and will be `awaited` |
+| Single synchronous function | Used for both synchronous (`invoke`) and asynchronous (`ainvoke`) call paths (it will be called directly in the async path without `await`) |
+| Binary tuple `(sync_func, async_func)` | The first function is for the synchronous call path; the second function (must be `async def`) is for the asynchronous call path and will be `await`ed |
 
 #### Function Signature
 
 ```python
 def pre_input_hook(request: str, runtime: ToolRuntime) -> str:
     """
-    Parameters:
-        request: Original tool call input
-        runtime: LangChain's ToolRuntime
+    Args:
+        request: The original tool call input
+        runtime: langchain's ToolRuntime
     
     Returns:
-        Processed str, as the actual input to the agent
+        The processed str, serving as the actual input for the agent
     """
 ```
 
@@ -277,28 +277,28 @@ call_agent_tool = wrap_agent_as_tool(
 
 !!! tip "Tip"
 
-    The above example is relatively simple. In practice, you can add more complex logic based on the `state` or `context` within `runtime`.
+    The example above is relatively simple. In practice, you can add more complex logic based on the `state` or `context` within `runtime`.
 
 ### 2. post_output_hooks
 
-After the agent completes execution, post-process the complete message list it returns to generate the final return value of the tool. Can be used for result extraction, structured transformation, etc.
+Post-process the complete list of messages returned by the agent after it finishes running to generate the final return value of the tool. Useful for result extraction, structured transformation, etc.
 
 #### Supported Input Types
 
 | Type | Description |
 |------|-------------|
-| Single function | Used for both synchronous and asynchronous paths (will not be `awaited` in the async path) |
-| Binary tuple `(sync_func, async_func)` | The first is used for the synchronous path; the second (`async def`) is used for the asynchronous path and will be `awaited` |
+| Single function | Used for both synchronous and asynchronous paths (it will not be `await`ed in the async path) |
+| Binary tuple `(sync_func, async_func)` | The first is for the synchronous path; the second (`async def`) is for the asynchronous path and will be `await`ed |
 
 #### Function Signature
 
 ```python
 def post_output_hook(request: str, messages: list, runtime: ToolRuntime) -> Union[str, Command]:
     """
-    Parameters:
-        request: (Possibly processed) original input
-        messages: Complete message history returned by the agent (from response["messages"])
-        runtime: LangChain's ToolRuntime
+    Args:
+        request: The original input (possibly processed)
+        messages: The complete message history returned by the agent (from response["messages"])
+        runtime: langchain's ToolRuntime
     
     Returns:
         A value that can be serialized to a string, or a Command object
@@ -329,9 +329,9 @@ call_agent_tool = wrap_agent_as_tool(
 
 !!! tip "Tip"
 
-    The above example is relatively simple. In practice, you can add more complex logic based on the `state` or `context` within `runtime`.
+    The example above is relatively simple. In practice, you can add more complex logic based on the `state` or `context` within `runtime`.
 
 ### Default Behavior
 
-- If `pre_input_hooks` is not provided, the input is passed through as is
-- If `post_output_hooks` is not provided, it defaults to returning `response["messages"][-1].content` (i.e., the text content of the last message)
+- If `pre_input_hooks` is not provided, the input is passed through as-is.
+- If `post_output_hooks` is not provided, it defaults to returning `response["messages"][-1].content` (i.e., the text content of the last message).

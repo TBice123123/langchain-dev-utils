@@ -1,4 +1,4 @@
-# Add Human Review for Tool Calls
+# Adding Human Review to Tool Calls
 
 ## Overview
 
@@ -11,9 +11,9 @@ This library provides decorator functions to add "human-in-the-loop" review supp
 
 ## Parameter Description
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `handler` | `Callable` | No | `None` | A custom handler function. If `None`, the default handler will be used. |
+| Parameter | Description |
+|-----------|-------------|
+| `handler` | Custom handler function. If `None`, the default handler is used.<br><br>**Type**: `Callable`<br>**Required**: No |
 
 ## Usage Examples
 
@@ -26,7 +26,7 @@ import datetime
 
 @human_in_the_loop
 def get_current_time() -> str:
-    """Get the current timestamp"""
+    """Gets the current timestamp"""
     return str(datetime.datetime.now().timestamp())
 ```
 
@@ -40,7 +40,7 @@ import datetime
 
 @human_in_the_loop_async
 async def async_get_current_time() -> str:
-    """Asynchronously get the current timestamp"""
+    """Asynchronously gets the current timestamp"""
     await asyncio.sleep(1)
     return str(datetime.datetime.now().timestamp())
 ```
@@ -82,29 +82,29 @@ def default_handler(params: InterruptParams) -> Any:
 
 #### Interrupt Request Format
 
-During an interrupt, a request in the following JSON Schema format is sent:
+An interrupt sends a request in the following JSON Schema format:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `action_request.action` | `str` | The name of the tool call |
-| `action_request.args` | `dict` | The arguments of the tool call |
-| `config.allow_accept` | `bool` | Whether to allow the action to be accepted |
-| `config.allow_edit` | `bool` | Whether to allow the arguments to be edited |
-| `config.allow_respond` | `bool` | Whether to allow a direct response |
-| `description` | `str` | A description of the action |
+| Field | Description |
+|-------|-------------|
+| `action_request.action` | The name of the tool call.<br><br>**Type**: `str` |
+| `action_request.args` | The arguments for the tool call.<br><br>**Type**: `dict` |
+| `config.allow_accept` | Whether to allow accepting the action.<br><br>**Type**: `bool` |
+| `config.allow_edit` | Whether to allow editing the arguments.<br><br>**Type**: `bool` |
+| `config.allow_respond` | Whether to allow responding directly.<br><br>**Type**: `bool` |
+| `description` | A description of the action.<br><br>**Type**: `str` |
 
 #### Interrupt Response Format
 
-The response should be returned in the following JSON Schema format:
+The response must be returned in the following JSON Schema format:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `type` | `str` | The response type. Possible values are `accept`, `edit`, `response` |
-| `args` | `dict` | When `type` is `edit` or `response`, this contains the updated arguments or response content |
+| Field | Description |
+|-------|-------------|
+| `type` | Response type, with optional values `accept`, `edit`, `response`.<br><br>**Type**: `str`<br>**Required**: Yes |
+| `args` | When `type` is `edit` or `response`, contains the updated arguments or response content.<br><br>**Type**: `dict`<br>**Required**: No |
 
 ### Custom Handler Example
 
-You can have full control over the interrupt behavior, for example, by only allowing "accept/reject" or by customizing the prompt:
+You can have full control over the interrupt behavior, for example, by only allowing "accept/reject" or customizing the prompt:
 
 ```python
 from typing import Any
@@ -126,9 +126,9 @@ async def custom_handler(params: InterruptParams) -> Any:
 
 @human_in_the_loop_async(handler=custom_handler)
 async def get_weather(city: str) -> str:
-    """Get weather information"""
+    """Gets weather information"""
     return f"The weather in {city} is sunny."
 ```
 
 !!! success "Best Practice"
-    When implementing custom human-in-the-loop logic with this decorator, you must pass a `handler` parameter. This `handler` is a function that must use LangGraph's `interrupt` function to perform the interruption. Therefore, if you are only adding custom human-in-the-loop logic to a single tool, it is recommended to use LangGraph's `interrupt` function directly. When multiple tools require the same custom human-in-the-loop logic, using this decorator can effectively avoid code duplication.
+    When implementing custom human-in-the-loop logic with this decorator, you need to pass the `handler` parameter. This `handler` parameter is a function that must internally use LangGraph's `interrupt` function to perform the interrupt operation. Therefore, if you are only adding custom human-in-the-loop logic for a single tool, it is recommended to use LangGraph's `interrupt` function directly. When multiple tools require the same custom human-in-the-loop logic, using this decorator can effectively avoid code duplication.

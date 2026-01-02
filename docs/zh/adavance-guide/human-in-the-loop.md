@@ -11,9 +11,9 @@
 
 ## 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `handler` | `Callable` | 否 | `None` | 自定义处理函数，若为 `None` 则使用默认处理函数 |
+| 参数 | 说明 |
+|------|------|
+| `handler` | 自定义处理函数，若为 `None` 则使用默认处理函数。<br><br>**类型**: `Callable`<br>**必填**: 否 |
 
 ## 使用示例
 
@@ -84,23 +84,24 @@ def default_handler(params: InterruptParams) -> Any:
 
 中断时会发送如下 JSON Schema 格式的请求：
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `action_request.action` | `str` | 工具调用名称 |
-| `action_request.args` | `dict` | 工具调用参数 |
-| `config.allow_accept` | `bool` | 是否允许接受操作 |
-| `config.allow_edit` | `bool` | 是否允许编辑参数 |
-| `config.allow_respond` | `bool` | 是否允许直接响应 |
-| `description` | `str` | 操作描述 |
+| 字段 | 说明 |
+|------|------|
+| `action_request.action` | 工具调用名称。<br><br>**类型**: `str` |
+| `action_request.args` | 工具调用参数。<br><br>**类型**: `dict` |
+| `config.allow_accept` | 是否允许接受操作。<br><br>**类型**: `bool` |
+| `config.allow_edit` | 是否允许编辑参数。<br><br>**类型**: `bool` |
+| `config.allow_respond` | 是否允许直接响应。<br><br>**类型**: `bool` |
+| `description` | 操作描述。<br><br>**类型**: `str` |
 
 #### 中断响应格式
 
 响应时需要返回如下 JSON Schema 格式的数据：
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `type` | `str` | 响应类型，可选值为 `accept`、`edit`、`response` |
-| `args` | `dict` | 当 `type` 为 `edit` 或 `response` 时，包含更新后的参数或响应内容 |
+| 字段 | 说明 |
+|------|------|
+| `type` | 响应类型，可选值为 `accept`、`edit`、`response`。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `args` | 当 `type` 为 `edit` 或 `response` 时，包含更新后的参数或响应内容。<br><br>**类型**: `dict`<br>**必填**: 否 |
+
 
 
 ### 自定义 Handler 示例

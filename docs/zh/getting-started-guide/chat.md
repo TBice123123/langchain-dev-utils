@@ -14,12 +14,12 @@ LangChain 的 `init_chat_model` 函数仅支持有限的模型提供商。本库
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `provider_name` | `str` | 是 | - | 模型提供商名称，用于后续在 `load_chat_model` 中引用 |
-| `chat_model` | `type[BaseChatModel]` | 是 | - | LangChain 对话模型类 |
-| `base_url` | `str` | 否 | `None` | API 基础地址，通常无需手动设置 |
-| `model_profiles` | `dict` | 否 | `None` | 模型配置信息字典 |
+| 参数 | 说明 |
+|------|------|
+| `provider_name` | 模型提供商名称，用于后续在 `load_chat_model` 中引用。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `chat_model` | LangChain 对话模型类。<br><br>**类型**: `type[BaseChatModel]`<br>**必填**: 是 |
+| `base_url` | API 基础地址，通常无需手动设置。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `model_profiles` | 模型配置信息字典。<br><br>**类型**: `dict`<br>**必填**: 否 |
 
 #### 代码示例
 
@@ -78,13 +78,13 @@ register_model_provider(
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `provider_name` | `str` | 是 | - | 模型提供商名称 |
-| `chat_model` | `str` | 是 | - | 固定取值 `"openai-compatible"` |
-| `base_url` | `str` | 否 | `None` | API 基础地址 |
-| `model_profiles` | `dict` | 否 | `None` | 模型配置信息字典 |
-| `compatibility_options` | `dict` | 否 | `None` | 兼容性选项配置 |
+| 参数 | 说明 |
+|------|------|
+| `provider_name` | 模型提供商名称。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `chat_model` | 固定取值 `"openai-compatible"`。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `base_url` | API 基础地址。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `model_profiles` | 模型配置信息字典。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `compatibility_options` | 兼容性选项配置。<br><br>**类型**: `dict`<br>**必填**: 否 |
 
 #### 代码示例
 
@@ -121,9 +121,10 @@ register_model_provider(
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `providers` | `list[dict]` | 是 | - | 提供商配置列表，每个字典包含注册参数 |
+| 参数 | 说明 |
+|------|------|
+| `providers` | 提供商配置列表，每个字典包含注册参数。<br><br>**类型**: `list[dict]`<br>**必填**: 是 |
+
 
 #### 代码示例
 
@@ -149,7 +150,7 @@ batch_register_model_provider(
 !!! warning "注意"
     两个注册函数均基于全局字典实现。为避免多线程问题，**必须在应用启动阶段完成所有注册**，禁止运行时动态注册。  
 
-    此外，注册时若将 `chat_model` 设为 `openai-compatible`，内部会通过 `pydantic.create_model` 动态创建新的模型类（以 `BaseChatOpenAICompatible` 为基类，生成对应的对话模型集成类，此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。
+    此外，注册时若将 `chat_model` 设为 `openai-compatible`，内部会通过 `pydantic.create_model` 动态创建新的模型类（以 `BaseChatOpenAICompatible` 为基类，生成对应的对话模型集成类），此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。
 
 
 ## 加载对话模型
@@ -158,10 +159,10 @@ batch_register_model_provider(
 
 #### 参数说明
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `model` | `str` | 是 | - | 模型名称 |
-| `model_provider` | `str` | 否 | `None` | 模型提供商名称 |
+| 参数 | 说明 |
+|------|------|
+| `model` | 模型名称。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `model_provider` | 模型提供商名称。<br><br>**类型**: `str`<br>**必填**: 否 |
 
 **除此之外，还可以传入任意数量的关键字参数，用于传递对话模型类的额外参数。**
 

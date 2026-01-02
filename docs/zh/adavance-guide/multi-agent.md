@@ -23,13 +23,13 @@
 
 ### 函数参数说明
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `agent` | `CompiledStateGraph` | 是 | 智能体实例，必须已定义 `name` 属性 |
-| `tool_name` | `str` | 否 | 工具名称，默认为 `transfer_to_{agent_name}` |
-| `tool_description` | `str` | 否 | 工具描述，默认为 `This tool transforms input to {agent_name}` |
-| `pre_input_hooks` | `tuple` | 否 | 智能体运行前的钩子函数 |
-| `post_output_hooks` | `tuple` | 否 | 智能体运行后的钩子函数 |
+| 参数 | 说明 |
+|------|------|
+| `agent` | 智能体实例，必须已定义 `name` 属性。<br><br>**类型**: `CompiledStateGraph`<br>**必填**: 是 |
+| `tool_name` | 工具名称，默认为 `transfer_to_{agent_name}`。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `tool_description` | 工具描述，默认为 `This tool transforms input to {agent_name}`。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
+| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
 
 ### 使用示例
 
@@ -187,13 +187,13 @@ print(
 
 ### 函数参数说明
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `agents` | `list[CompiledStateGraph]` | 是 | 智能体实例列表 |
-| `tool_name` | `str` | 否 | 工具名称，默认为 `task` |
-| `tool_description` | `str` | 否 | 工具描述，默认包含所有可用智能体信息 |
-| `pre_input_hooks` | `tuple` | 否 | 智能体运行前的钩子函数 |
-| `post_output_hooks` | `tuple` | 否 | 智能体运行后的钩子函数 |
+| 参数 | 说明 |
+|------|------|
+| `agents` | 智能体实例列表。<br><br>**类型**: `list[CompiledStateGraph]`<br>**必填**: 是 |
+| `tool_name` | 工具名称，默认为 `task`。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `tool_description` | 工具描述，默认包含所有可用智能体信息。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
+| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
 
 ### 使用示例
 

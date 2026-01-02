@@ -2,19 +2,17 @@
 
 ## 概述
 
-很多模型提供商都支持 **OpenAI 兼容 API** 的服务，例如：[vLLM](https://github.com/vllm-project/vllm)、[OpenRouter](https://openrouter.ai/)、[Together AI](https://www.together.ai/) 等。本库提供了完整的 OpenAI 兼容 API 集成方案，支持对话模型和嵌入模型，特别适用于暂时没有对应的LangChain集成而提供商有提供OpenAI兼容API的场景。
+很多模型提供商都支持**OpenAI 兼容**的API服务，例如：[vLLM](https://github.com/vllm-project/vllm)、[OpenRouter](https://openrouter.ai/)、[Together AI](https://www.together.ai/)等。本库提供了完整的OpenAI兼容API集成方案，支持对话模型和嵌入模型，特别适用于暂时没有对应的LangChain集成而提供商提供OpenAI兼容API的场景。
 
 
 !!! tip "提示"
-    一种常见的接入 OpenAI 兼容 API 的做法是直接使用 `langchain-openai` 中的 `ChatOpenAI` 或 `OpenAIEmbeddings`，只需传入 `base_url` 与 `api_key` 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题，尤其是对于对话模型类，存在如下问题：
+    接入 OpenAI 兼容 API 的常见做法是直接使用 `langchain-openai` 中的 `ChatOpenAI` 或 `OpenAIEmbeddings`，只需传入 `base_url` 与 `api_key` 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题，尤其是对话模型，具体包括：
 
-    - 1.无法显示非OpenAI官方的推理模型的思维链(`reasoning_content`)
+    1. 无法显示非 OpenAI 官方推理模型的思维链（`reasoning_content`）
+    2. 不支持视频类型的 content_block
+    3. 结构化输出默认策略覆盖率低
 
-    - 2.不支持使用视频类型的content_block
-
-    - 3.结构化输出默认策略覆盖率低。
-
-    为此，本库专门提供了此功能，用于解决上述问题。因此，如果对于比较简单的场景（尤其是是对兼容性要求低的场景）可以完全使用`ChatOpenAI`而无需使用本功能。
+    本库提供此功能正是为了解决上述兼容性问题。对于简单场景（尤其是对兼容性要求不高的场景），可直接使用 `ChatOpenAI`，无需使用本功能。`OpenAIEmbeddings` 兼容性较好，只需将 `check_embedding_ctx_length` 设为 `False` 即可。此外，为方便开发者，我们也提供了嵌入模型的 OpenAI 兼容集成类功能。
 
 ## 创建对应的集成类
 
@@ -29,13 +27,13 @@
 
 使用 `create_openai_compatible_model` 函数可以创建对话模型集成类。该函数接受以下参数：
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `model_provider` | `str` | 是 | - | 模型提供商名称，例如 `vllm`。 |
-| `base_url` | `str` | 否 | `None` | 模型提供商的默认API地址 |
-| `compatibility_options` | `dict` | 否 | `None` | 兼容性选项配置 |
-| `model_profiles` | `dict` | 否 | `None` | 该模型提供商所提供的模型对应的profiles |
-| `chat_model_cls_name` | `str` | 否 | `None` | 对话模型类名，默认值为 `Chat{model_provider}`（其中 `{model_provider}` 首字母大写） |
+| 参数 | 说明 |
+|------|------|
+| `model_provider` | 模型提供商名称，例如 `vllm`。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `base_url` | 模型提供商的默认API地址。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `compatibility_options` | 兼容性选项配置。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `model_profiles` | 该模型提供商所提供的模型对应的profiles。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `chat_model_cls_name` | 对话模型类名，默认值为 `Chat{model_provider}`（其中 `{model_provider}` 首字母大写）。<br><br>**类型**: `str`<br>**必填**: 否 |
 
 
 本库会根据用户传入的上述参数，使用内置 `BaseChatOpenAICompatible` 类构建对应于特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并增强以下能力：
@@ -117,15 +115,15 @@ print(model.invoke("你好"))
 
 目前支持以下配置项：
 
-| 配置项 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `supported_tool_choice` | `list[str]` | `["auto"]` | 支持的 `tool_choice` 策略列表 |
-| `supported_response_format` | `list[str]` | `[]` | 支持的 `response_format` 格式列表(`json_schema`、`json_object`) |
-| `reasoning_keep_policy` | `str` | `"never"` | 历史消息中 `reasoning_content` 字段的保留策略 |
-| `include_usage` | `bool` | `True` | 是否在流式返回结果中包含 `usage` 信息 |
+| 配置项 | 说明 |
+|--------|------|
+| `supported_tool_choice` | 支持的 `tool_choice` 策略列表。<br><br>**类型**: `list[str]`<br>**默认值**: `["auto"]` |
+| `supported_response_format` | 支持的 `response_format` 格式列表(`json_schema`、`json_object`)。<br><br>**类型**: `list[str]`<br>**默认值**: `[]` |
+| `reasoning_keep_policy` | 历史消息中 `reasoning_content` 字段的保留策略。<br><br>**类型**: `str`<br>**默认值**: `"never"` |
+| `include_usage` | 是否在流式返回结果中包含 `usage` 信息。<br><br>**类型**: `bool`<br>**默认值**: `True` |
 
 !!! info "补充"
-    因为同一模型提供商的不同模型对于`tool_choice`、`response_format`等参数的支持情况有所差异。故该四个兼容性选项最终会作为该类的**实例属性**。故创建该对话模型类时可传值作为全局默认值（代表该提供商的大部分模型支持的配置），后续如需微调，在 实例化时 中覆盖同名参数即可。
+    由于同一模型提供商的不同模型对 `tool_choice`、`response_format` 等参数的支持情况存在差异，这四个兼容性选项为类的**实例属性**。因此，创建对话模型类时可以传入值作为全局默认值（代表该提供商大部分模型支持的配置），后续如需针对特定模型进行微调，可在实例化时覆盖同名参数。
 
 对于这些配置项的详细介绍如下：
 
@@ -178,7 +176,7 @@ print(model.invoke("你好"))
 
     其中，`json_schema` 仅少数 OpenAI 兼容 API 提供商支持（如 `OpenRouter`、`TogetherAI`）；`json_mode` 支持度更高，多数提供商已兼容；而 `function_calling` 最为通用，只要模型支持工具调用即可使用。
 
-    本参数用于声明模型提供商对于`response_format`的支持情况。默认情况下为`[]`，代表模型提供商既不支持`json_mode`也不支持`json_schema`。此时`with_structured_output`方法中的`method`参数只能传递`function_calling`，如果传递了`json_mode`或`json_schema`，则会自动被转化为`function_calling`。如果想要启用`json_mode`或者`json_schema`的结构化输出实现方式，则需要显示设置该参数。
+    本参数用于声明模型提供商对于`response_format`的支持情况。默认情况下为`[]`，代表模型提供商既不支持`json_mode`也不支持`json_schema`。此时`with_structured_output`方法中的`method`参数只能传递`function_calling`，如果传递了`json_mode`或`json_schema`，则会自动被转化为`function_calling`。如果想要启用`json_mode`或者`json_schema`的结构化输出实现方式，则需要显式设置该参数。
 
     例如vLLM部署的模型支持`json_schema`的结构化输出方法，则可以注册的时候进行声明：
 
@@ -305,7 +303,7 @@ print(model.invoke("你好"))
 
 #### model_profiles参数设置
 
-此情况下，如果要使用`model.profile`参数，则必须在创建时显式的传入。
+如果要使用 `model.profile` 参数，则必须在创建时显式传入。
 
 例如：
 
@@ -422,7 +420,6 @@ print(embedding.embed_query("你好"))
     同时也支持`ainvoke`进行异步调用：
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM("qwen3-4b")
@@ -435,7 +432,6 @@ print(embedding.embed_query("你好"))
     支持`stream`进行流式输出：
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM("qwen3-4b")
@@ -446,7 +442,6 @@ print(embedding.embed_query("你好"))
     以及`astream`进行异步流式调用：
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM("qwen3-4b")
@@ -461,7 +456,6 @@ print(embedding.embed_query("你好"))
 ??? example "工具调用"
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
     from langchain_core.tools import tool
     import datetime
@@ -483,7 +477,6 @@ print(embedding.embed_query("你好"))
 ??? example "结构化输出"
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
     from langchain_core.tools import tool
     from pydantic import BaseModel
@@ -505,7 +498,6 @@ print(embedding.embed_query("你好"))
 ??? example "传递模型参数"
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM("qwen3-4b",extra_body={"chat_template_kwargs": {"enable_thinking": False}}) #利用extra_body传递额外参数，这里是关闭思考模式
@@ -523,7 +515,6 @@ print(embedding.embed_query("你好"))
     **传递图片类数据**：
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
     messages = [
         HumanMessage(
@@ -546,7 +537,6 @@ print(embedding.embed_query("你好"))
     
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
 
     messages = [
@@ -584,7 +574,6 @@ print(embedding.embed_query("你好"))
 ??? example "OpenAI 最新的`responses_api`"
 
     ```python
-    from langchain_dev_utils.chat_models import load_chat_model
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM("qwen3-4b", use_responses_api=True)
