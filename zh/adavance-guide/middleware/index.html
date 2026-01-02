@@ -1871,33 +1871,21 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>system_prompt</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>系统提示词，若为 <code>None</code> 则使用默认提示词</td>
+<td>系统提示词，若为 <code>None</code> 则使用默认提示词。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>custom_plan_tool_descriptions</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>自定义计划相关工具的描述</td>
+<td>自定义计划相关工具的描述。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>use_read_plan_tool</code></td>
-<td><code>bool</code></td>
-<td>否</td>
-<td><code>True</code></td>
-<td>是否启用读计划工具</td>
+<td>是否启用读计划工具。<br><br><strong>类型</strong>: <code>bool</code><br><strong>必填</strong>: 否<br><strong>默认值</strong>: <code>True</code></td>
 </tr>
 </tbody>
 </table>
@@ -1989,33 +1977,21 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>router_model</code></td>
-<td><code>str</code> | <code>BaseChatModel</code></td>
-<td>是</td>
-<td>-</td>
-<td>用于执行路由决策的模型</td>
+<td>用于执行路由决策的模型。<br><br><strong>类型</strong>: <code>str</code> | <code>BaseChatModel</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>model_list</code></td>
-<td><code>list[ModelDict]</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型配置列表</td>
+<td>模型配置列表。<br><br><strong>类型</strong>: <code>list[ModelDict]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>router_prompt</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>自定义路由模型的提示词</td>
+<td>自定义路由模型的提示词。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -2025,47 +2001,33 @@
 <thead>
 <tr>
 <th>字段</th>
-<th>类型</th>
-<th>必填</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>model_name</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>模型的唯一标识，使用 <code>provider:model-name</code> 格式</td>
+<td>模型的唯一标识，使用 <code>provider:model-name</code> 格式。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>model_description</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>模型能力或适用场景的简要描述</td>
+<td>模型能力或适用场景的简要描述。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>tools</code></td>
-<td><code>list[BaseTool]</code></td>
-<td>否</td>
-<td>该模型可调用的工具白名单</td>
+<td>该模型可调用的工具白名单。<br><br><strong>类型</strong>: <code>list[BaseTool]</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_kwargs</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td>模型加载时的额外参数</td>
+<td>模型加载时的额外参数。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_system_prompt</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>模型的系统级提示词</td>
+<td>模型的系统级提示词。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_instance</code></td>
-<td><code>BaseChatModel</code></td>
-<td>否</td>
-<td>已实例化的模型对象</td>
+<td>已实例化的模型对象。<br><br><strong>类型</strong>: <code>BaseChatModel</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -2138,26 +2100,17 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>agents_config</code></td>
-<td><code>dict[str, AgentConfig]</code></td>
-<td>是</td>
-<td>-</td>
-<td>智能体配置字典，键为智能体名称，值为智能体配置字典</td>
+<td>智能体配置字典，键为智能体名称，值为智能体配置字典。<br><br><strong>类型</strong>: <code>dict[str, AgentConfig]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>custom_handoffs_tool_descriptions</code></td>
-<td><code>dict[str, str]</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>自定义交接工具的描述，键为智能体名称，值为对应的交接工具描述</td>
+<td>自定义交接工具的描述，键为智能体名称，值为对应的交接工具描述。<br><br><strong>类型</strong>: <code>dict[str, str]</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -2167,41 +2120,29 @@
 <thead>
 <tr>
 <th>字段</th>
-<th>类型</th>
-<th>必填</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td><code>str</code> | <code>BaseChatModel</code></td>
-<td>否</td>
-<td>指定该智能体使用的模型；若不传，则沿用 <code>create_agent</code> 的 <code>model</code> 参数对应的模型。支持字符串（须为 <code>provider:model-name</code> 格式，如 <code>vllm:qwen3-4b</code>）或 <code>BaseChatModel</code> 实例</td>
+<td>指定该智能体使用的模型；若不传，则沿用 <code>create_agent</code> 的 <code>model</code> 参数对应的模型。支持字符串（须为 <code>provider:model-name</code> 格式，如 <code>vllm:qwen3-4b</code>）或 <code>BaseChatModel</code> 实例。<br><br><strong>类型</strong>: <code>str</code> | <code>BaseChatModel</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>prompt</code></td>
-<td><code>str</code> | <code>SystemMessage</code></td>
-<td>是</td>
-<td>智能体的系统提示词</td>
+<td>智能体的系统提示词。<br><br><strong>类型</strong>: <code>str</code> | <code>SystemMessage</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>tools</code></td>
-<td><code>list[BaseTool]</code></td>
-<td>否</td>
-<td>智能体可调用的工具列表</td>
+<td>智能体可调用的工具列表。<br><br><strong>类型</strong>: <code>list[BaseTool]</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>default</code></td>
-<td><code>bool</code></td>
-<td>否</td>
-<td>是否设为默认智能体；缺省为 <code>False</code>。全部配置中必须且只能有一个智能体设为 <code>True</code></td>
+<td>是否设为默认智能体；缺省为 <code>False</code>。全部配置中必须且只能有一个智能体设为 <code>True</code>。<br><br><strong>类型</strong>: <code>bool</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>handoffs</code></td>
-<td><code>list[str]</code> | <code>str</code></td>
-<td>是</td>
-<td>该智能体可交接给的其它智能体名称列表。若设为 <code>"all"</code>，则表示该智能体可交接给所有其它智能体</td>
+<td>该智能体可交接给的其它智能体名称列表。若设为 <code>"all"</code>，则表示该智能体可交接给所有其它智能体。<br><br><strong>类型</strong>: <code>list[str]</code> | <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 </tbody>
 </table>

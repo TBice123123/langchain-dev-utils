@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-human-review-for-tool-calls" class="md-skip">
+        <a href="#adding-human-review-to-tool-calls" class="md-skip">
           Skip to content
         </a>
       
@@ -1428,7 +1428,7 @@
   
 
 
-<h1 id="add-human-review-for-tool-calls">Add Human Review for Tool Calls</h1>
+<h1 id="adding-human-review-to-tool-calls">Adding Human Review to Tool Calls</h1>
 <h2 id="overview">Overview</h2>
 <p>This library provides decorator functions to add "human-in-the-loop" review support for tool calls, enabling human review during tool execution.</p>
 <table>
@@ -1454,19 +1454,13 @@
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>handler</code></td>
-<td><code>Callable</code></td>
-<td>No</td>
-<td><code>None</code></td>
-<td>A custom handler function. If <code>None</code>, the default handler will be used.</td>
+<td>Custom handler function. If <code>None</code>, the default handler is used.<br><br><strong>Type</strong>: <code>Callable</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
@@ -1478,7 +1472,7 @@
 
 <span class="nd">@human_in_the_loop</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current timestamp&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the current timestamp&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 </code></pre></div>
 <h3 id="async-tool-example">Async Tool Example</h3>
@@ -1489,7 +1483,7 @@
 
 <span class="nd">@human_in_the_loop_async</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Asynchronously get the current timestamp&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Asynchronously gets the current timestamp&quot;&quot;&quot;</span>
     <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 </code></pre></div>
@@ -1525,73 +1519,63 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported interrupt response type: </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="interrupt-request-format">Interrupt Request Format</h4>
-<p>During an interrupt, a request in the following JSON Schema format is sent:</p>
+<p>An interrupt sends a request in the following JSON Schema format:</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>action_request.action</code></td>
-<td><code>str</code></td>
-<td>The name of the tool call</td>
+<td>The name of the tool call.<br><br><strong>Type</strong>: <code>str</code></td>
 </tr>
 <tr>
 <td><code>action_request.args</code></td>
-<td><code>dict</code></td>
-<td>The arguments of the tool call</td>
+<td>The arguments for the tool call.<br><br><strong>Type</strong>: <code>dict</code></td>
 </tr>
 <tr>
 <td><code>config.allow_accept</code></td>
-<td><code>bool</code></td>
-<td>Whether to allow the action to be accepted</td>
+<td>Whether to allow accepting the action.<br><br><strong>Type</strong>: <code>bool</code></td>
 </tr>
 <tr>
 <td><code>config.allow_edit</code></td>
-<td><code>bool</code></td>
-<td>Whether to allow the arguments to be edited</td>
+<td>Whether to allow editing the arguments.<br><br><strong>Type</strong>: <code>bool</code></td>
 </tr>
 <tr>
 <td><code>config.allow_respond</code></td>
-<td><code>bool</code></td>
-<td>Whether to allow a direct response</td>
+<td>Whether to allow responding directly.<br><br><strong>Type</strong>: <code>bool</code></td>
 </tr>
 <tr>
 <td><code>description</code></td>
-<td><code>str</code></td>
-<td>A description of the action</td>
+<td>A description of the action.<br><br><strong>Type</strong>: <code>str</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="interrupt-response-format">Interrupt Response Format</h4>
-<p>The response should be returned in the following JSON Schema format:</p>
+<p>The response must be returned in the following JSON Schema format:</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>type</code></td>
-<td><code>str</code></td>
-<td>The response type. Possible values are <code>accept</code>, <code>edit</code>, <code>response</code></td>
+<td>Response type, with optional values <code>accept</code>, <code>edit</code>, <code>response</code>.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>args</code></td>
-<td><code>dict</code></td>
-<td>When <code>type</code> is <code>edit</code> or <code>response</code>, this contains the updated arguments or response content</td>
+<td>When <code>type</code> is <code>edit</code> or <code>response</code>, contains the updated arguments or response content.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
 <h3 id="custom-handler-example">Custom Handler Example</h3>
-<p>You can have full control over the interrupt behavior, for example, by only allowing "accept/reject" or by customizing the prompt:</p>
+<p>You can have full control over the interrupt behavior, for example, by only allowing "accept/reject" or customizing the prompt:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.tool_calling</span><span class="w"> </span><span class="kn">import</span> <span class="n">human_in_the_loop_async</span><span class="p">,</span> <span class="n">InterruptParams</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">interrupt</span>
@@ -1611,12 +1595,12 @@
 
 <span class="nd">@human_in_the_loop_async</span><span class="p">(</span><span class="n">handler</span><span class="o">=</span><span class="n">custom_handler</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_weather</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get weather information&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets weather information&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The weather in </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2"> is sunny.&quot;</span>
 </code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Best Practice</p>
-<p>When implementing custom human-in-the-loop logic with this decorator, you must pass a <code>handler</code> parameter. This <code>handler</code> is a function that must use LangGraph's <code>interrupt</code> function to perform the interruption. Therefore, if you are only adding custom human-in-the-loop logic to a single tool, it is recommended to use LangGraph's <code>interrupt</code> function directly. When multiple tools require the same custom human-in-the-loop logic, using this decorator can effectively avoid code duplication.</p>
+<p>When implementing custom human-in-the-loop logic with this decorator, you need to pass the <code>handler</code> parameter. This <code>handler</code> parameter is a function that must internally use LangGraph's <code>interrupt</code> function to perform the interrupt operation. Therefore, if you are only adding custom human-in-the-loop logic for a single tool, it is recommended to use LangGraph's <code>interrupt</code> function directly. When multiple tools require the same custom human-in-the-loop logic, using this decorator can effectively avoid code duplication.</p>
 </div>
 
 

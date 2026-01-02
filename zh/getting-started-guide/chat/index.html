@@ -1696,40 +1696,25 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>provider_name</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型提供商名称，用于后续在 <code>load_chat_model</code> 中引用</td>
+<td>模型提供商名称，用于后续在 <code>load_chat_model</code> 中引用。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>chat_model</code></td>
-<td><code>type[BaseChatModel]</code></td>
-<td>是</td>
-<td>-</td>
-<td>LangChain 对话模型类</td>
+<td>LangChain 对话模型类。<br><br><strong>类型</strong>: <code>type[BaseChatModel]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>API 基础地址，通常无需手动设置</td>
+<td>API 基础地址，通常无需手动设置。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>模型配置信息字典</td>
+<td>模型配置信息字典。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1781,47 +1766,29 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>provider_name</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型提供商名称</td>
+<td>模型提供商名称。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>chat_model</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>固定取值 <code>"openai-compatible"</code></td>
+<td>固定取值 <code>"openai-compatible"</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>API 基础地址</td>
+<td>API 基础地址。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>模型配置信息字典</td>
+<td>模型配置信息字典。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>compatibility_options</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>兼容性选项配置</td>
+<td>兼容性选项配置。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1850,19 +1817,13 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>providers</code></td>
-<td><code>list[dict]</code></td>
-<td>是</td>
-<td>-</td>
-<td>提供商配置列表，每个字典包含注册参数</td>
+<td>提供商配置列表，每个字典包含注册参数。<br><br><strong>类型</strong>: <code>list[dict]</code><br><strong>必填</strong>: 是</td>
 </tr>
 </tbody>
 </table>
@@ -1887,7 +1848,7 @@
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
 <p>两个注册函数均基于全局字典实现。为避免多线程问题，<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册。  </p>
-<p>此外，注册时若将 <code>chat_model</code> 设为 <code>openai-compatible</code>，内部会通过 <code>pydantic.create_model</code> 动态创建新的模型类（以 <code>BaseChatOpenAICompatible</code> 为基类，生成对应的对话模型集成类，此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。</p>
+<p>此外，注册时若将 <code>chat_model</code> 设为 <code>openai-compatible</code>，内部会通过 <code>pydantic.create_model</code> 动态创建新的模型类（以 <code>BaseChatOpenAICompatible</code> 为基类，生成对应的对话模型集成类），此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。</p>
 </div>
 <h2 id="_13">加载对话模型</h2>
 <p>使用 <code>load_chat_model</code> 函数加载对话模型（初始化对话模型实例）。</p>
@@ -1896,26 +1857,17 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型名称</td>
+<td>模型名称。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>model_provider</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>模型提供商名称</td>
+<td>模型提供商名称。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>

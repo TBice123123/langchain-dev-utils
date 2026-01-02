@@ -1731,41 +1731,29 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>agent</code></td>
-<td><code>CompiledStateGraph</code></td>
-<td>是</td>
-<td>智能体实例，必须已定义 <code>name</code> 属性</td>
+<td>智能体实例，必须已定义 <code>name</code> 属性。<br><br><strong>类型</strong>: <code>CompiledStateGraph</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>tool_name</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>工具名称，默认为 <code>transfer_to_{agent_name}</code></td>
+<td>工具名称，默认为 <code>transfer_to_{agent_name}</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>tool_description</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>工具描述，默认为 <code>This tool transforms input to {agent_name}</code></td>
+<td>工具描述，默认为 <code>This tool transforms input to {agent_name}</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>pre_input_hooks</code></td>
-<td><code>tuple</code></td>
-<td>否</td>
-<td>智能体运行前的钩子函数</td>
+<td>智能体运行前的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>post_output_hooks</code></td>
-<td><code>tuple</code></td>
-<td>否</td>
-<td>智能体运行后的钩子函数</td>
+<td>智能体运行后的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1913,41 +1901,29 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>agents</code></td>
-<td><code>list[CompiledStateGraph]</code></td>
-<td>是</td>
-<td>智能体实例列表</td>
+<td>智能体实例列表。<br><br><strong>类型</strong>: <code>list[CompiledStateGraph]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>tool_name</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>工具名称，默认为 <code>task</code></td>
+<td>工具名称，默认为 <code>task</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>tool_description</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>工具描述，默认包含所有可用智能体信息</td>
+<td>工具描述，默认包含所有可用智能体信息。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>pre_input_hooks</code></td>
-<td><code>tuple</code></td>
-<td>否</td>
-<td>智能体运行前的钩子函数</td>
+<td>智能体运行前的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>post_output_hooks</code></td>
-<td><code>tuple</code></td>
-<td>否</td>
-<td>智能体运行后的钩子函数</td>
+<td>智能体运行后的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>

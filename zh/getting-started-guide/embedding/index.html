@@ -1686,33 +1686,21 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>provider_name</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型提供商名称，用于后续在 <code>load_embeddings</code> 中引用</td>
+<td>模型提供商名称，用于后续在 <code>load_embeddings</code> 中引用。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>embeddings_model</code></td>
-<td><code>type[Embeddings]</code></td>
-<td>是</td>
-<td>-</td>
-<td>LangChain 嵌入模型类</td>
+<td>LangChain 嵌入模型类。<br><br><strong>类型</strong>: <code>type[Embeddings]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>API 基础地址，通常无需手动设置</td>
+<td>API 基础地址，通常无需手动设置。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1738,33 +1726,21 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>provider_name</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型提供商名称</td>
+<td>模型提供商名称，用于后续在 <code>load_embeddings</code> 中引用。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>embeddings_model</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>固定取值 <code>"openai-compatible"</code></td>
+<td>固定取值 <code>"openai-compatible"</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>API 基础地址</td>
+<td>API 基础地址。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1793,19 +1769,13 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>providers</code></td>
-<td><code>list[dict]</code></td>
-<td>是</td>
-<td>-</td>
-<td>提供商配置列表，每个字典包含注册参数</td>
+<td>提供商配置列表，每个字典包含注册参数。<br><br><strong>类型</strong>: <code>list[dict]</code><br><strong>必填</strong>: 是</td>
 </tr>
 </tbody>
 </table>
@@ -1829,7 +1799,8 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
-<p>两个注册函数均基于全局字典实现。<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册，以避免多线程问题。  </p>
+<p>两个注册函数均基于全局字典实现。<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册，以避免多线程问题。 </p>
+<p>此外，注册时若将 <code>embeddings_model</code> 设为 <code>openai-compatible</code>，内部会通过 <code>pydantic.create_model</code> 动态创建新的模型类（以 <code>BaseEmbeddingOpenAICompatible</code> 为基类，生成对应的嵌入模型集成类），此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。</p>
 </div>
 <h2 id="_12">加载嵌入模型</h2>
 <p>使用 <code>load_embeddings</code> 初始化嵌入模型实例。</p>

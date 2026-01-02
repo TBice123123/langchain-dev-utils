@@ -1454,19 +1454,13 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>handler</code></td>
-<td><code>Callable</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>自定义处理函数，若为 <code>None</code> 则使用默认处理函数</td>
+<td>自定义处理函数，若为 <code>None</code> 则使用默认处理函数。<br><br><strong>类型</strong>: <code>Callable</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1530,40 +1524,33 @@
 <thead>
 <tr>
 <th>字段</th>
-<th>类型</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>action_request.action</code></td>
-<td><code>str</code></td>
-<td>工具调用名称</td>
+<td>工具调用名称。<br><br><strong>类型</strong>: <code>str</code></td>
 </tr>
 <tr>
 <td><code>action_request.args</code></td>
-<td><code>dict</code></td>
-<td>工具调用参数</td>
+<td>工具调用参数。<br><br><strong>类型</strong>: <code>dict</code></td>
 </tr>
 <tr>
 <td><code>config.allow_accept</code></td>
-<td><code>bool</code></td>
-<td>是否允许接受操作</td>
+<td>是否允许接受操作。<br><br><strong>类型</strong>: <code>bool</code></td>
 </tr>
 <tr>
 <td><code>config.allow_edit</code></td>
-<td><code>bool</code></td>
-<td>是否允许编辑参数</td>
+<td>是否允许编辑参数。<br><br><strong>类型</strong>: <code>bool</code></td>
 </tr>
 <tr>
 <td><code>config.allow_respond</code></td>
-<td><code>bool</code></td>
-<td>是否允许直接响应</td>
+<td>是否允许直接响应。<br><br><strong>类型</strong>: <code>bool</code></td>
 </tr>
 <tr>
 <td><code>description</code></td>
-<td><code>str</code></td>
-<td>操作描述</td>
+<td>操作描述。<br><br><strong>类型</strong>: <code>str</code></td>
 </tr>
 </tbody>
 </table>
@@ -1573,20 +1560,17 @@
 <thead>
 <tr>
 <th>字段</th>
-<th>类型</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>type</code></td>
-<td><code>str</code></td>
-<td>响应类型，可选值为 <code>accept</code>、<code>edit</code>、<code>response</code></td>
+<td>响应类型，可选值为 <code>accept</code>、<code>edit</code>、<code>response</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>args</code></td>
-<td><code>dict</code></td>
-<td>当 <code>type</code> 为 <code>edit</code> 或 <code>response</code> 时，包含更新后的参数或响应内容</td>
+<td>当 <code>type</code> 为 <code>edit</code> 或 <code>response</code> 时，包含更新后的参数或响应内容。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>

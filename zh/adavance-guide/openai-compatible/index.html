@@ -1576,22 +1576,16 @@
 
 <h1 id="openai-api">OpenAI 兼容 API 模型提供商集成</h1>
 <h2 id="_1">概述</h2>
-<p>很多模型提供商都支持 <strong>OpenAI 兼容 API</strong> 的服务，例如：<a href="https://github.com/vllm-project/vllm">vLLM</a>、<a href="https://openrouter.ai/">OpenRouter</a>、<a href="https://www.together.ai/">Together AI</a> 等。本库提供了完整的 OpenAI 兼容 API 集成方案，支持对话模型和嵌入模型，特别适用于暂时没有对应的LangChain集成而提供商有提供OpenAI兼容API的场景。</p>
+<p>很多模型提供商都支持<strong>OpenAI 兼容</strong>的API服务，例如：<a href="https://github.com/vllm-project/vllm">vLLM</a>、<a href="https://openrouter.ai/">OpenRouter</a>、<a href="https://www.together.ai/">Together AI</a>等。本库提供了完整的OpenAI兼容API集成方案，支持对话模型和嵌入模型，特别适用于暂时没有对应的LangChain集成而提供商提供OpenAI兼容API的场景。</p>
 <div class="admonition tip">
 <p class="admonition-title">提示</p>
-<p>一种常见的接入 OpenAI 兼容 API 的做法是直接使用 <code>langchain-openai</code> 中的 <code>ChatOpenAI</code> 或 <code>OpenAIEmbeddings</code>，只需传入 <code>base_url</code> 与 <code>api_key</code> 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题，尤其是对于对话模型类，存在如下问题：</p>
-<ul>
-<li>
-<p>1.无法显示非OpenAI官方的推理模型的思维链(<code>reasoning_content</code>)</p>
-</li>
-<li>
-<p>2.不支持使用视频类型的content_block</p>
-</li>
-<li>
-<p>3.结构化输出默认策略覆盖率低。</p>
-</li>
-</ul>
-<p>为此，本库专门提供了此功能，用于解决上述问题。因此，如果对于比较简单的场景（尤其是是对兼容性要求低的场景）可以完全使用<code>ChatOpenAI</code>而无需使用本功能。</p>
+<p>接入 OpenAI 兼容 API 的常见做法是直接使用 <code>langchain-openai</code> 中的 <code>ChatOpenAI</code> 或 <code>OpenAIEmbeddings</code>，只需传入 <code>base_url</code> 与 <code>api_key</code> 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题，尤其是对话模型，具体包括：</p>
+<ol>
+<li>无法显示非 OpenAI 官方推理模型的思维链（<code>reasoning_content</code>）</li>
+<li>不支持视频类型的 content_block</li>
+<li>结构化输出默认策略覆盖率低</li>
+</ol>
+<p>本库提供此功能正是为了解决上述兼容性问题。对于简单场景（尤其是对兼容性要求不高的场景），可直接使用 <code>ChatOpenAI</code>，无需使用本功能。<code>OpenAIEmbeddings</code> 兼容性较好，只需将 <code>check_embedding_ctx_length</code> 设为 <code>False</code> 即可。此外，为方便开发者，我们也提供了嵌入模型的 OpenAI 兼容集成类功能。</p>
 </div>
 <h2 id="_2">创建对应的集成类</h2>
 <p>本库提供了两个工具函数，用于创建对应的对话模型集成类和嵌入模型集成类。具体为：</p>
@@ -1619,47 +1613,29 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>model_provider</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>-</td>
-<td>模型提供商名称，例如 <code>vllm</code>。</td>
+<td>模型提供商名称，例如 <code>vllm</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>模型提供商的默认API地址</td>
+<td>模型提供商的默认API地址。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>compatibility_options</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>兼容性选项配置</td>
+<td>兼容性选项配置。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>该模型提供商所提供的模型对应的profiles</td>
+<td>该模型提供商所提供的模型对应的profiles。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td><code>None</code></td>
-<td>对话模型类名，默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）</td>
+<td>对话模型类名，默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1733,41 +1709,31 @@
 <thead>
 <tr>
 <th>配置项</th>
-<th>类型</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>supported_tool_choice</code></td>
-<td><code>list[str]</code></td>
-<td><code>["auto"]</code></td>
-<td>支持的 <code>tool_choice</code> 策略列表</td>
+<td>支持的 <code>tool_choice</code> 策略列表。<br><br><strong>类型</strong>: <code>list[str]</code><br><strong>默认值</strong>: <code>["auto"]</code></td>
 </tr>
 <tr>
 <td><code>supported_response_format</code></td>
-<td><code>list[str]</code></td>
-<td><code>[]</code></td>
-<td>支持的 <code>response_format</code> 格式列表(<code>json_schema</code>、<code>json_object</code>)</td>
+<td>支持的 <code>response_format</code> 格式列表(<code>json_schema</code>、<code>json_object</code>)。<br><br><strong>类型</strong>: <code>list[str]</code><br><strong>默认值</strong>: <code>[]</code></td>
 </tr>
 <tr>
 <td><code>reasoning_keep_policy</code></td>
-<td><code>str</code></td>
-<td><code>"never"</code></td>
-<td>历史消息中 <code>reasoning_content</code> 字段的保留策略</td>
+<td>历史消息中 <code>reasoning_content</code> 字段的保留策略。<br><br><strong>类型</strong>: <code>str</code><br><strong>默认值</strong>: <code>"never"</code></td>
 </tr>
 <tr>
 <td><code>include_usage</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
-<td>是否在流式返回结果中包含 <code>usage</code> 信息</td>
+<td>是否在流式返回结果中包含 <code>usage</code> 信息。<br><br><strong>类型</strong>: <code>bool</code><br><strong>默认值</strong>: <code>True</code></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition info">
 <p class="admonition-title">补充</p>
-<p>因为同一模型提供商的不同模型对于<code>tool_choice</code>、<code>response_format</code>等参数的支持情况有所差异。故该四个兼容性选项最终会作为该类的<strong>实例属性</strong>。故创建该对话模型类时可传值作为全局默认值（代表该提供商的大部分模型支持的配置），后续如需微调，在 实例化时 中覆盖同名参数即可。</p>
+<p>由于同一模型提供商的不同模型对 <code>tool_choice</code>、<code>response_format</code> 等参数的支持情况存在差异，这四个兼容性选项为类的<strong>实例属性</strong>。因此，创建对话模型类时可以传入值作为全局默认值（代表该提供商大部分模型支持的配置），后续如需针对特定模型进行微调，可在实例化时覆盖同名参数。</p>
 </div>
 <p>对于这些配置项的详细介绍如下：</p>
 <details class="note">
@@ -1821,7 +1787,7 @@
 <li><code>json_mode</code>：是某些提供商在推出<code>json_schema</code>之前提供的一种功能，它能生成有效的 JSON，但 schema 必须在提示（prompt）中进行描述。在 OpenAI 兼容 API 中，具体为 <code>response_format={"type": "json_object"}</code>）。</li>
 </ul>
 <p>其中，<code>json_schema</code> 仅少数 OpenAI 兼容 API 提供商支持（如 <code>OpenRouter</code>、<code>TogetherAI</code>）；<code>json_mode</code> 支持度更高，多数提供商已兼容；而 <code>function_calling</code> 最为通用，只要模型支持工具调用即可使用。</p>
-<p>本参数用于声明模型提供商对于<code>response_format</code>的支持情况。默认情况下为<code>[]</code>，代表模型提供商既不支持<code>json_mode</code>也不支持<code>json_schema</code>。此时<code>with_structured_output</code>方法中的<code>method</code>参数只能传递<code>function_calling</code>，如果传递了<code>json_mode</code>或<code>json_schema</code>，则会自动被转化为<code>function_calling</code>。如果想要启用<code>json_mode</code>或者<code>json_schema</code>的结构化输出实现方式，则需要显示设置该参数。</p>
+<p>本参数用于声明模型提供商对于<code>response_format</code>的支持情况。默认情况下为<code>[]</code>，代表模型提供商既不支持<code>json_mode</code>也不支持<code>json_schema</code>。此时<code>with_structured_output</code>方法中的<code>method</code>参数只能传递<code>function_calling</code>，如果传递了<code>json_mode</code>或<code>json_schema</code>，则会自动被转化为<code>function_calling</code>。如果想要启用<code>json_mode</code>或者<code>json_schema</code>的结构化输出实现方式，则需要显式设置该参数。</p>
 <p>例如vLLM部署的模型支持<code>json_schema</code>的结构化输出方法，则可以注册的时候进行声明：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
@@ -1943,7 +1909,7 @@
 </div>
 </details>
 <h4 id="model_profiles">model_profiles参数设置</h4>
-<p>此情况下，如果要使用<code>model.profile</code>参数，则必须在创建时显式的传入。</p>
+<p>如果要使用 <code>model.profile</code> 参数，则必须在创建时显式传入。</p>
 <p>例如：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
@@ -2035,8 +2001,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>同时也支持<code>ainvoke</code>进行异步调用：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">model</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
@@ -2046,16 +2011,14 @@
 <details class="example">
 <summary>流式输出</summary>
 <p>支持<code>stream</code>进行流式输出：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div>
 <p>以及<code>astream</code>进行异步流式调用：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
@@ -2068,8 +2031,7 @@
 <p>如果模型本身支持工具调用，那么可以直接使用<code>bind_tools</code>方法进行工具调用：</p>
 <details class="example">
 <summary>工具调用</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
@@ -2089,8 +2051,7 @@
 <p>如果该模型类的<code>supported_response_format</code>参数中包含<code>json_schema</code>，则<code>with_structured_output</code> 优先使用 <code>json_schema</code>进行结构化输出，否则回退 <code>function_calling</code>；如需 <code>json_mode</code>，显式指定 <code>method="json_mode"</code> 并确保注册时包含 <code>json_mode</code>。</p>
 <details class="example">
 <summary>结构化输出</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
@@ -2109,8 +2070,7 @@
 <p>除此之外，由于该类继承了<code>BaseChatOpenAI</code>,因此支持传递<code>BaseChatOpenAI</code>的模型参数，例如<code>temperature</code>, <code>extra_body</code>等：</p>
 <details class="example">
 <summary>传递模型参数</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span><span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span> <span class="c1">#利用extra_body传递额外参数，这里是关闭思考模式</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
@@ -2124,8 +2084,7 @@
 <details class="example">
 <summary>传递多模态数据</summary>
 <p><strong>传递图片类数据</strong>：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">HumanMessage</span><span class="p">(</span>
         <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
@@ -2143,8 +2102,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>传递视频类数据</strong>：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">HumanMessage</span><span class="p">(</span>
@@ -2179,8 +2137,7 @@
     例如 vllm 支持<code>responses_api</code>，则可以这样使用：</p>
 <details class="example">
 <summary>OpenAI 最新的<code>responses_api</code></summary>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_chat_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>

@@ -1698,8 +1698,8 @@
 
 <h1 id="multi-agent-construction">Multi-Agent Construction</h1>
 <h2 id="overview">Overview</h2>
-<p>When building complex AI applications, multi-agent collaboration is a powerful architectural pattern. By assigning different responsibilities to specialized agents, you can achieve task specialization and efficient collaboration.</p>
-<p>There are multiple ways to implement multi-agent collaboration, with <strong>tool calling</strong> being a common and flexible implementation approach. By encapsulating sub-agents as tools, a main agent can dynamically delegate tasks to specialized sub-agents based on requirements.</p>
+<p>When building complex AI applications, multi-agent collaboration is a powerful architectural pattern. By assigning different responsibilities to specialized agents, specialized division of labor and efficient collaboration can be achieved.</p>
+<p>There are various ways to implement multi-agent collaboration, among which <strong>tool calling</strong> is a common and flexible approach. By encapsulating subagents as tools, a master agent can dynamically delegate tasks to specialized subagents based on requirements.</p>
 <p>This library provides two pre-built functions to simplify this implementation:</p>
 <table>
 <thead>
@@ -1715,12 +1715,12 @@
 </tr>
 <tr>
 <td><code>wrap_all_agents_as_tool</code></td>
-<td>Wraps multiple agent instances as a unified tool, specifying which sub-agent to call through parameters</td>
+<td>Wraps multiple agent instances as a unified tool, specifying which subagent to call via parameters</td>
 </tr>
 </tbody>
 </table>
 <h2 id="wrapping-a-single-agent-as-a-tool">Wrapping a Single Agent as a Tool</h2>
-<p>Wrapping a single agent requires just three steps:</p>
+<p>Wrapping a single agent involves just three steps:</p>
 <ol>
 <li>Import <code>wrap_agent_as_tool</code></li>
 <li>Pass the agent instance as a parameter</li>
@@ -1731,47 +1731,35 @@
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>agent</code></td>
-<td><code>CompiledStateGraph</code></td>
-<td>Yes</td>
-<td>Agent instance, must have a defined <code>name</code> attribute</td>
+<td>The agent instance, must have a <code>name</code> attribute defined.<br><br><strong>Type</strong>: <code>CompiledStateGraph</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>tool_name</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Tool name, defaults to <code>transfer_to_{agent_name}</code></td>
+<td>The tool name, defaults to <code>transfer_to_{agent_name}</code>.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>tool_description</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Tool description, defaults to <code>This tool transforms input to {agent_name}</code></td>
+<td>The tool description, defaults to <code>This tool transforms input to {agent_name}</code>.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>pre_input_hooks</code></td>
-<td><code>tuple</code></td>
-<td>No</td>
-<td>Hook functions to run before the agent executes</td>
+<td>Hook functions before the agent runs.<br><br><strong>Type</strong>: <code>tuple</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>post_output_hooks</code></td>
-<td><code>tuple</code></td>
-<td>No</td>
-<td>Hook functions to run after the agent executes</td>
+<td>Hook functions after the agent runs.<br><br><strong>Type</strong>: <code>tuple</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
 <h3 id="usage-example">Usage Example</h3>
-<p>Below, we'll use the <code>supervisor</code> agent as an example to demonstrate how to wrap sub-agents as tools using <code>wrap_agent_as_tool</code>.</p>
-<p>First, let's implement two sub-agents: one for sending emails and another for calendar queries and scheduling.</p>
+<p>Below, we use the <code>supervisor</code> agent as an example to introduce how to wrap subagents as tools using <code>wrap_agent_as_tool</code>.</p>
+<p>First, implement two subagents: one for sending emails and one for calendar query and scheduling.</p>
 <h4 id="email-agent">Email Agent</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
@@ -1791,17 +1779,17 @@
     <span class="n">body</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">cc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send an email through the email API. Requires properly formatted addresses.&quot;&quot;&quot;</span>
-    <span class="c1"># Stub: In a real application, this would call SendGrid, Gmail API, etc.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send emails via the Email API. Requires properly formatted addresses.&quot;&quot;&quot;</span>
+    <span class="c1"># Stub: In a real application, SendGrid, Gmail API, etc. would be called here</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Email sent to </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to</span><span class="p">)</span><span class="si">}</span><span class="s2"> - Subject: </span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
 <span class="n">EMAIL_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;You are an email assistant. &quot;</span>
-    <span class="s2">&quot;Compose professional emails based on natural language requests. &quot;</span>
+    <span class="s2">&quot;Draft professional emails based on natural language requests. &quot;</span>
     <span class="s2">&quot;Extract recipient information and create appropriate subject lines and body content. &quot;</span>
     <span class="s2">&quot;Use send_email to send the email. &quot;</span>
-    <span class="s2">&quot;Always confirm what was sent in your final response.&quot;</span>
+    <span class="s2">&quot;Always confirm what was sent in the final reply.&quot;</span>
 <span class="p">)</span>
 
 <span class="n">email_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -1821,7 +1809,7 @@
     <span class="n">location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a calendar event. Requires precise ISO date-time format.&quot;&quot;&quot;</span>
-    <span class="c1"># Stub: In a real application, this would call Google Calendar API, Outlook API, etc.</span>
+    <span class="c1"># Stub: In a real application, Google Calendar API, Outlook API, etc. would be called here</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Event created: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">start_time</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">end_time</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">attendees</span><span class="p">)</span><span class="si">}</span><span class="s2"> participants&quot;</span>
 
 
@@ -1832,16 +1820,16 @@
     <span class="n">duration_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Query calendar availability for attendees on a specific date.&quot;&quot;&quot;</span>
-    <span class="c1"># Stub: In a real application, this would query calendar APIs</span>
+    <span class="c1"># Stub: In a real application, the calendar API would be queried here</span>
     <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;09:00&quot;</span><span class="p">,</span> <span class="s2">&quot;14:00&quot;</span><span class="p">,</span> <span class="s2">&quot;16:00&quot;</span><span class="p">]</span>
 
 
 <span class="n">CALENDAR_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;You are a calendar scheduling assistant. &quot;</span>
-    <span class="s2">&quot;Parse natural language scheduling requests (e.g., &#39;next Tuesday at 2 PM&#39;) into proper ISO date-time formats. &quot;</span>
+    <span class="s2">&quot;Parse natural language scheduling requests (e.g., &#39;next Tuesday at 2 PM&#39;) into the correct ISO date-time format. &quot;</span>
     <span class="s2">&quot;Use get_available_time_slots to check availability when needed. &quot;</span>
     <span class="s2">&quot;Use create_calendar_event to schedule events. &quot;</span>
-    <span class="s2">&quot;Always confirm what was scheduled in your final response.&quot;</span>
+    <span class="s2">&quot;Always confirm what was scheduled in the final reply.&quot;</span>
 <span class="p">)</span>
 
 <span class="n">calendar_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -1851,15 +1839,15 @@
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;calendar_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Next, use <code>wrap_agent_as_tool</code> to wrap these two sub-agents as tools.</p>
+<p>Next, use <code>wrap_agent_as_tool</code> to wrap these two subagents as tools.</p>
 <div class="highlight"><pre><span></span><code><span class="n">schedule_event</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
     <span class="n">calendar_agent</span><span class="p">,</span>
     <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;schedule_event&quot;</span><span class="p">,</span>
     <span class="n">tool_description</span><span class="o">=</span><span class="p">(</span>
         <span class="s2">&quot;Schedule calendar events using natural language. &quot;</span>
-        <span class="s2">&quot;Use this when users want to create, modify, or check calendar appointments. &quot;</span>
-        <span class="s2">&quot;Capable of handling date/time parsing, querying availability, and creating events. &quot;</span>
-        <span class="s2">&quot;Input: Natural language calendar scheduling request (e.g., &#39;Meeting with design team next Tuesday at 2 PM&#39;)&quot;</span>
+        <span class="s2">&quot;Use this when the user wants to create, modify, or check calendar appointments. &quot;</span>
+        <span class="s2">&quot;Can handle date/time parsing, querying available times, and creating events. &quot;</span>
+        <span class="s2">&quot;Input: Natural language scheduling request (e.g., &#39;meeting with design team next Tuesday at 2 PM&#39;)&quot;</span>
     <span class="p">),</span>
 <span class="p">)</span>
 <span class="n">manage_email</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span>
@@ -1867,9 +1855,9 @@
     <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;manage_email&quot;</span><span class="p">,</span>
     <span class="n">tool_description</span><span class="o">=</span><span class="p">(</span>
         <span class="s2">&quot;Send emails using natural language. &quot;</span>
-        <span class="s2">&quot;Use this when users want to send notifications, reminders, or any email communication. &quot;</span>
-        <span class="s2">&quot;Capable of extracting recipient information, subject generation, and email composition. &quot;</span>
-        <span class="s2">&quot;Input: Natural language email request (e.g., &#39;Send them a meeting reminder&#39;)&quot;</span>
+        <span class="s2">&quot;Use this when the user wants to send notifications, reminders, or any email communication. &quot;</span>
+        <span class="s2">&quot;Capable of extracting recipient info, subject generation, and email drafting. &quot;</span>
+        <span class="s2">&quot;Input: Natural language email request (e.g., &#39;send them a meeting reminder&#39;)&quot;</span>
     <span class="p">),</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -1877,8 +1865,8 @@
 <div class="highlight"><pre><span></span><code><span class="n">SUPERVISOR_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;You are a helpful personal assistant. &quot;</span>
     <span class="s2">&quot;You can schedule calendar events and send emails. &quot;</span>
-    <span class="s2">&quot;Break down user requests into appropriate tool calls and coordinate the results. &quot;</span>
-    <span class="s2">&quot;When a request involves multiple operations, use multiple tools sequentially.&quot;</span>
+    <span class="s2">&quot;Break down user requests into appropriate tool calls and coordinate results. &quot;</span>
+    <span class="s2">&quot;When a request involves multiple operations, please use multiple tools sequentially.&quot;</span>
 <span class="p">)</span>
 
 
@@ -1889,20 +1877,20 @@
 <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span>
-    <span class="n">supervisor_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Check available time for tomorrow&quot;</span><span class="p">)]})</span>
+    <span class="n">supervisor_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Query free time for tomorrow&quot;</span><span class="p">)]})</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="n">supervisor_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Send a meeting reminder to test@123.com&quot;</span><span class="p">)]}</span>
+        <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Send an email meeting reminder to test@123.com&quot;</span><span class="p">)]}</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>In the example above, we imported the <code>create_agent</code> function from <code>langchain_dev_utils.agents</code> instead of <code>langchain.agents</code>. This is because this library also provides a function with exactly the same functionality as the official <code>create_agent</code> function, but with the added ability to specify models through strings. This allows direct use of models registered with <code>register_model_provider</code> without needing to initialize model instances first.</p>
+<p>In the example above, we imported <code>create_agent</code> from <code>langchain_dev_utils.agents</code> instead of <code>langchain.agents</code>. This is because this library also provides a function with exactly the same functionality as the official <code>create_agent</code>, but with the added capability to specify models via strings. This allows direct use of models registered via <code>register_model_provider</code> without needing to initialize and pass in model instances.</p>
 </div>
 <h2 id="wrapping-multiple-agents-as-a-single-tool">Wrapping Multiple Agents as a Single Tool</h2>
-<p>Wrapping multiple agents as a single tool requires just three steps:</p>
+<p>Wrapping multiple agents as a single tool involves just three steps:</p>
 <ol>
 <li>Import <code>wrap_all_agents_as_tool</code></li>
 <li>Pass multiple agent instances as a list at once</li>
@@ -1913,62 +1901,50 @@
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>agents</code></td>
-<td><code>list[CompiledStateGraph]</code></td>
-<td>Yes</td>
-<td>List of agent instances</td>
+<td>List of agent instances.<br><br><strong>Type</strong>: <code>list[CompiledStateGraph]</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>tool_name</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Tool name, defaults to <code>task</code></td>
+<td>The tool name, defaults to <code>task</code>.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>tool_description</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Tool description, defaults to include information about all available agents</td>
+<td>The tool description, defaults to containing information about all available agents.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>pre_input_hooks</code></td>
-<td><code>tuple</code></td>
-<td>No</td>
-<td>Hook functions to run before agents execute</td>
+<td>Hook functions before the agent runs.<br><br><strong>Type</strong>: <code>tuple</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>post_output_hooks</code></td>
-<td><code>tuple</code></td>
-<td>No</td>
-<td>Hook functions to run after agents execute</td>
+<td>Hook functions after the agent runs.<br><br><strong>Type</strong>: <code>tuple</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
 <h3 id="usage-example_1">Usage Example</h3>
-<p>For the <code>calendar_agent</code> and <code>email_agent</code> from the previous example, we can wrap them as a single tool <code>call_subagent</code>:</p>
+<p>For the <code>calendar_agent</code> and <code>email_agent</code> from the previous example, we can wrap them into a single tool <code>call_subagent</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">call_subagent_tool</span> <span class="o">=</span> <span class="n">wrap_all_agents_as_tool</span><span class="p">(</span>
     <span class="p">[</span><span class="n">calendar_agent</span><span class="p">,</span> <span class="n">email_agent</span><span class="p">],</span>
     <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;call_subagent&quot;</span><span class="p">,</span>
     <span class="n">tool_description</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;Call sub-agents to perform tasks. &quot;</span>
-        <span class="s2">&quot;Available agents: &quot;</span>
-        <span class="s2">&quot;- calendar_agent: For scheduling calendar events&quot;</span>
-        <span class="s2">&quot;- email_agent: For sending emails&quot;</span>
+        <span class="s2">&quot;Call subagents to execute tasks. &quot;</span>
+        <span class="s2">&quot;Available agents are: &quot;</span>
+        <span class="s2">&quot;- calendar_agent: for scheduling calendar events&quot;</span>
+        <span class="s2">&quot;- email_agent: for sending emails&quot;</span>
     <span class="p">),</span>
 <span class="p">)</span>
 
 <span class="n">MAIN_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;You are a helpful personal assistant. &quot;</span>
-    <span class="s2">&quot;You can use the **call_subagent** tool to call sub-agents to perform tasks. &quot;</span>
-    <span class="s2">&quot;Break down user requests into appropriate tool calls and coordinate the results. &quot;</span>
-    <span class="s2">&quot;When a request involves multiple operations, use multiple tools sequentially.&quot;</span>
+    <span class="s2">&quot;You can use the **call_subagent** tool to call subagents to execute tasks. &quot;</span>
+    <span class="s2">&quot;Break down user requests into appropriate tool calls and coordinate results. &quot;</span>
+    <span class="s2">&quot;When a request involves multiple operations, please use multiple tools sequentially.&quot;</span>
 <span class="p">)</span>
 
 <span class="n">main_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -1979,12 +1955,12 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>Besides using the <code>wrap_all_agents_as_tool</code> provided by this library to wrap multiple agents as a single tool, you can also use the <code>SubAgentMiddleware</code> middleware provided by the <code>deepagents</code> library to achieve similar effects.</p>
+<p>In addition to using <code>wrap_all_agents_as_tool</code> provided by this library to wrap multiple agents into a single tool, you can also use the <code>SubAgentMiddleware</code> middleware provided by the <code>deepagents</code> library to achieve a similar effect.</p>
 </div>
 <h2 id="hook-functions">Hook Functions</h2>
-<p>This library has a built-in flexible hook mechanism that allows inserting custom logic before and after sub-agent execution. This mechanism applies to both <code>wrap_agent_as_tool</code> and <code>wrap_all_agents_as_tool</code>. The following section uses <code>wrap_agent_as_tool</code> as an example for explanation.</p>
+<p>This library has a built-in flexible hook mechanism that allows inserting custom logic before and after subagent execution. This mechanism applies to both <code>wrap_agent_as_tool</code> and <code>wrap_all_agents_as_tool</code>. The following section uses <code>wrap_agent_as_tool</code> as an example for illustration.</p>
 <h3 id="1-pre_input_hooks">1. pre_input_hooks</h3>
-<p>Preprocess the input before the agent runs. Can be used for input enhancement, context injection, format validation, permission checking, etc.</p>
+<p>Preprocess the input before the agent runs. Useful for input augmentation, context injection, format validation, permission checks, etc.</p>
 <h4 id="supported-input-types">Supported Input Types</h4>
 <table>
 <thead>
@@ -1996,23 +1972,23 @@
 <tbody>
 <tr>
 <td>Single synchronous function</td>
-<td>Used for both synchronous (<code>invoke</code>) and asynchronous (<code>ainvoke</code>) call paths (will not be <code>awaited</code> in the async path, called directly)</td>
+<td>Used for both synchronous (<code>invoke</code>) and asynchronous (<code>ainvoke</code>) call paths (it will be called directly in the async path without <code>await</code>)</td>
 </tr>
 <tr>
 <td>Binary tuple <code>(sync_func, async_func)</code></td>
-<td>The first function is used for the synchronous call path; the second function (must be <code>async def</code>) is used for the asynchronous call path and will be <code>awaited</code></td>
+<td>The first function is for the synchronous call path; the second function (must be <code>async def</code>) is for the asynchronous call path and will be <code>await</code>ed</td>
 </tr>
 </tbody>
 </table>
 <h4 id="function-signature">Function Signature</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pre_input_hook</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parameters:</span>
-<span class="sd">        request: Original tool call input</span>
-<span class="sd">        runtime: LangChain&#39;s ToolRuntime</span>
+<span class="sd">    Args:</span>
+<span class="sd">        request: The original tool call input</span>
+<span class="sd">        runtime: langchain&#39;s ToolRuntime</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Processed str, as the actual input to the agent</span>
+<span class="sd">        The processed str, serving as the actual input for the agent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 </code></pre></div>
 <h4 id="usage-example_2">Usage Example</h4>
@@ -2031,10 +2007,10 @@
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>The above example is relatively simple. In practice, you can add more complex logic based on the <code>state</code> or <code>context</code> within <code>runtime</code>.</p>
+<p>The example above is relatively simple. In practice, you can add more complex logic based on the <code>state</code> or <code>context</code> within <code>runtime</code>.</p>
 </div>
 <h3 id="2-post_output_hooks">2. post_output_hooks</h3>
-<p>After the agent completes execution, post-process the complete message list it returns to generate the final return value of the tool. Can be used for result extraction, structured transformation, etc.</p>
+<p>Post-process the complete list of messages returned by the agent after it finishes running to generate the final return value of the tool. Useful for result extraction, structured transformation, etc.</p>
 <h4 id="supported-input-types_1">Supported Input Types</h4>
 <table>
 <thead>
@@ -2046,21 +2022,21 @@
 <tbody>
 <tr>
 <td>Single function</td>
-<td>Used for both synchronous and asynchronous paths (will not be <code>awaited</code> in the async path)</td>
+<td>Used for both synchronous and asynchronous paths (it will not be <code>await</code>ed in the async path)</td>
 </tr>
 <tr>
 <td>Binary tuple <code>(sync_func, async_func)</code></td>
-<td>The first is used for the synchronous path; the second (<code>async def</code>) is used for the asynchronous path and will be <code>awaited</code></td>
+<td>The first is for the synchronous path; the second (<code>async def</code>) is for the asynchronous path and will be <code>await</code>ed</td>
 </tr>
 </tbody>
 </table>
 <h4 id="function-signature_1">Function Signature</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">post_output_hook</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Command</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parameters:</span>
-<span class="sd">        request: (Possibly processed) original input</span>
-<span class="sd">        messages: Complete message history returned by the agent (from response[&quot;messages&quot;])</span>
-<span class="sd">        runtime: LangChain&#39;s ToolRuntime</span>
+<span class="sd">    Args:</span>
+<span class="sd">        request: The original input (possibly processed)</span>
+<span class="sd">        messages: The complete message history returned by the agent (from response[&quot;messages&quot;])</span>
+<span class="sd">        runtime: langchain&#39;s ToolRuntime</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A value that can be serialized to a string, or a Command object</span>
@@ -2087,12 +2063,12 @@
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>The above example is relatively simple. In practice, you can add more complex logic based on the <code>state</code> or <code>context</code> within <code>runtime</code>.</p>
+<p>The example above is relatively simple. In practice, you can add more complex logic based on the <code>state</code> or <code>context</code> within <code>runtime</code>.</p>
 </div>
 <h3 id="default-behavior">Default Behavior</h3>
 <ul>
-<li>If <code>pre_input_hooks</code> is not provided, the input is passed through as is</li>
-<li>If <code>post_output_hooks</code> is not provided, it defaults to returning <code>response["messages"][-1].content</code> (i.e., the text content of the last message)</li>
+<li>If <code>pre_input_hooks</code> is not provided, the input is passed through as-is.</li>
+<li>If <code>post_output_hooks</code> is not provided, it defaults to returning <code>response["messages"][-1].content</code> (i.e., the text content of the last message).</li>
 </ul>
 
 
