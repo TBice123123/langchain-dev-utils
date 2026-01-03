@@ -297,12 +297,9 @@ print(model.invoke("你好"))
 
 ??? note "4. include_usage"
 
-    `include_usage` 是 OpenAI 兼容 API 中的一个参数，用于控制是否在流式响应的末尾附加一条包含 token 使用情况（如 `prompt_tokens` 和 `completion_tokens`）的消息。由于标准流式响应默认不返回用量信息，启用该选项后，客户端可直接获取完整的 token 消耗数据，便于计费、监控或日志记录。
+    控制是否在流式响应末尾附加 token 使用情况（`prompt_tokens` 和 `completion_tokens`）。
 
-    通常通过 `stream_options={"include_usage": true}` 启用。考虑到有些模型提供商不支持该参数（或者不希望开启该token使用情况记录功能），因此本库将其设为兼容性选项，默认值为 `True`，因为绝大多数模型提供商均支持该参数，如果不支持，则可以显式设为 `False`。
-
-    !!! info "提示"
-        此参数一般无需设置，保持默认值即可。只有在模型提供商不支持时(或者不希望开启该token使用情况记录功能)，才需要设置为 `False`。
+    对于OpenAI兼容的API，一般是通过 `stream_options={"include_usage": true}` 设置，因此只有支持 `stream_options` 参数的提供商才能使用。默认值为 `True`，如遇到不支持的提供商，或不希望记录 token 使用情况，可显式设为 `False`。
 
 
 #### model_profiles参数设置

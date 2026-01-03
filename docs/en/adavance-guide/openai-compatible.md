@@ -291,12 +291,10 @@ Detailed introduction to these configuration items:
 
 ??? note "4. include_usage"
 
-    `include_usage` is a parameter in OpenAI-compatible API used to control whether to append a message containing token usage information (such as `prompt_tokens` and `completion_tokens`) at the end of streaming responses. Since standard streaming responses don't return usage information by default, enabling this option allows clients to directly obtain complete token consumption data for billing, monitoring, or logging.
+    Controls whether to append token usage information (`prompt_tokens` and `completion_tokens`) at the end of streaming responses.
 
-    Usually enabled through `stream_options={"include_usage": true}`. Considering that some model providers don't support this parameter (or don't want to enable this token usage recording feature), this library makes it a compatibility option with a default value of `True`, because most model providers support this parameter. If not supported, it can be explicitly set to `False`.
+    For OpenAI-compatible APIs, this is typically set via `stream_options={"include_usage": true}`, so only providers that support the `stream_options` parameter can use it. The default value is `True`, and if you encounter a provider that does not support it, or if you do not want to record token usage, you can explicitly set it to `False`.
 
-    !!! info "Tip"
-        This parameter generally doesn't need to be set, just keep the default value. Only set to `False` when the model provider doesn't support it(or doesn't want to enable this token usage recording feature).
 
 #### model_profiles Parameter Setting
 

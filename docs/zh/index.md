@@ -29,7 +29,13 @@
     
     ---
     
-    通过字符串指定模型提供商，轻松切换和组合不同模型
+    通过字符串指定模型提供商，轻松切换和组合不同模型。
+
+-    :fontawesome-solid-code: __内置OpenAI-Compatible集成类__
+    
+    ---
+    
+    内置 OpenAI-Compatible API集成类，可通过显式配置，提升模型兼容性。
     
 -   :material-message-fast: __灵活的消息处理__
     

@@ -1,22 +1,25 @@
 # 🦜️🧰 langchain-dev-utils
 
 <p align="center">
-    <em>🚀 A high-efficiency toolkit designed specifically for LangChain and LangGraph developers</em>
+    <em>🚀 An efficient toolkit designed specifically for LangChain and LangGraph developers</em>
 </p>
+
 
 [![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
 [![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
 
+
 ## Why choose langchain-dev-utils?
 
-Tired of writing repetitive code in LangChain development? `langchain-dev-utils` is exactly the solution you need! This lightweight yet powerful toolkit is designed specifically to enhance the development experience of LangChain and LangGraph, helping you:
+Tired of writing repetitive code in LangChain development? `langchain-dev-utils` is exactly the solution you need! This lightweight yet powerful toolkit is designed to enhance the development experience of LangChain and LangGraph, helping you:
 
-- **Improve development efficiency** - Reduce boilerplate code, allowing you to focus on core functionality
-- **Simplify complex processes** - Easily manage multi-model, multi-tool, and multi-agent applications
-- **Enhance code quality** - Improve consistency and readability, reducing maintenance costs
+- **Boost development efficiency** - Reduce boilerplate code, allowing you to focus on core functionality
+- **Simplify complex workflows** - Easily manage multi-model, multi-tool, and multi-agent applications
+- **Enhance code quality** - Improve consistency and readability, reduce maintenance costs
 - **Accelerate prototype development** - Quickly implement ideas, iterate and validate faster
+
 
 ## Core Features
 
@@ -26,33 +29,40 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
     
     ---
     
-    Easily switch and combine different models by specifying model providers through strings
+    Specify model providers through strings, easily switch and combine different models.
+
+-    :fontawesome-solid-code: __Built-in OpenAI-Compatible Integration Class__
+    
+    ---
+    
+    Built-in OpenAI-Compatible API integration class, improving model compatibility through explicit configuration.
     
 -   :material-message-fast: __Flexible Message Processing__
     
     ---
     
-    Support chain-of-thought concatenation, streaming processing, and message formatting
+    Supports chain-of-thought concatenation, streaming processing, and message formatting
     
--   :material-tools: __Powerful Tool Invocation__
+-   :material-tools: __Powerful Tool Calling__
     
     ---
     
-    Built-in tool invocation detection, parameter parsing, and manual review features    
+    Built-in tool calling detection, parameter parsing, and human review functions
     
 -   :material-robot: __Efficient Agent Development__
     
     ---
     
-    Simplify the agent creation process and expand more common middleware
+    Simplifies the agent creation process and expands more common middleware
     
 -   :octicons-ai-model-16: __Flexible State Graph Composition__
     
     ---
     
-    Support serial and parallel composition of multiple StateGraphs
+    Supports combining multiple StateGraphs in serial and parallel ways
 
 </div>
+
 
 ## Quick Start
 
@@ -88,6 +98,7 @@ agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
 response = agent.invoke({"messages": [HumanMessage(content="What's the weather like in New York today?")]})
 print(response)
 ```
+
 
 ## GitHub Repository
 
