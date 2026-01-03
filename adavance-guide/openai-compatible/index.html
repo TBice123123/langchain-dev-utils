@@ -895,10 +895,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-chat-model-class" class="md-nav__link">
+  <a href="#using-chat-model-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Chat Model Class
+        Using Chat Model Classes
       
     </span>
   </a>
@@ -906,10 +906,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-embedding-model-class" class="md-nav__link">
+  <a href="#using-embedding-model-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Embedding Model Class
+        Using Embedding Model Classes
       
     </span>
   </a>
@@ -922,15 +922,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-with-model-management-functionality" class="md-nav__link">
+  <a href="#integration-with-model-management-feature" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integration with Model Management Functionality
+        Integration with Model Management Feature
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Integration with Model Management Functionality">
+    <nav class="md-nav" aria-label="Integration with Model Management Feature">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1489,10 +1489,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-chat-model-class" class="md-nav__link">
+  <a href="#using-chat-model-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Chat Model Class
+        Using Chat Model Classes
       
     </span>
   </a>
@@ -1500,10 +1500,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-embedding-model-class" class="md-nav__link">
+  <a href="#using-embedding-model-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Embedding Model Class
+        Using Embedding Model Classes
       
     </span>
   </a>
@@ -1516,15 +1516,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-with-model-management-functionality" class="md-nav__link">
+  <a href="#integration-with-model-management-feature" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integration with Model Management Functionality
+        Integration with Model Management Feature
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Integration with Model Management Functionality">
+    <nav class="md-nav" aria-label="Integration with Model Management Feature">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1576,16 +1576,16 @@
 
 <h1 id="openai-compatible-api-model-provider-integration">OpenAI Compatible API Model Provider Integration</h1>
 <h2 id="overview">Overview</h2>
-<p>Many model providers support <strong>OpenAI compatible</strong> API services, such as: <a href="https://github.com/vllm-project/vllm">vLLM</a>, <a href="https://openrouter.ai/">OpenRouter</a>, <a href="https://www.together.ai/">Together AI</a>, etc. This library provides a complete OpenAI compatible API integration solution, supporting both chat models and embedding models, especially suitable for scenarios where there is no corresponding LangChain integration yet but the provider offers an OpenAI compatible API.</p>
+<p>Many model providers support <strong>OpenAI-compatible</strong> API services, such as: <a href="https://github.com/vllm-project/vllm">vLLM</a>, <a href="https://openrouter.ai/">OpenRouter</a>, <a href="https://www.together.ai/">Together AI</a>, etc. This library provides a complete OpenAI-compatible API integration solution, supporting both chat models and embedding models. It is particularly suitable for scenarios where there is no corresponding LangChain integration yet but the provider offers an OpenAI-compatible API.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>The common approach to integrate with OpenAI compatible APIs is to directly use <code>ChatOpenAI</code> or <code>OpenAIEmbeddings</code> from <code>langchain-openai</code>, simply by passing in <code>base_url</code> and <code>api_key</code>. However, this approach only works for simple scenarios and has many compatibility issues, especially for chat models, including:</p>
+<p>The common approach to integrate OpenAI-compatible APIs is to directly use <code>ChatOpenAI</code> or <code>OpenAIEmbeddings</code> from <code>langchain-openai</code>, simply by passing <code>base_url</code> and <code>api_key</code>. However, this approach only works for simple scenarios and has many compatibility issues, especially with chat models, including:</p>
 <ol>
-<li>Unable to display reasoning content (<code>reasoning_content</code>) from non-OpenAI official inference models</li>
+<li>Inability to display reasoning chains (<code>reasoning_content</code>) from non-OpenAI official inference models</li>
 <li>No support for video type content_block</li>
 <li>Low coverage rate for default structured output strategies</li>
 </ol>
-<p>This library provides this functionality to solve the above compatibility issues. For simple scenarios (especially those with low compatibility requirements), you can directly use <code>ChatOpenAI</code> without using this feature. <code>OpenAIEmbeddings</code> has good compatibility, just set <code>check_embedding_ctx_length</code> to <code>False</code>. Additionally, for developers' convenience, we also provide embedding model OpenAI compatible integration class functionality.</p>
+<p>This library provides this functionality to address the above compatibility issues. For simple scenarios (especially those with low compatibility requirements), you can directly use <code>ChatOpenAI</code> without using this feature. <code>OpenAIEmbeddings</code> has good compatibility, just set <code>check_embedding_ctx_length</code> to <code>False</code>. Additionally, for developers' convenience, we also provide embedding model OpenAI-compatible integration class functionality.</p>
 </div>
 <h2 id="creating-corresponding-integration-classes">Creating Corresponding Integration Classes</h2>
 <p>This library provides two utility functions for creating corresponding chat model integration classes and embedding model integration classes. Specifically:</p>
@@ -1607,8 +1607,12 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The two utility functions provided by this library are inspired by the third-party library <a href="https://ai-sdk.dev/providers/openai-compatible-providers">ai-sdk/openai-compatible</a> in the JavaScript ecosystem.</p>
+</div>
 <h3 id="creating-chat-model-class">Creating Chat Model Class</h3>
-<p>You can use the <code>create_openai_compatible_model</code> function to create a chat model integration class. This function accepts the following parameters:</p>
+<p>Using the <code>create_openai_compatible_model</code> function, you can create a chat model integration class. This function accepts the following parameters:</p>
 <table>
 <thead>
 <tr>
@@ -1631,7 +1635,7 @@
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td>Profiles corresponding to the models provided by this model provider.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
+<td>Profiles corresponding to models provided by this model provider.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
@@ -1639,22 +1643,22 @@
 </tr>
 </tbody>
 </table>
-<p>This library builds a chat model class corresponding to a specific provider using the built-in <code>BaseChatOpenAICompatible</code> class based on the above parameters passed by the user. This class inherits from <code>BaseChatOpenAI</code> of <code>langchain-openai</code> and enhances the following capabilities:</p>
+<p>This library builds a chat model class corresponding to a specific provider using the built-in <code>BaseChatOpenAICompatible</code> class based on the parameters provided by the user. This class inherits from <code>BaseChatOpenAI</code> of <code>langchain-openai</code> and enhances the following capabilities:</p>
 <ul>
 <li><strong>Support for more formats of reasoning content</strong>: Compared to <code>ChatOpenAI</code> which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., <code>vLLM</code>).</li>
-<li><strong>Support for <code>video</code> type content_block</strong>: <code>ChatOpenAI</code> cannot convert <code>type=video</code> <code>content_block</code>, this implementation has added support.</li>
-<li><strong>Dynamically adapt and select the most suitable structured output method</strong>: By default, it can automatically select the optimal structured output method (<code>function_calling</code> or <code>json_schema</code>) based on the actual support of the model provider.</li>
-<li><strong>Fine-tune differences through compatibility_options</strong>: By configuring provider compatibility options, resolve support differences for parameters such as <code>tool_choice</code>, <code>response_format</code>, etc.</li>
+<li><strong>Support for <code>video</code> type content_block</strong>: <code>ChatOpenAI</code> cannot convert <code>type=video</code> <code>content_block</code>, which this implementation has completed support for.</li>
+<li><strong>Dynamic adaptation and selection of the most suitable structured output method</strong>: By default, it can automatically select the optimal structured output method (<code>function_calling</code> or <code>json_schema</code>) based on the actual support of the model provider.</li>
+<li><strong>Fine-tuning differences through compatibility_options</strong>: By configuring provider compatibility options, resolve support differences for parameters like <code>tool_choice</code>, <code>response_format</code>, etc.</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>When using this feature, you must install the standard version of the <code>langchain-dev-utils</code> library. Please refer to the installation section for details.</p>
+<p>When using this feature, you must install the standard version of the <code>langchain-dev-utils</code> library. For details, refer to the installation section.</p>
 </div>
 <h4 id="code-example">Code Example</h4>
-<p>We take integrating vLLM as an example to show how to use the <code>create_openai_compatible_model</code> function to create a chat model integration class.</p>
+<p>We'll use the integration of vLLM as an example to show how to use the <code>create_openai_compatible_model</code> function to create a chat model integration class.</p>
 <div class="admonition note">
 <p class="admonition-title">Additional Information</p>
-<p>vLLM is a commonly used large model inference framework that can deploy large models as OpenAI compatible APIs, such as Qwen3-4B in this example:</p>
+<p>vLLM is a commonly used large model inference framework that can deploy large models as OpenAI-compatible APIs, such as Qwen3-4B in this example:</p>
 <p><div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
 --reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
 --enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
@@ -1675,7 +1679,7 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p>It's worth noting that when creating a chat model class, the <code>base_url</code> parameter can be omitted. If not passed, this library will read the corresponding environment variable by default. For example:</p>
+<p>It's worth noting that when creating a chat model class, the <code>base_url</code> parameter can be omitted. If not passed, the library will default to reading the corresponding environment variable. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
 </code></pre></div>
 <p>In this case, the code can omit the <code>base_url</code> parameter:</p>
@@ -1689,10 +1693,10 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><strong>Note</strong>: The prerequisite for the above code to run successfully is that you have set the <code>VLLM_API_KEY</code> environment variable. Although vLLM does not require passing an API Key, the chat model class initialization requires an API Key.</p>
+<p><strong>Note</strong>: The prerequisite for the above code to run successfully is that you have set the <code>VLLM_API_KEY</code> environment variable. Although vLLM doesn't require an API Key, the chat model class initialization needs an API Key.</p>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>Naming rules for environment variables of the created chat model class:</p>
+<p>Naming rules for environment variables of the created chat model class (embedding model class also follows this naming rule):</p>
 <ul>
 <li>
 <p>API address: <code>${PROVIDER_NAME}_API_BASE</code> (all uppercase, separated by underscores).</p>
@@ -1703,7 +1707,7 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </ul>
 </div>
 <h4 id="compatibility-parameters">Compatibility Parameters</h4>
-<p><code>compatibility_options</code> is a dictionary used to declare the provider's support for some features of the OpenAI API to improve compatibility and stability.</p>
+<p><code>compatibility_options</code> is a dictionary used to declare the provider's support for certain features of the OpenAI API to improve compatibility and stability.</p>
 <p>Currently supported configuration items:</p>
 <table>
 <thead>
@@ -1723,7 +1727,7 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </tr>
 <tr>
 <td><code>reasoning_keep_policy</code></td>
-<td>Retention policy for the <code>reasoning_content</code> field in historical messages.<br><br><strong>Type</strong>: <code>str</code><br><strong>Default Value</strong>: <code>"never"</code></td>
+<td>Retention policy for <code>reasoning_content</code> field in historical messages.<br><br><strong>Type</strong>: <code>str</code><br><strong>Default Value</strong>: <code>"never"</code></td>
 </tr>
 <tr>
 <td><code>include_usage</code></td>
@@ -1733,23 +1737,23 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </table>
 <div class="admonition info">
 <p class="admonition-title">Additional Information</p>
-<p>Since different models from the same model provider have different support for parameters such as <code>tool_choice</code> and <code>response_format</code>, these four compatibility options are <strong>instance attributes</strong> of the class. Therefore, when creating a chat model class, values can be passed in as global defaults (representing the configuration supported by most models of this provider). If fine-tuning is needed for specific models later, the same-named parameters can be overridden during instantiation.</p>
+<p>Since different models from the same provider may have different support for parameters like <code>tool_choice</code>, <code>response_format</code>, etc., these four compatibility options are <strong>instance attributes</strong> of the class. Therefore, when creating a chat model class, values can be passed as global defaults (representing the configuration supported by most models of this provider). If fine-tuning is needed for specific models later, the same parameters can be overridden during instantiation.</p>
 </div>
-<p>Detailed introductions to these configuration items are as follows:</p>
+<p>Detailed introduction to these configuration items:</p>
 <details class="note">
 <summary>1. supported_tool_choice</summary>
-<p><code>tool_choice</code> is used to control whether and which external tools the large model calls during responses to improve accuracy, reliability, and controllability. Common values include:</p>
+<p><code>tool_choice</code> is used to control whether and which external tools the large model calls during response to improve accuracy, reliability, and controllability. Common values include:</p>
 <ul>
-<li><code>"auto"</code>: The model autonomously decides whether to call tools (default behavior);</li>
-<li><code>"none"</code>: Prohibit calling tools;</li>
+<li><code>"auto"</code>: Model autonomously decides whether to call tools (default behavior);</li>
+<li><code>"none"</code>: Prohibit tool calling;</li>
 <li><code>"required"</code>: Force calling at least one tool;</li>
-<li>Specify a specific tool (in OpenAI compatible API, specifically <code>{"type": "function", "function": {"name": "xxx"}}</code>).</li>
+<li>Specify a specific tool (in OpenAI-compatible API, specifically <code>{"type": "function", "function": {"name": "xxx"}}</code>).</li>
 </ul>
-<p>Different providers support different ranges. To avoid errors, this library defaults <code>supported_tool_choice</code> to <code>["auto"]</code>, which means when using <code>bind_tools</code>, the <code>tool_choice</code> parameter can only be passed as <code>auto</code>, and other values will be filtered out.</p>
-<p>If you need to support passing other <code>tool_choice</code> values, you must configure the supported items. The configuration value is a list of strings, with each optional value being:</p>
+<p>Different providers support different ranges. To avoid errors, this library defaults <code>supported_tool_choice</code> to <code>["auto"]</code>, meaning when <code>bind_tools</code>, the <code>tool_choice</code> parameter can only be passed as <code>auto</code>, and other values will be filtered out.</p>
+<p>To support passing other <code>tool_choice</code> values, you must configure the supported items. The configuration value is a list of strings, with optional values for each string:</p>
 <ul>
 <li><code>"auto"</code>, <code>"none"</code>, <code>"required"</code>: Corresponding to standard strategies;</li>
-<li><code>"specific"</code>: A unique identifier in this library, indicating support for specifying a specific tool.</li>
+<li><code>"specific"</code>: Unique identifier for this library, indicating support for specifying specific tools.</li>
 </ul>
 <p>For example, vLLM supports all strategies:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
@@ -1766,16 +1770,16 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>If there are no special requirements, you can keep the default (i.e., <code>["auto"]</code>). If business scenarios require the model to <strong>must call a specific tool</strong> or <strong>select one from a given list</strong>, and the model provider supports the corresponding strategy, enable as needed:</p>
+<p>If no special requirements, keep the default (i.e., <code>["auto"]</code>). If business scenarios require the model to <strong>must call specific tools</strong> or <strong>select from a given list</strong>, and the model provider supports the corresponding strategy, enable as needed:</p>
 <ol>
 <li>
-<p>If you require <strong>at least one tool</strong> to be called and the model provider supports <code>required</code>, you can set it to <code>["required"]</code> (at the same time, when calling <code>bind_tools</code>, you need to explicitly pass <code>tool_choice="required"</code>)</p>
+<p>If requiring <strong>at least one</strong> tool call, and the model provider supports <code>required</code>, it can be set to <code>["required"]</code> (and when calling <code>bind_tools</code>, you need to explicitly pass <code>tool_choice="required"</code>)</p>
 </li>
 <li>
-<p>If you require <strong>calling a specific</strong> tool and the model provider supports specifying a specific tool call, you can set it to <code>["specific"]</code> (in <code>function_calling</code> structured output, this configuration is very useful to ensure the model calls the specified structured output tool to ensure the stability of structured output. Because in the <code>with_structured_output</code> method, its internal implementation will pass in <strong>a <code>tool_choice</code> value that can force calling the specified tool</strong> when calling <code>bind_tools</code>, but if <code>"specific"</code> is not in <code>supported_tool_choice</code>, this parameter will be filtered out. Therefore, if you want to ensure that <code>tool_choice</code> can be passed normally, you must add <code>"specific"</code> to <code>supported_tool_choice</code>.)</p>
+<p>If requiring to call a <strong>specified</strong> tool, and the model provider supports specifying a specific tool call, it can be set to <code>["specific"]</code> (in <code>function_calling</code> structured output, this configuration is very useful to ensure the model calls the specified structured output tool to guarantee the stability of structured output. Because in the <code>with_structured_output</code> method, its internal implementation will pass a <code>tool_choice</code> value that <strong>forces the call to the specified tool</strong> when calling <code>bind_tools</code>, but if <code>"specific"</code> is not in <code>supported_tool_choice</code>, this parameter will be filtered out. Therefore, to ensure <code>tool_choice</code> can be passed normally, <code>"specific"</code> must be added to <code>supported_tool_choice</code>.)</p>
 </li>
 </ol>
-<p>This parameter can be set uniformly when creating, or can be dynamically overridden for a single model during instantiation; it is recommended to declare the <code>tool_choice</code> support situation for most models of this provider when creating, and for some models with different support situations, specify separately during instantiation.</p>
+<p>This parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; it's recommended to declare the <code>tool_choice</code> support for most models of this provider during creation, and for models with different support, specify separately during instantiation.</p>
 </div>
 </details>
 <details class="note">
@@ -1783,11 +1787,11 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 <p>Currently, there are three common methods for structured output.</p>
 <ul>
 <li><code>function_calling</code>: Generate structured output by calling a tool that conforms to a specified schema.</li>
-<li><code>json_schema</code>: A feature provided by the model provider specifically for generating structured output, in OpenAI compatible API, specifically <code>response_format={"type": "json_schema", "json_schema": {...}}</code>.</li>
-<li><code>json_mode</code>: A feature provided by some providers before they launched <code>json_schema</code>, which can generate valid JSON, but the schema must be described in the prompt. In OpenAI compatible API, specifically <code>response_format={"type": "json_object"}</code>).</li>
+<li><code>json_schema</code>: A feature provided by the model provider specifically for generating structured output, in OpenAI-compatible API, specifically <code>response_format={"type": "json_schema", "json_schema": {...}}</code>.</li>
+<li><code>json_mode</code>: A feature provided by some providers before launching <code>json_schema</code> that can generate valid JSON, but the schema must be described in the prompt. In OpenAI-compatible API, specifically <code>response_format={"type": "json_object"}</code>).</li>
 </ul>
-<p>Among them, <code>json_schema</code> is supported by only a few OpenAI compatible API providers (such as <code>OpenRouter</code>, <code>TogetherAI</code>); <code>json_mode</code> has higher support and is compatible with most providers; while <code>function_calling</code> is the most universal, as long as the model supports tool calls, it can be used.</p>
-<p>This parameter is used to declare the model provider's support for <code>response_format</code>. By default, it is <code>[]</code>, which means the model provider supports neither <code>json_mode</code> nor <code>json_schema</code>. In this case, the <code>method</code> parameter in the <code>with_structured_output</code> method can only be passed as <code>function_calling</code>. If <code>json_mode</code> or <code>json_schema</code> is passed, it will be automatically converted to <code>function_calling</code>. If you want to enable <code>json_mode</code> or <code>json_schema</code> structured output implementation, you need to explicitly set this parameter.</p>
+<p>Among these, <code>json_schema</code> is supported by only a few OpenAI-compatible API providers (such as <code>OpenRouter</code>, <code>TogetherAI</code>); <code>json_mode</code> has higher support and is compatible with most providers; while <code>function_calling</code> is the most universal, usable as long as the model supports tool calling.</p>
+<p>This parameter is used to declare the model provider's support for <code>response_format</code>. By default, it's <code>[]</code>, representing that the model provider supports neither <code>json_mode</code> nor <code>json_schema</code>. In this case, the <code>method</code> parameter in the <code>with_structured_output</code> method can only be passed as <code>function_calling</code>. If <code>json_mode</code> or <code>json_schema</code> is passed, it will be automatically converted to <code>function_calling</code>. If you want to enable <code>json_mode</code> or <code>json_schema</code> structured output implementation, you need to explicitly set this parameter.</p>
 <p>For example, if the model deployed by vLLM supports the <code>json_schema</code> structured output method, you can declare it during registration:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
@@ -1801,17 +1805,17 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>Generally, there is no need to configure this. It only needs to be considered when using the <code>with_structured_output</code> method. At this time, if the model provider supports <code>json_schema</code>, you can consider configuring this parameter (because the stability of <code>json_schema</code> structured output is better than <code>function_calling</code>). To ensure the stability of structured output. For <code>json_mode</code>, because it can only guarantee JSON output, it is generally not necessary to set it. Only when the model does not support tool calls and only supports setting <code>response_format={"type":"json_object"}</code>, it is necessary to configure this parameter to include <code>json_mode</code>.</p>
-<p>Similarly, this parameter can be set uniformly when creating, or can be dynamically overridden for a single model during instantiation; it is recommended to declare the <code>response_format</code> support situation for most models of this provider when creating, and for some models with different support situations, specify separately during instantiation.</p>
+<p>Generally, no configuration is needed. Only when using the <code>with_structured_output</code> method do you need to consider configuring this parameter. If the model provider supports <code>json_schema</code>, you can consider configuring this parameter (because the stability of <code>json_schema</code> structured output is better than <code>function_calling</code>). For <code>json_mode</code>, since it only guarantees JSON output, there's generally no need to set it. Only when the model doesn't support tool calling and only supports setting <code>response_format={"type":"json_object"}</code> do you need to configure this parameter to include <code>json_mode</code>.</p>
+<p>Similarly, this parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; it's recommended to declare the <code>response_format</code> support for most models of this provider during creation, and for models with different support, specify separately during instantiation.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>This parameter currently only affects the <code>model.with_structured_output</code> method. For structured output in <code>create_agent</code>, if you need to use the <code>json_schema</code> implementation, you need to ensure that the corresponding model's <code>profile</code> contains the <code>structured_output</code> field, and its value is <code>True</code>.</p>
+<p>This parameter currently only affects the <code>model.with_structured_output</code> method. For structured output in <code>create_agent</code>, if you need to use the <code>json_schema</code> implementation, you need to ensure the corresponding model's <code>profile</code> contains the <code>structured_output</code> field with a value of <code>True</code>.</p>
 </div>
 </details>
 <details class="note">
 <summary>3. reasoning_keep_policy</summary>
-<p>Used to control the retention policy of the <code>reasoning_content</code> field in historical messages (messages), mainly adapted to different thinking modes of models from different model providers.</p>
+<p>Used to control the retention policy of the <code>reasoning_content</code> field in historical messages (messages), mainly adapted to different thinking modes of models from different providers.</p>
 <p>Supports the following values:</p>
 <ul>
 <li>
@@ -1825,17 +1829,17 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </li>
 </ul>
 <p>For example:
-For example, the user first asks "How is the weather in New York?", then follows up with "How is the weather in London?", and is currently about to have the second round of conversation, and is about to make the last model call.</p>
+The user first asks "What's the weather in New York?", then follows up with "What's the weather in London?", currently in the second round of conversation, and about to make the final model call.</p>
 <ul>
 <li>When the value is <code>never</code></li>
 </ul>
-<p>When the value is <code>never</code>, the final messages passed to the model will <strong>not have any</strong> <code>reasoning_content</code> field. The final messages received by the model will be:</p>
+<p>When the value is <code>never</code>, the final messages passed to the model will <strong>not have any</strong> <code>reasoning_content</code> fields. The final messages received by the model are:</p>
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Today&#39;s weather in New York is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
@@ -1843,16 +1847,16 @@ For example, the user first asks "How is the weather in New York?", then follows
 <ul>
 <li>When the value is <code>current</code></li>
 </ul>
-<p>When the value is <code>current</code>, only the <code>reasoning_content</code> field in the <strong>current conversation</strong> is retained. The final messages received by the model will be:
+<p>When the value is <code>current</code>, only the <code>reasoning_content</code> field in the <strong>current conversation</strong> is retained. The final messages received by the model are:
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Today&#39;s weather in New York is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check London weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain reasoning_content of this round of conversation</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain reasoning_content for this round of conversation</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
@@ -1862,54 +1866,54 @@ For example, the user first asks "How is the weather in New York?", then follows
 <ul>
 <li>When the value is <code>all</code></li>
 </ul>
-<p>When the value is <code>all</code>, the <code>reasoning_content</code> field in <strong>all</strong> conversations is retained. The final messages received by the model will be:
+<p>When the value is <code>all</code>, the <code>reasoning_content</code> field in <strong>all</strong> conversations is retained. The final messages received by the model are:
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check New York weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check New York&#39;s weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Today&#39;s weather in New York is cloudy, 7~13°C.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Directly return New York weather result.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check London weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div></p>
-<p><strong>Note</strong>: If the current round of conversation does not involve tool calls, the effect of <code>current</code> is the same as <code>never</code>.</p>
+<p><strong>Note</strong>: If the current conversation doesn't involve tool calling, the effect of <code>current</code> is the same as <code>never</code>.</p>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>Configure flexibly according to the model provider's requirements for retaining <code>reasoning_content</code>:</p>
+<p>Configure flexibly based on the provider's requirements for <code>reasoning_content</code> retention:</p>
 <ul>
 <li>If the provider requires <strong>retaining reasoning content throughout</strong>, set to <code>all</code>;  </li>
-<li>If only required to retain in <strong>this round of tool calls</strong>, set to <code>current</code>;  </li>
-<li>If there are no special requirements, keep the default <code>never</code>.</li>
+<li>If only required to retain in <strong>this round of tool calling</strong>, set to <code>current</code>;  </li>
+<li>If no special requirements, keep the default <code>never</code>.</li>
 </ul>
-<p>Similarly, this parameter can be set uniformly when creating, or can be dynamically overridden for a single model during instantiation; <strong>it is generally recommended to specify separately during instantiation</strong>, in which case no need to set when creating.</p>
+<p>This parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; since different models from the same provider may have different <code>reasoning_content</code> retention policies, and even the same model may need different policies in different scenarios, <strong>it's recommended to specify explicitly during instantiation</strong>, no need to assign when creating the class.</p>
 </div>
 </details>
 <details class="note">
 <summary>4. include_usage</summary>
-<p><code>include_usage</code> is a parameter in the OpenAI compatible API used to control whether to append a message containing token usage information (such as <code>prompt_tokens</code> and <code>completion_tokens</code>) at the end of the streaming response. Since standard streaming responses do not return usage information by default, enabling this option allows clients to directly obtain complete token consumption data for billing, monitoring, or logging.</p>
-<p>It is usually enabled through <code>stream_options={"include_usage": true}</code>. Considering that some model providers do not support this parameter, this library sets it as a compatibility option with a default value of <code>True</code>, because most model providers support this parameter. If not supported, it can be explicitly set to <code>False</code>.</p>
+<p><code>include_usage</code> is a parameter in OpenAI-compatible API used to control whether to append a message containing token usage information (such as <code>prompt_tokens</code> and <code>completion_tokens</code>) at the end of streaming responses. Since standard streaming responses don't return usage information by default, enabling this option allows clients to directly obtain complete token consumption data for billing, monitoring, or logging.</p>
+<p>Usually enabled through <code>stream_options={"include_usage": true}</code>. Considering that some model providers don't support this parameter (or don't want to enable this token usage recording feature), this library makes it a compatibility option with a default value of <code>True</code>, because most model providers support this parameter. If not supported, it can be explicitly set to <code>False</code>.</p>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>This parameter generally does not need to be set, just keep the default value. Only when the model provider does not support it, it needs to be set to <code>False</code>.</p>
+<p>This parameter generally doesn't need to be set, just keep the default value. Only set to <code>False</code> when the model provider doesn't support it(or doesn't want to enable this token usage recording feature).</p>
 </div>
 </details>
 <h4 id="model_profiles-parameter-setting">model_profiles Parameter Setting</h4>
-<p>If you want to use the <code>model.profile</code> parameter, you must explicitly pass it in when creating.</p>
+<p>If you want to use the <code>model.profile</code> parameter, you must explicitly pass it during creation.</p>
 <p>For example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
@@ -1942,15 +1946,15 @@ For example, the user first asks "How is the weather in New York?", then follows
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>Although the above compatibility configurations have been provided, this library still cannot guarantee 100% compatibility with all OpenAI compatible interfaces. If the model provider already has an official or community integration class, please prioritize using that integration class. If you encounter any compatibility issues, welcome to submit an issue in this library's GitHub repository.</p>
+<p>Despite providing the above compatibility configurations, this library cannot guarantee 100% compatibility with all OpenAI-compatible interfaces. If the model provider already has an official or community integration class, please prioritize using that integration class. If you encounter any compatibility issues, feel free to submit an issue in this library's GitHub repository.</p>
 </div>
 <h3 id="creating-embedding-model-class">Creating Embedding Model Class</h3>
-<p>Similar to the chat model class, you can use <code>create_openai_compatible_embedding</code> to create an embedding model class.</p>
+<p>Similar to chat model classes, you can use <code>create_openai_compatible_embedding</code> to create an embedding model class.</p>
 <h4 id="example-code">Example Code</h4>
 <p>Similarly, we use <code>create_openai_compatible_embedding</code> to integrate vLLM's embedding model.</p>
 <div class="admonition note">
 <p class="admonition-title">Additional Information</p>
-<p>vLLM can deploy embedding models and expose OpenAI compatible interfaces, for example:</p>
+<p>vLLM can deploy embedding models and expose OpenAI-compatible interfaces, for example:</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-Embedding-4B<span class="w"> </span><span class="se">\</span>
 --task<span class="w"> </span>embed<span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-embedding-4b<span class="w"> </span><span class="se">\</span>
@@ -1985,22 +1989,26 @@ For example, the user first asks "How is the weather in New York?", then follows
 
 <span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Note</p>
+<p>Similar to model management requirements, since the two functions above use <code>pydantic.create_model</code> to create model classes at the bottom layer, they bring certain performance overhead, and <code>create_openai_compatible_model</code> also relies on a global dictionary to record the <code>profiles</code> corresponding to each model provider at the bottom layer, so there are also multi-threading concurrency issues in use. Therefore, it's recommended to create the corresponding integration classes in the project's startup phase, and not dynamically create them later.</p>
+</div>
 <h2 id="using-integration-classes">Using Integration Classes</h2>
-<h3 id="using-chat-model-class">Using Chat Model Class</h3>
-<p>First, we need to create a chat model class. We use the previously created <code>ChatVLLM</code> class.</p>
+<h3 id="using-chat-model-classes">Using Chat Model Classes</h3>
+<p>First, we need to create a chat model class. We'll use the previously created <code>ChatVLLM</code> class.</p>
 <ul>
-<li>Supports methods such as <code>invoke</code>, <code>ainvoke</code>, <code>stream</code>, <code>astream</code>, etc.</li>
+<li>Supports methods like <code>invoke</code>, <code>ainvoke</code>, <code>stream</code>, <code>astream</code>, etc.</li>
 </ul>
 <details class="example">
 <summary>Regular Call</summary>
-<p>Supports using <code>invoke</code> for simple calls:</p>
+<p>Supports <code>invoke</code> for simple calls:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>Also supports using <code>ainvoke</code> for asynchronous calls:</p>
+<p>Also supports <code>ainvoke</code> for asynchronous calls:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
@@ -2010,14 +2018,14 @@ For example, the user first asks "How is the weather in New York?", then follows
 </details>
 <details class="example">
 <summary>Streaming Output</summary>
-<p>Supports using <code>stream</code> for streaming output:</p>
+<p>Supports <code>stream</code> for streaming output:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div>
-<p>And using <code>astream</code> for asynchronous streaming calls:</p>
+<p>And <code>astream</code> for asynchronous streaming calls:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
@@ -2080,10 +2088,10 @@ For example, the user first asks "How is the weather in New York?", then follows
 <ul>
 <li>Supports passing multimodal data</li>
 </ul>
-<p>Supports passing multimodal data, you can use OpenAI compatible multimodal data formats or directly use <code>content_block</code> in <code>langchain</code>.</p>
+<p>Supports passing multimodal data, you can use OpenAI-compatible multimodal data format or directly use <code>content_block</code> in <code>langchain</code>.</p>
 <details class="example">
 <summary>Passing Multimodal Data</summary>
-<p><strong>Passing image type data</strong>:</p>
+<p><strong>Passing image data</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">HumanMessage</span><span class="p">(</span>
@@ -2101,7 +2109,7 @@ For example, the user first asks "How is the weather in New York?", then follows
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Passing video type data</strong>:</p>
+<p><strong>Passing video data</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
@@ -2133,8 +2141,8 @@ For example, the user first asks "How is the weather in New York?", then follows
 <ul>
 <li>Supports OpenAI's latest <code>responses api</code> (not yet fully guaranteed to be supported, can be used for simple testing, but not for production environments)</li>
 </ul>
-<p>This model class also supports OpenAI's latest <code>responses_api</code>. However, currently only a few providers support this API style. If your model provider supports this API style, you can pass in the <code>use_responses_api</code> parameter as <code>True</code>.
-    For example, vllm supports <code>responses_api</code>, so you can use it like this:</p>
+<p>This model class also supports OpenAI's latest <code>responses_api</code>. However, currently only a few providers support this API style. If your model provider supports this API style, you can pass <code>use_responses_api</code> parameter as <code>True</code>.
+    For example, if vllm supports <code>responses_api</code>, you can use it like this:</p>
 <details class="example">
 <summary>OpenAI's latest <code>responses_api</code></summary>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -2144,13 +2152,13 @@ For example, the user first asks "How is the weather in New York?", then follows
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<h3 id="using-embedding-model-class">Using Embedding Model Class</h3>
+<h3 id="using-embedding-model-classes">Using Embedding Model Classes</h3>
 <p>We use the previously created <code>VLLMEmbeddings</code> class to initialize an embedding model instance.</p>
 <ul>
-<li>Vectorize query</li>
+<li>Vectorizing queries</li>
 </ul>
 <details class="example">
-<summary>Vectorize Query</summary>
+<summary>Vectorizing Queries</summary>
 <div class="highlight"><pre><span></span><code><span class="n">embedding</span> <span class="o">=</span> <span class="n">VLLMEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-embedding-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
 </code></pre></div>
@@ -2161,10 +2169,10 @@ For example, the user first asks "How is the weather in New York?", then follows
 </code></pre></div>
 </details>
 <ul>
-<li>Vectorize string list</li>
+<li>Vectorizing string lists</li>
 </ul>
 <details class="example">
-<summary>Vectorize String List</summary>
+<summary>Vectorizing String Lists</summary>
 <div class="highlight"><pre><span></span><code><span class="n">documents</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, I&#39;m Zhang San&quot;</span><span class="p">]</span>
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">VLLMEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-embedding-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="o">.</span><span class="n">embed_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">))</span>
@@ -2176,9 +2184,9 @@ For example, the user first asks "How is the weather in New York?", then follows
 <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<p><strong>Note</strong>: The chat model class and embedding model class created using this feature support passing any parameters of <code>BaseChatOpenAI</code> and <code>OpenAIEmbeddings</code>, such as <code>temperature</code>, <code>extra_body</code>, <code>dimensions</code>, etc.</p>
-<h2 id="integration-with-model-management-functionality">Integration with Model Management Functionality</h2>
-<p>This library has seamlessly integrated this functionality into the model management feature. When registering a chat model, simply set <code>chat_model</code> to <code>"openai-compatible"</code>; when registering an embedding model, set <code>embeddings_model</code> to <code>"openai-compatible"</code>.</p>
+<p><strong>Note</strong>: The chat model classes and embedding model classes created using this feature support passing any parameters of <code>BaseChatOpenAI</code> and <code>OpenAIEmbeddings</code>, such as <code>temperature</code>, <code>extra_body</code>, <code>dimensions</code>, etc.</p>
+<h2 id="integration-with-model-management-feature">Integration with Model Management Feature</h2>
+<p>This library has seamlessly integrated this feature with the model management functionality. When registering a chat model, just set <code>chat_model</code> to <code>"openai-compatible"</code>; when registering an embedding model, set <code>embeddings_model</code> to <code>"openai-compatible"</code>.</p>
 <h3 id="chat-model-class-registration">Chat Model Class Registration</h3>
 <p>Specific code is as follows:</p>
 <p><strong>Method 1: Explicit Parameter Passing</strong></p>
@@ -2199,7 +2207,7 @@ For example, the user first asks "How is the weather in New York?", then follows
     <span class="c1"># Automatically reads VLLM_API_BASE</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>At the same time, the <code>base_url</code>, <code>compatibility_options</code>, and <code>model_profiles</code> parameters in the <code>create_openai_compatible_model</code> function also support being passed in. Just pass in the corresponding parameters in the <code>register_model_provider</code> function.</p>
+<p>At the same time, parameters like <code>base_url</code>, <code>compatibility_options</code>, <code>model_profiles</code> in the <code>create_openai_compatible_model</code> function also support being passed. Just pass the corresponding parameters in the <code>register_model_provider</code> function.</p>
 <h3 id="embedding-model-class-registration">Embedding Model Class Registration</h3>
 <p>Similar to chat model class registration:</p>
 <p><strong>Method 1: Explicit Parameter Passing</strong></p>
