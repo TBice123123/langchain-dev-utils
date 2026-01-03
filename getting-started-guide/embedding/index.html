@@ -671,6 +671,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#optional-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1488,6 +1499,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#optional-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1717,8 +1739,14 @@
 <ul>
 <li><code>FakeEmbeddings</code> is only for testing. In actual use, you must pass an <code>Embeddings</code> class with real functionality.</li>
 <li><code>provider_name</code> represents the name of the model provider, used for subsequent reference in <code>load_embeddings</code>. The name can be customized, but should not contain special characters such as <code>:</code>, <code>-</code>, etc.</li>
-<li>The <code>base_url</code> parameter usually doesn't need to be set manually (since the embedding model class has already defined the API address internally). Only when you need to override the default address should you explicitly pass <code>base_url</code>; the override scope is limited to attributes with field names <code>api_base</code> or <code>base_url</code> (including aliases) in the model class.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>provider_name</code> must start with a letter or number, can only contain letters, numbers, and underscores, and must be 20 characters or fewer.</p>
+</div>
+<h4 id="optional-parameters">Optional Parameters</h4>
+<p><strong>base_url</strong></p>
+<p>This parameter usually does not need to be set (because the embedding model class already defines a default API address internally). Only pass <code>base_url</code> when you need to override the default address of the embedding model class, and it only takes effect for fields named <code>api_base</code> or <code>base_url</code> (including aliases).</p>
 <h3 id="no-langchain-embedding-model-class-but-provider-supports-openai-compatible-api">No LangChain Embedding Model Class, but Provider Supports OpenAI Compatible API</h3>
 <p>The parameter description for this situation is as follows:</p>
 <h4 id="parameter-description_1">Parameter Description</h4>

@@ -2242,7 +2242,7 @@
 <p>This middleware cannot guarantee 100% fixing of all invalid tool calls; the actual effect depends on the repair capability of <code>json-repair</code>. Additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.</p>
 </div>
 <h2 id="formatting-system-prompts">Formatting System Prompts</h2>
-<p><code>format_prompt</code> is a decorator that allows you to use <code>f-string</code> style placeholders (like <code>{name}</code>) in <code>system_prompt</code> and dynamically replace them with actual values at runtime.</p>
+<p><code>format_prompt</code> is a <strong>middleware instance</strong> that allows you to use <code>f-string</code> style placeholders (like <code>{name}</code>) in <code>system_prompt</code> and dynamically replace them with actual values at runtime.</p>
 <h3 id="parameter-description_4">Parameter Description</h3>
 <p>The values of variables in placeholders follow a clear resolution order:</p>
 <ol>

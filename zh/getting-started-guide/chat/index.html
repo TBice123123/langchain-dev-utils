@@ -1730,11 +1730,15 @@
 <h4 id="_6">使用说明</h4>
 <ul>
 <li><code>FakeChatModel</code> 仅用于测试。实际使用中必须传入具备真实功能的 <code>ChatModel</code> 类。</li>
-<li><code>provider_name</code> 代表模型提供商的名称，用于后续在 <code>load_chat_model</code> 中引用。名称可自定义，但不要包含 <code>:</code>、<code>-</code> 等特殊字符。</li>
+<li><code>provider_name</code> 代表模型提供商的名称，用于后续在 <code>load_chat_model</code> 中引用。</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p><code>provider_name</code> 必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。</p>
+</div>
 <h4 id="_7">可选参数说明</h4>
 <p><strong>base_url</strong></p>
-<p>此参数通常无需设置（因为模型类内部一般已定义默认的 API 地址），仅当需要覆盖模型类默认地址时才传入 <code>base_url</code>，且仅对字段名为 <code>api_base</code> 或 <code>base_url</code>（含别名）的属性生效。</p>
+<p>此参数通常无需设置（因为对话模型类内部一般已定义默认的 API 地址），仅当需要覆盖对话模型类默认地址时才传入 <code>base_url</code>，且仅对字段名为 <code>api_base</code> 或 <code>base_url</code>（含别名）的属性生效。</p>
 <p><strong>model_profiles</strong></p>
 <p>如果你的 LangChain 集成对话模型类已全面支持 <code>profile</code> 参数（即可以通过 <code>model.profile</code> 直接访问模型的相关属性，例如 <code>max_input_tokens</code>、<code>tool_calling</code> 等），则无需额外设置 <code>model_profiles</code>。</p>
 <p>如果通过 <code>model.profile</code> 访问时返回的是一个空字典 <code>{}</code>，说明该 LangChain 对话模型类可能暂时未支持 <code>profile</code> 参数，此时可以手动提供 <code>model_profiles</code>。</p>

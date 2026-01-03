@@ -1639,10 +1639,14 @@
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
-<td>Chat model class name, default value is <code>Chat{model_provider}</code> (where <code>{model_provider}</code> is capitalized).<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
+<td>Chat model class name(must follow Python class name conventions), default value is <code>Chat{model_provider}</code> (where <code>{model_provider}</code> is capitalized).<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>model_provider</code> must start with a letter or number, can only contain letters, numbers, and underscores, and must be 20 characters or fewer. (<code>embedding_provider</code> is also subject to the same constraints)</p>
+</div>
 <p>This library builds a chat model class corresponding to a specific provider using the built-in <code>BaseChatOpenAICompatible</code> class based on the parameters provided by the user. This class inherits from <code>BaseChatOpenAI</code> of <code>langchain-openai</code> and enhances the following capabilities:</p>
 <ul>
 <li><strong>Support for more formats of reasoning content</strong>: Compared to <code>ChatOpenAI</code> which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., <code>vLLM</code>).</li>

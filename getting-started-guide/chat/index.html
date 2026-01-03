@@ -633,10 +633,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-instructions" class="md-nav__link">
+  <a href="#usage-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage Instructions
+        Usage Notes
       
     </span>
   </a>
@@ -1483,10 +1483,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-instructions" class="md-nav__link">
+  <a href="#usage-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage Instructions
+        Usage Notes
       
     </span>
   </a>
@@ -1727,14 +1727,18 @@
     <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<h4 id="usage-instructions">Usage Instructions</h4>
+<h4 id="usage-notes">Usage Notes</h4>
 <ul>
-<li><code>FakeChatModel</code> is only for testing. In actual use, you must pass a <code>ChatModel</code> class with real functionality.</li>
-<li><code>provider_name</code> represents the name of the model provider, used for subsequent reference in <code>load_chat_model</code>. The name can be customized, but should not contain special characters such as <code>:</code>, <code>-</code>, etc.</li>
+<li><code>FakeChatModel</code> is for testing only. In real usage, you must pass a <code>ChatModel</code> class with actual functionality.</li>
+<li><code>provider_name</code> is the name of the model provider, used later in <code>load_chat_model</code>.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Note</p>
+<p><code>provider_name</code> must start with a letter or digit, can only contain letters, digits, and underscores, and must not exceed 20 characters in length.</p>
+</div>
 <h4 id="optional-parameter-description">Optional Parameter Description</h4>
 <p><strong>base_url</strong></p>
-<p>This parameter usually doesn't need to be set (since the model class generally has a default API address defined internally). It should only be passed when you need to override the model class's default address, and it only affects attributes with field names <code>api_base</code> or <code>base_url</code> (including aliases).</p>
+<p>This parameter usually does not need to be set (because the chat model class typically already defines a default API address). Only pass <code>base_url</code> when you need to override the default address defined by the chat model class, and it only takes effect for fields named <code>api_base</code> or <code>base_url</code> (including aliases).</p>
 <p><strong>model_profiles</strong></p>
 <p>If your LangChain integrated chat model class fully supports the <code>profile</code> parameter (i.e., you can directly access model-related properties through <code>model.profile</code>, such as <code>max_input_tokens</code>, <code>tool_calling</code>, etc.), there's no need to set <code>model_profiles</code> additionally.</p>
 <p>If accessing through <code>model.profile</code> returns an empty dictionary <code>{}</code>, it indicates that the LangChain chat model class may not support the <code>profile</code> parameter yet, in which case you can manually provide <code>model_profiles</code>.</p>

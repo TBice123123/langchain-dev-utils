@@ -2242,7 +2242,7 @@
 <p>本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 <code>json-repair</code> 的修复能力；此外，它仅作用于 <code>invalid_tool_calls</code> 字段中的无效工具调用内容。</p>
 </div>
 <h2 id="_16">格式化系统提示词</h2>
-<p><code>format_prompt</code> 是一个装饰器，允许您在 <code>system_prompt</code> 中使用 <code>f-string</code> 风格的占位符（如 <code>{name}</code>），并在运行时动态地用实际值替换它们。</p>
+<p><code>format_prompt</code> 是一个<strong>中间件实例</strong>，允许您在 <code>system_prompt</code> 中使用 <code>f-string</code> 风格的占位符（如 <code>{name}</code>），并在运行时动态地用实际值替换它们。</p>
 <h3 id="_17">参数说明</h3>
 <p>占位符中的变量值遵循一个明确的解析顺序：</p>
 <ol>

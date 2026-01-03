@@ -1639,10 +1639,14 @@
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
-<td>对话模型类名，默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
+<td>对话模型类名(需要符合Python类名规范)，默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">注意</p>
+<p><code>model_provider</code> 必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。(<code>embedding_provider</code> 同理)</p>
+</div>
 <p>本库会根据用户传入的上述参数，使用内置 <code>BaseChatOpenAICompatible</code> 类构建对应于特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并增强以下能力：</p>
 <ul>
 <li><strong>支持更多格式的推理内容</strong>：相较于 <code>ChatOpenAI</code> 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如 <code>vLLM</code>）。</li>
