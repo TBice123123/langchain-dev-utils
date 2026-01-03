@@ -23,6 +23,10 @@
 | `create_openai_compatible_model` | 创建对话模型集成类 |
 | `create_openai_compatible_embedding` | 创建嵌入模型集成类 |
 
+
+!!! tip "提示"
+    本库提供的两个工具函数借鉴了 JavaScript 生态的第三方库 [ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers)。
+
 ### 创建对话模型类
 
 使用 `create_openai_compatible_model` 函数可以创建对话模型集成类。该函数接受以下参数：
@@ -102,7 +106,7 @@ print(model.invoke("你好"))
 
 
 !!! info "提示"
-    创建的对话模型类环境变量的命名规则：
+    创建的对话模型类（嵌入模型类也遵循此命名规则）环境变量的命名规则：
 
     - API地址：`${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。
 
@@ -289,16 +293,16 @@ print(model.invoke("你好"))
         - 若仅要求在**本轮工具调用**中保留，设为 `current`；  
         - 若无特殊要求，保持默认 `never` 即可。  
 
-        同样，该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖；**一般推荐在实例化时单独指定**，此时创建时无需设置。
+        该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖；由于同一提供商的不同模型对 `reasoning_content` 保留策略的可能不同，甚至同一模型在不同场景下可能需要不同的策略，**建议在实例化时显式指定**，创建类时无需赋值。
 
 ??? note "4. include_usage"
 
     `include_usage` 是 OpenAI 兼容 API 中的一个参数，用于控制是否在流式响应的末尾附加一条包含 token 使用情况（如 `prompt_tokens` 和 `completion_tokens`）的消息。由于标准流式响应默认不返回用量信息，启用该选项后，客户端可直接获取完整的 token 消耗数据，便于计费、监控或日志记录。
 
-    通常通过 `stream_options={"include_usage": true}` 启用。考虑到有些模型提供商不支持该参数，因此本库将其设为兼容性选项，默认值为 `True`，因为绝大多数模型提供商均支持该参数，如果不支持，则可以显式设为 `False`。
+    通常通过 `stream_options={"include_usage": true}` 启用。考虑到有些模型提供商不支持该参数（或者不希望开启该token使用情况记录功能），因此本库将其设为兼容性选项，默认值为 `True`，因为绝大多数模型提供商均支持该参数，如果不支持，则可以显式设为 `False`。
 
     !!! info "提示"
-        此参数一般无需设置，保持默认值即可。只有在模型提供商不支持时，才需要设置为 `False`。
+        此参数一般无需设置，保持默认值即可。只有在模型提供商不支持时(或者不希望开启该token使用情况记录功能)，才需要设置为 `False`。
 
 
 #### model_profiles参数设置
@@ -396,6 +400,9 @@ embedding = VLLMEmbedding(model="qwen3-embedding-8b")
 
 print(embedding.embed_query("你好"))
 ```
+
+!!! warning "注意"
+    与模型管理的要求类似，由于上述的两个函数底层使用了`pydantic.create_model`来创建模型类，因此会带来一定的性能开销，且`create_openai_compatible_model`底层也依托了一个全局字典来记录各个模型提供商对应的`profiles`，因此在使用中也存在多线程并发的问题，因此也建议在项目的启动阶段就创建好对应的集成类，后续不应再动态创建。
 
 ## 集成类的使用
 

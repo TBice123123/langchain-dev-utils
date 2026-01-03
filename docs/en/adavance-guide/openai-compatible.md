@@ -2,54 +2,57 @@
 
 ## Overview
 
-Many model providers support **OpenAI compatible** API services, such as: [vLLM](https://github.com/vllm-project/vllm), [OpenRouter](https://openrouter.ai/), [Together AI](https://www.together.ai/), etc. This library provides a complete OpenAI compatible API integration solution, supporting both chat models and embedding models, especially suitable for scenarios where there is no corresponding LangChain integration yet but the provider offers an OpenAI compatible API.
+Many model providers support **OpenAI-compatible** API services, such as: [vLLM](https://github.com/vllm-project/vllm), [OpenRouter](https://openrouter.ai/), [Together AI](https://www.together.ai/), etc. This library provides a complete OpenAI-compatible API integration solution, supporting both chat models and embedding models. It is particularly suitable for scenarios where there is no corresponding LangChain integration yet but the provider offers an OpenAI-compatible API.
 
 !!! tip "Tip"
-    The common approach to integrate with OpenAI compatible APIs is to directly use `ChatOpenAI` or `OpenAIEmbeddings` from `langchain-openai`, simply by passing in `base_url` and `api_key`. However, this approach only works for simple scenarios and has many compatibility issues, especially for chat models, including:
+    The common approach to integrate OpenAI-compatible APIs is to directly use `ChatOpenAI` or `OpenAIEmbeddings` from `langchain-openai`, simply by passing `base_url` and `api_key`. However, this approach only works for simple scenarios and has many compatibility issues, especially with chat models, including:
 
-    1. Unable to display reasoning content (`reasoning_content`) from non-OpenAI official inference models
+    1. Inability to display reasoning chains (`reasoning_content`) from non-OpenAI official inference models
     2. No support for video type content_block
     3. Low coverage rate for default structured output strategies
 
-    This library provides this functionality to solve the above compatibility issues. For simple scenarios (especially those with low compatibility requirements), you can directly use `ChatOpenAI` without using this feature. `OpenAIEmbeddings` has good compatibility, just set `check_embedding_ctx_length` to `False`. Additionally, for developers' convenience, we also provide embedding model OpenAI compatible integration class functionality.
+    This library provides this functionality to address the above compatibility issues. For simple scenarios (especially those with low compatibility requirements), you can directly use `ChatOpenAI` without using this feature. `OpenAIEmbeddings` has good compatibility, just set `check_embedding_ctx_length` to `False`. Additionally, for developers' convenience, we also provide embedding model OpenAI-compatible integration class functionality.
 
 ## Creating Corresponding Integration Classes
 
 This library provides two utility functions for creating corresponding chat model integration classes and embedding model integration classes. Specifically:
 
 | Function Name | Description |
-|--------|------|
+|---------------|-------------|
 | `create_openai_compatible_model` | Create chat model integration class |
 | `create_openai_compatible_embedding` | Create embedding model integration class |
 
+!!! tip "Tip"
+    The two utility functions provided by this library are inspired by the third-party library [ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers) in the JavaScript ecosystem.
+
 ### Creating Chat Model Class
 
-You can use the `create_openai_compatible_model` function to create a chat model integration class. This function accepts the following parameters:
+Using the `create_openai_compatible_model` function, you can create a chat model integration class. This function accepts the following parameters:
 
 | Parameter | Description |
-|------|------|
+|-----------|-------------|
 | `model_provider` | Model provider name, e.g., `vllm`.<br><br>**Type**: `str`<br>**Required**: Yes |
 | `base_url` | Default API address of the model provider.<br><br>**Type**: `str`<br>**Required**: No |
 | `compatibility_options` | Compatibility options configuration.<br><br>**Type**: `dict`<br>**Required**: No |
-| `model_profiles` | Profiles corresponding to the models provided by this model provider.<br><br>**Type**: `dict`<br>**Required**: No |
+| `model_profiles` | Profiles corresponding to models provided by this model provider.<br><br>**Type**: `dict`<br>**Required**: No |
 | `chat_model_cls_name` | Chat model class name, default value is `Chat{model_provider}` (where `{model_provider}` is capitalized).<br><br>**Type**: `str`<br>**Required**: No |
 
-This library builds a chat model class corresponding to a specific provider using the built-in `BaseChatOpenAICompatible` class based on the above parameters passed by the user. This class inherits from `BaseChatOpenAI` of `langchain-openai` and enhances the following capabilities:
+This library builds a chat model class corresponding to a specific provider using the built-in `BaseChatOpenAICompatible` class based on the parameters provided by the user. This class inherits from `BaseChatOpenAI` of `langchain-openai` and enhances the following capabilities:
 
 - **Support for more formats of reasoning content**: Compared to `ChatOpenAI` which can only output official reasoning content, this class also supports outputting more formats of reasoning content (e.g., `vLLM`).
-- **Support for `video` type content_block**: `ChatOpenAI` cannot convert `type=video` `content_block`, this implementation has added support.
-- **Dynamically adapt and select the most suitable structured output method**: By default, it can automatically select the optimal structured output method (`function_calling` or `json_schema`) based on the actual support of the model provider.
-- **Fine-tune differences through compatibility_options**: By configuring provider compatibility options, resolve support differences for parameters such as `tool_choice`, `response_format`, etc.
+- **Support for `video` type content_block**: `ChatOpenAI` cannot convert `type=video` `content_block`, which this implementation has completed support for.
+- **Dynamic adaptation and selection of the most suitable structured output method**: By default, it can automatically select the optimal structured output method (`function_calling` or `json_schema`) based on the actual support of the model provider.
+- **Fine-tuning differences through compatibility_options**: By configuring provider compatibility options, resolve support differences for parameters like `tool_choice`, `response_format`, etc.
 
 !!! warning "Note"
-    When using this feature, you must install the standard version of the `langchain-dev-utils` library. Please refer to the installation section for details.
+    When using this feature, you must install the standard version of the `langchain-dev-utils` library. For details, refer to the installation section.
 
 #### Code Example
 
-We take integrating vLLM as an example to show how to use the `create_openai_compatible_model` function to create a chat model integration class.
+We'll use the integration of vLLM as an example to show how to use the `create_openai_compatible_model` function to create a chat model integration class.
 
 !!! note "Additional Information"
-    vLLM is a commonly used large model inference framework that can deploy large models as OpenAI compatible APIs, such as Qwen3-4B in this example:
+    vLLM is a commonly used large model inference framework that can deploy large models as OpenAI-compatible APIs, such as Qwen3-4B in this example:
 
     ```bash
     vllm serve Qwen/Qwen3-4B \
@@ -75,7 +78,7 @@ model = ChatVLLM(model="qwen3-4b")
 print(model.invoke("你好"))
 ```
 
-It's worth noting that when creating a chat model class, the `base_url` parameter can be omitted. If not passed, this library will read the corresponding environment variable by default. For example:
+It's worth noting that when creating a chat model class, the `base_url` parameter can be omitted. If not passed, the library will default to reading the corresponding environment variable. For example:
 
 ```bash
 export VLLM_API_BASE=http://localhost:8000/v1
@@ -95,10 +98,10 @@ model = ChatVLLM(model="qwen3-4b")
 print(model.invoke("你好"))
 ```
 
-**Note**: The prerequisite for the above code to run successfully is that you have set the `VLLM_API_KEY` environment variable. Although vLLM does not require passing an API Key, the chat model class initialization requires an API Key.
+**Note**: The prerequisite for the above code to run successfully is that you have set the `VLLM_API_KEY` environment variable. Although vLLM doesn't require an API Key, the chat model class initialization needs an API Key.
 
 !!! info "Tip"
-    Naming rules for environment variables of the created chat model class:
+    Naming rules for environment variables of the created chat model class (embedding model class also follows this naming rule):
 
     - API address: `${PROVIDER_NAME}_API_BASE` (all uppercase, separated by underscores).
 
@@ -106,36 +109,36 @@ print(model.invoke("你好"))
 
 #### Compatibility Parameters
 
-`compatibility_options` is a dictionary used to declare the provider's support for some features of the OpenAI API to improve compatibility and stability.
+`compatibility_options` is a dictionary used to declare the provider's support for certain features of the OpenAI API to improve compatibility and stability.
 
 Currently supported configuration items:
 
 | Configuration Item | Description |
-|--------|------|
+|--------------------|-------------|
 | `supported_tool_choice` | List of supported `tool_choice` strategies.<br><br>**Type**: `list[str]`<br>**Default Value**: `["auto"]` |
 | `supported_response_format` | List of supported `response_format` formats (`json_schema`, `json_object`).<br><br>**Type**: `list[str]`<br>**Default Value**: `[]` |
-| `reasoning_keep_policy` | Retention policy for the `reasoning_content` field in historical messages.<br><br>**Type**: `str`<br>**Default Value**: `"never"` |
+| `reasoning_keep_policy` | Retention policy for `reasoning_content` field in historical messages.<br><br>**Type**: `str`<br>**Default Value**: `"never"` |
 | `include_usage` | Whether to include `usage` information in streaming return results.<br><br>**Type**: `bool`<br>**Default Value**: `True` |
 
 !!! info "Additional Information"
-    Since different models from the same model provider have different support for parameters such as `tool_choice` and `response_format`, these four compatibility options are **instance attributes** of the class. Therefore, when creating a chat model class, values can be passed in as global defaults (representing the configuration supported by most models of this provider). If fine-tuning is needed for specific models later, the same-named parameters can be overridden during instantiation.
+    Since different models from the same provider may have different support for parameters like `tool_choice`, `response_format`, etc., these four compatibility options are **instance attributes** of the class. Therefore, when creating a chat model class, values can be passed as global defaults (representing the configuration supported by most models of this provider). If fine-tuning is needed for specific models later, the same parameters can be overridden during instantiation.
 
-Detailed introductions to these configuration items are as follows:
+Detailed introduction to these configuration items:
 
 ??? note "1. supported_tool_choice"
-    `tool_choice` is used to control whether and which external tools the large model calls during responses to improve accuracy, reliability, and controllability. Common values include:
+    `tool_choice` is used to control whether and which external tools the large model calls during response to improve accuracy, reliability, and controllability. Common values include:
 
-    - `"auto"`: The model autonomously decides whether to call tools (default behavior);
-    - `"none"`: Prohibit calling tools;
+    - `"auto"`: Model autonomously decides whether to call tools (default behavior);
+    - `"none"`: Prohibit tool calling;
     - `"required"`: Force calling at least one tool;
-    - Specify a specific tool (in OpenAI compatible API, specifically `{"type": "function", "function": {"name": "xxx"}}`).
+    - Specify a specific tool (in OpenAI-compatible API, specifically `{"type": "function", "function": {"name": "xxx"}}`).
 
-    Different providers support different ranges. To avoid errors, this library defaults `supported_tool_choice` to `["auto"]`, which means when using `bind_tools`, the `tool_choice` parameter can only be passed as `auto`, and other values will be filtered out.
+    Different providers support different ranges. To avoid errors, this library defaults `supported_tool_choice` to `["auto"]`, meaning when `bind_tools`, the `tool_choice` parameter can only be passed as `auto`, and other values will be filtered out.
 
-    If you need to support passing other `tool_choice` values, you must configure the supported items. The configuration value is a list of strings, with each optional value being:
+    To support passing other `tool_choice` values, you must configure the supported items. The configuration value is a list of strings, with optional values for each string:
 
     - `"auto"`, `"none"`, `"required"`: Corresponding to standard strategies;
-    - `"specific"`: A unique identifier in this library, indicating support for specifying a specific tool.
+    - `"specific"`: Unique identifier for this library, indicating support for specifying specific tools.
 
     For example, vLLM supports all strategies:
 
@@ -154,24 +157,24 @@ Detailed introductions to these configuration items are as follows:
     ```
 
     !!! info "Tip"
-        If there are no special requirements, you can keep the default (i.e., `["auto"]`). If business scenarios require the model to **must call a specific tool** or **select one from a given list**, and the model provider supports the corresponding strategy, enable as needed:
+        If no special requirements, keep the default (i.e., `["auto"]`). If business scenarios require the model to **must call specific tools** or **select from a given list**, and the model provider supports the corresponding strategy, enable as needed:
         
-        1. If you require **at least one tool** to be called and the model provider supports `required`, you can set it to `["required"]` (at the same time, when calling `bind_tools`, you need to explicitly pass `tool_choice="required"`)
+        1. If requiring **at least one** tool call, and the model provider supports `required`, it can be set to `["required"]` (and when calling `bind_tools`, you need to explicitly pass `tool_choice="required"`)
 
-        2. If you require **calling a specific** tool and the model provider supports specifying a specific tool call, you can set it to `["specific"]` (in `function_calling` structured output, this configuration is very useful to ensure the model calls the specified structured output tool to ensure the stability of structured output. Because in the `with_structured_output` method, its internal implementation will pass in **a `tool_choice` value that can force calling the specified tool** when calling `bind_tools`, but if `"specific"` is not in `supported_tool_choice`, this parameter will be filtered out. Therefore, if you want to ensure that `tool_choice` can be passed normally, you must add `"specific"` to `supported_tool_choice`.)
+        2. If requiring to call a **specified** tool, and the model provider supports specifying a specific tool call, it can be set to `["specific"]` (in `function_calling` structured output, this configuration is very useful to ensure the model calls the specified structured output tool to guarantee the stability of structured output. Because in the `with_structured_output` method, its internal implementation will pass a `tool_choice` value that **forces the call to the specified tool** when calling `bind_tools`, but if `"specific"` is not in `supported_tool_choice`, this parameter will be filtered out. Therefore, to ensure `tool_choice` can be passed normally, `"specific"` must be added to `supported_tool_choice`.)
 
-        This parameter can be set uniformly when creating, or can be dynamically overridden for a single model during instantiation; it is recommended to declare the `tool_choice` support situation for most models of this provider when creating, and for some models with different support situations, specify separately during instantiation.
+        This parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; it's recommended to declare the `tool_choice` support for most models of this provider during creation, and for models with different support, specify separately during instantiation.
 
 ??? note "2. supported_response_format"
     Currently, there are three common methods for structured output.
 
     - `function_calling`: Generate structured output by calling a tool that conforms to a specified schema.
-    - `json_schema`: A feature provided by the model provider specifically for generating structured output, in OpenAI compatible API, specifically `response_format={"type": "json_schema", "json_schema": {...}}`.
-    - `json_mode`: A feature provided by some providers before they launched `json_schema`, which can generate valid JSON, but the schema must be described in the prompt. In OpenAI compatible API, specifically `response_format={"type": "json_object"}`).
+    - `json_schema`: A feature provided by the model provider specifically for generating structured output, in OpenAI-compatible API, specifically `response_format={"type": "json_schema", "json_schema": {...}}`.
+    - `json_mode`: A feature provided by some providers before launching `json_schema` that can generate valid JSON, but the schema must be described in the prompt. In OpenAI-compatible API, specifically `response_format={"type": "json_object"}`).
 
-    Among them, `json_schema` is supported by only a few OpenAI compatible API providers (such as `OpenRouter`, `TogetherAI`); `json_mode` has higher support and is compatible with most providers; while `function_calling` is the most universal, as long as the model supports tool calls, it can be used.
+    Among these, `json_schema` is supported by only a few OpenAI-compatible API providers (such as `OpenRouter`, `TogetherAI`); `json_mode` has higher support and is compatible with most providers; while `function_calling` is the most universal, usable as long as the model supports tool calling.
 
-    This parameter is used to declare the model provider's support for `response_format`. By default, it is `[]`, which means the model provider supports neither `json_mode` nor `json_schema`. In this case, the `method` parameter in the `with_structured_output` method can only be passed as `function_calling`. If `json_mode` or `json_schema` is passed, it will be automatically converted to `function_calling`. If you want to enable `json_mode` or `json_schema` structured output implementation, you need to explicitly set this parameter.
+    This parameter is used to declare the model provider's support for `response_format`. By default, it's `[]`, representing that the model provider supports neither `json_mode` nor `json_schema`. In this case, the `method` parameter in the `with_structured_output` method can only be passed as `function_calling`. If `json_mode` or `json_schema` is passed, it will be automatically converted to `function_calling`. If you want to enable `json_mode` or `json_schema` structured output implementation, you need to explicitly set this parameter.
 
     For example, if the model deployed by vLLM supports the `json_schema` structured output method, you can declare it during registration:
 
@@ -188,16 +191,16 @@ Detailed introductions to these configuration items are as follows:
     ``` 
 
     !!! info "Tip"
-        Generally, there is no need to configure this. It only needs to be considered when using the `with_structured_output` method. At this time, if the model provider supports `json_schema`, you can consider configuring this parameter (because the stability of `json_schema` structured output is better than `function_calling`). To ensure the stability of structured output. For `json_mode`, because it can only guarantee JSON output, it is generally not necessary to set it. Only when the model does not support tool calls and only supports setting `response_format={"type":"json_object"}`, it is necessary to configure this parameter to include `json_mode`.
+        Generally, no configuration is needed. Only when using the `with_structured_output` method do you need to consider configuring this parameter. If the model provider supports `json_schema`, you can consider configuring this parameter (because the stability of `json_schema` structured output is better than `function_calling`). For `json_mode`, since it only guarantees JSON output, there's generally no need to set it. Only when the model doesn't support tool calling and only supports setting `response_format={"type":"json_object"}` do you need to configure this parameter to include `json_mode`.
         
-        Similarly, this parameter can be set uniformly when creating, or can be dynamically overridden for a single model during instantiation; it is recommended to declare the `response_format` support situation for most models of this provider when creating, and for some models with different support situations, specify separately during instantiation.
+        Similarly, this parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; it's recommended to declare the `response_format` support for most models of this provider during creation, and for models with different support, specify separately during instantiation.
 
     !!! warning "Note"
-        This parameter currently only affects the `model.with_structured_output` method. For structured output in `create_agent`, if you need to use the `json_schema` implementation, you need to ensure that the corresponding model's `profile` contains the `structured_output` field, and its value is `True`.
+        This parameter currently only affects the `model.with_structured_output` method. For structured output in `create_agent`, if you need to use the `json_schema` implementation, you need to ensure the corresponding model's `profile` contains the `structured_output` field with a value of `True`.
 
 ??? note "3. reasoning_keep_policy"
 
-    Used to control the retention policy of the `reasoning_content` field in historical messages (messages), mainly adapted to different thinking modes of models from different model providers.
+    Used to control the retention policy of the `reasoning_content` field in historical messages (messages), mainly adapted to different thinking modes of models from different providers.
 
     Supports the following values:
 
@@ -208,19 +211,19 @@ Detailed introductions to these configuration items are as follows:
     - `all`: Retain the `reasoning_content` field in **all conversations**.
 
     For example:
-    For example, the user first asks "How is the weather in New York?", then follows up with "How is the weather in London?", and is currently about to have the second round of conversation, and is about to make the last model call.
+    The user first asks "What's the weather in New York?", then follows up with "What's the weather in London?", currently in the second round of conversation, and about to make the final model call.
 
     - When the value is `never`
 
-    When the value is `never`, the final messages passed to the model will **not have any** `reasoning_content` field. The final messages received by the model will be:
+    When the value is `never`, the final messages passed to the model will **not have any** `reasoning_content` fields. The final messages received by the model are:
 
     ```python
     messages = [
-        {"content": "How is the weather in New York?", "role": "user"},
+        {"content": "What's the weather in New York?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
-        {"content": "Cloudy 7~13°C", "role": "tool", "tool_call_id": "..."},
-        {"content": "The weather in New York today is cloudy, 7~13°C.", "role": "assistant"},
-        {"content": "How is the weather in London?", "role": "user"},
+        {"content": "Cloudy, 7~13°C", "role": "tool", "tool_call_id": "..."},
+        {"content": "Today's weather in New York is cloudy, 7~13°C.", "role": "assistant"},
+        {"content": "What's the weather in London?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Rainy, 14~20°C", "role": "tool", "tool_call_id": "..."},
     ]
@@ -228,17 +231,17 @@ Detailed introductions to these configuration items are as follows:
 
     - When the value is `current`
 
-    When the value is `current`, only the `reasoning_content` field in the **current conversation** is retained. The final messages received by the model will be:
+    When the value is `current`, only the `reasoning_content` field in the **current conversation** is retained. The final messages received by the model are:
     ```python
     messages = [
-        {"content": "How is the weather in New York?", "role": "user"},
+        {"content": "What's the weather in New York?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
-        {"content": "Cloudy 7~13°C", "role": "tool", "tool_call_id": "..."},
-        {"content": "The weather in New York today is cloudy, 7~13°C.", "role": "assistant"},
-        {"content": "How is the weather in London?", "role": "user"},
+        {"content": "Cloudy, 7~13°C", "role": "tool", "tool_call_id": "..."},
+        {"content": "Today's weather in New York is cloudy, 7~13°C.", "role": "assistant"},
+        {"content": "What's the weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "Check London weather, need to directly call the weather tool.",  # Only retain reasoning_content of this round of conversation
+            "reasoning_content": "To check London's weather, need to directly call the weather tool.",  # Only retain reasoning_content for this round of conversation
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -248,26 +251,26 @@ Detailed introductions to these configuration items are as follows:
 
     - When the value is `all`
 
-    When the value is `all`, the `reasoning_content` field in **all** conversations is retained. The final messages received by the model will be:
+    When the value is `all`, the `reasoning_content` field in **all** conversations is retained. The final messages received by the model are:
     ```python
     messages = [
-        {"content": "How is the weather in New York?", "role": "user"},
+        {"content": "What's the weather in New York?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "Check New York weather, need to directly call the weather tool.",  # Retain reasoning_content
+            "reasoning_content": "To check New York's weather, need to directly call the weather tool.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
-        {"content": "Cloudy 7~13°C", "role": "tool", "tool_call_id": "..."},
+        {"content": "Cloudy, 7~13°C", "role": "tool", "tool_call_id": "..."},
         {
-            "content": "The weather in New York today is cloudy, 7~13°C.",
+            "content": "Today's weather in New York is cloudy, 7~13°C.",
             "reasoning_content": "Directly return New York weather result.",  # Retain reasoning_content
             "role": "assistant",
         },
-        {"content": "How is the weather in London?", "role": "user"},
+        {"content": "What's the weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "Check London weather, need to directly call the weather tool.",  # Retain reasoning_content
+            "reasoning_content": "To check London's weather, need to directly call the weather tool.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -275,29 +278,29 @@ Detailed introductions to these configuration items are as follows:
     ]
     ```
 
-    **Note**: If the current round of conversation does not involve tool calls, the effect of `current` is the same as `never`.
+    **Note**: If the current conversation doesn't involve tool calling, the effect of `current` is the same as `never`.
 
     !!! info "Tip"
-        Configure flexibly according to the model provider's requirements for retaining `reasoning_content`:
+        Configure flexibly based on the provider's requirements for `reasoning_content` retention:
 
         - If the provider requires **retaining reasoning content throughout**, set to `all`;  
-        - If only required to retain in **this round of tool calls**, set to `current`;  
-        - If there are no special requirements, keep the default `never`.
+        - If only required to retain in **this round of tool calling**, set to `current`;  
+        - If no special requirements, keep the default `never`.
 
-        Similarly, this parameter can be set uniformly when creating, or can be dynamically overridden for a single model during instantiation; **it is generally recommended to specify separately during instantiation**, in which case no need to set when creating.
+        This parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; since different models from the same provider may have different `reasoning_content` retention policies, and even the same model may need different policies in different scenarios, **it's recommended to specify explicitly during instantiation**, no need to assign when creating the class.
 
 ??? note "4. include_usage"
 
-    `include_usage` is a parameter in the OpenAI compatible API used to control whether to append a message containing token usage information (such as `prompt_tokens` and `completion_tokens`) at the end of the streaming response. Since standard streaming responses do not return usage information by default, enabling this option allows clients to directly obtain complete token consumption data for billing, monitoring, or logging.
+    `include_usage` is a parameter in OpenAI-compatible API used to control whether to append a message containing token usage information (such as `prompt_tokens` and `completion_tokens`) at the end of streaming responses. Since standard streaming responses don't return usage information by default, enabling this option allows clients to directly obtain complete token consumption data for billing, monitoring, or logging.
 
-    It is usually enabled through `stream_options={"include_usage": true}`. Considering that some model providers do not support this parameter, this library sets it as a compatibility option with a default value of `True`, because most model providers support this parameter. If not supported, it can be explicitly set to `False`.
+    Usually enabled through `stream_options={"include_usage": true}`. Considering that some model providers don't support this parameter (or don't want to enable this token usage recording feature), this library makes it a compatibility option with a default value of `True`, because most model providers support this parameter. If not supported, it can be explicitly set to `False`.
 
     !!! info "Tip"
-        This parameter generally does not need to be set, just keep the default value. Only when the model provider does not support it, it needs to be set to `False`.
+        This parameter generally doesn't need to be set, just keep the default value. Only set to `False` when the model provider doesn't support it(or doesn't want to enable this token usage recording feature).
 
 #### model_profiles Parameter Setting
 
-If you want to use the `model.profile` parameter, you must explicitly pass it in when creating.
+If you want to use the `model.profile` parameter, you must explicitly pass it during creation.
 
 For example:
 
@@ -333,17 +336,17 @@ print(model.profile)
 ```
 
 !!! warning "Note"
-    Although the above compatibility configurations have been provided, this library still cannot guarantee 100% compatibility with all OpenAI compatible interfaces. If the model provider already has an official or community integration class, please prioritize using that integration class. If you encounter any compatibility issues, welcome to submit an issue in this library's GitHub repository.
+    Despite providing the above compatibility configurations, this library cannot guarantee 100% compatibility with all OpenAI-compatible interfaces. If the model provider already has an official or community integration class, please prioritize using that integration class. If you encounter any compatibility issues, feel free to submit an issue in this library's GitHub repository.
 
 ### Creating Embedding Model Class
 
-Similar to the chat model class, you can use `create_openai_compatible_embedding` to create an embedding model class.
+Similar to chat model classes, you can use `create_openai_compatible_embedding` to create an embedding model class.
 
 #### Example Code
 Similarly, we use `create_openai_compatible_embedding` to integrate vLLM's embedding model.
 
 !!! note "Additional Information"  
-    vLLM can deploy embedding models and expose OpenAI compatible interfaces, for example:
+    vLLM can deploy embedding models and expose OpenAI-compatible interfaces, for example:
 
     ```bash
     vllm serve Qwen/Qwen3-Embedding-4B \
@@ -389,17 +392,20 @@ embedding = VLLMEmbedding(model="qwen3-embedding-8b")
 print(embedding.embed_query("你好"))
 ```
 
+!!! warning "Note"
+    Similar to model management requirements, since the two functions above use `pydantic.create_model` to create model classes at the bottom layer, they bring certain performance overhead, and `create_openai_compatible_model` also relies on a global dictionary to record the `profiles` corresponding to each model provider at the bottom layer, so there are also multi-threading concurrency issues in use. Therefore, it's recommended to create the corresponding integration classes in the project's startup phase, and not dynamically create them later.
+
 ## Using Integration Classes
 
-### Using Chat Model Class
+### Using Chat Model Classes
 
-First, we need to create a chat model class. We use the previously created `ChatVLLM` class.
+First, we need to create a chat model class. We'll use the previously created `ChatVLLM` class.
 
-- Supports methods such as `invoke`, `ainvoke`, `stream`, `astream`, etc.
+- Supports methods like `invoke`, `ainvoke`, `stream`, `astream`, etc.
 
 ??? example "Regular Call"
 
-    Supports using `invoke` for simple calls:
+    Supports `invoke` for simple calls:
 
     ```python
     from langchain_core.messages import HumanMessage
@@ -409,7 +415,7 @@ First, we need to create a chat model class. We use the previously created `Chat
     print(response)
     ```
 
-    Also supports using `ainvoke` for asynchronous calls:
+    Also supports `ainvoke` for asynchronous calls:
 
     ```python
     from langchain_core.messages import HumanMessage
@@ -421,7 +427,7 @@ First, we need to create a chat model class. We use the previously created `Chat
 
 ??? example "Streaming Output"
 
-    Supports using `stream` for streaming output:
+    Supports `stream` for streaming output:
 
     ```python
     from langchain_core.messages import HumanMessage
@@ -431,7 +437,7 @@ First, we need to create a chat model class. We use the previously created `Chat
         print(chunk)
     ```
 
-    And using `astream` for asynchronous streaming calls:
+    And `astream` for asynchronous streaming calls:
 
     ```python
     from langchain_core.messages import HumanMessage
@@ -482,7 +488,6 @@ If the `supported_response_format` parameter of this model class contains `json_
     print(response)
     ```
 
-
 - Supports passing parameters of `BaseChatOpenAI`, such as `temperature`, `top_p`, `max_tokens`, etc.
 
 In addition, since this class inherits from `BaseChatOpenAI`, it supports passing model parameters of `BaseChatOpenAI`, such as `temperature`, `extra_body`, etc.:
@@ -497,14 +502,13 @@ In addition, since this class inherits from `BaseChatOpenAI`, it supports passin
     print(response)
     ```
 
-
 - Supports passing multimodal data
 
-Supports passing multimodal data, you can use OpenAI compatible multimodal data formats or directly use `content_block` in `langchain`.
+Supports passing multimodal data, you can use OpenAI-compatible multimodal data format or directly use `content_block` in `langchain`.
 
 ??? example "Passing Multimodal Data"
 
-    **Passing image type data**:
+    **Passing image data**:
 
     ```python
     from langchain_core.messages import HumanMessage
@@ -525,7 +529,7 @@ Supports passing multimodal data, you can use OpenAI compatible multimodal data 
     print(response)
     ```
 
-    **Passing video type data**:
+    **Passing video data**:
     
 
     ```python
@@ -557,11 +561,10 @@ Supports passing multimodal data, you can use OpenAI compatible multimodal data 
     --served-model-name qwen3-vl-2b
     ```
 
-
 - Supports OpenAI's latest `responses api` (not yet fully guaranteed to be supported, can be used for simple testing, but not for production environments)
 
-This model class also supports OpenAI's latest `responses_api`. However, currently only a few providers support this API style. If your model provider supports this API style, you can pass in the `use_responses_api` parameter as `True`.
-    For example, vllm supports `responses_api`, so you can use it like this:
+This model class also supports OpenAI's latest `responses_api`. However, currently only a few providers support this API style. If your model provider supports this API style, you can pass `use_responses_api` parameter as `True`.
+    For example, if vllm supports `responses_api`, you can use it like this:
 
 ??? example "OpenAI's latest `responses_api`"
 
@@ -573,14 +576,13 @@ This model class also supports OpenAI's latest `responses_api`. However, current
     print(response)
     ```
 
-
-### Using Embedding Model Class
+### Using Embedding Model Classes
 
 We use the previously created `VLLMEmbeddings` class to initialize an embedding model instance.
 
-- Vectorize query
+- Vectorizing queries
 
-??? example "Vectorize Query"
+??? example "Vectorizing Queries"
 
     ```python
     embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
@@ -595,9 +597,9 @@ We use the previously created `VLLMEmbeddings` class to initialize an embedding 
     print(res)
     ```
 
-- Vectorize string list
+- Vectorizing string lists
 
-??? example "Vectorize String List"
+??? example "Vectorizing String Lists"
 
     ```python
     documents = ["Hello", "Hello, I'm Zhang San"]
@@ -614,11 +616,11 @@ We use the previously created `VLLMEmbeddings` class to initialize an embedding 
     print(res)
     ```
 
-**Note**: The chat model class and embedding model class created using this feature support passing any parameters of `BaseChatOpenAI` and `OpenAIEmbeddings`, such as `temperature`, `extra_body`, `dimensions`, etc.
+**Note**: The chat model classes and embedding model classes created using this feature support passing any parameters of `BaseChatOpenAI` and `OpenAIEmbeddings`, such as `temperature`, `extra_body`, `dimensions`, etc.
 
-## Integration with Model Management Functionality
+## Integration with Model Management Feature
 
-This library has seamlessly integrated this functionality into the model management feature. When registering a chat model, simply set `chat_model` to `"openai-compatible"`; when registering an embedding model, set `embeddings_model` to `"openai-compatible"`.
+This library has seamlessly integrated this feature with the model management functionality. When registering a chat model, just set `chat_model` to `"openai-compatible"`; when registering an embedding model, set `embeddings_model` to `"openai-compatible"`.
 
 ### Chat Model Class Registration
 
@@ -648,7 +650,7 @@ register_model_provider(
 )
 ```
 
-At the same time, the `base_url`, `compatibility_options`, and `model_profiles` parameters in the `create_openai_compatible_model` function also support being passed in. Just pass in the corresponding parameters in the `register_model_provider` function.
+At the same time, parameters like `base_url`, `compatibility_options`, `model_profiles` in the `create_openai_compatible_model` function also support being passed. Just pass the corresponding parameters in the `register_model_provider` function.
 
 ### Embedding Model Class Registration
 

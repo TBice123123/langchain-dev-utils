@@ -11,7 +11,7 @@ def format_prompt(request: ModelRequest) -> str:
     Variables are first resolved from the state, then from the context if not found.
 
     Example:
-        >>> from langchain_dev_utils.agents.middleware.format_prompt import format_prompt
+        >>> from langchain_dev_utils.agents.middleware import format_prompt
         >>> from langchain.agents import create_agent
         >>> from langchain_core.messages import HumanMessage
         >>> from dataclasses import dataclass

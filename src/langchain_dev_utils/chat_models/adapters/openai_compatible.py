@@ -586,6 +586,78 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         )
 
 
+def _validate_compatibility_options(
+    compatibility_options: Optional[CompatibilityOptions] = None,
+) -> None:
+    """Validate provider configuration against supported features.
+
+    Args:
+        compatibility_options: Optional configuration for the provider
+
+    Raises:
+        ValueError: If provider configuration is invalid
+    """
+    if compatibility_options is None:
+        compatibility_options = {}
+
+    if "supported_tool_choice" in compatibility_options:
+        _supported_tool_choice = compatibility_options["supported_tool_choice"]
+        for tool_choice in _supported_tool_choice:
+            if tool_choice not in ["auto", "none", "required", "specific"]:
+                raise ValueError(
+                    f"Unsupported tool_choice: {tool_choice}. Please choose from 'auto', 'none', 'required','specific'."
+                )
+
+    if "supported_response_format" in compatibility_options:
+        _supported_response_format = compatibility_options["supported_response_format"]
+        for response_format in _supported_response_format:
+            if response_format not in ["json_schema", "json_mode"]:
+                raise ValueError(
+                    f"Unsupported response_format: {response_format}. Please choose from 'json_schema', 'json_mode'."
+                )
+
+    if "reasoning_keep_policy" in compatibility_options:
+        _reasoning_keep_policy = compatibility_options["reasoning_keep_policy"]
+        if _reasoning_keep_policy not in ["never", "current", "all"]:
+            raise ValueError(
+                f"Unsupported reasoning_keep_policy: {_reasoning_keep_policy}. Please choose from 'never', 'current', 'all'."
+            )
+
+    if "include_usage" in compatibility_options:
+        _include_usage = compatibility_options["include_usage"]
+        if not isinstance(_include_usage, bool):
+            raise ValueError(
+                f"include_usage must be a boolean value. Received: {_include_usage}"
+            )
+
+
+def _validate_base_url(base_url: Optional[str] = None) -> None:
+    """Validate base URL format.
+
+    Args:
+        base_url: Base URL to validate
+
+    Raises:
+        ValueError: If base URL is not a valid HTTP or HTTPS URL
+    """
+    if base_url is None:
+        return
+
+    from urllib.parse import urlparse
+
+    parsed = urlparse(base_url.strip())
+
+    if not parsed.scheme or not parsed.netloc:
+        raise ValueError(
+            f"base_url must be a valid HTTP or HTTPS URL. Received: {base_url}"
+        )
+
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(
+            f"base_url must use HTTP or HTTPS protocol. Received: {parsed.scheme}"
+        )
+
+
 def _create_openai_compatible_model(
     provider: str,
     base_url: str,
@@ -614,6 +686,20 @@ def _create_openai_compatible_model(
 
     if profiles is not None:
         _register_profile_with_provider(provider, profiles)
+
+    _validate_compatibility_options(compatibility_options)
+
+    if len(provider) >= 25:
+        raise ValueError(
+            f"provider must be less than 25 characters. Received: {provider}"
+        )
+
+    if len(chat_model_cls_name) >= 30:
+        raise ValueError(
+            f"chat_model_cls_name must be less than 30 characters. Received: {chat_model_cls_name}"
+        )
+
+    _validate_base_url(base_url)
 
     return create_model(
         chat_model_cls_name,
