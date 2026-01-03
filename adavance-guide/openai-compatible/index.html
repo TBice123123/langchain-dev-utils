@@ -1905,12 +1905,8 @@ The user first asks "What's the weather in New York?", then follows up with "Wha
 </details>
 <details class="note">
 <summary>4. include_usage</summary>
-<p><code>include_usage</code> is a parameter in OpenAI-compatible API used to control whether to append a message containing token usage information (such as <code>prompt_tokens</code> and <code>completion_tokens</code>) at the end of streaming responses. Since standard streaming responses don't return usage information by default, enabling this option allows clients to directly obtain complete token consumption data for billing, monitoring, or logging.</p>
-<p>Usually enabled through <code>stream_options={"include_usage": true}</code>. Considering that some model providers don't support this parameter (or don't want to enable this token usage recording feature), this library makes it a compatibility option with a default value of <code>True</code>, because most model providers support this parameter. If not supported, it can be explicitly set to <code>False</code>.</p>
-<div class="admonition info">
-<p class="admonition-title">Tip</p>
-<p>This parameter generally doesn't need to be set, just keep the default value. Only set to <code>False</code> when the model provider doesn't support it(or doesn't want to enable this token usage recording feature).</p>
-</div>
+<p>Controls whether to append token usage information (<code>prompt_tokens</code> and <code>completion_tokens</code>) at the end of streaming responses.</p>
+<p>For OpenAI-compatible APIs, this is typically set via <code>stream_options={"include_usage": true}</code>, so only providers that support the <code>stream_options</code> parameter can use it. The default value is <code>True</code>, and if you encounter a provider that does not support it, or if you do not want to record token usage, you can explicitly set it to <code>False</code>.</p>
 </details>
 <h4 id="model_profiles-parameter-setting">model_profiles Parameter Setting</h4>
 <p>If you want to use the <code>model.profile</code> parameter, you must explicitly pass it during creation.</p>

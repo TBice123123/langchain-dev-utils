@@ -1905,12 +1905,8 @@
 </details>
 <details class="note">
 <summary>4. include_usage</summary>
-<p><code>include_usage</code> 是 OpenAI 兼容 API 中的一个参数，用于控制是否在流式响应的末尾附加一条包含 token 使用情况（如 <code>prompt_tokens</code> 和 <code>completion_tokens</code>）的消息。由于标准流式响应默认不返回用量信息，启用该选项后，客户端可直接获取完整的 token 消耗数据，便于计费、监控或日志记录。</p>
-<p>通常通过 <code>stream_options={"include_usage": true}</code> 启用。考虑到有些模型提供商不支持该参数（或者不希望开启该token使用情况记录功能），因此本库将其设为兼容性选项，默认值为 <code>True</code>，因为绝大多数模型提供商均支持该参数，如果不支持，则可以显式设为 <code>False</code>。</p>
-<div class="admonition info">
-<p class="admonition-title">提示</p>
-<p>此参数一般无需设置，保持默认值即可。只有在模型提供商不支持时(或者不希望开启该token使用情况记录功能)，才需要设置为 <code>False</code>。</p>
-</div>
+<p>控制是否在流式响应末尾附加 token 使用情况（<code>prompt_tokens</code> 和 <code>completion_tokens</code>）。</p>
+<p>对于OpenAI兼容的API，一般是通过 <code>stream_options={"include_usage": true}</code> 设置，因此只有支持 <code>stream_options</code> 参数的提供商才能使用。默认值为 <code>True</code>，如遇到不支持的提供商，或不希望记录 token 使用情况，可显式设为 <code>False</code>。</p>
 </details>
 <h4 id="model_profiles">model_profiles参数设置</h4>
 <p>如果要使用 <code>model.profile</code> 参数，则必须在创建时显式传入。</p>
