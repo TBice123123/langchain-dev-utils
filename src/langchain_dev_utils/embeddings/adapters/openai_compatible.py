@@ -4,7 +4,11 @@ from langchain_core.utils import from_env, secret_from_env
 from langchain_openai.embeddings import OpenAIEmbeddings
 from pydantic import Field, SecretStr, create_model
 
-from ..._utils import _validate_base_url, _validate_model_cls_name
+from ..._utils import (
+    _validate_base_url,
+    _validate_model_cls_name,
+    _validate_provider_name,
+)
 
 
 class _BaseEmbeddingOpenAICompatible(OpenAIEmbeddings):
@@ -61,6 +65,7 @@ def _create_openai_compatible_embedding(
         )
 
     _validate_model_cls_name(embeddings_cls_name)
+    _validate_provider_name(provider)
 
     _validate_base_url(base_url)
 

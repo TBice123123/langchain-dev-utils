@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from collections.abc import AsyncIterator, Iterator
 from json import JSONDecodeError
 from typing import (
@@ -14,6 +15,7 @@ from typing import (
     cast,
 )
 
+import openai
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
@@ -37,7 +39,6 @@ from langchain_core.utils import from_env, secret_from_env
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_openai.chat_models._compat import _convert_from_v1_to_chat_completions
 from langchain_openai.chat_models.base import BaseChatOpenAI, _convert_message_to_dict
-import openai
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -49,7 +50,11 @@ from pydantic import (
 )
 from typing_extensions import Self
 
-from ..._utils import _validate_base_url, _validate_model_cls_name
+from ..._utils import (
+    _validate_base_url,
+    _validate_model_cls_name,
+    _validate_provider_name,
+)
 from ..types import (
     CompatibilityOptions,
     ReasoningKeepPolicy,
@@ -662,10 +667,7 @@ def _create_openai_compatible_model(
 
     _validate_compatibility_options(compatibility_options)
 
-    if len(provider) >= 20:
-        raise ValueError(
-            f"provider must be less than 50 characters. Received: {provider}"
-        )
+    _validate_provider_name(provider)
 
     _validate_model_cls_name(chat_model_cls_name)
 

@@ -35,7 +35,12 @@ Using the `create_openai_compatible_model` function, you can create a chat model
 | `base_url` | Default API address of the model provider.<br><br>**Type**: `str`<br>**Required**: No |
 | `compatibility_options` | Compatibility options configuration.<br><br>**Type**: `dict`<br>**Required**: No |
 | `model_profiles` | Profiles corresponding to models provided by this model provider.<br><br>**Type**: `dict`<br>**Required**: No |
-| `chat_model_cls_name` | Chat model class name, default value is `Chat{model_provider}` (where `{model_provider}` is capitalized).<br><br>**Type**: `str`<br>**Required**: No |
+| `chat_model_cls_name` | Chat model class name(must follow Python class name conventions), default value is `Chat{model_provider}` (where `{model_provider}` is capitalized).<br><br>**Type**: `str`<br>**Required**: No |
+
+
+!!! warning "Warning"
+    `model_provider` must start with a letter or number, can only contain letters, numbers, and underscores, and must be 20 characters or fewer. (`embedding_provider` is also subject to the same constraints)
+
 
 This library builds a chat model class corresponding to a specific provider using the built-in `BaseChatOpenAICompatible` class based on the parameters provided by the user. This class inherits from `BaseChatOpenAI` of `langchain-openai` and enhances the following capabilities:
 

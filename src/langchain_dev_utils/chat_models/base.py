@@ -7,6 +7,7 @@ from langchain_core.utils import from_env
 from langchain_dev_utils._utils import (
     _check_pkg_install,
     _get_base_url_field_name,
+    _validate_provider_name,
 )
 
 from .types import ChatModelProvider, ChatModelType, CompatibilityOptions
@@ -126,6 +127,7 @@ def register_model_provider(
         >>> model = load_chat_model(model="vllm:qwen3-4b")
         >>> model.invoke("Hello")
     """
+    _validate_provider_name(provider_name)
     base_url = base_url or from_env(f"{provider_name.upper()}_API_BASE", default=None)()
     if isinstance(chat_model, str):
         _check_pkg_install("langchain_openai")

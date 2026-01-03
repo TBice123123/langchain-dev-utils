@@ -37,7 +37,16 @@ register_embeddings_provider(
 
 - `FakeEmbeddings` 仅用于测试。实际使用中必须传入具备真实功能的 `Embeddings` 类。
 - `provider_name` 代表模型提供商的名称，用于后续在 `load_embeddings` 中引用。名称可自定义，但不要包含 `:`、`-` 等特殊字符。
-- `base_url` 参数通常无需手动设置（因为嵌入模型类内部已定义 API 地址）。仅当需要覆盖默认地址时，才显式传入 `base_url`；覆盖范围仅限模型类中字段名为 `api_base` 或 `base_url`（含别名）的属性。
+
+!!! warning "注意"
+    `provider_name` 必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。
+
+
+#### 可选参数说明
+
+**base_url**
+
+此参数通常无需设置（因为嵌入模型类内部一般已定义默认的 API 地址），仅当需要覆盖嵌入模型类默认地址时才传入 `base_url`，且仅对字段名为 `api_base` 或 `base_url`（含别名）的属性生效。
 
 ### 未有 LangChain 嵌入模型类，但提供商支持 OpenAI 兼容 API
 

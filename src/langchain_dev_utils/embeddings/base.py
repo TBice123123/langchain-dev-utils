@@ -6,6 +6,7 @@ from langchain_core.utils import from_env
 from langchain_dev_utils._utils import (
     _check_pkg_install,
     _get_base_url_field_name,
+    _validate_provider_name,
 )
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
@@ -87,7 +88,7 @@ def register_embeddings_provider(
         >>> embeddings = load_embeddings("vllm:qwen3-embedding-4b")
         >>> embeddings.embed_query("hello world")
     """
-
+    _validate_provider_name(provider_name)
     base_url = base_url or from_env(f"{provider_name.upper()}_API_BASE", default=None)()
     if isinstance(embeddings_model, str):
         if base_url is None:

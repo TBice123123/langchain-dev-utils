@@ -36,7 +36,16 @@ register_embeddings_provider(
 
 - `FakeEmbeddings` is only for testing. In actual use, you must pass an `Embeddings` class with real functionality.
 - `provider_name` represents the name of the model provider, used for subsequent reference in `load_embeddings`. The name can be customized, but should not contain special characters such as `:`, `-`, etc.
-- The `base_url` parameter usually doesn't need to be set manually (since the embedding model class has already defined the API address internally). Only when you need to override the default address should you explicitly pass `base_url`; the override scope is limited to attributes with field names `api_base` or `base_url` (including aliases) in the model class.
+
+!!! warning "Warning"
+    `provider_name` must start with a letter or number, can only contain letters, numbers, and underscores, and must be 20 characters or fewer.
+
+#### Optional Parameters
+
+**base_url**
+
+This parameter usually does not need to be set (because the embedding model class already defines a default API address internally). Only pass `base_url` when you need to override the default address of the embedding model class, and it only takes effect for fields named `api_base` or `base_url` (including aliases).
+
 
 ### No LangChain Embedding Model Class, but Provider Supports OpenAI Compatible API
 

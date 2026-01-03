@@ -33,16 +33,21 @@ register_model_provider(
 )
 ```
 
-#### Usage Instructions
+#### Usage Notes
 
-- `FakeChatModel` is only for testing. In actual use, you must pass a `ChatModel` class with real functionality.
-- `provider_name` represents the name of the model provider, used for subsequent reference in `load_chat_model`. The name can be customized, but should not contain special characters such as `:`, `-`, etc.
+- `FakeChatModel` is for testing only. In real usage, you must pass a `ChatModel` class with actual functionality.
+- `provider_name` is the name of the model provider, used later in `load_chat_model`.
+
+
+!!! warning "Note"
+    `provider_name` must start with a letter or digit, can only contain letters, digits, and underscores, and must not exceed 20 characters in length.
+
 
 #### Optional Parameter Description
 
 **base_url**
 
-This parameter usually doesn't need to be set (since the model class generally has a default API address defined internally). It should only be passed when you need to override the model class's default address, and it only affects attributes with field names `api_base` or `base_url` (including aliases).
+This parameter usually does not need to be set (because the chat model class typically already defines a default API address). Only pass `base_url` when you need to override the default address defined by the chat model class, and it only takes effect for fields named `api_base` or `base_url` (including aliases).
 
 **model_profiles**
 

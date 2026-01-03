@@ -321,7 +321,7 @@ agent = create_agent(
 
 ## Formatting System Prompts
 
-`format_prompt` is a decorator that allows you to use `f-string` style placeholders (like `{name}`) in `system_prompt` and dynamically replace them with actual values at runtime.
+`format_prompt` is a **middleware instance** that allows you to use `f-string` style placeholders (like `{name}`) in `system_prompt` and dynamically replace them with actual values at runtime.
 
 ### Parameter Description
 

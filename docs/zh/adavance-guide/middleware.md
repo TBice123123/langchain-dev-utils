@@ -327,7 +327,7 @@ agent = create_agent(
 
 ## 格式化系统提示词
 
-`format_prompt` 是一个装饰器，允许您在 `system_prompt` 中使用 `f-string` 风格的占位符（如 `{name}`），并在运行时动态地用实际值替换它们。
+`format_prompt` 是一个**中间件实例**，允许您在 `system_prompt` 中使用 `f-string` 风格的占位符（如 `{name}`），并在运行时动态地用实际值替换它们。
 
 ### 参数说明
 

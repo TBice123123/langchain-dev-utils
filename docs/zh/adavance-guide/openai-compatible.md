@@ -37,8 +37,10 @@
 | `base_url` | 模型提供商的默认API地址。<br><br>**类型**: `str`<br>**必填**: 否 |
 | `compatibility_options` | 兼容性选项配置。<br><br>**类型**: `dict`<br>**必填**: 否 |
 | `model_profiles` | 该模型提供商所提供的模型对应的profiles。<br><br>**类型**: `dict`<br>**必填**: 否 |
-| `chat_model_cls_name` | 对话模型类名，默认值为 `Chat{model_provider}`（其中 `{model_provider}` 首字母大写）。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `chat_model_cls_name` | 对话模型类名(需要符合Python类名规范)，默认值为 `Chat{model_provider}`（其中 `{model_provider}` 首字母大写）。<br><br>**类型**: `str`<br>**必填**: 否 |
 
+!!! warning "注意"
+    `model_provider` 必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。(`embedding_provider` 同理)
 
 本库会根据用户传入的上述参数，使用内置 `BaseChatOpenAICompatible` 类构建对应于特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并增强以下能力：
 
