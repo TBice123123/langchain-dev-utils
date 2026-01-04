@@ -97,6 +97,11 @@ def _validate_model_cls_name(model_cls_name: str) -> None:
             f"model_cls_name should start with an uppercase letter (PEP 8). Received: {model_cls_name}"
         )
 
+    if len(model_cls_name) > 30:
+        raise ValueError(
+            f"model_cls_name must be 30 characters or fewer. Received: {model_cls_name}"
+        )
+
 
 def _validate_provider_name(provider_name: str) -> None:
     """Validate provider name follows Python naming conventions.
@@ -112,7 +117,7 @@ def _validate_provider_name(provider_name: str) -> None:
 
     if not provider_name[0].isalnum():
         raise ValueError(
-            f"provider_name must start with a letter. Received: {provider_name}"
+            f"provider_name must start with a letter or number. Received: {provider_name}"
         )
 
     if not all(c.isalnum() or c == "_" for c in provider_name):

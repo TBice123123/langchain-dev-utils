@@ -25,7 +25,7 @@
 
 
 !!! tip "提示"
-    本库提供的两个工具函数借鉴了 JavaScript 生态的第三方库 [ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers)。
+    本库提供的两个工具函数的最初灵感借鉴自 JavaScript 生态的 [@ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers)。
 
 ### 创建对话模型类
 
@@ -104,7 +104,11 @@ model = ChatVLLM(model="qwen3-4b")
 print(model.invoke("你好"))
 ```
 
-**注意**：上述代码能够成功运行的前提是，你设置了`VLLM_API_KEY`的环境变量。虽然vLLM不要求传入API Key，但是由于对话模型类初始化时需要API Key。
+**注意**：上述代码成功运行的前提是已配置环境变量 `VLLM_API_KEY`。虽然 vLLM 本身不要求 API Key，但对话模型类初始化时必须传入，因此请先设置该变量。例如
+
+```bash
+export VLLM_API_KEY=vllm_api_key
+```
 
 
 !!! info "提示"

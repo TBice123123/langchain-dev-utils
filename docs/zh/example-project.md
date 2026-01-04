@@ -39,7 +39,7 @@ langgraph dev
 
 使用的本库的功能：
 
-- 对话模型管理：`register_model_provider`、`load_chat_model`
+- 对话模型管理（含OpenAI兼容API集成）：`register_model_provider`、`load_chat_model`
 - 嵌入模型管理：`register_embeddings_provider`、`load_embeddings`
 - 格式化序列：`format_sequence`
 - 中间件：`format_prompt`
@@ -48,7 +48,7 @@ langgraph dev
 
 使用的本库的功能：
 
-- 对话模型管理：`register_model_provider`、`load_chat_model`
+- 对话模型管理（含OpenAI兼容API集成）：`register_model_provider`、`load_chat_model`
 - 多智能体构建：`wrap_agent_as_tool`
 
 
@@ -64,17 +64,18 @@ langgraph dev
   - `GLM-4.6`：用于`supervisor-agent`的`supervisor`
   - `GLM-4.5`：用于`supervisor-agent`的`subagent`
 
-如果你想自定义你的模型提供商，需要修改`src/utils/providers/chat_models/register.py`中的内容，在`register_all_model_providers`函数中使用`register_model_provider`函数注册你的模型提供商。
-同时也建议修改`src/utils/providers/chat_models/load.py`中的内容，在`load_chat_model`函数中添加你的模型提供商的加载逻辑。
+如需自定义模型提供商，请修改`src/utils/providers/chat_models/register.py`，在`register_all_model_providers`函数中使用`register_model_provider`函数注册你的模型提供商。
+
+同时建议修改`src/utils/providers/chat_models/load.py`，在`load_chat_model`函数中添加对应的加载逻辑。
 
 !!! success "对话模型管理最佳实践"
-    对于不同对话模型类的额外参数，`load_chat_model`函数采用关键字参数方式进行接收（LangChain对应的函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考`src\utils\providers\chat_models\load.py`中内容进行针对性修改。
+    `load_chat_model`函数采用关键字参数接收不同对话模型类的额外参数（LangChain官方函数也采用此方式）。这种方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，参考`src/utils/providers/chat_models/load.py`进行针对性修改。
 
 ### 2. 注册嵌入模型提供商
 
-与对话模型提供商类似，你也可以根据需要注册自定义的嵌入模型提供商。需要修改`src/utils/providers/embeddings/register.py`中的内容，在`register_all_embeddings_providers`函数中使用`register_embeddings_provider`函数注册你的嵌入模型提供商。
+嵌入模型提供商的注册方式与对话模型类似。请修改`src/utils/providers/embeddings/register.py`，在`register_all_embeddings_providers`函数中使用`register_embeddings_provider`函数注册你的嵌入模型提供商。
 
-如果需要，也可以根据实际情况，修改`src/utils/providers/embeddings/load.py`中的内容，在`load_embeddings`函数中添加你的嵌入模型提供商的加载逻辑。
+如需自定义加载逻辑，可修改`src/utils/providers/embeddings/load.py`，在`load_embeddings`函数中添加相应的加载逻辑。
 
 
 ### 3. 自定义工具

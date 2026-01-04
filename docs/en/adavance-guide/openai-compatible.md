@@ -23,7 +23,7 @@ This library provides two utility functions for creating corresponding chat mode
 | `create_openai_compatible_embedding` | Create embedding model integration class |
 
 !!! tip "Tip"
-    The two utility functions provided by this library are inspired by the third-party library [ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers) in the JavaScript ecosystem.
+    The two utility functions provided by this library are inspired by the third-party library [@ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers) in the JavaScript ecosystem.
 
 ### Creating Chat Model Class
 
@@ -103,7 +103,11 @@ model = ChatVLLM(model="qwen3-4b")
 print(model.invoke("你好"))
 ```
 
-**Note**: The prerequisite for the above code to run successfully is that you have set the `VLLM_API_KEY` environment variable. Although vLLM doesn't require an API Key, the chat model class initialization needs an API Key.
+**Note**: For the code above to run successfully, you must set the environment variable `VLLM_API_KEY`. Although vLLM itself does not require an API key, the chat model class must receive one during initialization, so please configure this variable first. For example:
+
+```bash
+export VLLM_API_KEY=vllm_api_key
+```
 
 !!! info "Tip"
     Naming rules for environment variables of the created chat model class (embedding model class also follows this naming rule):
