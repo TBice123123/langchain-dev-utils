@@ -1786,17 +1786,13 @@
 <p><strong>Implementation Notes</strong>:</p>
 <ol>
 <li>
-<p><strong>Extended State Schema</strong>: Added four fields <code>requirement</code>, <code>architecture</code>, <code>code</code>, and <code>tests</code> to the agent's State Schema to store the final output results of corresponding agents.</p>
+<p><strong>Extended State Schema</strong>: Added four fields <code>requirement</code>, <code>architecture</code>, <code>code</code>, and <code>tests</code> to the agent's State Schema to store the final output results of the corresponding agents.</p>
 </li>
 <li>
-<p><strong>Custom Middleware</strong>: Created the <code>ClearAgentContextMiddleware</code> middleware, which after each agent finishes:</p>
-</li>
-<li>Clears the current execution context (using <code>RemoveMessage</code>)</li>
-<li>
-<p>Saves the final result (<code>final_message.content</code>) to the corresponding field</p>
+<p><strong>Custom Middleware</strong>: Created the <code>ClearAgentContextMiddleware</code> middleware. After each agent completes, it first clears the current runtime context (using <code>RemoveMessage</code>), then saves the final result (<code>final_message.content</code>) to the corresponding field.</p>
 </li>
 <li>
-<p><strong>Dynamic Prompt Formatting</strong>: Uses the built-in <code>format_prompt</code> middleware to dynamically concatenate the output of previous agents into the <code>system_prompt</code> at runtime</p>
+<p><strong>Dynamic Prompt Formatting</strong>: Uses the built-in <code>format_prompt</code> middleware of this library to dynamically splice the output of preceding agents into the <code>system_prompt</code> at runtime as needed.</p>
 </li>
 </ol>
 </details>

@@ -1789,14 +1789,10 @@
 <p><strong>扩展状态模式</strong>：在智能体的 State Schema 中添加了 <code>requirement</code>、<code>architecture</code>、<code>code</code>、<code>tests</code> 四个字段，用于存储对应智能体的最终输出结果。</p>
 </li>
 <li>
-<p><strong>自定义中间件</strong>：创建了 <code>ClearAgentContextMiddleware</code> 中间件，在每个智能体结束后：</p>
-</li>
-<li>清除当前的运行上下文（使用 <code>RemoveMessage</code>）</li>
-<li>
-<p>将最终结果（<code>final_message.content</code>）保存到对应的字段中</p>
+<p><strong>自定义中间件</strong>：创建了 <code>ClearAgentContextMiddleware</code> 中间件，在每个智能体结束后，首先清除当前的运行上下文（使用 <code>RemoveMessage</code>），然后将最终结果（<code>final_message.content</code>）保存到对应的字段中。</p>
 </li>
 <li>
-<p><strong>动态提示格式化</strong>：使用本库内置的 <code>format_prompt</code> 中间件，在运行时将前置智能体的输出按需动态拼入 <code>system_prompt</code></p>
+<p><strong>动态提示格式化</strong>：使用本库内置的 <code>format_prompt</code> 中间件，在运行时将前置智能体的输出按需动态拼入 <code>system_prompt</code>。</p>
 </li>
 </ol>
 </details>
