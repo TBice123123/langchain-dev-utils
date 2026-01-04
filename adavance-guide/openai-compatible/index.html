@@ -1609,7 +1609,7 @@
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>The two utility functions provided by this library are inspired by the third-party library <a href="https://ai-sdk.dev/providers/openai-compatible-providers">ai-sdk/openai-compatible</a> in the JavaScript ecosystem.</p>
+<p>The two utility functions provided by this library are inspired by the third-party library <a href="https://ai-sdk.dev/providers/openai-compatible-providers">@ai-sdk/openai-compatible</a> in the JavaScript ecosystem.</p>
 </div>
 <h3 id="creating-chat-model-class">Creating Chat Model Class</h3>
 <p>Using the <code>create_openai_compatible_model</code> function, you can create a chat model integration class. This function accepts the following parameters:</p>
@@ -1697,7 +1697,9 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><strong>Note</strong>: The prerequisite for the above code to run successfully is that you have set the <code>VLLM_API_KEY</code> environment variable. Although vLLM doesn't require an API Key, the chat model class initialization needs an API Key.</p>
+<p><strong>Note</strong>: For the code above to run successfully, you must set the environment variable <code>VLLM_API_KEY</code>. Although vLLM itself does not require an API key, the chat model class must receive one during initialization, so please configure this variable first. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm_api_key
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
 <p>Naming rules for environment variables of the created chat model class (embedding model class also follows this naming rule):</p>

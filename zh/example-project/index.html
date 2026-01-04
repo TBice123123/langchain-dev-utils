@@ -1380,7 +1380,7 @@
 <p><strong>单智能体（Simple Agent）</strong>：</p>
 <p>使用的本库的功能：</p>
 <ul>
-<li>对话模型管理：<code>register_model_provider</code>、<code>load_chat_model</code></li>
+<li>对话模型管理（含OpenAI兼容API集成）：<code>register_model_provider</code>、<code>load_chat_model</code></li>
 <li>嵌入模型管理：<code>register_embeddings_provider</code>、<code>load_embeddings</code></li>
 <li>格式化序列：<code>format_sequence</code></li>
 <li>中间件：<code>format_prompt</code></li>
@@ -1388,7 +1388,7 @@
 <p><strong>监督者-多智能体架构（Supervisor-Multi-Agent Architecture）</strong>：</p>
 <p>使用的本库的功能：</p>
 <ul>
-<li>对话模型管理：<code>register_model_provider</code>、<code>load_chat_model</code></li>
+<li>对话模型管理（含OpenAI兼容API集成）：<code>register_model_provider</code>、<code>load_chat_model</code></li>
 <li>多智能体构建：<code>wrap_agent_as_tool</code></li>
 </ul>
 <h2 id="_3">如何自定义</h2>
@@ -1400,15 +1400,15 @@
 <li><code>GLM-4.6</code>：用于<code>supervisor-agent</code>的<code>supervisor</code></li>
 <li><code>GLM-4.5</code>：用于<code>supervisor-agent</code>的<code>subagent</code></li>
 </ul>
-<p>如果你想自定义你的模型提供商，需要修改<code>src/utils/providers/chat_models/register.py</code>中的内容，在<code>register_all_model_providers</code>函数中使用<code>register_model_provider</code>函数注册你的模型提供商。
-同时也建议修改<code>src/utils/providers/chat_models/load.py</code>中的内容，在<code>load_chat_model</code>函数中添加你的模型提供商的加载逻辑。</p>
+<p>如需自定义模型提供商，请修改<code>src/utils/providers/chat_models/register.py</code>，在<code>register_all_model_providers</code>函数中使用<code>register_model_provider</code>函数注册你的模型提供商。</p>
+<p>同时建议修改<code>src/utils/providers/chat_models/load.py</code>，在<code>load_chat_model</code>函数中添加对应的加载逻辑。</p>
 <div class="admonition success">
 <p class="admonition-title">对话模型管理最佳实践</p>
-<p>对于不同对话模型类的额外参数，<code>load_chat_model</code>函数采用关键字参数方式进行接收（LangChain对应的函数也采用此方式）。虽然此方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可以针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，可以参考<code>src\utils\providers\chat_models\load.py</code>中内容进行针对性修改。</p>
+<p><code>load_chat_model</code>函数采用关键字参数接收不同对话模型类的额外参数（LangChain官方函数也采用此方式）。这种方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，参考<code>src/utils/providers/chat_models/load.py</code>进行针对性修改。</p>
 </div>
 <h3 id="2">2. 注册嵌入模型提供商</h3>
-<p>与对话模型提供商类似，你也可以根据需要注册自定义的嵌入模型提供商。需要修改<code>src/utils/providers/embeddings/register.py</code>中的内容，在<code>register_all_embeddings_providers</code>函数中使用<code>register_embeddings_provider</code>函数注册你的嵌入模型提供商。</p>
-<p>如果需要，也可以根据实际情况，修改<code>src/utils/providers/embeddings/load.py</code>中的内容，在<code>load_embeddings</code>函数中添加你的嵌入模型提供商的加载逻辑。</p>
+<p>嵌入模型提供商的注册方式与对话模型类似。请修改<code>src/utils/providers/embeddings/register.py</code>，在<code>register_all_embeddings_providers</code>函数中使用<code>register_embeddings_provider</code>函数注册你的嵌入模型提供商。</p>
+<p>如需自定义加载逻辑，可修改<code>src/utils/providers/embeddings/load.py</code>，在<code>load_embeddings</code>函数中添加相应的加载逻辑。</p>
 <h3 id="3">3. 自定义工具</h3>
 <p><strong>单智能体（simple-agent）</strong><br />
 工具实现位于 <code>src/agents/simple_agent/tools.py</code>，已内置：<br />

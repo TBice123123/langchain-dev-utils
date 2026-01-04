@@ -1609,7 +1609,7 @@
 </table>
 <div class="admonition tip">
 <p class="admonition-title">提示</p>
-<p>本库提供的两个工具函数借鉴了 JavaScript 生态的第三方库 <a href="https://ai-sdk.dev/providers/openai-compatible-providers">ai-sdk/openai-compatible</a>。</p>
+<p>本库提供的两个工具函数的最初灵感借鉴自 JavaScript 生态的 <a href="https://ai-sdk.dev/providers/openai-compatible-providers">@ai-sdk/openai-compatible</a>。</p>
 </div>
 <h3 id="_3">创建对话模型类</h3>
 <p>使用 <code>create_openai_compatible_model</code> 函数可以创建对话模型集成类。该函数接受以下参数：</p>
@@ -1697,7 +1697,9 @@
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><strong>注意</strong>：上述代码能够成功运行的前提是，你设置了<code>VLLM_API_KEY</code>的环境变量。虽然vLLM不要求传入API Key，但是由于对话模型类初始化时需要API Key。</p>
+<p><strong>注意</strong>：上述代码成功运行的前提是已配置环境变量 <code>VLLM_API_KEY</code>。虽然 vLLM 本身不要求 API Key，但对话模型类初始化时必须传入，因此请先设置该变量。例如</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm_api_key
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
 <p>创建的对话模型类（嵌入模型类也遵循此命名规则）环境变量的命名规则：</p>

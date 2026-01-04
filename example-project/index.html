@@ -1346,13 +1346,13 @@
 
 
 <h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
-<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> designed to help developers quickly understand how to efficiently build two typical intelligent agent (agent) systems using the utility functions provided by <code>langchain-dev-utils</code>:</p>
+<p>This repository provides an example project <a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a> designed to help developers quickly understand how to use the utility functions provided by <code>langchain-dev-utils</code> to efficiently build two typical agent systems:</p>
 <ul>
 <li><strong>Single Agent</strong>: Suitable for executing simple tasks and tasks related to long-term memory storage.</li>
-<li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios that require task decomposition, planning, and iterative optimization.</li>
+<li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.</li>
 </ul>
 <p align="center">
-  <img src="../assets/graph.png" alt="graph">
+  <img src="../../assets/graph.png" alt="graph">
 </p>
 
 <h2 id="quick-start">Quick Start</h2>
@@ -1364,11 +1364,11 @@
 <li>Install dependencies using uv:
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
 </code></pre></div></li>
-<li>Create .env file
+<li>Create a .env file
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div></li>
 <li>
-<p>Edit the <code>.env</code> file and fill in your API keys (requires API keys from <code>ZhipuAI</code> and <code>Tavily</code>).</p>
+<p>Edit the <code>.env</code> file and fill in your API keys (requires <code>ZhipuAI</code> and <code>Tavily</code> API keys).</p>
 </li>
 <li>
 <p>Start the project
@@ -1380,7 +1380,7 @@
 <p><strong>Single Agent</strong>:</p>
 <p>Features from this library used:</p>
 <ul>
-<li>Chat model management: <code>register_model_provider</code>, <code>load_chat_model</code></li>
+<li>Chat model management (including OpenAI compatible API integration): <code>register_model_provider</code>, <code>load_chat_model</code></li>
 <li>Embedding model management: <code>register_embeddings_provider</code>, <code>load_embeddings</code></li>
 <li>Format sequence: <code>format_sequence</code></li>
 <li>Middleware: <code>format_prompt</code></li>
@@ -1388,36 +1388,36 @@
 <p><strong>Supervisor-Multi-Agent Architecture</strong>:</p>
 <p>Features from this library used:</p>
 <ul>
-<li>Chat model management: <code>register_model_provider</code>, <code>load_chat_model</code></li>
+<li>Chat model management (including OpenAI compatible API integration): <code>register_model_provider</code>, <code>load_chat_model</code></li>
 <li>Multi-agent construction: <code>wrap_agent_as_tool</code></li>
 </ul>
 <h2 id="how-to-customize">How to Customize</h2>
 <p>You can customize this project according to your actual needs.</p>
 <h3 id="1-replace-chat-model-provider">1. Replace Chat Model Provider</h3>
-<p>This project uses ZhipuAI's GLM series as the core model by default, specifically as follows:</p>
+<p>This project uses ZhipuAI's GLM series as the core model by default, as follows:</p>
 <ul>
 <li><code>GLM-4.7</code>: Used for <code>simple-agent</code></li>
-<li><code>GLM-4.6</code>: Used for <code>supervisor-agent</code>'s <code>supervisor</code></li>
-<li><code>GLM-4.5</code>: Used for the <code>supervisor-agent</code>'s <code>subagent</code></li>
+<li><code>GLM-4.6</code>: Used for the <code>supervisor</code> in <code>supervisor-agent</code></li>
+<li><code>GLM-4.5</code>: Used for <code>subagent</code> in <code>supervisor-agent</code></li>
 </ul>
-<p>If you want to customize your model provider, you need to modify the content in <code>src/utils/providers/chat_models/register.py</code>, and register your model provider using the <code>register_model_provider</code> function in the <code>register_all_model_providers</code> function.</p>
-<p>It is also recommended to modify the content in <code>src/utils/providers/chat_models/load.py</code>, and add the loading logic for your model provider in the <code>load_chat_model</code> function.</p>
+<p>To customize the model provider, please modify <code>src/utils/providers/chat_models/register.py</code> and register your model provider using the <code>register_model_provider</code> function in the <code>register_all_model_providers</code> function.</p>
+<p>It is also recommended to modify <code>src/utils/providers/chat_models/load.py</code> and add corresponding loading logic in the <code>load_chat_model</code> function.</p>
 <div class="admonition success">
 <p class="admonition-title">Chat Model Management Best Practice</p>
-<p>For additional parameters of different chat model classes, the <code>load_chat_model</code> function receives them through keyword arguments (the corresponding LangChain function also uses this method). Although this approach enhances universality, it weakens IDE type hints and increases the risk of parameter misuse. Therefore, if the specific provider is already determined, you can extend the parameter signature for its integrated chat model class (or embedding model class) to restore type hints. You can refer to the content in <code>src\utils\providers\chat_models\load.py</code> for targeted modifications.</p>
+<p>The <code>load_chat_model</code> function uses keyword arguments to receive additional parameters for different chat model classes (LangChain official functions also use this approach). This approach improves universality but weakens IDE type hints and increases the risk of parameter misuse. Therefore, if a specific provider is already determined, you can extend the parameter signature for its integrated chat model class (or embedding model class) to restore type hints. Refer to <code>src/utils/providers/chat_models/load.py</code> for targeted modifications.</p>
 </div>
 <h3 id="2-register-embedding-model-provider">2. Register Embedding Model Provider</h3>
-<p>Similar to chat model providers, you can also register custom embedding model providers as needed. You need to modify the content in <code>src/utils/providers/embeddings/register.py</code>, and register your embedding model provider using the <code>register_embeddings_provider</code> function in the <code>register_all_embeddings_providers</code> function.</p>
-<p>If needed, you can also modify the content in <code>src/utils/providers/embeddings/load.py</code>, and add the loading logic for your embedding model provider in the <code>load_embeddings</code> function.</p>
+<p>The registration method for embedding model providers is similar to chat models. Please modify <code>src/utils/providers/embeddings/register.py</code> and register your embedding model provider using the <code>register_embeddings_provider</code> function in the <code>register_all_embeddings_providers</code> function.</p>
+<p>To customize the loading logic, you can modify <code>src/utils/providers/embeddings/load.py</code> and add corresponding loading logic in the <code>load_embeddings</code> function.</p>
 <h3 id="3-customize-tools">3. Customize Tools</h3>
 <p><strong>Single Agent (simple-agent)</strong><br />
 Tool implementations are located in <code>src/agents/simple_agent/tools.py</code>, with built-in:<br />
-- <code>save_user_memory</code> - Persist user memory<br />
-- <code>get_user_memory</code> - Read user memory  </p>
-<p>For extensions, simply add corresponding tool implementations in this file.</p>
+- <code>save_user_memory</code> — Persist user memory<br />
+- <code>get_user_memory</code> — Read user memory  </p>
+<p>To extend, simply add new tool implementations directly in this file.</p>
 <p><strong>Supervisor-Multi-Agent (supervisor-agent)</strong><br />
-Tool implementations are located in <code>src/agents/supervisor/subagent/tools.py</code>. These are tool implementations for sub-agents. If you need to add custom tools for sub-agents, simply add corresponding tool implementations in this file.</p>
-<p>Note: The <code>supervisor</code> only holds two tools for "calling sub-agents" by default. If you need to add custom tools for the <code>supervisor</code>, it is recommended to create a new <code>tools.py</code> under <code>src/agents/supervisor/</code>, and after writing, import it in <code>src/agents/supervisor/agent.py</code> and pass it to the <code>create_agent</code> function.</p>
+Tool implementations are located in <code>src/agents/supervisor/subagent/tools.py</code>. These are tool implementations for sub-agents. To add custom tools for sub-agents, simply add new tool implementations directly in this file.</p>
+<p>Note: The <code>supervisor</code> only has two tools for "calling sub-agents" by default. If you need to add custom tools for the <code>supervisor</code>, it is recommended to create a new <code>tools.py</code> under <code>src/agents/supervisor/</code>, write the implementations, and then import and pass them to the <code>create_agent</code> function in <code>src/agents/supervisor/agent.py</code>.</p>
 
 
 
