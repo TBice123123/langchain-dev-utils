@@ -1993,7 +1993,7 @@ The user first asks "What's the weather in New York?", then follows up with "Wha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>Similar to model management requirements, since the two functions above use <code>pydantic.create_model</code> to create model classes at the bottom layer, they bring certain performance overhead, and <code>create_openai_compatible_model</code> also relies on a global dictionary to record the <code>profiles</code> corresponding to each model provider at the bottom layer, so there are also multi-threading concurrency issues in use. Therefore, it's recommended to create the corresponding integration classes in the project's startup phase, and not dynamically create them later.</p>
+<p>Similar to model management, the two functions above use <code>pydantic.create_model</code> under the hood to create model classes, which incurs certain performance overhead. Additionally, <code>create_openai_compatible_model</code> uses a global dictionary to store <code>profiles</code> for each model provider. To avoid multi-threading concurrency issues, it is recommended to create the integration classes during project startup and avoid dynamic creation afterward.</p>
 </div>
 <h2 id="using-integration-classes">Using Integration Classes</h2>
 <h3 id="using-chat-model-classes">Using Chat Model Classes</h3>
@@ -2210,6 +2210,20 @@ The user first asks "What's the weather in New York?", then follows up with "Wha
 <span class="p">)</span>
 </code></pre></div>
 <p>At the same time, parameters like <code>base_url</code>, <code>compatibility_options</code>, <code>model_profiles</code> in the <code>create_openai_compatible_model</code> function also support being passed. Just pass the corresponding parameters in the <code>register_model_provider</code> function.</p>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <h3 id="embedding-model-class-registration">Embedding Model Class Registration</h3>
 <p>Similar to chat model class registration:</p>
 <p><strong>Method 1: Explicit Parameter Passing</strong></p>

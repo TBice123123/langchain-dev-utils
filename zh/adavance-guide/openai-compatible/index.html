@@ -1993,7 +1993,7 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
-<p>与模型管理的要求类似，由于上述的两个函数底层使用了<code>pydantic.create_model</code>来创建模型类，因此会带来一定的性能开销，且<code>create_openai_compatible_model</code>底层也依托了一个全局字典来记录各个模型提供商对应的<code>profiles</code>，因此在使用中也存在多线程并发的问题，因此也建议在项目的启动阶段就创建好对应的集成类，后续不应再动态创建。</p>
+<p>与模型管理类似，上述两个函数底层使用 <code>pydantic.create_model</code> 创建模型类，会带来一定的性能开销。此外，<code>create_openai_compatible_model</code> 使用全局字典记录各模型提供商的 <code>profiles</code>，为了避免多线程并发问题，建议在项目启动阶段创建好集成类，后续避免动态创建。</p>
 </div>
 <h2 id="_8">集成类的使用</h2>
 <h3 id="_9">对话模型类的使用</h3>
@@ -2210,6 +2210,20 @@
 <span class="p">)</span>
 </code></pre></div>
 <p>同时，<code>create_openai_compatible_model</code>函数中的<code>base_url</code>、<code>compatibility_options</code>、<code>model_profiles</code>参数也支持传入。只需要在<code>register_model_provider</code>函数中传入对应的参数即可。</p>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
+
+<span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <h3 id="_13">嵌入模型类注册</h3>
 <p>与对话模型类注册类似：</p>
 <p><strong>方式一：显式传参</strong></p>
