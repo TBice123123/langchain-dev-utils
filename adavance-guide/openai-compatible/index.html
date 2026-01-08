@@ -2186,6 +2186,24 @@ The user first asks "What's the weather in New York?", then follows up with "Wha
 <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </code></pre></div>
 </details>
+<div class="admonition warning">
+<p class="admonition-title">Embedding Model Compatibility Notes</p>
+<p>OpenAI-compatible embedding APIs generally show good compatibility, but you should be aware of the following differences:</p>
+<ol>
+<li>
+<p><code>check_embedding_ctx_length</code>: Set to <code>True</code> only when using the official OpenAI embedding service; set to <code>False</code> for all other embedding models.</p>
+</li>
+<li>
+<p><code>dimensions</code>: If the model supports custom dimensions (e.g., 1024, 4096), you can pass this parameter directly.</p>
+</li>
+<li>
+<p><code>chunk_size</code>: The maximum number of texts that can be carried in a single request (i.e., the length of the list passed to the <code>embed_documents</code> method), default is 100. Adjust according to the actual requirements of the provider.</p>
+</li>
+<li>
+<p>Single text token limit: Cannot be controlled through parameters, must be ensured during the preprocessing chunking stage.</p>
+</li>
+</ol>
+</div>
 <p><strong>Note</strong>: The chat model classes and embedding model classes created using this feature support passing any parameters of <code>BaseChatOpenAI</code> and <code>OpenAIEmbeddings</code>, such as <code>temperature</code>, <code>extra_body</code>, <code>dimensions</code>, etc.</p>
 <h2 id="integration-with-model-management-feature">Integration with Model Management Feature</h2>
 <p>This library has seamlessly integrated this feature with the model management functionality. When registering a chat model, just set <code>chat_model</code> to <code>"openai-compatible"</code>; when registering an embedding model, set <code>embeddings_model</code> to <code>"openai-compatible"</code>.</p>

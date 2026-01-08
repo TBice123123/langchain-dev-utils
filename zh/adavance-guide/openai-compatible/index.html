@@ -2186,6 +2186,24 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </code></pre></div>
 </details>
+<div class="admonition warning">
+<p class="admonition-title">向量化模型兼容性说明</p>
+<p>兼容 OpenAI 的嵌入 API 通常表现出较好的兼容性，但仍需注意以下差异点：</p>
+<ol>
+<li>
+<p><code>check_embedding_ctx_length</code>：仅在使用官方 OpenAI 嵌入服务时设为 <code>True</code>；其余嵌入模型一律设为 <code>False</code>。</p>
+</li>
+<li>
+<p><code>dimensions</code>：若模型支持自定义维度（如 1024、4096），可直接传入该参数。</p>
+</li>
+<li>
+<p><code>chunk_size</code>：单次请求可携带的最大文本数（即<code>embed_documents</code>方法中的传入的列表长度），默认 100。请按提供商实际要求调整。</p>
+</li>
+<li>
+<p>单文本 token 上限：无法通过参数控制，需在预处理分块阶段自行保证。</p>
+</li>
+</ol>
+</div>
 <p><strong>注意</strong>：使用本功能创建的对话模型类和嵌入模型类支持传入任何<code>BaseChatOpenAI</code>和<code>OpenAIEmbeddings</code>的参数，例如<code>temperature</code>, <code>extra_body</code>,<code>dimensions</code>等。</p>
 <h2 id="_11">与模型管理功能集成</h2>
 <p>本库已将此功能无缝接入模型管理功能。注册对话模型时，只需将 <code>chat_model</code> 设为 <code>"openai-compatible"</code>；注册嵌入模型时，将 <code>embeddings_model</code> 设为 <code>"openai-compatible"</code> 即可。</p>
