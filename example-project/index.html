@@ -1352,7 +1352,7 @@
 <li><strong>Supervisor-Multi-Agent Architecture</strong>: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.</li>
 </ul>
 <p align="center">
-  <img src="../../assets/graph.png" alt="graph">
+  <img src="../assets/graph.png" alt="graph">
 </p>
 
 <h2 id="quick-start">Quick Start</h2>
@@ -1399,6 +1399,7 @@
 <li><code>GLM-4.7</code>: Used for <code>simple-agent</code></li>
 <li><code>GLM-4.6</code>: Used for the <code>supervisor</code> in <code>supervisor-agent</code></li>
 <li><code>GLM-4.5</code>: Used for <code>subagent</code> in <code>supervisor-agent</code></li>
+<li><code>GLM-4.6V</code>: Used for <code>vision subagent</code> in <code>supervisor-agent</code></li>
 </ul>
 <p>To customize the model provider, please modify <code>src/utils/providers/chat_models/register.py</code> and register your model provider using the <code>register_model_provider</code> function in the <code>register_all_model_providers</code> function.</p>
 <p>It is also recommended to modify <code>src/utils/providers/chat_models/load.py</code> and add corresponding loading logic in the <code>load_chat_model</code> function.</p>

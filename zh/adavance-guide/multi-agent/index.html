@@ -1991,10 +1991,18 @@
 <span class="sd">        处理后的输入，作为 agent 的实际输入（需要是 str 或 dict）</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p><strong>注意</strong>：
-- 钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。
-- 若返回 dict，则会被直接作为 agent 的实际输入。
-- 若返回 str，则会被包装为 <code>HumanMessage(content=...)</code>，最终以 <code>{"messages": [HumanMessage(content=...)]}</code> 作为 agent 的实际输入。</p>
+<p><strong>注意</strong>：</p>
+<ul>
+<li>
+<p>钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。</p>
+</li>
+<li>
+<p>若返回 dict，则会被直接作为 agent 的实际输入。</p>
+</li>
+<li>
+<p>若返回 str，则会被包装为 <code>HumanMessage(content=...)</code>，最终以 <code>{"messages": [HumanMessage(content=...)]}</code> 作为 agent 的实际输入。</p>
+</li>
+</ul>
 <h4 id="_14">使用示例</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="s2">&quot;&lt;task_description&gt;&quot;</span> <span class="o">+</span> <span class="n">request</span> <span class="o">+</span> <span class="s2">&quot;&lt;/task_description&gt;&quot;</span>

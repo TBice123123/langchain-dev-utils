@@ -1991,10 +1991,18 @@
 <span class="sd">        The processed input, which serves as the actual input for the agent (needs to be str or dict)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p><strong>Note</strong>:
-- The return value of the hook function must be str or dict, otherwise a ValueError will be raised.
-- If returning dict, it will be used directly as the agent's actual input.
-- If returning str, it will be wrapped as <code>HumanMessage(content=...)</code>, ultimately serving as the agent's actual input as <code>{"messages": [HumanMessage(content=...)]}</code>.</p>
+<p><strong>Note</strong>:</p>
+<ul>
+<li>
+<p>The return value of the hook function must be str or dict, otherwise a ValueError will be raised.</p>
+</li>
+<li>
+<p>If returning dict, it will be used directly as the agent's actual input.</p>
+</li>
+<li>
+<p>If returning str, it will be wrapped as <code>HumanMessage(content=...)</code>, ultimately serving as the agent's actual input as <code>{"messages": [HumanMessage(content=...)]}</code>.</p>
+</li>
+</ul>
 <h4 id="usage-example_2">Usage Example</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="s2">&quot;&lt;task_description&gt;&quot;</span> <span class="o">+</span> <span class="n">request</span> <span class="o">+</span> <span class="s2">&quot;&lt;/task_description&gt;&quot;</span>
