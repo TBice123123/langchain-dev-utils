@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#agent-module-api-reference-documentation" class="md-skip">
+        <a href="#agent-module-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -1579,10 +1579,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties" class="md-nav__link">
+  <a href="#attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -1618,10 +1618,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_1" class="md-nav__link">
+  <a href="#attributes_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -1657,10 +1657,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_2" class="md-nav__link">
+  <a href="#attributes_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -1696,10 +1696,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_3" class="md-nav__link">
+  <a href="#attributes_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -1735,10 +1735,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_4" class="md-nav__link">
+  <a href="#attributes_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -2561,10 +2561,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties" class="md-nav__link">
+  <a href="#attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -2600,10 +2600,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_1" class="md-nav__link">
+  <a href="#attributes_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -2639,10 +2639,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_2" class="md-nav__link">
+  <a href="#attributes_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -2678,10 +2678,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_3" class="md-nav__link">
+  <a href="#attributes_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -2717,10 +2717,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties_4" class="md-nav__link">
+  <a href="#attributes_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties
+        Attributes
       
     </span>
   </a>
@@ -2752,9 +2752,9 @@
   
 
 
-<h1 id="agent-module-api-reference-documentation">Agent Module API Reference Documentation</h1>
+<h1 id="agent-module-api-reference">Agent Module API Reference</h1>
 <h2 id="create_agent">create_agent</h2>
-<p>Creates an agent that provides the same functionality as the official <code>create_agent</code> from langchain, but with expanded string model specification.</p>
+<p>Creates an agent with the same functionality as the official <code>langchain</code> <code>create_agent</code>, but extends the model specification to a string.</p>
 <h3 id="function-signature">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_agent</span><span class="p">(</span>  <span class="c1"># noqa: PLR0915</span>
     <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2842,7 +2842,7 @@
 <td>Checkpointer | None</td>
 <td>No</td>
 <td>None</td>
-<td>Checkpoint for state persistence</td>
+<td>Checkpointer for state persistence</td>
 </tr>
 <tr>
 <td>store</td>
@@ -2889,7 +2889,7 @@
 </tbody>
 </table>
 <h3 id="notes">Notes</h3>
-<p>This function provides the same functionality as the official <code>create_agent</code> from <code>langchain</code>, but with expanded model selection. The main difference is that the <code>model</code> parameter must be a string that can be loaded by the <code>load_chat_model</code> function, allowing for more flexible model selection using registered model providers.</p>
+<p>This function provides the same functionality as the official <code>langchain</code> <code>create_agent</code>, but extends the model selection. The main difference is that the <code>model</code> parameter must be a string that can be loaded by the <code>load_chat_model</code> function, allowing more flexible model selection using registered model providers.</p>
 <h3 id="example">Example</h3>
 <div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">])</span>
 </code></pre></div>
@@ -2903,19 +2903,19 @@
     <span class="n">tool_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pre_input_hooks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
         <span class="nb">tuple</span><span class="p">[</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span>
         <span class="p">]</span>
-        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">post_output_hooks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
         <span class="nb">tuple</span><span class="p">[</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
         <span class="p">]</span>
-        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTool</span><span class="p">:</span>
 </code></pre></div>
 <h3 id="parameters_1">Parameters</h3>
 <table>
@@ -2934,35 +2934,35 @@
 <td>CompiledStateGraph</td>
 <td>Yes</td>
 <td>-</td>
-<td>Agent</td>
+<td>The agent graph to wrap</td>
 </tr>
 <tr>
 <td>tool_name</td>
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>Tool name</td>
+<td>Name of the resulting tool</td>
 </tr>
 <tr>
 <td>tool_description</td>
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>Tool description</td>
+<td>Description of the resulting tool</td>
 </tr>
 <tr>
 <td>pre_input_hooks</td>
-<td>Optional[tuple[Callable[[str, ToolRuntime], str], Callable[[str, ToolRuntime], Awaitable[str]]] | Callable[[str, ToolRuntime], str]]</td>
+<td>-</td>
 <td>No</td>
 <td>None</td>
-<td>Agent input preprocessing function</td>
+<td>Hooks for processing input before passing to the agent</td>
 </tr>
 <tr>
 <td>post_output_hooks</td>
-<td>Optional[tuple[Callable[[str, list[AnyMessage], ToolRuntime], Any], Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]]] | Callable[[str, list[AnyMessage], ToolRuntime], Any]]</td>
+<td>-</td>
 <td>No</td>
 <td>None</td>
-<td>Agent output postprocessing function</td>
+<td>Hooks for processing output after receiving from the agent</td>
 </tr>
 </tbody>
 </table>
@@ -2979,17 +2979,17 @@
     <span class="n">tool_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pre_input_hooks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
         <span class="nb">tuple</span><span class="p">[</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span>
         <span class="p">]</span>
-        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">post_output_hooks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
         <span class="nb">tuple</span><span class="p">[</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
-            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
+            <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
         <span class="p">]</span>
-        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+        <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ToolRuntime</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTool</span><span class="p">:</span>
 </code></pre></div>
@@ -3010,35 +3010,35 @@
 <td>list[CompiledStateGraph]</td>
 <td>Yes</td>
 <td>-</td>
-<td>List of agents (must contain at least 2, and each agent must have a unique name)</td>
+<td>List of agents (must contain at least 2 agents, and each agent must have a unique name)</td>
 </tr>
 <tr>
 <td>tool_name</td>
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>Tool name</td>
+<td>Name of the resulting tool</td>
 </tr>
 <tr>
 <td>tool_description</td>
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>Tool description</td>
+<td>Description of the resulting tool</td>
 </tr>
 <tr>
 <td>pre_input_hooks</td>
-<td>Optional[tuple[Callable[[str, ToolRuntime], str], Callable[[str, ToolRuntime], Awaitable[str]]] | Callable[[str, ToolRuntime], str]]</td>
+<td>-</td>
 <td>No</td>
 <td>None</td>
-<td>Agent input preprocessing function</td>
+<td>Hooks for processing input before passing to the agents</td>
 </tr>
 <tr>
 <td>post_output_hooks</td>
-<td>Optional[tuple[Callable[[str, list[AnyMessage], ToolRuntime], Any], Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]]] | Callable[[str, list[AnyMessage], ToolRuntime], Any]]</td>
+<td>-</td>
 <td>No</td>
 <td>None</td>
-<td>Agent output postprocessing function</td>
+<td>Hooks for processing output after receiving from the agents</td>
 </tr>
 </tbody>
 </table>
@@ -3086,35 +3086,35 @@
 <td>ContextSize | list[ContextSize] | None</td>
 <td>No</td>
 <td>None</td>
-<td>Context size that triggers summarization</td>
+<td>Context size threshold that triggers summarization</td>
 </tr>
 <tr>
 <td>keep</td>
 <td>ContextSize</td>
 <td>No</td>
 <td>("messages", _DEFAULT_MESSAGES_TO_KEEP)</td>
-<td>Context size to keep</td>
+<td>Context size to preserve after summarization</td>
 </tr>
 <tr>
 <td>token_counter</td>
 <td>TokenCounter</td>
 <td>No</td>
 <td>count_tokens_approximately</td>
-<td>Token counter</td>
+<td>Token counting function to use</td>
 </tr>
 <tr>
 <td>summary_prompt</td>
 <td>str</td>
 <td>No</td>
 <td>DEFAULT_SUMMARY_PROMPT</td>
-<td>Summary prompt</td>
+<td>System prompt used for summarization</td>
 </tr>
 <tr>
 <td>trim_tokens_to_summarize</td>
 <td>int | None</td>
 <td>No</td>
 <td>_DEFAULT_TRIM_TOKEN_LIMIT</td>
-<td>Number of tokens to trim before summarizing</td>
+<td>Number of tokens to trim from the context before summarizing</td>
 </tr>
 </tbody>
 </table>
@@ -3159,21 +3159,21 @@
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>System prompt</td>
+<td>System prompt for the selection model</td>
 </tr>
 <tr>
 <td>max_tools</td>
 <td>Optional[int]</td>
 <td>No</td>
 <td>None</td>
-<td>Maximum number of tools</td>
+<td>Maximum number of tools to select</td>
 </tr>
 <tr>
 <td>always_include</td>
 <td>Optional[list[str]]</td>
 <td>No</td>
 <td>None</td>
-<td>Tools to always include</td>
+<td>List of tool names to always include in the selection</td>
 </tr>
 </tbody>
 </table>
@@ -3192,7 +3192,7 @@
         <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">custom_plan_tool_descriptions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PlanToolDescription</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">use_read_plan_tool</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 <h3 id="parameters_5">Parameters</h3>
 <table>
@@ -3211,21 +3211,21 @@
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>System prompt</td>
+<td>System prompt for the planning agent</td>
 </tr>
 <tr>
 <td>custom_plan_tool_descriptions</td>
 <td>Optional[PlanToolDescription]</td>
 <td>No</td>
 <td>None</td>
-<td>Custom descriptions for plan tools</td>
+<td>Custom descriptions for plan-related tools</td>
 </tr>
 <tr>
 <td>use_read_plan_tool</td>
 <td>bool</td>
 <td>No</td>
 <td>True</td>
-<td>Whether to use the read plan tool</td>
+<td>Whether to enable the tool that allows the model to read the current plan</td>
 </tr>
 </tbody>
 </table>
@@ -3260,14 +3260,14 @@
 <td>str</td>
 <td>Yes</td>
 <td>-</td>
-<td>Model identifier string that can be loaded by <code>load_chat_model</code>. Can be specified in "provider:model-name" format</td>
+<td>Primary model identifier string (can be loaded by <code>load_chat_model</code>)</td>
 </tr>
 <tr>
 <td>additional_models</td>
 <td>str</td>
 <td>No</td>
 <td>-</td>
-<td>List of backup models</td>
+<td>Fallback model identifier strings to use if the primary model fails</td>
 </tr>
 </tbody>
 </table>
@@ -3279,7 +3279,7 @@
 </code></pre></div>
 <hr />
 <h2 id="llmtoolemulator">LLMToolEmulator</h2>
-<p>Middleware for using large models to simulate tool calls.</p>
+<p>Middleware for simulating tool calls using large language models.</p>
 <h3 id="class-definition_4">Class Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LLMToolEmulator</span><span class="p">(</span><span class="n">_LLMToolEmulator</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -3313,7 +3313,7 @@
 <td>list[str | BaseTool] | None</td>
 <td>No</td>
 <td>None</td>
-<td>List of tools</td>
+<td>List of tools to be emulated by the LLM</td>
 </tr>
 </tbody>
 </table>
@@ -3350,21 +3350,21 @@
 <td>str | BaseChatModel</td>
 <td>Yes</td>
 <td>-</td>
-<td>Model for routing, accepts string type (loaded with <code>load_chat_model</code>) or directly passed ChatModel</td>
+<td>Model used for routing. Accepts a string (loaded via <code>load_chat_model</code>) or a ChatModel instance</td>
 </tr>
 <tr>
 <td>model_list</td>
 <td>list[ModelDict]</td>
 <td>Yes</td>
 <td>-</td>
-<td>List of models, each model needs to contain <code>model_name</code> and <code>model_description</code> keys, and can optionally include <code>tools</code>, <code>model_kwargs</code>, <code>model_instance</code>, <code>model_system_prompt</code> these four keys</td>
+<td>List of available models. Each entry must contain <code>model_name</code> and <code>model_description</code>, and optionally <code>tools</code>, <code>model_kwargs</code>, <code>model_instance</code>, and <code>model_system_prompt</code></td>
 </tr>
 <tr>
 <td>router_prompt</td>
 <td>Optional[str]</td>
 <td>No</td>
 <td>None</td>
-<td>Prompt for the routing model, if None then the default prompt is used</td>
+<td>Custom prompt for the router model. Uses default prompt if not provided</td>
 </tr>
 </tbody>
 </table>
@@ -3374,18 +3374,18 @@
     <span class="n">model_list</span><span class="o">=</span><span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for ordinary tasks, such as dialogue, text generation, etc.&quot;</span>
+            <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks such as conversation, text generation, etc.&quot;</span>
         <span class="p">},</span>
         <span class="p">{</span>
             <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for complex tasks, such as code generation, data analysis, etc.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for complex tasks such as code generation, data analysis, etc.&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="handoffagentmiddleware">HandoffAgentMiddleware</h2>
-<p>Middleware for implementing multi-agent switching (handoffs).</p>
+<p>Middleware for implementing multi-agent handoffs.</p>
 <h3 id="class-definition_6">Class Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HandoffAgentMiddleware</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
     <span class="n">state_schema</span> <span class="o">=</span> <span class="n">MultiAgentState</span>
@@ -3393,7 +3393,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agents_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AgentConfig</span><span class="p">],</span>
         <span class="n">custom_handoffs_tool_descriptions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 <h3 id="parameters_9">Parameters</h3>
 <table>
@@ -3412,14 +3412,14 @@
 <td>dict[str, AgentConfig]</td>
 <td>Yes</td>
 <td>-</td>
-<td>Dictionary of agent configurations, keys are agent names, values are agent configurations</td>
+<td>Configuration dictionary for agents. Keys are agent names, values are agent configurations</td>
 </tr>
 <tr>
 <td>custom_handoffs_tool_descriptions</td>
 <td>Optional[dict[str, str]]</td>
 <td>No</td>
 <td>None</td>
-<td>Custom descriptions for tools to handoff to other agents</td>
+<td>Custom descriptions for handoff tools targeting other agents</td>
 </tr>
 </tbody>
 </table>
@@ -3427,13 +3427,13 @@
 <div class="highlight"><pre><span></span><code><span class="n">handoffs_agent_middleware</span> <span class="o">=</span> <span class="n">HandoffsAgentMiddleware</span><span class="p">({</span>
     <span class="s2">&quot;time_agent&quot;</span><span class="p">:{</span>
         <span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span><span class="s2">&quot;You are a time agent, responsible for answering time-related questions.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span><span class="s2">&quot;You are a time agent responsible for answering time-related questions.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:[</span><span class="n">get_current_time</span><span class="p">,</span> <span class="n">transfer_to_default_agent</span><span class="p">],</span>
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:[</span><span class="s2">&quot;default_agent&quot;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="s2">&quot;default_agent&quot;</span><span class="p">:{</span>
         <span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span><span class="s2">&quot;You are a complex task agent, responsible for answering complex task-related questions.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span><span class="s2">&quot;You are a complex task agent responsible for answering complex task-related questions.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;default&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:[</span><span class="s2">&quot;time_agent&quot;</span><span class="p">]</span>
     <span class="p">}</span>
@@ -3450,7 +3450,7 @@
 </code></pre></div>
 <hr />
 <h2 id="format_prompt">format_prompt</h2>
-<p>Middleware for formatting prompts.</p>
+<p>Helper for formatting prompts.</p>
 <h3 id="function-signature_3">Function Signature</h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@dynamic_prompt</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_prompt</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ModelRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
@@ -3467,11 +3467,11 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">PlanState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
     <span class="n">plan</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Plan</span><span class="p">]]</span>
 </code></pre></div>
-<h3 id="properties">Properties</h3>
+<h3 id="attributes">Attributes</h3>
 <table>
 <thead>
 <tr>
-<th>Property</th>
+<th>Attribute</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
@@ -3480,23 +3480,23 @@
 <tr>
 <td>plan</td>
 <td>NotRequired[list[Plan]]</td>
-<td>List of plans</td>
+<td>List of plan steps</td>
 </tr>
 <tr>
 <td>plan.content</td>
 <td>str</td>
-<td>Plan content</td>
+<td>Content of the plan step</td>
 </tr>
 <tr>
 <td>plan.status</td>
 <td>Literal["pending", "in_progress", "done"]</td>
-<td>Plan status, values are <code>pending</code>, <code>in_progress</code>, <code>done</code></td>
+<td>Status of the plan step. Valid values are <code>pending</code>, <code>in_progress</code>, <code>done</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="modeldict">ModelDict</h2>
-<p>Type for model list.</p>
+<p>Type definition for the model list.</p>
 <h3 id="class-definition_9">Class Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ModelDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
@@ -3506,11 +3506,11 @@
     <span class="n">model_instance</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]</span>
     <span class="n">model_system_prompt</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
-<h3 id="properties_1">Properties</h3>
+<h3 id="attributes_1">Attributes</h3>
 <table>
 <thead>
 <tr>
-<th>Property</th>
+<th>Attribute</th>
 <th>Type</th>
 <th>Required</th>
 <th>Description</th>
@@ -3521,43 +3521,43 @@
 <td>model_name</td>
 <td>str</td>
 <td>Yes</td>
-<td>Model name</td>
+<td>Name of the model</td>
 </tr>
 <tr>
 <td>model_description</td>
 <td>str</td>
 <td>Yes</td>
-<td>Model description</td>
+<td>Description of the model's capabilities</td>
 </tr>
 <tr>
 <td>tools</td>
 <td>NotRequired[list[BaseTool | dict[str, Any]]]</td>
 <td>No</td>
-<td>Tools available to the model</td>
+<td>Tools available to this model</td>
 </tr>
 <tr>
 <td>model_kwargs</td>
 <td>NotRequired[dict[str, Any]]</td>
 <td>No</td>
-<td>Additional parameters to pass to the model</td>
+<td>Additional keyword arguments to pass to the model</td>
 </tr>
 <tr>
 <td>model_instance</td>
 <td>NotRequired[BaseChatModel]</td>
 <td>No</td>
-<td>Model instance</td>
+<td>A specific model instance to use</td>
 </tr>
 <tr>
 <td>model_system_prompt</td>
 <td>NotRequired[str]</td>
 <td>No</td>
-<td>System prompt for the model</td>
+<td>System prompt specific to this model</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="selectmodel">SelectModel</h2>
-<p>Tool class for model selection.</p>
+<p>Tool class for selecting a model.</p>
 <h3 id="class-definition_10">Class Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SelectModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tool for model selection - Must call this tool to return the finally selected model&quot;&quot;&quot;</span>
@@ -3567,11 +3567,11 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Selected model name (must be the full model name, for example, openai:gpt-4o)&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 </code></pre></div>
-<h3 id="properties_2">Properties</h3>
+<h3 id="attributes_2">Attributes</h3>
 <table>
 <thead>
 <tr>
-<th>Property</th>
+<th>Attribute</th>
 <th>Type</th>
 <th>Required</th>
 <th>Description</th>
@@ -3582,22 +3582,22 @@
 <td>model_name</td>
 <td>str</td>
 <td>Yes</td>
-<td>Selected model name (must be the full model name, for example, openai:gpt-4o)</td>
+<td>The name of the selected model (must be the full model name, e.g., openai:gpt-4o)</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="multiagentstate">MultiAgentState</h2>
-<p>State Schema for multi-agent switching.</p>
+<p>State Schema for multi-agent handoffs.</p>
 <h3 id="class-definition_11">Class Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MultiAgentState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
     <span class="n">active_agent</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
-<h3 id="properties_3">Properties</h3>
+<h3 id="attributes_3">Attributes</h3>
 <table>
 <thead>
 <tr>
-<th>Property</th>
+<th>Attribute</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
@@ -3606,13 +3606,13 @@
 <tr>
 <td>active_agent</td>
 <td>NotRequired[str]</td>
-<td>Name of the currently active agent</td>
+<td>The name of the currently active agent</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="agentconfig">AgentConfig</h2>
-<p>Type for agent configuration.</p>
+<p>Type definition for agent configuration.</p>
 <h3 id="class-definition_12">Class Definition</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AgentConfig</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">BaseChatModel</span><span class="p">]</span>
@@ -3621,11 +3621,11 @@
     <span class="n">default</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
     <span class="n">handoffs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span>
 </code></pre></div>
-<h3 id="properties_4">Properties</h3>
+<h3 id="attributes_4">Attributes</h3>
 <table>
 <thead>
 <tr>
-<th>Property</th>
+<th>Attribute</th>
 <th>Type</th>
 <th>Required</th>
 <th>Description</th>
@@ -3642,7 +3642,7 @@
 <td>prompt</td>
 <td>str | SystemMessage</td>
 <td>Yes</td>
-<td>Prompt for the agent</td>
+<td>System prompt for the agent</td>
 </tr>
 <tr>
 <td>tools</td>
@@ -3654,13 +3654,13 @@
 <td>default</td>
 <td>NotRequired[bool]</td>
 <td>No</td>
-<td>Whether this is the default agent</td>
+<td>Whether this agent is the default fallback</td>
 </tr>
 <tr>
 <td>handoffs</td>
 <td>list[str] | Literal["all"]</td>
 <td>Yes</td>
-<td>List of agent names that can be handed off to, or "all" for all agents</td>
+<td>List of agent names to hand off to, or "all" to allow handoffs to any agent</td>
 </tr>
 </tbody>
 </table>

@@ -1749,11 +1749,11 @@
 </tr>
 <tr>
 <td><code>pre_input_hooks</code></td>
-<td>智能体运行前的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
+<td>智能体运行前的钩子函数。<br><br><strong>类型</strong>: <code>tuple[Callable, Callable] | Callable</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>post_output_hooks</code></td>
-<td>智能体运行后的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
+<td>智能体运行后的钩子函数。<br><br><strong>类型</strong>: <code>tuple[Callable, Callable] | Callable</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1919,11 +1919,11 @@
 </tr>
 <tr>
 <td><code>pre_input_hooks</code></td>
-<td>智能体运行前的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
+<td>智能体运行前的钩子函数。<br><br><strong>类型</strong>: <code>tuple[Callable, Callable] | Callable</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>post_output_hooks</code></td>
-<td>智能体运行后的钩子函数。<br><br><strong>类型</strong>: <code>tuple</code><br><strong>必填</strong>: 否</td>
+<td>智能体运行后的钩子函数。<br><br><strong>类型</strong>: <code>tuple[Callable, Callable] | Callable</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1981,16 +1981,20 @@
 </tbody>
 </table>
 <h4 id="_13">函数签名</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pre_input_hook</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pre_input_hook</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    参数:</span>
 <span class="sd">        request: 原始工具调用输入</span>
 <span class="sd">        runtime: langchain 的 ToolRuntime</span>
 
 <span class="sd">    返回:</span>
-<span class="sd">        处理后的 str，作为 agent 的实际输入</span>
+<span class="sd">        处理后的输入，作为 agent 的实际输入（需要是 str 或 dict）</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 </code></pre></div>
+<p><strong>注意</strong>：
+- 钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。
+- 若返回 dict，则会被直接作为 agent 的实际输入。
+- 若返回 str，则会被包装为 <code>HumanMessage(content=...)</code>，最终以 <code>{"messages": [HumanMessage(content=...)]}</code> 作为 agent 的实际输入。</p>
 <h4 id="_14">使用示例</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="s2">&quot;&lt;task_description&gt;&quot;</span> <span class="o">+</span> <span class="n">request</span> <span class="o">+</span> <span class="s2">&quot;&lt;/task_description&gt;&quot;</span>
@@ -2031,11 +2035,11 @@
 </tbody>
 </table>
 <h4 id="_16">函数签名</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">post_output_hook</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Command</span><span class="p">]:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">post_output_hook</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Command</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    参数:</span>
-<span class="sd">        request: （可能已处理的）原始输入</span>
-<span class="sd">        messages: agent 返回的完整消息历史（来自 response[&quot;messages&quot;]）</span>
+<span class="sd">        request: 未经处理的原始输入</span>
+<span class="sd">        response: agent 返回的完整响应</span>
 <span class="sd">        runtime: langchain 的 ToolRuntime</span>
 
 <span class="sd">    返回:</span>
@@ -2045,14 +2049,14 @@
 <h4 id="_17">使用示例</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">process_output_sync</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_output_sync</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">Command</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)]</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)]</span>
     <span class="p">})</span>
 
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_output_async</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_output_async</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">Command</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)]</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">)]</span>
     <span class="p">})</span>
 
 <span class="c1"># 使用</span>
@@ -2067,7 +2071,7 @@
 </div>
 <h3 id="_18">默认行为</h3>
 <ul>
-<li>若未提供 <code>pre_input_hooks</code>，输入原样传递</li>
+<li>若未提供 <code>pre_input_hooks</code>，则直接将原始输入以 <code>{"messages": [HumanMessage(content=request)]}</code> 作为 agent 的实际输入。</li>
 <li>若未提供 <code>post_output_hooks</code>，默认返回 <code>response["messages"][-1].content</code>（即最后一条消息的文本内容）</li>
 </ul>
 
