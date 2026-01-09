@@ -1,6 +1,6 @@
 [project]
 name = "langchain-dev-utils"
-version = "1.3.5"
+version = "1.3.6"
 description = "A practical utility library for LangChain and LangGraph development"
 readme = "README.md"
 authors = [{ name = "tiebingice", email = "tiebingice123@outlook.com" }]

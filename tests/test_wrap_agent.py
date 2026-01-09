@@ -31,18 +31,22 @@ async def process_input_async(request: str, runtime: ToolRuntime) -> str:
     return "<task_description>" + request + "</task_description>"
 
 
-def process_output(request: str, messages: list, runtime: ToolRuntime) -> str:
-    assert request.startswith("<task_description>")
-    assert request.endswith("</task_description>")
-    return "<task_response>" + messages[-1].content + "</task_response>"
+def process_output(request: str, response: dict[str, Any], runtime: ToolRuntime) -> str:
+    human_message = response["messages"][0]
+    assert human_message.content.startswith(
+        "<task_description>"
+    ) and human_message.content.endswith("</task_description>")
+    return "<task_response>" + response["messages"][-1].content + "</task_response>"
 
 
 async def process_output_async(
-    request: str, messages: list, runtime: ToolRuntime
+    request: str, response: dict[str, Any], runtime: ToolRuntime
 ) -> str:
-    assert request.startswith("<task_description>")
-    assert request.endswith("</task_description>")
-    return "<task_response>" + messages[-1].content + "</task_response>"
+    human_message = response["messages"][0]
+    assert human_message.content.startswith(
+        "<task_description>"
+    ) and human_message.content.endswith("</task_description>")
+    return "<task_response>" + response["messages"][-1].content + "</task_response>"
 
 
 def test_wrap_agent():

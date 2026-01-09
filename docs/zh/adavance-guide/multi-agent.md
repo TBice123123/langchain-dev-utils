@@ -28,8 +28,8 @@
 | `agent` | 智能体实例，必须已定义 `name` 属性。<br><br>**类型**: `CompiledStateGraph`<br>**必填**: 是 |
 | `tool_name` | 工具名称，默认为 `transfer_to_{agent_name}`。<br><br>**类型**: `str`<br>**必填**: 否 |
 | `tool_description` | 工具描述，默认为 `This tool transforms input to {agent_name}`。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
-| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
+| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
+| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
 
 ### 使用示例
 
@@ -192,8 +192,8 @@ print(
 | `agents` | 智能体实例列表。<br><br>**类型**: `list[CompiledStateGraph]`<br>**必填**: 是 |
 | `tool_name` | 工具名称，默认为 `task`。<br><br>**类型**: `str`<br>**必填**: 否 |
 | `tool_description` | 工具描述，默认包含所有可用智能体信息。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
-| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple`<br>**必填**: 否 |
+| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
+| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
 
 ### 使用示例
 
@@ -247,16 +247,21 @@ main_agent = create_agent(
 #### 函数签名
 
 ```python
-def pre_input_hook(request: str, runtime: ToolRuntime) -> str:
+def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
     """
     参数:
         request: 原始工具调用输入
         runtime: langchain 的 ToolRuntime
-    
+
     返回:
-        处理后的 str，作为 agent 的实际输入
+        处理后的输入，作为 agent 的实际输入（需要是 str 或 dict）
     """
 ```
+
+**注意**：
+- 钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。
+- 若返回 dict，则会被直接作为 agent 的实际输入。
+- 若返回 str，则会被包装为 `HumanMessage(content=...)`，最终以 `{"messages": [HumanMessage(content=...)]}` 作为 agent 的实际输入。
 
 #### 使用示例
 
@@ -293,11 +298,11 @@ call_agent_tool = wrap_agent_as_tool(
 #### 函数签名
 
 ```python
-def post_output_hook(request: str, messages: list, runtime: ToolRuntime) -> Union[str, Command]:
+def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntime) -> Union[str, Command]:
     """
     参数:
-        request: （可能已处理的）原始输入
-        messages: agent 返回的完整消息历史（来自 response["messages"]）
+        request: 未经处理的原始输入
+        response: agent 返回的完整响应
         runtime: langchain 的 ToolRuntime
     
     返回:
@@ -310,14 +315,14 @@ def post_output_hook(request: str, messages: list, runtime: ToolRuntime) -> Unio
 ```python
 from langgraph.types import Command
 
-def process_output_sync(request: str, messages: list, runtime: ToolRuntime) -> Command:
+def process_output_sync(request: str, response: dict[str, Any], runtime: ToolRuntime) -> Command:
     return Command(update={
-        "messages":[ToolMessage(content=messages[-1].content, tool_call_id=runtime.tool_call_id)]
+        "messages":[ToolMessage(content=response["messages"][-1].content, tool_call_id=runtime.tool_call_id)]
     })
 
-async def process_output_async(request: str, messages: list, runtime: ToolRuntime) -> Command:
+async def process_output_async(request: str, response: dict[str, Any], runtime: ToolRuntime) -> Command:
     return Command(update={
-        "messages":[ToolMessage(content=messages[-1].content, tool_call_id=runtime.tool_call_id)]
+        "messages":[ToolMessage(content=response["messages"][-1].content, tool_call_id=runtime.tool_call_id)]
     })
 
 # 使用
@@ -333,7 +338,7 @@ call_agent_tool = wrap_agent_as_tool(
 
 ### 默认行为
 
-- 若未提供 `pre_input_hooks`，输入原样传递
+- 若未提供 `pre_input_hooks`，则直接将原始输入以 `{"messages": [HumanMessage(content=request)]}` 作为 agent 的实际输入。
 - 若未提供 `post_output_hooks`，默认返回 `response["messages"][-1].content`（即最后一条消息的文本内容）
 
 

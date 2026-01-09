@@ -73,19 +73,19 @@ def wrap_agent_as_tool(
     tool_description: Optional[str] = None,
     pre_input_hooks: Optional[
         tuple[
-            Callable[[str, ToolRuntime], str],
-            Callable[[str, ToolRuntime], Awaitable[str]],
+            Callable[[str, ToolRuntime], str | dict[str, Any]],
+            Callable[[str, ToolRuntime], Awaitable[str | dict[str, Any]]],
         ]
-        | Callable[[str, ToolRuntime], str]
+        | Callable[[str, ToolRuntime], str | dict[str, Any]]
     ] = None,
     post_output_hooks: Optional[
         tuple[
-            Callable[[str, list[AnyMessage], ToolRuntime], Any],
-            Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]],
+            Callable[[str, dict[str, Any], ToolRuntime], Any],
+            Callable[[str, dict[str, Any], ToolRuntime], Awaitable[Any]],
         ]
-        | Callable[[str, list[AnyMessage], ToolRuntime], Any]
+        | Callable[[str, dict[str, Any], ToolRuntime], Any]
     ] = None,
-) -> BaseTool
+) -> BaseTool:
 ```
 
 ### 参数
@@ -95,8 +95,8 @@ def wrap_agent_as_tool(
 | agent | CompiledStateGraph | 是 | - | 智能体 |
 | tool_name | Optional[str] | 否 | None | 工具名称 |
 | tool_description | Optional[str] | 否 | None | 工具描述 |
-| pre_input_hooks | Optional[tuple[Callable[[str, ToolRuntime], str], Callable[[str, ToolRuntime], Awaitable[str]]] \| Callable[[str, ToolRuntime], str]] | 否 | None | Agent 输入预处理函数 |
-| post_output_hooks | Optional[tuple[Callable[[str, list[AnyMessage], ToolRuntime], Any], Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]]] \| Callable[[str, list[AnyMessage], ToolRuntime], Any]] | 否 | None | Agent 输出后处理函数 |
+| pre_input_hooks | - | 否 | None | Agent 输入预处理函数 |
+| post_output_hooks | - | 否 | None | Agent 输出后处理函数 |
 
 
 ### 示例
@@ -120,17 +120,17 @@ def wrap_all_agents_as_tool(
     tool_description: Optional[str] = None,
     pre_input_hooks: Optional[
         tuple[
-            Callable[[str, ToolRuntime], str],
-            Callable[[str, ToolRuntime], Awaitable[str]],
+            Callable[[str, ToolRuntime], str | dict[str, Any]],
+            Callable[[str, ToolRuntime], Awaitable[str | dict[str, Any]]],
         ]
-        | Callable[[str, ToolRuntime], str]
+        | Callable[[str, ToolRuntime], str | dict[str, Any]]
     ] = None,
     post_output_hooks: Optional[
         tuple[
-            Callable[[str, list[AnyMessage], ToolRuntime], Any],
-            Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]],
+            Callable[[str, dict[str, Any], ToolRuntime], Any],
+            Callable[[str, dict[str, Any], ToolRuntime], Awaitable[Any]],
         ]
-        | Callable[[str, list[AnyMessage], ToolRuntime], Any]
+        | Callable[[str, dict[str, Any], ToolRuntime], Any]
     ] = None,
 ) -> BaseTool:
 ```
@@ -143,8 +143,8 @@ def wrap_all_agents_as_tool(
 | agents | list[CompiledStateGraph] | 是 | - | 智能体列表(至少包含2个，且每个智能体必须有唯一的名称) |
 | tool_name | Optional[str] | 否 | None | 工具名称 |
 | tool_description | Optional[str] | 否 | None | 工具描述 |
-| pre_input_hooks | Optional[tuple[Callable[[str, ToolRuntime], str], Callable[[str, ToolRuntime], Awaitable[str]]] \| Callable[[str, ToolRuntime], str]] | 否 | None | Agent 输入预处理函数 |
-| post_output_hooks | Optional[tuple[Callable[[str, list[AnyMessage], ToolRuntime], Any], Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]]] \| Callable[[str, list[AnyMessage], ToolRuntime], Any]] | 否 | None | Agent 输出后处理函数 |
+| pre_input_hooks | - | 否 | None | Agent 输入预处理函数 |
+| post_output_hooks | - | 否 | None | Agent 输出后处理函数 |
 
 ### 示例
 

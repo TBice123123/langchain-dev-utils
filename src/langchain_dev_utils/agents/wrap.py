@@ -1,8 +1,8 @@
 import asyncio
-from typing import Any, Awaitable, Callable, Optional, cast
+from typing import Any, Awaitable, Callable, Optional
 
 from langchain.tools import ToolRuntime
-from langchain_core.messages import AnyMessage, HumanMessage
+from langchain_core.messages import HumanMessage
 from langchain_core.tools import BaseTool, StructuredTool
 from langgraph.graph.state import CompiledStateGraph
 
@@ -14,9 +14,9 @@ def _process_input(request: str, runtime: ToolRuntime) -> str:
 
 
 def _process_output(
-    request: str, response: list[AnyMessage], runtime: ToolRuntime
+    request: str, response: dict[str, Any], runtime: ToolRuntime
 ) -> Any:
-    return response[-1].content
+    return response["messages"][-1].content
 
 
 def wrap_agent_as_tool(
@@ -25,17 +25,17 @@ def wrap_agent_as_tool(
     tool_description: Optional[str] = None,
     pre_input_hooks: Optional[
         tuple[
-            Callable[[str, ToolRuntime], str],
-            Callable[[str, ToolRuntime], Awaitable[str]],
+            Callable[[str, ToolRuntime], str | dict[str, Any]],
+            Callable[[str, ToolRuntime], Awaitable[str | dict[str, Any]]],
         ]
-        | Callable[[str, ToolRuntime], str]
+        | Callable[[str, ToolRuntime], str | dict[str, Any]]
     ] = None,
     post_output_hooks: Optional[
         tuple[
-            Callable[[str, list[AnyMessage], ToolRuntime], Any],
-            Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]],
+            Callable[[str, dict[str, Any], ToolRuntime], Any],
+            Callable[[str, dict[str, Any], ToolRuntime], Awaitable[Any]],
         ]
-        | Callable[[str, list[AnyMessage], ToolRuntime], Any]
+        | Callable[[str, dict[str, Any], ToolRuntime], Any]
     ] = None,
 ) -> BaseTool:
     """Wraps an agent as a tool
@@ -91,33 +91,58 @@ def wrap_agent_as_tool(
     def call_agent(
         request: str,
         runtime: ToolRuntime,
-    ) -> str:
-        request = process_input(request, runtime) if process_input else request
+    ):
+        _processed_input = process_input(request, runtime) if process_input else request
+        if isinstance(_processed_input, str):
+            agent_input = {"messages": [HumanMessage(content=_processed_input)]}
+        elif isinstance(_processed_input, dict):
+            if "messages" not in _processed_input:
+                raise ValueError("Agent input must contain 'messages' key")
+            agent_input = _processed_input
+        else:
+            raise ValueError("Pre Hooks must return a string or a dict")
 
-        messages = [HumanMessage(content=request)]
-        response = agent.invoke({"messages": messages})
+        response = agent.invoke(agent_input)
 
-        response = process_output(request, response["messages"], runtime)
+        response = (
+            process_output(request, response, runtime)
+            if process_output
+            else response["messages"][-1].content
+        )
         return response
 
     async def acall_agent(
         request: str,
         runtime: ToolRuntime,
-    ) -> str:
+    ):
         if asyncio.iscoroutinefunction(process_input_async):
-            request = await process_input_async(request, runtime)
+            _processed_input = await process_input_async(request, runtime)
         else:
-            request = cast(str, process_input_async(request, runtime))
+            _processed_input = (
+                process_input_async(request, runtime)
+                if process_input_async
+                else request
+            )
 
-        messages = [HumanMessage(content=request)]
-        response = await agent.ainvoke({"messages": messages})
+        if isinstance(_processed_input, str):
+            agent_input = {"messages": [HumanMessage(content=_processed_input)]}
+        elif isinstance(_processed_input, dict):
+            if "messages" not in _processed_input:
+                raise ValueError("Agent input must contain 'messages' key")
+            agent_input = _processed_input
+        else:
+            raise ValueError("Pre Hooks must return a string or a dict")
+
+        response = await agent.ainvoke(agent_input)
 
         if asyncio.iscoroutinefunction(process_output_async):
-            response = await process_output_async(
-                request, response["messages"], runtime
-            )
+            response = await process_output_async(request, response, runtime)
         else:
-            response = process_output(request, response["messages"], runtime)
+            response = (
+                process_output(request, response, runtime)
+                if process_output
+                else response["messages"][-1].content
+            )
 
         return response
 
@@ -143,17 +168,17 @@ def wrap_all_agents_as_tool(
     tool_description: Optional[str] = None,
     pre_input_hooks: Optional[
         tuple[
-            Callable[[str, ToolRuntime], str],
-            Callable[[str, ToolRuntime], Awaitable[str]],
+            Callable[[str, ToolRuntime], str | dict[str, Any]],
+            Callable[[str, ToolRuntime], Awaitable[str | dict[str, Any]]],
         ]
-        | Callable[[str, ToolRuntime], str]
+        | Callable[[str, ToolRuntime], str | dict[str, Any]]
     ] = None,
     post_output_hooks: Optional[
         tuple[
-            Callable[[str, list[AnyMessage], ToolRuntime], Any],
-            Callable[[str, list[AnyMessage], ToolRuntime], Awaitable[Any]],
+            Callable[[str, dict[str, Any], ToolRuntime], Any],
+            Callable[[str, dict[str, Any], ToolRuntime], Awaitable[Any]],
         ]
-        | Callable[[str, list[AnyMessage], ToolRuntime], Any]
+        | Callable[[str, dict[str, Any], ToolRuntime], Any]
     ] = None,
 ) -> BaseTool:
     """Wraps all agents as single tool
@@ -219,42 +244,67 @@ def wrap_all_agents_as_tool(
         agent_name: str,
         description: str,
         runtime: ToolRuntime,
-    ) -> str:
-        task_description = (
-            process_input(description, runtime) if process_input else description
-        )
-
+    ):
         if agent_name not in agents_map:
             raise ValueError(f"Agent {agent_name} not found")
 
-        messages = [HumanMessage(content=task_description)]
-        response = agents_map[agent_name].invoke({"messages": messages})
+        _processed_input = (
+            process_input(description, runtime) if process_input else description
+        )
+        if isinstance(_processed_input, str):
+            agent_input = {"messages": [HumanMessage(content=_processed_input)]}
+        elif isinstance(_processed_input, dict):
+            if "messages" not in _processed_input:
+                raise ValueError("Agent input must contain 'messages' key")
+            agent_input = _processed_input
+        else:
+            raise ValueError("Pre Hooks must return str or dict")
 
-        response = process_output(task_description, response["messages"], runtime)
+        response = agent.invoke(agent_input)
+
+        response = (
+            process_output(description, response, runtime)
+            if process_output
+            else response["messages"][-1].content
+        )
         return response
 
     async def acall_agent(
         agent_name: str,
         description: str,
         runtime: ToolRuntime,
-    ) -> str:
-        if asyncio.iscoroutinefunction(process_input_async):
-            task_description = await process_input_async(description, runtime)
-        else:
-            task_description = cast(str, process_input_async(description, runtime))
-
+    ):
         if agent_name not in agents_map:
             raise ValueError(f"Agent {agent_name} not found")
 
-        messages = [HumanMessage(content=task_description)]
-        response = await agents_map[agent_name].ainvoke({"messages": messages})
+        if asyncio.iscoroutinefunction(process_input_async):
+            _processed_input = await process_input_async(description, runtime)
+        else:
+            _processed_input = (
+                process_input_async(description, runtime)
+                if process_input_async
+                else description
+            )
+
+        if isinstance(_processed_input, str):
+            agent_input = {"messages": [HumanMessage(content=_processed_input)]}
+        elif isinstance(_processed_input, dict):
+            if "messages" not in _processed_input:
+                raise ValueError("Agent input must contain 'messages' key")
+            agent_input = _processed_input
+        else:
+            raise ValueError("Pre Hooks must return str or dict")
+
+        response = await agents_map[agent_name].ainvoke(agent_input)
 
         if asyncio.iscoroutinefunction(process_output_async):
-            response = await process_output_async(
-                task_description, response["messages"], runtime
-            )
+            response = await process_output_async(description, response, runtime)
         else:
-            response = process_output(task_description, response["messages"], runtime)
+            response = (
+                process_output(description, response, runtime)
+                if process_output
+                else response["messages"][-1].content
+            )
 
         return response
 

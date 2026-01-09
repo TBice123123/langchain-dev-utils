@@ -238,13 +238,11 @@ It is recommended to adopt either of the following solutions to streamline the c
 
     **Implementation Notes**:
 
-    1. **Extended State Schema**: Added four fields `requirement`, `architecture`, `code`, and `tests` to the agent's State Schema to store the final output results of corresponding agents.
+    1. **Extended State Schema**: Added four fields `requirement`, `architecture`, `code`, and `tests` to the agent's State Schema to store the final output results of the corresponding agents.
 
-    2. **Custom Middleware**: Created the `ClearAgentContextMiddleware` middleware, which after each agent finishes:
-       - Clears the current execution context (using `RemoveMessage`)
-       - Saves the final result (`final_message.content`) to the corresponding field
+    2. **Custom Middleware**: Created the `ClearAgentContextMiddleware` middleware. After each agent completes, it first clears the current runtime context (using `RemoveMessage`), then saves the final result (`final_message.content`) to the corresponding field.
 
-    3. **Dynamic Prompt Formatting**: Uses the built-in `format_prompt` middleware to dynamically concatenate the output of previous agents into the `system_prompt` at runtime
+    3. **Dynamic Prompt Formatting**: Uses the built-in `format_prompt` middleware of this library to dynamically splice the output of preceding agents into the `system_prompt` at runtime as needed.
 
 !!! info "Tip"
 

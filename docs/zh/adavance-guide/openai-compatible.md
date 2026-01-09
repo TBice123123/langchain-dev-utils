@@ -405,7 +405,7 @@ print(embedding.embed_query("你好"))
 ```
 
 !!! warning "注意"
-    与模型管理的要求类似，由于上述的两个函数底层使用了`pydantic.create_model`来创建模型类，因此会带来一定的性能开销，且`create_openai_compatible_model`底层也依托了一个全局字典来记录各个模型提供商对应的`profiles`，因此在使用中也存在多线程并发的问题，因此也建议在项目的启动阶段就创建好对应的集成类，后续不应再动态创建。
+    与模型管理类似，上述两个函数底层使用 `pydantic.create_model` 创建模型类，会带来一定的性能开销。此外，`create_openai_compatible_model` 使用全局字典记录各模型提供商的 `profiles`，为了避免多线程并发问题，建议在项目启动阶段创建好集成类，后续避免动态创建。
 
 ## 集成类的使用
 
@@ -632,6 +632,17 @@ print(embedding.embed_query("你好"))
     print(res)
     ```
 
+!!! warning "向量化模型兼容性说明"
+    兼容 OpenAI 的嵌入 API 通常表现出较好的兼容性，但仍需注意以下差异点：
+
+    1. `check_embedding_ctx_length`：仅在使用官方 OpenAI 嵌入服务时设为 `True`；其余嵌入模型一律设为 `False`。
+
+    2. `dimensions`：若模型支持自定义维度（如 1024、4096），可直接传入该参数。
+
+    3. `chunk_size`：单次请求可携带的最大文本数（即`embed_documents`方法中的传入的列表长度），默认 100。请按提供商实际要求调整。
+    
+    4. 单文本 token 上限：无法通过参数控制，需在预处理分块阶段自行保证。
+
 **注意**：使用本功能创建的对话模型类和嵌入模型类支持传入任何`BaseChatOpenAI`和`OpenAIEmbeddings`的参数，例如`temperature`, `extra_body`,`dimensions`等。
 
 
@@ -669,6 +680,23 @@ register_model_provider(
 ```
 
 同时，`create_openai_compatible_model`函数中的`base_url`、`compatibility_options`、`model_profiles`参数也支持传入。只需要在`register_model_provider`函数中传入对应的参数即可。
+
+例如：
+
+```python
+from langchain_dev_utils.chat_models import register_model_provider
+
+register_model_provider(
+    provider_name="vllm",
+    chat_model="openai-compatible",
+    base_url="http://localhost:8000/v1",
+    compatibility_options={
+        "supported_tool_choice": ["auto", "none", "required", "specific"],
+        "supported_response_format": ["json_schema"]
+    },
+    model_profiles=model_profiles,
+)
+```
 
 ### 嵌入模型类注册
 

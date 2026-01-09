@@ -400,7 +400,8 @@ print(embedding.embed_query("你好"))
 ```
 
 !!! warning "Note"
-    Similar to model management requirements, since the two functions above use `pydantic.create_model` to create model classes at the bottom layer, they bring certain performance overhead, and `create_openai_compatible_model` also relies on a global dictionary to record the `profiles` corresponding to each model provider at the bottom layer, so there are also multi-threading concurrency issues in use. Therefore, it's recommended to create the corresponding integration classes in the project's startup phase, and not dynamically create them later.
+    Similar to model management, the two functions above use `pydantic.create_model` under the hood to create model classes, which incurs certain performance overhead. Additionally, `create_openai_compatible_model` uses a global dictionary to store `profiles` for each model provider. To avoid multi-threading concurrency issues, it is recommended to create the integration classes during project startup and avoid dynamic creation afterward.
+
 
 ## Using Integration Classes
 
@@ -623,6 +624,18 @@ We use the previously created `VLLMEmbeddings` class to initialize an embedding 
     print(res)
     ```
 
+!!! warning "Embedding Model Compatibility Notes"
+    OpenAI-compatible embedding APIs generally show good compatibility, but you should be aware of the following differences:
+
+    1. `check_embedding_ctx_length`: Set to `True` only when using the official OpenAI embedding service; set to `False` for all other embedding models.
+
+    2. `dimensions`: If the model supports custom dimensions (e.g., 1024, 4096), you can pass this parameter directly.
+
+    3. `chunk_size`: The maximum number of texts that can be carried in a single request (i.e., the length of the list passed to the `embed_documents` method), default is 100. Adjust according to the actual requirements of the provider.
+    
+    4. Single text token limit: Cannot be controlled through parameters, must be ensured during the preprocessing chunking stage.
+
+
 **Note**: The chat model classes and embedding model classes created using this feature support passing any parameters of `BaseChatOpenAI` and `OpenAIEmbeddings`, such as `temperature`, `extra_body`, `dimensions`, etc.
 
 ## Integration with Model Management Feature
@@ -658,6 +671,24 @@ register_model_provider(
 ```
 
 At the same time, parameters like `base_url`, `compatibility_options`, `model_profiles` in the `create_openai_compatible_model` function also support being passed. Just pass the corresponding parameters in the `register_model_provider` function.
+
+For example:
+
+```python
+from langchain_dev_utils.chat_models import register_model_provider
+
+register_model_provider(
+    provider_name="vllm",
+    chat_model="openai-compatible",
+    base_url="http://localhost:8000/v1",
+    compatibility_options={
+        "supported_tool_choice": ["auto", "none", "required", "specific"],
+        "supported_response_format": ["json_schema"]
+    },
+    model_profiles=model_profiles,
+)
+```
+
 
 ### Embedding Model Class Registration
 
