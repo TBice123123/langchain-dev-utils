@@ -1821,7 +1821,7 @@
 </details>
 <details class="note">
 <summary>3. reasoning_keep_policy</summary>
-<p>用于控制历史消息（messages）中<code>reasoning_content</code> 字段的保留策略，主要适配于不同模型提供商的模型的不同的思考模式。</p>
+<p>用于控制历史消息（messages）中<code>reasoning_content</code> 字段的保留策略，主要适配于不同模型甚至同一模型在不同场景下的思考模式。</p>
 <p>支持以下取值：</p>
 <ul>
 <li>
@@ -1834,12 +1834,19 @@
 <p><code>all</code>：保留<strong>所有对话</strong>中的 <code>reasoning_content</code> 字段。</p>
 </li>
 </ul>
-<p>例如：
-例如，用户先提问“纽约天气如何？”，随后追问“伦敦天气如何？”，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
+<pre class="mermaid"><code>graph LR
+    A[reasoning_content 保留策略] --&gt; B{取值?};
+    B --&gt;|never| C[不包含任何&lt;br&gt;reasoning_content];
+    B --&gt;|current| D[仅包含当前对话的&lt;br&gt;reasoning_content&lt;br&gt;适配交错式思考模式];
+    B --&gt;|all| E[包含所有对话的&lt;br&gt;reasoning_content];
+    C --&gt; F[发送给模型];
+    D --&gt; F;
+    E --&gt; F;</code></pre>
+<p>例如，用户先提问"纽约天气如何？"，随后追问"伦敦天气如何？"，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
 <ul>
 <li>取值为<code>never</code>时</li>
 </ul>
-<p>当取值为<code>never</code>时，则最终传递给模型的 messages 中<strong>不会有任何</strong>的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：</p>
+<p>最终传递给模型的 messages 中<strong>不会有任何</strong> <code>reasoning_content</code> 字段，模型收到的 messages 为：</p>
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
@@ -1853,7 +1860,7 @@
 <ul>
 <li>取值为<code>current</code>时</li>
 </ul>
-<p>当取值为<code>current</code>时，仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：
+<p>仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段。该策略适用于交错式思考（Interleaved Thinking）场景，即模型在显式推理与工具调用之间交替进行，此时需要将当前轮次的推理内容进行保留。模型收到的 messages 为：
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
@@ -1872,7 +1879,7 @@
 <ul>
 <li>取值为<code>all</code>时</li>
 </ul>
-<p>当取值为<code>all</code>时，保留<strong>所有</strong>对话中的 <code>reasoning_content</code> 字段。最终模型收到的 messages 为：
+<p>保留<strong>所有</strong>对话中的 <code>reasoning_content</code> 字段。模型收到的 messages 为：
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
@@ -1897,7 +1904,7 @@
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div></p>
-<p><strong>注意</strong>：如果本轮对话不涉及工具调用，则<code>current</code>效果和<code>never</code>效果相同。</p>
+<p><strong>注意</strong>：若本轮对话不涉及工具调用，则<code>current</code>与<code>never</code>效果相同。</p>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
 <p>根据模型提供商对 <code>reasoning_content</code> 的保留要求灵活配置：</p>
@@ -1906,7 +1913,7 @@
 <li>若仅要求在<strong>本轮工具调用</strong>中保留，设为 <code>current</code>；  </li>
 <li>若无特殊要求，保持默认 <code>never</code> 即可。  </li>
 </ul>
-<p>该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖；由于同一提供商的不同模型对 <code>reasoning_content</code> 保留策略的可能不同，甚至同一模型在不同场景下可能需要不同的策略，<strong>建议在实例化时显式指定</strong>，创建类时无需赋值。</p>
+<p>该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖。由于同一提供商的不同模型、甚至同一模型在不同场景下对 <code>reasoning_content</code> 保留策略的要求可能不同，<strong>建议在实例化时显式指定</strong>，创建类时无需赋值。</p>
 </div>
 </details>
 <details class="note">
@@ -2187,7 +2194,7 @@
 </code></pre></div>
 </details>
 <div class="admonition warning">
-<p class="admonition-title">向量化模型兼容性说明</p>
+<p class="admonition-title">嵌入模型兼容性说明</p>
 <p>兼容 OpenAI 的嵌入 API 通常表现出较好的兼容性，但仍需注意以下差异点：</p>
 <ol>
 <li>

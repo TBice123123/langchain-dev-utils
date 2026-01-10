@@ -1821,92 +1821,99 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 </details>
 <details class="note">
 <summary>3. reasoning_keep_policy</summary>
-<p>Used to control the retention policy of the <code>reasoning_content</code> field in historical messages (messages), mainly adapted to different thinking modes of models from different providers.</p>
-<p>Supports the following values:</p>
+<p>Used to control the retention policy of the <code>reasoning_content</code> field in the message history (<code>messages</code>), primarily to adapt to the thinking patterns of different models or even the same model in different scenarios.</p>
+<p>The following values are supported:</p>
 <ul>
 <li>
-<p><code>never</code>: <strong>Do not retain any</strong> reasoning content in historical messages (default);</p>
+<p><code>never</code>: <strong>Do not retain any</strong> reasoning content in the message history (default);</p>
 </li>
 <li>
-<p><code>current</code>: Only retain the <code>reasoning_content</code> field in the <strong>current conversation</strong>;</p>
+<p><code>current</code>: Retain the <code>reasoning_content</code> field <strong>only in the current conversation turn</strong>;</p>
 </li>
 <li>
-<p><code>all</code>: Retain the <code>reasoning_content</code> field in <strong>all conversations</strong>.</p>
+<p><code>all</code>: Retain the <code>reasoning_content</code> field <strong>in all conversation turns</strong>.</p>
 </li>
 </ul>
-<p>For example:
-The user first asks "What's the weather in New York?", then follows up with "What's the weather in London?", currently in the second round of conversation, and about to make the final model call.</p>
+<pre class="mermaid"><code>graph LR
+    A[reasoning_content Retention Policy] --&gt; B{Policy Value?};
+    B --&gt;|never| C[Exclude any&lt;br&gt;reasoning_content];
+    B --&gt;|current| D[Include only current turn&lt;br&gt;reasoning_content&lt;br&gt;Suitable for Interleaved Reasoning];
+    B --&gt;|all| E[Include all historical&lt;br&gt;reasoning_content];
+    C --&gt; F[Send to Model];
+    D --&gt; F;
+    E --&gt; F;</code></pre>
+<p>For example, the user first asks "How is the weather in New York?", then follows up with "How is the weather in London?". We are currently in the second round of conversation, about to perform the final model call.</p>
 <ul>
-<li>When the value is <code>never</code></li>
+<li>When set to <code>never</code></li>
 </ul>
-<p>When the value is <code>never</code>, the final messages passed to the model will <strong>not have any</strong> <code>reasoning_content</code> fields. The final messages received by the model are:</p>
+<p>There will be <strong>no</strong> <code>reasoning_content</code> field in the messages passed to the model. The messages received by the model will be:</p>
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Today&#39;s weather in New York is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div>
 <ul>
-<li>When the value is <code>current</code></li>
+<li>When set to <code>current</code></li>
 </ul>
-<p>When the value is <code>current</code>, only the <code>reasoning_content</code> field in the <strong>current conversation</strong> is retained. The final messages received by the model are:
+<p>Only the <code>reasoning_content</code> field from the <strong>current conversation turn</strong> is retained. This policy is suitable for Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls. In this case, the reasoning content of the current turn needs to be preserved. The messages received by the model will be:</p>
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Today&#39;s weather in New York is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain reasoning_content for this round of conversation</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check London weather, need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain reasoning_content from the current turn</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <ul>
-<li>When the value is <code>all</code></li>
+<li>When set to <code>all</code></li>
 </ul>
-<p>When the value is <code>all</code>, the <code>reasoning_content</code> field in <strong>all</strong> conversations is retained. The final messages received by the model are:
+<p>Retain the <code>reasoning_content</code> field from <strong>all</strong> conversation turns. The messages received by the model will be:</p>
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check New York&#39;s weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check New York weather, need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy, 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Today&#39;s weather in New York is cloudy, 7~13°C.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Directly return New York weather result.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Return the New York weather result directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;How is the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, need to directly call the weather tool.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check London weather, need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 <span class="p">]</span>
-</code></pre></div></p>
-<p><strong>Note</strong>: If the current conversation doesn't involve tool calling, the effect of <code>current</code> is the same as <code>never</code>.</p>
+</code></pre></div>
+<p><strong>Note</strong>: If the current conversation turn does not involve a tool call, the effect of <code>current</code> is the same as <code>never</code>.</p>
 <div class="admonition info">
 <p class="admonition-title">Tip</p>
-<p>Configure flexibly based on the provider's requirements for <code>reasoning_content</code> retention:</p>
+<p>Configure flexibly based on the model provider's requirements for retaining <code>reasoning_content</code>:</p>
 <ul>
-<li>If the provider requires <strong>retaining reasoning content throughout</strong>, set to <code>all</code>;  </li>
-<li>If only required to retain in <strong>this round of tool calling</strong>, set to <code>current</code>;  </li>
-<li>If no special requirements, keep the default <code>never</code>.</li>
+<li>If the provider requires reasoning content to be retained <strong>throughout</strong>, set to <code>all</code>;  </li>
+<li>If it is only required to be retained for the <strong>current tool call</strong>, set to <code>current</code>;  </li>
+<li>If there are no special requirements, keep the default <code>never</code>.  </li>
 </ul>
-<p>This parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; since different models from the same provider may have different <code>reasoning_content</code> retention policies, and even the same model may need different policies in different scenarios, <strong>it's recommended to specify explicitly during instantiation</strong>, no need to assign when creating the class.</p>
+<p>This parameter can be set uniformly during creation, or dynamically overridden for a specific model during instantiation. Since different models from the same provider, or even the same model in different scenarios, may have different requirements for the <code>reasoning_content</code> retention policy, <strong>it is recommended to specify it explicitly during instantiation</strong>; no value needs to be assigned when creating the class.</p>
 </div>
 </details>
 <details class="note">
