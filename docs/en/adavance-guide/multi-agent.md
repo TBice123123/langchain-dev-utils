@@ -259,8 +259,11 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 ```
 
 **Note**:
+
 - The return value of the hook function must be str or dict, otherwise a ValueError will be raised.
+
 - If returning dict, it will be used directly as the agent's actual input.
+
 - If returning str, it will be wrapped as `HumanMessage(content=...)`, ultimately serving as the agent's actual input as `{"messages": [HumanMessage(content=...)]}`.
 
 #### Usage Example

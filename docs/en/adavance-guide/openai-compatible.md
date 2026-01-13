@@ -209,48 +209,59 @@ Detailed introduction to these configuration items:
 
 ??? note "3. reasoning_keep_policy"
 
-    Used to control the retention policy of the `reasoning_content` field in historical messages (messages), mainly adapted to different thinking modes of models from different providers.
+    Used to control the retention policy of the `reasoning_content` field in the message history (`messages`), primarily to adapt to the thinking patterns of different models or even the same model in different scenarios.
 
-    Supports the following values:
+    The following values are supported:
 
-    - `never`: **Do not retain any** reasoning content in historical messages (default);
+    - `never`: **Do not retain any** reasoning content in the message history (default);
 
-    - `current`: Only retain the `reasoning_content` field in the **current conversation**;
+    - `current`: Retain the `reasoning_content` field **only in the current conversation turn**;
 
-    - `all`: Retain the `reasoning_content` field in **all conversations**.
+    - `all`: Retain the `reasoning_content` field **in all conversation turns**.
 
-    For example:
-    The user first asks "What's the weather in New York?", then follows up with "What's the weather in London?", currently in the second round of conversation, and about to make the final model call.
+    ```mermaid
+    graph LR
+        A[reasoning_content Retention Policy] --> B{Policy Value?};
+        B -->|never| C[Exclude any<br>reasoning_content];
+        B -->|current| D[Include only current turn<br>reasoning_content<br>Suitable for Interleaved Reasoning];
+        B -->|all| E[Include all historical<br>reasoning_content];
+        C --> F[Send to Model];
+        D --> F;
+        E --> F;
+    ```
 
-    - When the value is `never`
+    For example, the user first asks "How is the weather in New York?", then follows up with "How is the weather in London?". We are currently in the second round of conversation, about to perform the final model call.
 
-    When the value is `never`, the final messages passed to the model will **not have any** `reasoning_content` fields. The final messages received by the model are:
+    - When set to `never`
+
+    There will be **no** `reasoning_content` field in the messages passed to the model. The messages received by the model will be:
 
     ```python
     messages = [
-        {"content": "What's the weather in New York?", "role": "user"},
+        {"content": "How is the weather in New York?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Cloudy, 7~13°C", "role": "tool", "tool_call_id": "..."},
-        {"content": "Today's weather in New York is cloudy, 7~13°C.", "role": "assistant"},
-        {"content": "What's the weather in London?", "role": "user"},
+        {"content": "The weather in New York today is cloudy, 7~13°C.", "role": "assistant"},
+        {"content": "How is the weather in London?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Rainy, 14~20°C", "role": "tool", "tool_call_id": "..."},
     ]
     ```
 
-    - When the value is `current`
+    - When set to `current`
 
-    When the value is `current`, only the `reasoning_content` field in the **current conversation** is retained. The final messages received by the model are:
+    Only the `reasoning_content` field from the **current conversation turn** is retained. This policy is suitable for Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls. In this case, the reasoning content of the current turn needs to be preserved. The messages received by the model will be:
+
     ```python
     messages = [
-        {"content": "What's the weather in New York?", "role": "user"},
+        {"content": "How is the weather in New York?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Cloudy, 7~13°C", "role": "tool", "tool_call_id": "..."},
-        {"content": "Today's weather in New York is cloudy, 7~13°C.", "role": "assistant"},
-        {"content": "What's the weather in London?", "role": "user"},
+        {"content": "The weather in New York today is cloudy, 7~13°C.", "role": "assistant"},
+        {"content": "How is the weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "To check London's weather, need to directly call the weather tool.",  # Only retain reasoning_content for this round of conversation
+            "reasoning_content": "Check London weather, need to call the weather tool directly.",  # Only retain reasoning_content from the current turn
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -258,28 +269,29 @@ Detailed introduction to these configuration items:
     ]
     ```
 
-    - When the value is `all`
+    - When set to `all`
 
-    When the value is `all`, the `reasoning_content` field in **all** conversations is retained. The final messages received by the model are:
+    Retain the `reasoning_content` field from **all** conversation turns. The messages received by the model will be:
+
     ```python
     messages = [
-        {"content": "What's the weather in New York?", "role": "user"},
+        {"content": "How is the weather in New York?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "To check New York's weather, need to directly call the weather tool.",  # Retain reasoning_content
+            "reasoning_content": "Check New York weather, need to call the weather tool directly.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
         {"content": "Cloudy, 7~13°C", "role": "tool", "tool_call_id": "..."},
         {
-            "content": "Today's weather in New York is cloudy, 7~13°C.",
-            "reasoning_content": "Directly return New York weather result.",  # Retain reasoning_content
+            "content": "The weather in New York today is cloudy, 7~13°C.",
+            "reasoning_content": "Return the New York weather result directly.",  # Retain reasoning_content
             "role": "assistant",
         },
-        {"content": "What's the weather in London?", "role": "user"},
+        {"content": "How is the weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "To check London's weather, need to directly call the weather tool.",  # Retain reasoning_content
+            "reasoning_content": "Check London weather, need to call the weather tool directly.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -287,16 +299,16 @@ Detailed introduction to these configuration items:
     ]
     ```
 
-    **Note**: If the current conversation doesn't involve tool calling, the effect of `current` is the same as `never`.
+    **Note**: If the current conversation turn does not involve a tool call, the effect of `current` is the same as `never`.
 
     !!! info "Tip"
-        Configure flexibly based on the provider's requirements for `reasoning_content` retention:
+        Configure flexibly based on the model provider's requirements for retaining `reasoning_content`:
 
-        - If the provider requires **retaining reasoning content throughout**, set to `all`;  
-        - If only required to retain in **this round of tool calling**, set to `current`;  
-        - If no special requirements, keep the default `never`.
+        - If the provider requires reasoning content to be retained **throughout**, set to `all`;  
+        - If it is only required to be retained for the **current tool call**, set to `current`;  
+        - If there are no special requirements, keep the default `never`.  
 
-        This parameter can be set uniformly during creation or dynamically overridden for individual models during instantiation; since different models from the same provider may have different `reasoning_content` retention policies, and even the same model may need different policies in different scenarios, **it's recommended to specify explicitly during instantiation**, no need to assign when creating the class.
+        This parameter can be set uniformly during creation, or dynamically overridden for a specific model during instantiation. Since different models from the same provider, or even the same model in different scenarios, may have different requirements for the `reasoning_content` retention policy, **it is recommended to specify it explicitly during instantiation**; no value needs to be assigned when creating the class.
 
 ??? note "4. include_usage"
 

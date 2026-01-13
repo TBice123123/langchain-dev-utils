@@ -212,7 +212,7 @@ export VLLM_API_KEY=vllm_api_key
 
 ??? note "3. reasoning_keep_policy"
 
-    用于控制历史消息（messages）中`reasoning_content` 字段的保留策略，主要适配于不同模型提供商的模型的不同的思考模式。
+    用于控制历史消息（messages）中`reasoning_content` 字段的保留策略，主要适配于不同模型甚至同一模型在不同场景下的思考模式。
 
     支持以下取值：
 
@@ -222,12 +222,22 @@ export VLLM_API_KEY=vllm_api_key
 
     - `all`：保留**所有对话**中的 `reasoning_content` 字段。
 
-    例如：
-    例如，用户先提问“纽约天气如何？”，随后追问“伦敦天气如何？”，当前正要进行第二轮对话，且即将进行最后一次模型调用。
+    ```mermaid
+    graph LR
+        A[reasoning_content 保留策略] --> B{取值?};
+        B -->|never| C[不包含任何<br>reasoning_content];
+        B -->|current| D[仅包含当前对话的<br>reasoning_content<br>适配交错式思考模式];
+        B -->|all| E[包含所有对话的<br>reasoning_content];
+        C --> F[发送给模型];
+        D --> F;
+        E --> F;
+    ```
+
+    例如，用户先提问"纽约天气如何？"，随后追问"伦敦天气如何？"，当前正要进行第二轮对话，且即将进行最后一次模型调用。
 
     - 取值为`never`时
 
-    当取值为`never`时，则最终传递给模型的 messages 中**不会有任何**的 `reasoning_content` 字段。最终模型收到的 messages 为：
+    最终传递给模型的 messages 中**不会有任何** `reasoning_content` 字段，模型收到的 messages 为：
 
     ```python
     messages = [
@@ -243,7 +253,7 @@ export VLLM_API_KEY=vllm_api_key
 
     - 取值为`current`时
 
-    当取值为`current`时，仅保留**当前对话**中的 `reasoning_content` 字段。最终模型收到的 messages 为：
+    仅保留**当前对话**中的 `reasoning_content` 字段。该策略适用于交错式思考（Interleaved Thinking）场景，即模型在显式推理与工具调用之间交替进行，此时需要将当前轮次的推理内容进行保留。模型收到的 messages 为：
     ```python
     messages = [
         {"content": "查纽约天气如何？", "role": "user"},
@@ -263,7 +273,7 @@ export VLLM_API_KEY=vllm_api_key
 
     - 取值为`all`时
 
-    当取值为`all`时，保留**所有**对话中的 `reasoning_content` 字段。最终模型收到的 messages 为：
+    保留**所有**对话中的 `reasoning_content` 字段。模型收到的 messages 为：
     ```python
     messages = [
         {"content": "查纽约天气如何？", "role": "user"},
@@ -290,7 +300,7 @@ export VLLM_API_KEY=vllm_api_key
     ]
     ```
 
-    **注意**：如果本轮对话不涉及工具调用，则`current`效果和`never`效果相同。
+    **注意**：若本轮对话不涉及工具调用，则`current`与`never`效果相同。
 
     !!! info "提示"
         根据模型提供商对 `reasoning_content` 的保留要求灵活配置：
@@ -299,7 +309,7 @@ export VLLM_API_KEY=vllm_api_key
         - 若仅要求在**本轮工具调用**中保留，设为 `current`；  
         - 若无特殊要求，保持默认 `never` 即可。  
 
-        该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖；由于同一提供商的不同模型对 `reasoning_content` 保留策略的可能不同，甚至同一模型在不同场景下可能需要不同的策略，**建议在实例化时显式指定**，创建类时无需赋值。
+        该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖。由于同一提供商的不同模型、甚至同一模型在不同场景下对 `reasoning_content` 保留策略的要求可能不同，**建议在实例化时显式指定**，创建类时无需赋值。
 
 ??? note "4. include_usage"
 
@@ -632,7 +642,7 @@ print(embedding.embed_query("你好"))
     print(res)
     ```
 
-!!! warning "向量化模型兼容性说明"
+!!! warning "嵌入模型兼容性说明"
     兼容 OpenAI 的嵌入 API 通常表现出较好的兼容性，但仍需注意以下差异点：
 
     1. `check_embedding_ctx_length`：仅在使用官方 OpenAI 嵌入服务时设为 `True`；其余嵌入模型一律设为 `False`。

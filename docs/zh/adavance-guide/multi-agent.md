@@ -259,8 +259,11 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 ```
 
 **注意**：
+
 - 钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。
+
 - 若返回 dict，则会被直接作为 agent 的实际输入。
+
 - 若返回 str，则会被包装为 `HumanMessage(content=...)`，最终以 `{"messages": [HumanMessage(content=...)]}` 作为 agent 的实际输入。
 
 #### 使用示例

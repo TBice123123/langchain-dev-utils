@@ -6,7 +6,7 @@ This repository provides an example project [`langchain-dev-utils-example`](http
 - **Supervisor-Multi-Agent Architecture**: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.
 
 <p align="center">
-  <img src="../../assets/graph.png" alt="graph">
+  <img src="../assets/graph.png" alt="graph">
 </p>
 
 ## Quick Start
@@ -60,6 +60,7 @@ This project uses ZhipuAI's GLM series as the core model by default, as follows:
   - `GLM-4.7`: Used for `simple-agent`
   - `GLM-4.6`: Used for the `supervisor` in `supervisor-agent`
   - `GLM-4.5`: Used for `subagent` in `supervisor-agent`
+  - `GLM-4.6V`: Used for `vision subagent` in `supervisor-agent`
 
 To customize the model provider, please modify `src/utils/providers/chat_models/register.py` and register your model provider using the `register_model_provider` function in the `register_all_model_providers` function.
 
