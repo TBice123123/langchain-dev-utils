@@ -989,15 +989,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#agent-handoff" class="md-nav__link">
+  <a href="#agent-handoffs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent Handoff
+        Agent Handoffs
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Agent Handoff">
+    <nav class="md-nav" aria-label="Agent Handoffs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1661,15 +1661,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#agent-handoff" class="md-nav__link">
+  <a href="#agent-handoffs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent Handoff
+        Agent Handoffs
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Agent Handoff">
+    <nav class="md-nav" aria-label="Agent Handoffs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2093,8 +2093,8 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>Through <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
-<h2 id="agent-handoff">Agent Handoff</h2>
-<p><code>HandoffAgentMiddleware</code> is a middleware for <strong>flexibly switching between multiple sub-agents</strong>, fully implementing LangChain's official <code>handoffs</code> multi-agent collaboration solution.</p>
+<h2 id="agent-handoffs">Agent Handoffs</h2>
+<p><code>HandoffAgentMiddleware</code> is a middleware used for <strong>flexibly switching between multiple sub-agents</strong>, fully implementing LangChain's official <code>handoffs</code> multi-agent collaboration scheme.</p>
 <h3 id="parameter-description_2">Parameter Description</h3>
 <table>
 <thead>
@@ -2106,16 +2106,20 @@
 <tbody>
 <tr>
 <td><code>agents_config</code></td>
-<td>Dictionary of agent configurations, with agent names as keys and agent configuration dictionaries as values.<br><br><strong>Type</strong>: <code>dict[str, AgentConfig]</code><br><strong>Required</strong>: Yes</td>
+<td>A dictionary of agent configurations, where the key is the agent name and the value is the agent configuration dictionary.<br><br><strong>Type</strong>: <code>dict[str, AgentConfig]</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>custom_handoffs_tool_descriptions</code></td>
-<td>Custom descriptions for handoff tools, with agent names as keys and corresponding handoff tool descriptions as values.<br><br><strong>Type</strong>: <code>dict[str, str]</code><br><strong>Required</strong>: No</td>
+<td>Custom descriptions for handoff tools, where the key is the agent name and the value is the corresponding handoff tool description.<br><br><strong>Type</strong>: <code>dict[str, str]</code><br><strong>Required</strong>: No</td>
+</tr>
+<tr>
+<td><code>handoffs_tool_overrides</code></td>
+<td>Custom implementations of handoff tools, where the key is the agent name and the value is the corresponding handoff tool implementation.<br><br><strong>Type</strong>: <code>dict[str, BaseTool]</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
 <h4 id="agents_config-configuration-description"><code>agents_config</code> Configuration Description</h4>
-<p>Each agent configuration is a dictionary containing the following fields:</p>
+<p>Each agent is configured as a dictionary containing the following fields:</p>
 <table>
 <thead>
 <tr>
@@ -2126,27 +2130,27 @@
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td>Specifies the model used by this agent; if not passed, it inherits the model corresponding to the <code>model</code> parameter of <code>create_agent</code>. Supports strings (must be in <code>provider:model-name</code> format, such as <code>vllm:qwen3-4b</code>) or <code>BaseChatModel</code> instances.<br><br><strong>Type</strong>: <code>str</code> | <code>BaseChatModel</code><br><strong>Required</strong>: No</td>
+<td>Specifies the model used by this agent; if not passed, it inherits the model corresponding to the <code>model</code> parameter of <code>create_agent</code>. Supports strings (must be in <code>provider:model-name</code> format, e.g., <code>vllm:qwen3-4b</code>) or a <code>BaseChatModel</code> instance.<br><br><strong>Type</strong>: <code>str</code> | <code>BaseChatModel</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>prompt</code></td>
-<td>System prompt for the agent.<br><br><strong>Type</strong>: <code>str</code> | <code>SystemMessage</code><br><strong>Required</strong>: Yes</td>
+<td>The system prompt for the agent.<br><br><strong>Type</strong>: <code>str</code> | <code>SystemMessage</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>tools</code></td>
-<td>List of tools that the agent can call.<br><br><strong>Type</strong>: <code>list[BaseTool]</code><br><strong>Required</strong>: No</td>
+<td>A list of tools that the agent can call.<br><br><strong>Type</strong>: <code>list[BaseTool]</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>default</code></td>
-<td>Whether to set as the default agent; defaults to <code>False</code>. Only one agent in all configurations must be set to <code>True</code>.<br><br><strong>Type</strong>: <code>bool</code><br><strong>Required</strong>: No</td>
+<td>Whether to set as the default agent; defaults to <code>False</code>. There must be exactly one agent set to <code>True</code> in the entire configuration.<br><br><strong>Type</strong>: <code>bool</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>handoffs</code></td>
-<td>List of other agent names that this agent can hand off to. If set to <code>"all"</code>, it means this agent can hand off to all other agents.<br><br><strong>Type</strong>: <code>list[str]</code> | <code>str</code><br><strong>Required</strong>: Yes</td>
+<td>A list of other agent names that this agent can hand off to. If set to <code>"all"</code>, it means this agent can hand off to all other agents.<br><br><strong>Type</strong>: <code>list[str]</code> | <code>str</code><br><strong>Required</strong>: Yes</td>
 </tr>
 </tbody>
 </table>
-<p>For this paradigm of multi-agent implementation, a tool for handoffs is often needed. This middleware automatically creates corresponding handoff tools for each agent based on their <code>handoffs</code> configuration. If you want to customize the description of handoff tools, you can achieve this through the <code>custom_handoffs_tool_descriptions</code> parameter.</p>
+<p>For this paradigm of multi-agent implementation, a tool used for handoffs is often required. This middleware utilizes the <code>handoffs</code> configuration of each agent to automatically create the corresponding handoff tool for each agent. If you wish to customize the description of the handoff tool, you can achieve this via the <code>custom_handoffs_tool_descriptions</code> parameter.</p>
 <p><strong>Usage Example</strong></p>
 <p>In this example, we will use four agents: <code>time_agent</code>, <code>weather_agent</code>, <code>code_agent</code>, and <code>default_agent</code>.</p>
 <p>Next, we need to create the corresponding agent configuration dictionary <code>agent_config</code>.</p>
@@ -2166,7 +2170,7 @@
     <span class="p">},</span>
     <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-coder-flash&quot;</span><span class="p">),</span>
-        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a code assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a coding assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="n">run_code</span><span class="p">,</span>
         <span class="p">],</span>
@@ -2179,7 +2183,7 @@
     <span class="p">},</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Finally, pass this configuration to <code>HandoffAgentMiddleware</code>.</p>
+<p>Finally, simply pass this configuration to <code>HandoffAgentMiddleware</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffAgentMiddleware</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2196,7 +2200,7 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What is the current time?&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>If you want to customize the description of handoff tools, you can pass a second parameter <code>custom_handoffs_tool_descriptions</code>.</p>
+<p>If you want to customize the description of the handoff tools, you can pass the second parameter <code>custom_handoffs_tool_descriptions</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffAgentMiddleware</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2211,11 +2215,53 @@
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
             <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;This tool is used to hand off to the time assistant to solve time query problems&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;This tool is used to hand off to the weather assistant to solve weather query problems&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;This tool is used to hand off to the code assistant to solve code problems&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;This tool is used to hand off to the default assistant&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the time assistant to resolve time query issues&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the weather assistant to resolve weather query issues&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the code assistant to resolve coding issues&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the default assistant&quot;</span><span class="p">,</span>
             <span class="p">},</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>If you want to completely customize the logic of the handoff tool implementation, you can pass the third parameter <code>handoffs_tool_overrides</code>. Similar to the second parameter, it is also a dictionary where the key is the agent name and the value is the corresponding handoff tool implementation.</p>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.handoffs</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffTool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transfer_to_code_agent</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This tool help you transfer to the code agent.&quot;&quot;&quot;</span>
+    <span class="c1">#You can add custom logic here</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
+        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">ToolMessage</span><span class="p">(</span>
+                    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;transfer to code agent&quot;</span><span class="p">,</span>
+                    <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;active_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;code_agent&quot;</span><span class="p">,</span>
+            <span class="c1">#You can add other keys to update here</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+<span class="n">handoffs_tool_overrides</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffAgentMiddleware</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">get_current_time</span><span class="p">,</span>
+        <span class="n">get_current_weather</span><span class="p">,</span>
+        <span class="n">get_current_city</span><span class="p">,</span>
+        <span class="n">run_code</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
+            <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
+            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="n">handoffs_tool_overrides</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>

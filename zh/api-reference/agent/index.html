@@ -3393,6 +3393,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agents_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AgentConfig</span><span class="p">],</span>
         <span class="n">custom_handoffs_tool_descriptions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">handoffs_tool_overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseTool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </code></pre></div>
 <h3 id="_30">参数</h3>
@@ -3420,6 +3421,13 @@
 <td>否</td>
 <td>None</td>
 <td>自定义交接到其它智能体的工具描述</td>
+</tr>
+<tr>
+<td>handoffs_tool_overrides</td>
+<td>Optional[dict[str, BaseTool]]</td>
+<td>否</td>
+<td>None</td>
+<td>自定义交接到其它智能体的工具</td>
 </tr>
 </tbody>
 </table>

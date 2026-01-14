@@ -992,12 +992,12 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        智能体切换
+        智能体交接
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="智能体切换">
+    <nav class="md-nav" aria-label="智能体交接">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1664,12 +1664,12 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        智能体切换
+        智能体交接
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="智能体切换">
+    <nav class="md-nav" aria-label="智能体交接">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1849,7 +1849,7 @@
 <ul>
 <li><code>PlanMiddleware</code>：任务规划，将复杂任务拆解为有序子任务</li>
 <li><code>ModelRouterMiddleware</code>：根据输入内容动态路由到最适配的模型</li>
-<li><code>HandoffAgentMiddleware</code>：在多个子 Agent 之间灵活切换</li>
+<li><code>HandoffAgentMiddleware</code>：在多个子 Agent 之间灵活交接任务</li>
 <li><code>ToolCallRepairMiddleware</code>：自动修复大模型无效工具调用</li>
 <li><code>format_prompt</code>：动态格式化系统提示词中的占位符</li>
 </ul>
@@ -2093,7 +2093,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>通过 <code>ModelRouterMiddleware</code>，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。</p>
-<h2 id="_11">智能体切换</h2>
+<h2 id="_11">智能体交接</h2>
 <p><code>HandoffAgentMiddleware</code> 是一个用于<strong>在多个子 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>
 <h3 id="_12">参数说明</h3>
 <table>
@@ -2111,6 +2111,10 @@
 <tr>
 <td><code>custom_handoffs_tool_descriptions</code></td>
 <td>自定义交接工具的描述，键为智能体名称，值为对应的交接工具描述。<br><br><strong>类型</strong>: <code>dict[str, str]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>handoffs_tool_overrides</code></td>
+<td>自定义交接工具的实现，键为智能体名称，值为对应的交接工具实现。<br><br><strong>类型</strong>: <code>dict[str, BaseTool]</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -2216,6 +2220,48 @@
                 <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
             <span class="p">},</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 <code>handoffs_tool_overrides</code>。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。</p>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.handoffs</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffTool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transfer_to_code_agent</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This tool help you transfer to the code agent.&quot;&quot;&quot;</span>
+    <span class="c1">#这里你可以添加自定义逻辑</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
+        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">ToolMessage</span><span class="p">(</span>
+                    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;transfer to code agent&quot;</span><span class="p">,</span>
+                    <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;active_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;code_agent&quot;</span><span class="p">,</span>
+            <span class="c1">#这里你可以添加其它的要更新的键</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+<span class="n">handoffs_tool_overrides</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffAgentMiddleware</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">get_current_time</span><span class="p">,</span>
+        <span class="n">get_current_weather</span><span class="p">,</span>
+        <span class="n">get_current_city</span><span class="p">,</span>
+        <span class="n">run_code</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
+            <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
+            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="n">handoffs_tool_overrides</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
