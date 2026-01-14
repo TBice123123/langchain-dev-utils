@@ -382,6 +382,7 @@ class HandoffAgentMiddleware(AgentMiddleware):
         self,
         agents_config: dict[str, AgentConfig],
         custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
+        handoffs_tool_overrides: Optional[dict[str, BaseTool]] = None,
     ) -> None
 ```
 
@@ -391,6 +392,9 @@ class HandoffAgentMiddleware(AgentMiddleware):
 |-----------|------|----------|---------|-------------|
 | agents_config | dict[str, AgentConfig] | Yes | - | Configuration dictionary for agents. Keys are agent names, values are agent configurations |
 | custom_handoffs_tool_descriptions | Optional[dict[str, str]] | No | None | Custom descriptions for handoff tools targeting other agents |
+| handoffs_tool_overrides | Optional[dict[str, BaseTool]] | No | None | Custom handoff tools targeting other agents |
+
+
 
 ### Example
 

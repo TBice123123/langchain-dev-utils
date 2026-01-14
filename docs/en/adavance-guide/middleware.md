@@ -181,30 +181,32 @@ print(response)
 
 Through `ModelRouterMiddleware`, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.
 
-## Agent Handoff
+## Agent Handoffs
 
-`HandoffAgentMiddleware` is a middleware for **flexibly switching between multiple sub-agents**, fully implementing LangChain's official `handoffs` multi-agent collaboration solution.
+`HandoffAgentMiddleware` is a middleware used for **flexibly switching between multiple sub-agents**, fully implementing LangChain's official `handoffs` multi-agent collaboration scheme.
 
 ### Parameter Description
 
 | Parameter | Description |
-|-----------|-------------|
-| `agents_config` | Dictionary of agent configurations, with agent names as keys and agent configuration dictionaries as values.<br><br>**Type**: `dict[str, AgentConfig]`<br>**Required**: Yes |
-| `custom_handoffs_tool_descriptions` | Custom descriptions for handoff tools, with agent names as keys and corresponding handoff tool descriptions as values.<br><br>**Type**: `dict[str, str]`<br>**Required**: No |
+|------|------|
+| `agents_config` | A dictionary of agent configurations, where the key is the agent name and the value is the agent configuration dictionary.<br><br>**Type**: `dict[str, AgentConfig]`<br>**Required**: Yes |
+| `custom_handoffs_tool_descriptions` | Custom descriptions for handoff tools, where the key is the agent name and the value is the corresponding handoff tool description.<br><br>**Type**: `dict[str, str]`<br>**Required**: No |
+| `handoffs_tool_overrides` | Custom implementations of handoff tools, where the key is the agent name and the value is the corresponding handoff tool implementation.<br><br>**Type**: `dict[str, BaseTool]`<br>**Required**: No |
 
 #### `agents_config` Configuration Description
 
-Each agent configuration is a dictionary containing the following fields:
+Each agent is configured as a dictionary containing the following fields:
 
 | Field | Description |
-|-------|-------------|
-| `model` | Specifies the model used by this agent; if not passed, it inherits the model corresponding to the `model` parameter of `create_agent`. Supports strings (must be in `provider:model-name` format, such as `vllm:qwen3-4b`) or `BaseChatModel` instances.<br><br>**Type**: `str` \| `BaseChatModel`<br>**Required**: No |
-| `prompt` | System prompt for the agent.<br><br>**Type**: `str` \| `SystemMessage`<br>**Required**: Yes |
-| `tools` | List of tools that the agent can call.<br><br>**Type**: `list[BaseTool]`<br>**Required**: No |
-| `default` | Whether to set as the default agent; defaults to `False`. Only one agent in all configurations must be set to `True`.<br><br>**Type**: `bool`<br>**Required**: No |
-| `handoffs` | List of other agent names that this agent can hand off to. If set to `"all"`, it means this agent can hand off to all other agents.<br><br>**Type**: `list[str]` \| `str`<br>**Required**: Yes |
+|------|------|
+| `model` | Specifies the model used by this agent; if not passed, it inherits the model corresponding to the `model` parameter of `create_agent`. Supports strings (must be in `provider:model-name` format, e.g., `vllm:qwen3-4b`) or a `BaseChatModel` instance.<br><br>**Type**: `str` \| `BaseChatModel`<br>**Required**: No |
+| `prompt` | The system prompt for the agent.<br><br>**Type**: `str` \| `SystemMessage`<br>**Required**: Yes |
+| `tools` | A list of tools that the agent can call.<br><br>**Type**: `list[BaseTool]`<br>**Required**: No |
+| `default` | Whether to set as the default agent; defaults to `False`. There must be exactly one agent set to `True` in the entire configuration.<br><br>**Type**: `bool`<br>**Required**: No |
+| `handoffs` | A list of other agent names that this agent can hand off to. If set to `"all"`, it means this agent can hand off to all other agents.<br><br>**Type**: `list[str]` \| `str`<br>**Required**: Yes |
 
-For this paradigm of multi-agent implementation, a tool for handoffs is often needed. This middleware automatically creates corresponding handoff tools for each agent based on their `handoffs` configuration. If you want to customize the description of handoff tools, you can achieve this through the `custom_handoffs_tool_descriptions` parameter.
+For this paradigm of multi-agent implementation, a tool used for handoffs is often required. This middleware utilizes the `handoffs` configuration of each agent to automatically create the corresponding handoff tool for each agent. If you wish to customize the description of the handoff tool, you can achieve this via the `custom_handoffs_tool_descriptions` parameter.
+
 
 **Usage Example**
 
@@ -229,7 +231,7 @@ agent_config: dict[str, AgentConfig] = {
     },
     "code_agent": {
         "model": load_chat_model("vllm:qwen3-coder-flash"),
-        "prompt": "You are a code assistant",
+        "prompt": "You are a coding assistant",
         "tools": [
             run_code,
         ],
@@ -243,7 +245,7 @@ agent_config: dict[str, AgentConfig] = {
 }
 ```
 
-Finally, pass this configuration to `HandoffAgentMiddleware`.
+Finally, simply pass this configuration to `HandoffAgentMiddleware`.
 
 ```python
 from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
@@ -263,7 +265,7 @@ response = agent.invoke({"messages": [HumanMessage(content="What is the current 
 print(response)
 ```
 
-If you want to customize the description of handoff tools, you can pass a second parameter `custom_handoffs_tool_descriptions`.
+If you want to customize the description of the handoff tools, you can pass the second parameter `custom_handoffs_tool_descriptions`.
 
 ```python
 from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
@@ -280,11 +282,57 @@ agent = create_agent(
         HandoffAgentMiddleware(
             agents_config=agent_config,
             custom_handoffs_tool_descriptions={
-                "time_agent": "This tool is used to hand off to the time assistant to solve time query problems",
-                "weather_agent": "This tool is used to hand off to the weather assistant to solve weather query problems",
-                "code_agent": "This tool is used to hand off to the code assistant to solve code problems",
-                "default_agent": "This tool is used to hand off to the default assistant",
+                "time_agent": "Use this tool to hand off to the time assistant to resolve time query issues",
+                "weather_agent": "Use this tool to hand off to the weather assistant to resolve weather query issues",
+                "code_agent": "Use this tool to hand off to the code assistant to resolve coding issues",
+                "default_agent": "Use this tool to hand off to the default assistant",
             },
+        )
+    ],
+)
+```
+
+If you want to completely customize the logic of the handoff tool implementation, you can pass the third parameter `handoffs_tool_overrides`. Similar to the second parameter, it is also a dictionary where the key is the agent name and the value is the corresponding handoff tool implementation.
+
+For example:
+
+```python
+from langchain_dev_utils.agents.middleware.handoffs import HandoffTool
+
+@tool
+def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
+    """This tool help you transfer to the code agent."""
+    #You can add custom logic here
+    return Command(
+        update={
+            "messages": [
+                ToolMessage(
+                    content="transfer to code agent",
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+            "active_agent": "code_agent",
+            #You can add other keys to update here
+        }
+    )
+
+handoffs_tool_overrides = {
+    "code_agent": transfer_to_code_agent,
+}
+from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
+
+agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[
+        get_current_time,
+        get_current_weather,
+        get_current_city,
+        run_code,
+    ],
+    middleware=[
+        HandoffAgentMiddleware(
+            agents_config=agent_config,
+            handoffs_tool_overrides=handoffs_tool_overrides,
         )
     ],
 )

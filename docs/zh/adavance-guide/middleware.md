@@ -8,7 +8,7 @@
 
 - `PlanMiddleware`：任务规划，将复杂任务拆解为有序子任务
 - `ModelRouterMiddleware`：根据输入内容动态路由到最适配的模型
-- `HandoffAgentMiddleware`：在多个子 Agent 之间灵活切换
+- `HandoffAgentMiddleware`：在多个子 Agent 之间灵活交接任务
 - `ToolCallRepairMiddleware`：自动修复大模型无效工具调用
 - `format_prompt`：动态格式化系统提示词中的占位符
 
@@ -185,7 +185,7 @@ print(response)
 通过 `ModelRouterMiddleware`，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。
 
 
-## 智能体切换
+## 智能体交接
 
 `HandoffAgentMiddleware` 是一个用于**在多个子 Agent 之间灵活切换**的中间件，完整实现了 LangChain 官方的 `handoffs` 多智能体协作方案。
 
@@ -195,6 +195,7 @@ print(response)
 |------|------|
 | `agents_config` | 智能体配置字典，键为智能体名称，值为智能体配置字典。<br><br>**类型**: `dict[str, AgentConfig]`<br>**必填**: 是 |
 | `custom_handoffs_tool_descriptions` | 自定义交接工具的描述，键为智能体名称，值为对应的交接工具描述。<br><br>**类型**: `dict[str, str]`<br>**必填**: 否 |
+| `handoffs_tool_overrides` | 自定义交接工具的实现，键为智能体名称，值为对应的交接工具实现。<br><br>**类型**: `dict[str, BaseTool]`<br>**必填**: 否 |
 
 #### `agents_config` 配置说明
 
@@ -294,6 +295,54 @@ agent = create_agent(
     ],
 )
 ```
+
+如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 `handoffs_tool_overrides`。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。
+
+例如：
+
+```python
+from langchain_dev_utils.agents.middleware.handoffs import HandoffTool
+
+@tool
+def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
+    """This tool help you transfer to the code agent."""
+    #这里你可以添加自定义逻辑
+    return Command(
+        update={
+            "messages": [
+                ToolMessage(
+                    content="transfer to code agent",
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+            "active_agent": "code_agent",
+            #这里你可以添加其它的要更新的键
+        }
+    )
+
+handoffs_tool_overrides = {
+    "code_agent": transfer_to_code_agent,
+}
+from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
+
+agent = create_agent(
+    model="vllm:qwen3-4b",
+    tools=[
+        get_current_time,
+        get_current_weather,
+        get_current_city,
+        run_code,
+    ],
+    middleware=[
+        HandoffAgentMiddleware(
+            agents_config=agent_config,
+            handoffs_tool_overrides=handoffs_tool_overrides,
+        )
+    ],
+)
+```
+
+
 
 ## 工具调用修复
 

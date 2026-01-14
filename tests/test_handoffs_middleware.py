@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from langchain.tools import tool
+from langchain.tools import BaseTool, ToolRuntime, tool
 from langchain_core.messages import HumanMessage, ToolMessage
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.types import Command
 
 from langchain_dev_utils.agents import create_agent
 from langchain_dev_utils.agents.middleware import (
@@ -22,6 +23,22 @@ def get_current_time() -> str:
 def run_code(code: str) -> str:
     """Run the given code."""
     return "Running code successfully"
+
+
+@tool
+def transfer_to_coding_agent(runtime: ToolRuntime) -> Command:
+    """This tool help you transfer to the coding agent."""
+    return Command(
+        update={
+            "messages": [
+                ToolMessage(
+                    content="Successfully transferred to coding agent",
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+            "active_agent": "code_agent",
+        }
+    )
 
 
 agents_config: dict[str, AgentConfig] = {
@@ -56,14 +73,24 @@ agents_config: dict[str, AgentConfig] = {
 custom_tool_descriptions: dict[str, str] = {
     "time_agent": "transfer to the time agent to answer time-related questions",
     "talk_agent": "transfer to the talk agent to answer user questions",
-    "code_agent": "transfer to the code agent to answer code-related questions",
+}
+
+
+handoffs_tool_map: dict[str, BaseTool] = {
+    "code_agent": transfer_to_coding_agent,
 }
 
 
 def test_handoffs_middleware():
     agent = create_agent(
         model="dashscope:qwen3-max",
-        middleware=[HandoffAgentMiddleware(agents_config, custom_tool_descriptions)],
+        middleware=[
+            HandoffAgentMiddleware(
+                agents_config=agents_config,
+                custom_handoffs_tool_descriptions=custom_tool_descriptions,
+                handoffs_tool_overrides=handoffs_tool_map,
+            )
+        ],
         tools=[
             get_current_time,
             run_code,
@@ -95,13 +122,26 @@ def test_handoffs_middleware():
         == "qwen3-coder-plus"
     )
     assert isinstance(response["messages"][-2], ToolMessage)
+    assert any(
+        message
+        for message in response["messages"]
+        if isinstance(message, ToolMessage)
+        and "Successfully transferred to coding agent" in message.content
+        and message.name == "transfer_to_coding_agent"
+    )
     assert "active_agent" in response and response["active_agent"] == "code_agent"
 
 
 async def test_handoffs_middleware_async():
     agent = create_agent(
         model="dashscope:qwen3-max",
-        middleware=[HandoffAgentMiddleware(agents_config, custom_tool_descriptions)],
+        middleware=[
+            HandoffAgentMiddleware(
+                agents_config=agents_config,
+                custom_handoffs_tool_descriptions=custom_tool_descriptions,
+                handoffs_tool_overrides=handoffs_tool_map,
+            )
+        ],
         tools=[
             get_current_time,
             run_code,
@@ -133,4 +173,11 @@ async def test_handoffs_middleware_async():
         == "qwen3-coder-plus"
     )
     assert isinstance(response["messages"][-2], ToolMessage)
+    assert any(
+        message
+        for message in response["messages"]
+        if isinstance(message, ToolMessage)
+        and "Successfully transferred to coding agent" in message.content
+        and message.name == "transfer_to_coding_agent"
+    )
     assert "active_agent" in response and response["active_agent"] == "code_agent"

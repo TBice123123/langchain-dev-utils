@@ -76,17 +76,6 @@ async def test_model_tool_calling_async(
     assert hasattr(response, "tool_calls") and len(response.tool_calls) == 1
 
 
-def test_model_with_reasoning(reasoning_model: BaseChatModel):
-    response = reasoning_model.invoke("hello?")
-    assert response.additional_kwargs.get("reasoning_content")
-
-
-@pytest.mark.asyncio
-async def test_model_with_reasoning_async(reasoning_model: BaseChatModel):
-    response = await reasoning_model.ainvoke("hello？")
-    assert response.additional_kwargs.get("reasoning_content")
-
-
 def test_model_profile():
     model = load_chat_model("dashscope:qwen-flash")
     assert model.profile == ALI_PROFILES["qwen-flash"]

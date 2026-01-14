@@ -150,7 +150,7 @@ class ModelRouterMiddleware(AgentMiddleware):
         model_name = await self._aselect_model(state["messages"])
         return {"router_model_selection": model_name}
 
-    def _get_override_kwargs(self, request: ModelRequest) -> dict[str, Any]:
+    def _get_override_request(self, request: ModelRequest) -> ModelRequest:
         model_dict = {
             item["model_name"]: {
                 "tools": item.get("tools", None),
@@ -180,24 +180,21 @@ class ModelRouterMiddleware(AgentMiddleware):
                     content=model_values["system_prompt"]
                 )
 
-        return override_kwargs
+        if override_kwargs:
+            return request.override(**override_kwargs)
+        else:
+            return request
 
     def wrap_model_call(
         self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelCallResult:
-        override_kwargs = self._get_override_kwargs(request)
-        if override_kwargs:
-            return handler(request.override(**override_kwargs))
-        else:
-            return handler(request)
+        override_request = self._get_override_request(request)
+        return handler(override_request)
 
     async def awrap_model_call(
         self,
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        override_kwargs = self._get_override_kwargs(request)
-        if override_kwargs:
-            return await handler(request.override(**override_kwargs))
-        else:
-            return await handler(request)
+        override_request = self._get_override_request(request)
+        return await handler(override_request)

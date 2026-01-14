@@ -386,6 +386,7 @@ class HandoffAgentMiddleware(AgentMiddleware):
         self,
         agents_config: dict[str, AgentConfig],
         custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
+        handoffs_tool_overrides: Optional[dict[str, BaseTool]] = None,
     ) -> None:
 ```
 
@@ -395,6 +396,7 @@ class HandoffAgentMiddleware(AgentMiddleware):
 |------|------|------|--------|------|
 | agents_config | dict[str, AgentConfig] | 是 | - | 智能体配置字典，键为智能体名称，值为智能体配置 |
 | custom_handoffs_tool_descriptions | Optional[dict[str, str]] | 否 | None | 自定义交接到其它智能体的工具描述 |
+| handoffs_tool_overrides | Optional[dict[str, BaseTool]] | 否 | None | 自定义交接到其它智能体的工具 |
 
 ### 示例
 

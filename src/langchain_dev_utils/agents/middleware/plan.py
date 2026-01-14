@@ -335,12 +335,8 @@ class PlanMiddleware(AgentMiddleware):
         self.system_prompt = system_prompt
         self.tools = tools
 
-    def wrap_model_call(
-        self,
-        request: ModelRequest,
-        handler: Callable[[ModelRequest], ModelResponse],
-    ) -> ModelCallResult:
-        """Update the system message to include the plan system prompt."""
+    def _get_override_request(self, request: ModelRequest) -> ModelRequest:
+        """Add the plan system prompt to the system message."""
         if request.system_message is not None:
             new_system_content = [
                 *request.system_message.content_blocks,
@@ -351,7 +347,15 @@ class PlanMiddleware(AgentMiddleware):
         new_system_message = SystemMessage(
             content=cast("list[str | dict[str, str]]", new_system_content)
         )
-        return handler(request.override(system_message=new_system_message))
+        return request.override(system_message=new_system_message)
+
+    def wrap_model_call(
+        self,
+        request: ModelRequest,
+        handler: Callable[[ModelRequest], ModelResponse],
+    ) -> ModelCallResult:
+        override_request = self._get_override_request(request)
+        return handler(override_request)
 
     async def awrap_model_call(
         self,
@@ -359,14 +363,5 @@ class PlanMiddleware(AgentMiddleware):
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
         """Update the system message to include the plan system prompt."""
-        if request.system_message is not None:
-            new_system_content = [
-                *request.system_message.content_blocks,
-                {"type": "text", "text": f"\n\n{self.system_prompt}"},
-            ]
-        else:
-            new_system_content = [{"type": "text", "text": self.system_prompt}]
-        new_system_message = SystemMessage(
-            content=cast("list[str | dict[str, str]]", new_system_content)
-        )
-        return await handler(request.override(system_message=new_system_message))
+        override_request = self._get_override_request(request)
+        return await handler(override_request)

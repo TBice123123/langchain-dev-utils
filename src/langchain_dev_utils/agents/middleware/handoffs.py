@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Callable, Literal
+from typing import Any, Awaitable, Callable, Literal, cast
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
@@ -128,6 +128,7 @@ class HandoffAgentMiddleware(AgentMiddleware):
     Args:
         agents_config (dict[str, AgentConfig]): A dictionary of agent configurations.
         custom_handoffs_tool_descriptions (Optional[dict[str, str]]): A dictionary of custom tool descriptions for handoffs tools. Defaults to None.
+        handoffs_tool_overrides (Optional[dict[str, BaseTool]]): A dictionary of handoffs tools to override. Defaults to None.
 
     Examples:
         ```python
@@ -142,6 +143,7 @@ class HandoffAgentMiddleware(AgentMiddleware):
         self,
         agents_config: dict[str, AgentConfig],
         custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
+        handoffs_tool_overrides: Optional[dict[str, BaseTool]] = None,
     ) -> None:
         default_agent_name = _get_default_active_agent(agents_config)
         if default_agent_name is None:
@@ -152,13 +154,23 @@ class HandoffAgentMiddleware(AgentMiddleware):
         if custom_handoffs_tool_descriptions is None:
             custom_handoffs_tool_descriptions = {}
 
-        handoffs_tools = [
-            _create_handoffs_tool(
-                agent_name,
-                custom_handoffs_tool_descriptions.get(agent_name),
-            )
-            for agent_name in agents_config.keys()
-        ]
+        if handoffs_tool_overrides is None:
+            handoffs_tool_overrides = {}
+
+        handoffs_tools = []
+        for agent_name in agents_config.keys():
+            if not handoffs_tool_overrides.get(agent_name):
+                handoffs_tools.append(
+                    _create_handoffs_tool(
+                        agent_name,
+                        custom_handoffs_tool_descriptions.get(agent_name),
+                    )
+                )
+            else:
+                handoffs_tools.append(
+                    cast(BaseTool, handoffs_tool_overrides.get(agent_name))
+                )
+
         self.default_agent_name = default_agent_name
         self.agents_config = _transform_agent_config(
             agents_config,
@@ -166,7 +178,7 @@ class HandoffAgentMiddleware(AgentMiddleware):
         )
         self.tools = handoffs_tools
 
-    def _get_active_agent_config(self, request: ModelRequest) -> dict[str, Any]:
+    def _get_override_request(self, request: ModelRequest) -> ModelRequest:
         active_agent_name = request.state.get("active_agent", self.default_agent_name)
 
         _config = self.agents_config[active_agent_name]
@@ -181,24 +193,22 @@ class HandoffAgentMiddleware(AgentMiddleware):
             params["system_prompt"] = _config.get("prompt")
         if _config.get("tools"):
             params["tools"] = _config.get("tools")
-        return params
+
+        if params:
+            return request.override(**params)
+        else:
+            return request
 
     def wrap_model_call(
         self, request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelCallResult:
-        override_kwargs = self._get_active_agent_config(request)
-        if override_kwargs:
-            return handler(request.override(**override_kwargs))
-        else:
-            return handler(request)
+        override_request = self._get_override_request(request)
+        return handler(override_request)
 
     async def awrap_model_call(
         self,
         request: ModelRequest,
         handler: Callable[[ModelRequest], Awaitable[ModelResponse]],
     ) -> ModelCallResult:
-        override_kwargs = self._get_active_agent_config(request)
-        if override_kwargs:
-            return await handler(request.override(**override_kwargs))
-        else:
-            return await handler(request)
+        override_request = self._get_override_request(request)
+        return await handler(override_request)
