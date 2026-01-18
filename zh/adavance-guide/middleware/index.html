@@ -752,7 +752,7 @@
   <span class="md-ellipsis">
     
   
-    子智能体工具
+    子智能体工具（Agent as Tool）
   
 
     
@@ -2223,6 +2223,7 @@
 <span class="p">)</span>
 </code></pre></div>
 <p>如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 <code>handoffs_tool_overrides</code>。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。</p>
+<p>自定义交接工具必须返回一个 <code>Command</code> 对象，其 <code>update</code> 属性需包含 <code>messages</code> 键（返回工具响应）和 <code>active_agent</code> 键（值为要交接的智能体名称，用于切换当前智能体）。</p>
 <p>例如：</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">transfer_to_code_agent</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
@@ -2259,6 +2260,7 @@
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
+<p><code>handoffs_tool_overrides</code> 用于高度定制化交接工具的实现，如果仅仅是想要自定义交接工具的描述，则应该使用 <code>custom_handoffs_tool_descriptions</code>。</p>
 <h2 id="_13">工具调用修复</h2>
 <p><code>ToolCallRepairMiddleware</code> 是一个<strong>自动修复大模型无效工具调用（<code>invalid_tool_calls</code>）</strong>的中间件。</p>
 <p>大模型在输出工具调用的 JSON Schema 时，可能因模型自身原因生成 JSON 格式错误的内容（错误的内容常见于 <code>arguments</code> 字段），导致 JSON 解析失败。这类调用会被存到 <code>invalid_tool_calls</code> 字段中。<code>ToolCallRepairMiddleware</code> 会在模型返回结果后自动检测 <code>invalid_tool_calls</code>，并尝试调用 <code>json-repair</code> 进行修复，使工具调用得以正常执行。</p>
