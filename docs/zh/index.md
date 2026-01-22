@@ -25,13 +25,13 @@
 
 <div class="grid cards" markdown>
 
--   :material-code-json: __统一的模型管理__
+-   :fontawesome-solid-chain: __统一的模型管理__
     
     ---
     
     通过字符串指定模型提供商，轻松切换和组合不同模型。
 
--    :fontawesome-solid-code: __内置OpenAI-Compatible集成类__
+-    :fontawesome-solid-file-code: __内置OpenAI-Compatible集成类__
     
     ---
     
@@ -49,13 +49,13 @@
     
     内置工具调用检测、参数解析和人工审核功能
     
--   :material-robot: __高效的 Agent 开发__
+-   :octicons-dependabot-16: __高效的 Agent 开发__
     
     ---
     
     简化智能体创建流程，扩充更多的常用中间件
     
--   :octicons-ai-model-16: __灵活的状态图组合__
+-   :fontawesome-solid-circle-nodes: __灵活的状态图组合__
     
     ---
     

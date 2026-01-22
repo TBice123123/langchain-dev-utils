@@ -125,9 +125,19 @@ print(response)
 
 ### 执行流程图
 
-最终生成的图如下：
+编排后的状态图的执行过程如下：
 
-![Sequential Pipeline](../../assets/sequential.png)
+```mermaid
+graph LR
+    Start([开始])
+    Req[需求分析]
+    Arch[架构设计]
+    Code[代码编写]
+    Test[测试与质保]
+    End([结束])
+
+    Start --> Req --> Arch --> Code --> Test --> End
+```
 
 ### 上下文工程优化
 
@@ -343,9 +353,20 @@ print(response)
 
 ### 执行流程图
 
-最终生成的图如下：
+编排后的状态图的执行过程如下：
 
-![Parallel Pipeline](../../assets/parallel.png)
+```mermaid
+graph LR
+    Start([开始])
+    User[用户模块开发]
+    Product[商品模块开发]
+    Order[订单模块开发]
+    End([结束])
+
+    Start --> User --> End
+    Start --> Product --> End
+    Start --> Order --> End
+```
 
 ### 使用分支函数指定并行执行的子图
 

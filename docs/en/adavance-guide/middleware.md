@@ -294,11 +294,11 @@ agent = create_agent(
 
 If you want to completely customize the logic of the handoff tool implementation, you can pass the third parameter `handoffs_tool_overrides`. Similar to the second parameter, it is also a dictionary where the key is the agent name and the value is the corresponding handoff tool implementation.
 
+Custom handoff tools must return a `Command` object whose `update` attribute must include the `messages` key (for returning tool responses) and the `active_agent` key (whose value is the name of the agent to hand off to, used to switch the current agent).
+
 For example:
 
 ```python
-from langchain_dev_utils.agents.middleware.handoffs import HandoffTool
-
 @tool
 def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
     """This tool help you transfer to the code agent."""
@@ -316,11 +316,6 @@ def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
         }
     )
 
-handoffs_tool_overrides = {
-    "code_agent": transfer_to_code_agent,
-}
-from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
-
 agent = create_agent(
     model="vllm:qwen3-4b",
     tools=[
@@ -332,11 +327,15 @@ agent = create_agent(
     middleware=[
         HandoffAgentMiddleware(
             agents_config=agent_config,
-            handoffs_tool_overrides=handoffs_tool_overrides,
+            handoffs_tool_overrides={
+                "code_agent": transfer_to_code_agent,
+            },
         )
     ],
 )
 ```
+
+`handoffs_tool_overrides` is used for highly customized handoff tool implementations. If you only want to customize the description of the handoff tool, you should use `custom_handoffs_tool_descriptions`.
 
 ## Tool Call Repair
 

@@ -825,7 +825,7 @@ wheels = [
 
 [[package]]
 name = "langchain-dev-utils"
-version = "1.3.0"
+version = "1.3.7"
 source = { editable = "." }
 dependencies = [
     { name = "langchain" },

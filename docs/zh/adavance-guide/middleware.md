@@ -272,8 +272,6 @@ print(response)
 如果想要自定义交接工具的描述，可以传递第二个参数 `custom_handoffs_tool_descriptions`。
 
 ```python
-from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
-
 agent = create_agent(
     model="vllm:qwen3-4b",
     tools=[
@@ -298,11 +296,11 @@ agent = create_agent(
 
 如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 `handoffs_tool_overrides`。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。
 
+自定义交接工具必须返回一个 `Command` 对象，其 `update` 属性需包含 `messages` 键（返回工具响应）和 `active_agent` 键（值为要交接的智能体名称，用于切换当前智能体）。
+
 例如：
 
 ```python
-from langchain_dev_utils.agents.middleware.handoffs import HandoffTool
-
 @tool
 def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
     """This tool help you transfer to the code agent."""
@@ -320,11 +318,6 @@ def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
         }
     )
 
-handoffs_tool_overrides = {
-    "code_agent": transfer_to_code_agent,
-}
-from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
-
 agent = create_agent(
     model="vllm:qwen3-4b",
     tools=[
@@ -336,13 +329,15 @@ agent = create_agent(
     middleware=[
         HandoffAgentMiddleware(
             agents_config=agent_config,
-            handoffs_tool_overrides=handoffs_tool_overrides,
+            handoffs_tool_overrides={
+                "code_agent": transfer_to_code_agent,
+            },
         )
     ],
 )
 ```
 
-
+`handoffs_tool_overrides` 用于高度定制化交接工具的实现，如果仅仅是想要自定义交接工具的描述，则应该使用 `custom_handoffs_tool_descriptions`。
 
 ## 工具调用修复
 

@@ -126,7 +126,17 @@ print(response)
 
 The generated diagram is as follows:
 
-![Sequential Pipeline](../../assets/sequential.png)
+```mermaid
+graph LR
+    Start([Start])
+    Req[Requirements Analysis]
+    Arch[Architecture Design]
+    Code[Code Implementation]
+    Test[Testing & QA]
+    End([End])
+
+    Start --> Req --> Arch --> Code --> Test --> End
+```
 
 ### Context Engineering Optimization
 
@@ -342,7 +352,18 @@ print(response)
 
 The generated diagram is as follows:
 
-![Parallel Pipeline](../../assets/parallel.png)
+```mermaid
+graph LR
+    Start([Start])
+    User[User Module Development]
+    Product[Product Module Development]
+    Order[Order Module Development]
+    End([End])
+
+    Start --> User --> End
+    Start --> Product --> End
+    Start --> Order --> End
+```
 
 ### Using Branch Functions to Specify Parallelly Executed Subgraphs
 

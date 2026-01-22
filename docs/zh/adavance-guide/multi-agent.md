@@ -1,4 +1,4 @@
-# 多智能体构建
+# 子智能体工具（Agent as Tool）
 
 ## 概述
 
@@ -266,26 +266,82 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 
 - 若返回 str，则会被包装为 `HumanMessage(content=...)`，最终以 `{"messages": [HumanMessage(content=...)]}` 作为 agent 的实际输入。
 
+- 若未提供 `pre_input_hooks`，则直接将原始输入以 `{"messages": [HumanMessage(content=request)]}` 作为 agent 的实际输入。
+
 #### 使用示例
 
-```python
-def process_input(request: str, runtime: ToolRuntime) -> str:
-    return "<task_description>" + request + "</task_description>"
+例如，在调用子智能体之前，可以使用模型对主智能体的对话历史进行摘要，从而为子智能体提供更精准的任务上下文。
 
-# 或支持异步
+```python
+from langchain.tools import ToolRuntime
+from langchain_core.messages import SystemMessage
+from langchain_dev_utils.agents import wrap_agent_as_tool
+
+
+def process_input(request: str, runtime: ToolRuntime) -> str:
+    messages = runtime.state.get("messages", [])
+
+    new_messages = [
+        SystemMessage(
+            content="""请基于以下对话历史，生成简洁准确的摘要。
+            摘要应包含：
+            1) 对话主题；
+            2) 关键内容；
+            3) 当前状态或进展。
+            摘要长度控制在200字以内。"""
+        ),
+        *messages,
+    ]
+
+    if messages:
+        summary = model.invoke(new_messages)
+
+        return (
+            "<history_summary>\n"
+            + summary.content
+            + "\n</history_summary>\n"
+            + "<task_description>\n"
+            + request
+            + "\n</task_description>"
+        )
+    return "<task_description>\n" + request + "\n</task_description>"
+
+
 async def process_input_async(request: str, runtime: ToolRuntime) -> str:
-    return "<task_description>" + request + "</task_description>"
+    messages = runtime.state.get("messages", [])
+
+    new_messages = [
+        SystemMessage(
+            content="""请基于以下对话历史，生成简洁准确的摘要。
+            摘要应包含：
+            1) 对话主题；
+            2) 关键信息点；
+            3) 当前状态或进展。
+            摘要长度控制在200字以内。"""
+        ),
+        *messages,
+    ]
+
+    if messages:
+        summary = await model.ainvoke(new_messages)
+
+        return (
+            "<history_summary>\n"
+            + summary.content
+            + "\n</history_summary>\n"
+            + "<task_description>\n"
+            + request
+            + "\n</task_description>"
+        )
+    return "<task_description>\n" + request + "\n</task_description>"
+
 
 # 使用
 call_agent_tool = wrap_agent_as_tool(
-    agent,
-    pre_input_hooks=(process_input, process_input_async)
+    agent, pre_input_hooks=(process_input, process_input_async)
 )
 ```
 
-!!! tip "提示"
-
-    上述的例子比较简单，实际上你可以根据 `runtime` 里面的 `state` 或者 `context` 添加更复杂的逻辑。
 
 ### 2. post_output_hooks
 
@@ -313,35 +369,60 @@ def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntim
     """
 ```
 
+**注意**：
+
+- 钩子函数的返回值必须是可以被序列化为字符串的值或者 `Command` 对象。
+
+- 钩子函数的两个入参，`request` 是未经处理的原始输入，`response` 是 agent 返回的完整响应（即 `agent.invoke(input)` 的返回值）。
+
+- 若未提供 `post_output_hooks`，则会将 agent 的最终响应直接作为工具的返回值（即 `response["messages"][-1].content`）。
+
 #### 使用示例
 
+例如，子智能体执行完毕后，除了更新 `messages` 键外，可能还会更新其它状态键。如果需要将这些额外的状态键保存到主智能体的状态中，可以使用 `Command` 对象进行返回。
+
 ```python
+from typing import Any
+from langchain.tools import ToolRuntime
+from langchain_core.messages import ToolMessage
 from langgraph.types import Command
 
-def process_output_sync(request: str, response: dict[str, Any], runtime: ToolRuntime) -> Command:
-    return Command(update={
-        "messages":[ToolMessage(content=response["messages"][-1].content, tool_call_id=runtime.tool_call_id)]
-    })
 
-async def process_output_async(request: str, response: dict[str, Any], runtime: ToolRuntime) -> Command:
-    return Command(update={
-        "messages":[ToolMessage(content=response["messages"][-1].content, tool_call_id=runtime.tool_call_id)]
-    })
+def process_output_sync(
+    request: str, response: dict[str, Any], runtime: ToolRuntime
+) -> Command:
+    return Command(
+        update={
+            "messages": [
+                ToolMessage(
+                    content=response["messages"][-1].content,
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+            "example_state_key": response["example_state_key"],
+        }
+    )
+
+
+async def process_output_async(
+    request: str, response: dict[str, Any], runtime: ToolRuntime
+) -> Command:
+    return Command(
+        update={
+            "messages": [
+                ToolMessage(
+                    content=response["messages"][-1].content,
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+            "example_state_key": response["example_state_key"],
+        }
+    )
+
 
 # 使用
 call_agent_tool = wrap_agent_as_tool(
-    agent,
-    post_output_hooks=(process_output_sync, process_output_async)
+    agent, post_output_hooks=(process_output_sync, process_output_async)
 )
 ```
-
-!!! tip "提示"
-
-    上述的例子比较简单，实际上你可以根据 `runtime` 里面的 `state` 或者 `context` 添加更复杂的逻辑。
-
-### 默认行为
-
-- 若未提供 `pre_input_hooks`，则直接将原始输入以 `{"messages": [HumanMessage(content=request)]}` 作为 agent 的实际输入。
-- 若未提供 `post_output_hooks`，默认返回 `response["messages"][-1].content`（即最后一条消息的文本内容）
-
 

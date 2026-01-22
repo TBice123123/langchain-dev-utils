@@ -25,13 +25,13 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
 
 <div class="grid cards" markdown>
 
--   :material-code-json: __Unified Model Management__
+-   :fontawesome-solid-chain: __Unified Model Management__
     
     ---
     
     Specify model providers through strings, easily switch and combine different models.
 
--    :fontawesome-solid-code: __Built-in OpenAI-Compatible Integration Class__
+-    :fontawesome-solid-file-code: __Built-in OpenAI-Compatible Integration Class__
     
     ---
     
@@ -49,13 +49,13 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
     
     Built-in tool calling detection, parameter parsing, and human review functions
     
--   :material-robot: __Efficient Agent Development__
+-   :octicons-dependabot-16: __Efficient Agent Development__
     
     ---
     
     Simplifies the agent creation process and expands more common middleware
     
--   :octicons-ai-model-16: __Flexible State Graph Composition__
+-   :fontawesome-solid-circle-nodes: __Flexible State Graph Composition__
     
     ---
     
