@@ -1662,8 +1662,16 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="_6">执行流程图</h3>
-<p>最终生成的图如下：</p>
-<p><img alt="Sequential Pipeline" src="../../../assets/sequential.png" /></p>
+<p>编排后的状态图的执行过程如下：</p>
+<pre class="mermaid"><code>graph LR
+    Start([开始])
+    Req[需求分析]
+    Arch[架构设计]
+    Code[代码编写]
+    Test[测试与质保]
+    End([结束])
+
+    Start --&gt; Req --&gt; Arch --&gt; Code --&gt; Test --&gt; End</code></pre>
 <h3 id="_7">上下文工程优化</h3>
 <p>上述基础示例仅作参考。实际上，该例子在运行时会将前面所有智能体的完整上下文依次传递给当前智能体，可能导致上下文膨胀，影响性能与效果。</p>
 <p>推荐采用以下任一方案精简上下文：</p>
@@ -1898,8 +1906,17 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="_11">执行流程图</h3>
-<p>最终生成的图如下：</p>
-<p><img alt="Parallel Pipeline" src="../../../assets/parallel.png" /></p>
+<p>编排后的状态图的执行过程如下：</p>
+<pre class="mermaid"><code>graph LR
+    Start([开始])
+    User[用户模块开发]
+    Product[商品模块开发]
+    Order[订单模块开发]
+    End([结束])
+
+    Start --&gt; User --&gt; End
+    Start --&gt; Product --&gt; End
+    Start --&gt; Order --&gt; End</code></pre>
 <h3 id="_12">使用分支函数指定并行执行的子图</h3>
 <p>有些时候需要根据条件指定并行执行哪些子图，这时可以使用分支函数。分支函数需要返回 <code>Send</code> 列表。</p>
 <h4 id="_13">应用场景</h4>

@@ -1663,7 +1663,15 @@
 </code></pre></div>
 <h3 id="execution-flow-diagram">Execution Flow Diagram</h3>
 <p>The generated diagram is as follows:</p>
-<p><img alt="Sequential Pipeline" src="../../assets/sequential.png" /></p>
+<pre class="mermaid"><code>graph LR
+    Start([Start])
+    Req[Requirements Analysis]
+    Arch[Architecture Design]
+    Code[Code Implementation]
+    Test[Testing &amp; QA]
+    End([End])
+
+    Start --&gt; Req --&gt; Arch --&gt; Code --&gt; Test --&gt; End</code></pre>
 <h3 id="context-engineering-optimization">Context Engineering Optimization</h3>
 <p>The basic example above is for reference only. In practice, this example passes the complete context of all previous agents to the current agent, which may lead to context inflation, affecting performance and effectiveness.</p>
 <p>It is recommended to adopt either of the following solutions to streamline the context:</p>
@@ -1899,7 +1907,16 @@
 </code></pre></div>
 <h3 id="execution-flow-diagram_1">Execution Flow Diagram</h3>
 <p>The generated diagram is as follows:</p>
-<p><img alt="Parallel Pipeline" src="../../assets/parallel.png" /></p>
+<pre class="mermaid"><code>graph LR
+    Start([Start])
+    User[User Module Development]
+    Product[Product Module Development]
+    Order[Order Module Development]
+    End([End])
+
+    Start --&gt; User --&gt; End
+    Start --&gt; Product --&gt; End
+    Start --&gt; Order --&gt; End</code></pre>
 <h3 id="using-branch-functions-to-specify-parallelly-executed-subgraphs">Using Branch Functions to Specify Parallelly Executed Subgraphs</h3>
 <p>Sometimes it is necessary to specify which subgraphs are executed in parallel based on conditions. In this case, branch functions can be used. The branch function needs to return a list of <code>Send</code>.</p>
 <h4 id="application-scenario">Application Scenario</h4>
