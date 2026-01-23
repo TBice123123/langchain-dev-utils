@@ -19,10 +19,14 @@ theme:
     - content.footnote.tooltips 
   palette:
     - scheme: default
+      primary: light blue
+      accent: light blue
       toggle:
         icon: material/brightness-7
         name: 切换到深色模式
     - scheme: slate
+      primary: light blue
+      accent: light blue
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式

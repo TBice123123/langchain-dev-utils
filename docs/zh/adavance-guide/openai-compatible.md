@@ -1,22 +1,13 @@
 # OpenAI 兼容 API 模型提供商集成
 
+!!! warning "前提条件"
+    使用此功能时，必须安装 standard 版本的 `langchain-dev-utils` 库。具体可以参考安装部分的介绍。
+
 ## 概述
 
-很多模型提供商都支持**OpenAI 兼容**的API服务，例如：[vLLM](https://github.com/vllm-project/vllm)、[OpenRouter](https://openrouter.ai/)、[Together AI](https://www.together.ai/)等。本库提供了完整的OpenAI兼容API集成方案，支持对话模型和嵌入模型，特别适用于暂时没有对应的LangChain集成而提供商提供OpenAI兼容API的场景。
+许多模型提供商都提供 **OpenAI 兼容 API** 服务，例如 [vLLM](https://github.com/vllm-project/vllm)、[OpenRouter](https://openrouter.ai/) 和 [Together AI](https://www.together.ai/) 等。本库提供一套 OpenAI 兼容 API 集成方案，覆盖对话模型与嵌入模型，尤其适用于「提供商已提供 OpenAI 兼容 API，但尚无对应 LangChain 集成」的场景。
 
-
-!!! tip "提示"
-    接入 OpenAI 兼容 API 的常见做法是直接使用 `langchain-openai` 中的 `ChatOpenAI` 或 `OpenAIEmbeddings`，只需传入 `base_url` 与 `api_key` 即可。然而，这种方式仅适用于简单场景，存在诸多兼容性问题，尤其是对话模型，具体包括：
-
-    1. 无法显示非 OpenAI 官方推理模型的思维链（`reasoning_content`）
-    2. 不支持视频类型的 content_block
-    3. 结构化输出默认策略覆盖率低
-
-    本库提供此功能正是为了解决上述兼容性问题。对于简单场景（尤其是对兼容性要求不高的场景），可直接使用 `ChatOpenAI`，无需使用本功能。`OpenAIEmbeddings` 兼容性较好，只需将 `check_embedding_ctx_length` 设为 `False` 即可。此外，为方便开发者，我们也提供了嵌入模型的 OpenAI 兼容集成类功能。
-
-## 创建对应的集成类
-
-本库提供了两个工具函数，用于创建对应的对话模型集成类和嵌入模型集成类。具体为：
+本库提供了两个工具函数，用于创建对话模型集成类与嵌入模型集成类：
 
 | 函数名 | 说明 |
 |--------|------|
@@ -24,40 +15,17 @@
 | `create_openai_compatible_embedding` | 创建嵌入模型集成类 |
 
 
-!!! tip "提示"
+!!! tip "说明"
     本库提供的两个工具函数的最初灵感借鉴自 JavaScript 生态的 [@ai-sdk/openai-compatible](https://ai-sdk.dev/providers/openai-compatible-providers)。
 
-### 创建对话模型类
+以下将以接入 [vLLM](https://github.com/vllm-project/vllm) 为例，展示如何使用本功能。
 
-使用 `create_openai_compatible_model` 函数可以创建对话模型集成类。该函数接受以下参数：
+??? note "vLLM 介绍"
+    vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API。
 
-| 参数 | 说明 |
-|------|------|
-| `model_provider` | 模型提供商名称，例如 `vllm`。<br><br>**类型**: `str`<br>**必填**: 是 |
-| `base_url` | 模型提供商的默认API地址。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `compatibility_options` | 兼容性选项配置。<br><br>**类型**: `dict`<br>**必填**: 否 |
-| `model_profiles` | 该模型提供商所提供的模型对应的profiles。<br><br>**类型**: `dict`<br>**必填**: 否 |
-| `chat_model_cls_name` | 对话模型类名(需要符合Python类名规范)，默认值为 `Chat{model_provider}`（其中 `{model_provider}` 首字母大写）。<br><br>**类型**: `str`<br>**必填**: 否 |
-
-!!! warning "注意"
-    `model_provider` 必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。(`embedding_provider` 同理)
-
-本库会根据用户传入的上述参数，使用内置 `BaseChatOpenAICompatible` 类构建对应于特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并增强以下能力：
-
-- **支持更多格式的推理内容**：相较于 `ChatOpenAI` 只能输出官方的推理内容，本类还支持输出更多格式的推理内容（例如 `vLLM`）。
-- **支持 `video` 类型 content_block**：`ChatOpenAI` 无法转换 `type=video` 的 `content_block`，本实现已完成支持。
-- **动态适配并选择最合适的结构化输出方法**：默认情况下，能够根据模型提供商的实际支持情况，自动选择最优的结构化输出方法（`function_calling` 或 `json_schema`）。
-- **通过 compatibility_options 精细适配差异**：通过配置提供商兼容性选项，解决 `tool_choice`、`response_format` 等参数的支持差异。
-
-!!! warning "注意"
-    使用此功能时，必须安装 standard 版本的 `langchain-dev-utils` 库。具体可以参考安装部分的介绍。
-
-#### 代码示例
-
-我们以集成 vLLM 为例，展示如何使用 `create_openai_compatible_model` 函数创建对话模型集成类。
-
-!!! note "补充"
-    vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API，例如本例子中的 Qwen3-4B：
+    例如：
+    
+    部署普通的文本模型，如**Qwen3-4B**：
 
     ```bash
     vllm serve Qwen/Qwen3-4B \
@@ -66,7 +34,76 @@
     --host 0.0.0.0 --port 8000 \
     --served-model-name qwen3-4b
     ```
+
+    部署需要特殊处理的模型，如**GLM-4.7-Flash**：
+
+    ```bash
+    vllm serve zai-org/GLM-4.7-Flash \
+     --tensor-parallel-size 4 \
+     --speculative-config.method mtp \
+     --speculative-config.num_speculative_tokens 1 \
+     --tool-call-parser glm47 \
+     --reasoning-parser glm45 \
+     --enable-auto-tool-choice \
+     --served-model-name glm-4.7-flash
+    ```
+
+    部署多模态模型，如**Qwen3-VL-2B-Instruct**：
+
+    ```bash
+    vllm serve Qwen/Qwen3-VL-2B-Instruct \
+    --trust-remote-code \
+    --host 0.0.0.0 --port 8000 \
+    --served-model-name qwen3-vl-2b
+    ```
+
+    部署嵌入模型，如**Qwen3-Embedding-4B**：
+
+    ```bash
+    vllm serve Qwen/Qwen3-Embedding-4B \
+    --task embed \
+    --served-model-name qwen3-embedding-4b \
+    --host 0.0.0.0 --port 8000
+    ```
     服务地址为 `http://localhost:8000/v1`。
+
+
+## 对话模型的创建与使用
+
+### 创建对话模型类
+
+使用 `create_openai_compatible_model` 函数可以创建对话模型集成类。该函数接受以下参数：
+
+| 参数 | 说明 |
+|------|------|
+| `model_provider` | 模型提供商名称，例如 `vllm`。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `base_url` | 模型提供商默认 API 地址。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `compatibility_options` | 兼容性选项配置。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `model_profiles` | 该提供商各模型的 profile 配置字典。<br><br>**类型**: `dict`<br>**必填**: 否 |
+| `chat_model_cls_name` | 对话模型类名（需符合 Python 类名规范）。默认值为 `Chat{model_provider}`（其中 `{model_provider}` 首字母大写）。<br><br>**类型**: `str`<br>**必填**: 否 |
+
+其中，`compatibility_options` 是一个字典，用于声明该提供商对 OpenAI API 的部分特性的支持情况，以提高兼容性和稳定性。
+
+目前支持以下配置项：
+
+| 配置项 | 说明 |
+|--------|------|
+| `supported_tool_choice` | 支持的 `tool_choice` 策略列表。<br><br>**类型**: `list[str]`<br>**默认值**: `["auto"]` |
+| `supported_response_format` | 支持的 `response_format` 格式列表（`json_schema`、`json_object`）。<br><br>**类型**: `list[str]`<br>**默认值**: `[]` |
+| `reasoning_keep_policy` | 历史消息中 `reasoning_content` 字段的保留策略。<br><br>**类型**: `str`<br>**默认值**: `"never"` |
+| `include_usage` | 是否在流式返回结果中包含 `usage` 信息。<br><br>**类型**: `bool`<br>**默认值**: `True` |
+
+!!! info "补充"
+    由于同一模型提供商的不同模型对 `tool_choice`、`response_format` 等参数的支持情况存在差异，这四个兼容性选项为类的**实例属性**。因此，创建对话模型类时可以传入值作为全局默认值（代表该提供商大部分模型支持的配置），后续如需针对特定模型进行微调，可在实例化时覆盖同名参数。
+
+
+!!! tip "提示"
+    本库会基于用户传入的参数，使用内置的 `BaseChatOpenAICompatible` 构建面向特定提供商的对话模型类。该类继承自 `langchain-openai` 的 `BaseChatOpenAI`，并在以下方面进行了增强：
+
+    - **支持更多格式的推理内容**：除 OpenAI 官方格式外，也支持以 `reasoning_content` 参数返回的推理内容格式。
+    - **支持 `video` 类型的 content_block**：补齐 `ChatOpenAI` 在视频类型的 `content_block` 上的能力缺口。
+    - **自动选择更合适的结构化输出方式**：根据提供商实际支持情况，在 `function_calling` 与 `json_schema` 之间自动选择更优方案。
+    - **通过 `compatibility_options` 精细适配差异**：按需配置对 `tool_choice`、`response_format` 等参数的支持差异。
 
 
 使用如下代码创建对话模型类：
@@ -84,13 +121,13 @@ model = ChatVLLM(model="qwen3-4b")
 print(model.invoke("你好"))
 ```
 
-值得注意的是，在创建对话模型类时，`base_url`参数可以省略，若未传入，本库会默认读取对应的环境变量。例如
+在创建对话模型类时，`base_url` 参数可以省略。未传入时，本库会默认读取对应环境变量，例如：
 
 ```bash
 export VLLM_API_BASE=http://localhost:8000/v1
 ```
 
-此时代码可以省略 `base_url` 参数：
+此时代码可以省略 `base_url`：
 
 ```python
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -104,50 +141,121 @@ model = ChatVLLM(model="qwen3-4b")
 print(model.invoke("你好"))
 ```
 
-**注意**：上述代码成功运行的前提是已配置环境变量 `VLLM_API_KEY`。虽然 vLLM 本身不要求 API Key，但对话模型类初始化时必须传入，因此请先设置该变量。例如
+**注意**：上述代码成功运行的前提是已配置环境变量 `VLLM_API_KEY`。虽然 vLLM 本身不要求 API Key，但对话模型类初始化时需要传入，因此请先设置该变量，例如：
 
 ```bash
 export VLLM_API_KEY=vllm_api_key
 ```
 
-
 !!! info "提示"
     创建的对话模型类（嵌入模型类也遵循此命名规则）环境变量的命名规则：
 
-    - API地址：`${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。
+    - API 地址：`${PROVIDER_NAME}_API_BASE`（全大写，下划线分隔）。
 
     - API Key：`${PROVIDER_NAME}_API_KEY`（全大写，下划线分隔）。
 
 
-#### 兼容性参数
+### 使用对话模型类
 
-`compatibility_options` 是一个字典，用于声明该提供商对 OpenAI API 的部分特性的支持情况，以提高兼容性和稳定性。
+#### 普通调用
 
-目前支持以下配置项：
+通过 `invoke` 方法可以进行普通调用，返回模型响应。
 
-| 配置项 | 说明 |
-|--------|------|
-| `supported_tool_choice` | 支持的 `tool_choice` 策略列表。<br><br>**类型**: `list[str]`<br>**默认值**: `["auto"]` |
-| `supported_response_format` | 支持的 `response_format` 格式列表(`json_schema`、`json_object`)。<br><br>**类型**: `list[str]`<br>**默认值**: `[]` |
-| `reasoning_keep_policy` | 历史消息中 `reasoning_content` 字段的保留策略。<br><br>**类型**: `str`<br>**默认值**: `"never"` |
-| `include_usage` | 是否在流式返回结果中包含 `usage` 信息。<br><br>**类型**: `bool`<br>**默认值**: `True` |
+```python
+from langchain_core.messages import HumanMessage
 
-!!! info "补充"
-    由于同一模型提供商的不同模型对 `tool_choice`、`response_format` 等参数的支持情况存在差异，这四个兼容性选项为类的**实例属性**。因此，创建对话模型类时可以传入值作为全局默认值（代表该提供商大部分模型支持的配置），后续如需针对特定模型进行微调，可在实例化时覆盖同名参数。
+model = ChatVLLM(model="qwen3-4b")
+response = model.invoke([HumanMessage("Hello")])
+print(response)
+```
 
-对于这些配置项的详细介绍如下：
+同时也支持 `ainvoke` 进行异步调用：
 
-??? note "1. supported_tool_choice"
-    `tool_choice` 用于控制大模型在响应时是否以及调用哪个外部工具，以提升准确性、可靠性和可控性。常见的取值有：
+```python
+from langchain_core.messages import HumanMessage
 
-    - `"auto"`：模型自主决定是否调用工具(默认行为)；
+model = ChatVLLM(model="qwen3-4b")
+response = await model.ainvoke([HumanMessage("Hello")])
+print(response)
+```
+#### 流式调用
+
+通过 `stream` 方法可以进行流式调用，用于流式返回模型响应。
+
+```python
+from langchain_core.messages import HumanMessage
+
+model = ChatVLLM(model="qwen3-4b")
+for chunk in model.stream([HumanMessage("Hello")]):
+    print(chunk)
+```
+
+以及通过 `astream` 进行异步流式调用：
+
+```python
+from langchain_core.messages import HumanMessage
+
+model = ChatVLLM(model="qwen3-4b")
+async for chunk in model.astream([HumanMessage("Hello")]):
+    print(chunk)
+```
+
+??? note "流式输出选项"
+    可以通过 `stream_options={"include_usage": True}` 在流式响应末尾附加 token 使用情况（`prompt_tokens` 和 `completion_tokens`）。
+    本库默认开启该选项；若需关闭，可在创建模型类或实例化时传入兼容性选项 `include_usage=False`。
+
+#### 工具调用
+
+如果模型本身支持工具调用，可以直接使用 `bind_tools` 进行工具调用：
+
+```python
+from langchain_core.messages import HumanMessage
+from langchain_core.tools import tool
+import datetime
+
+@tool
+def get_current_time() -> str:
+    """获取当前时间戳"""
+    return str(datetime.datetime.now().timestamp())
+
+model = ChatVLLM(model="qwen3-4b").bind_tools([get_current_time])
+response = model.invoke([HumanMessage("获取当前时间戳")])
+print(response)
+```
+??? note "并行工具调用"
+    如果模型支持并行工具调用，可以在 `bind_tools` 中传递 `parallel_tool_calls=True` 开启并行工具调用（部分模型提供商默认开启，则无需显式传参）。
+    
+    例如：
+
+    ```python
+    from langchain_core.messages import HumanMessage
+    from langchain_core.tools import tool
+
+
+    @tool
+    def get_current_weather(location: str) -> str:
+        """获取当前天气"""
+        return f"当前{location}的天气是晴朗"
+    
+    model = ChatVLLM(model="qwen3-4b").bind_tools(
+        [get_current_weather], parallel_tool_calls=True
+    )
+    response = model.invoke([HumanMessage("获取洛杉矶和伦敦的天气")])
+    print(response)
+    ```
+
+??? note "强制工具调用"
+
+    通过 `tool_choice` 参数，可以控制模型在响应时是否调用工具以及调用哪个工具，以提升准确性、可靠性和可控性。常见取值有：
+
+    - `"auto"`：模型自主决定是否调用工具（默认行为）；
     - `"none"`：禁止调用工具；
     - `"required"`：强制调用至少一个工具；
     - 指定具体工具（在 OpenAI 兼容 API 中，具体为 `{"type": "function", "function": {"name": "xxx"}}`）。
 
-    不同提供商支持范围不同。为避免错误，本库默认的`supported_tool_choice`为`["auto"]`，则在`bind_tools`时，`tool_choice`参数只能传递`auto`，如果传递其它取值均会被过滤。
+    不同提供商对`tool_choice`的支持范围不同。为解决差异，本库引入兼容性配置项 `supported_tool_choice`，默认值为 `["auto"]`，此时`bind_tools` 中传入的 `tool_choice` 只能为 `auto`，其他取值会被过滤。
 
-    若需支持传递其它`tool_choice`取值，必须配置支持项。配置值为字符串列表，每个字符串的可选值：
+    若需支持传递其他 `tool_choice` 取值，必须配置支持项。配置值为字符串列表，每个字符串的可选值：
 
     - `"auto"`, `"none"`, `"required"`：对应标准策略；
     - `"specific"`：本库特有标识，表示支持指定具体工具。
@@ -165,30 +273,31 @@ export VLLM_API_KEY=vllm_api_key
         },
     )
 
-    model = ChatVLLM(model="qwen3-4b")
+    model = ChatVLLM(model="qwen3-4b").bind_tools(
+        [get_current_weather], tool_choice="required"
+    )
     ```
 
-    !!! info "提示"
-        如无特殊需求，可保持默认（即`["auto"]`）。若业务场景要求模型**必须调用特定工具**或从**给定列表中任选其一**，且模型提供商支持对应策略，再按需开启：
-        
-        1. 如果要求**至少调用一个**工具，且模型提供商支持`required`，则可以设为 `["required"]`  （同时在调用`bind_tools`时，需要显示传递`tool_choice="required"`）
 
-        2. 如果要求**调用指定**工具，且模型提供商支持指定某个具体的工具调用，则可以设为 `["specific"]`（在 `function_calling` 结构化输出中，此配置非常有用，可以确保模型调用指定的结构化输出工具，以保证结构化输出的稳定性。因为在 `with_structured_output` 方法中，其内部实现会在调用`bind_tools` 时传入**能够强制调用指定工具的 `tool_choice` 取值**，但如果 `supported_tool_choice` 中没有 `"specific"`，该参数将会被过滤。故如果想要保证能够正常传入 `tool_choice`，必须在 `supported_tool_choice` 中添加 `"specific"`。）
+#### 结构化输出
 
-        该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖；推荐在创建时一次性声明该提供商的大多数模型的`tool_choice`支持情况，而对于部分支持情况不同的模型，则在实例化时单独指定。
+```python
+from langchain_core.messages import HumanMessage
+from pydantic import BaseModel
 
-??? note "2. supported_response_format"
-    目前常见的结构化输出方法有三种。
+class User(BaseModel):
+    name: str
+    age: int
 
-    - `function_calling`：通过调用一个符合指定 schema 的工具来生成结构化输出。
-    - `json_schema`：由模型提供商提供的专门用于生成结构化输出的功能，在OpenAI兼容API中，具体为`response_format={"type": "json_schema", "json_schema": {...}}`。
-    - `json_mode`：是某些提供商在推出`json_schema`之前提供的一种功能，它能生成有效的 JSON，但 schema 必须在提示（prompt）中进行描述。在 OpenAI 兼容 API 中，具体为 `response_format={"type": "json_object"}`）。
+model = ChatVLLM(model="qwen3-4b").with_structured_output(User)
+response = model.invoke([HumanMessage("你好，我叫张三，今年25岁")])
+print(response)
+```
+??? note "默认的结构化输出方法"
 
-    其中，`json_schema` 仅少数 OpenAI 兼容 API 提供商支持（如 `OpenRouter`、`TogetherAI`）；`json_mode` 支持度更高，多数提供商已兼容；而 `function_calling` 最为通用，只要模型支持工具调用即可使用。
+    目前常见的结构化输出方法有三种：`json_schema`、`function_calling`、`json_mode`。其中，效果最好的是`json_schema`，故本库的 `with_structured_output` 会优先使用`json_schema`作为结构化输出方法；当提供商不支持时，才会自动降级为 `function_calling`。不同的模型提供商对于结构化输出的支持程度有所不同。本库通过兼容性配置项 `supported_response_format` 声明提供商支持的结构化输出方法。默认值为 `[]`，表示既不支持 `json_schema` 也不支持 `json_mode`。此时 `with_structured_output(method=...)` 会固定使用 `function_calling`；即使传入 `json_schema` / `json_mode` 也会自动转化为 `function_calling`，如果想要使用对应的结构化输出方法，需要显式传入响应的参数（尤其是`json_schema`)。
 
-    本参数用于声明模型提供商对于`response_format`的支持情况。默认情况下为`[]`，代表模型提供商既不支持`json_mode`也不支持`json_schema`。此时`with_structured_output`方法中的`method`参数只能传递`function_calling`，如果传递了`json_mode`或`json_schema`，则会自动被转化为`function_calling`。如果想要启用`json_mode`或者`json_schema`的结构化输出实现方式，则需要显式设置该参数。
-
-    例如vLLM部署的模型支持`json_schema`的结构化输出方法，则可以注册的时候进行声明：
+    例如，vLLM 部署的模型支持 `json_schema` 结构化输出方法，则可以在注册时进行声明：
 
     ```python
     from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -202,19 +311,92 @@ export VLLM_API_KEY=vllm_api_key
     model = ChatVLLM(model="qwen3-4b")
     ``` 
 
-    !!! info "提示"
-        通常一般情况下也无需配置。仅在需要使用`with_structured_output`方法时需要考虑进行配置，此时，如果模型提供商支持`json_schema`，则可以考虑配置本参数（因为`json_schema`的结构化输出稳定性要优于`function_calling`）。以保证结构化输出的稳定性。对于`json_mode`，因为其只能保证输出JSON，因此一般没有必要设置。仅当模型不支持工具调用且仅支持设置`response_format={"type":"json_object"}`时，才需要配置本参数包含`json_mode`。
-        
-        同样，该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖；推荐在创建时一次性声明该提供商的大多数模型的`response_format`支持情况，而对于部分支持情况不同的模型，则在实例化时单独指定。
-
     !!! warning "注意"
-        本参数目前仅影响`model.with_structured_output`方法。对于`create_agent`中的结构化输出，若需要使用`json_schema`的实现方式，你需要确保对应模型的`profile`中包含`structured_output`字段，且值为`True`。
+        `supported_response_format`目前仅影响`model.with_structured_output`方法。对于`create_agent`中的结构化输出，若需要使用`json_schema`的实现方式，你需要确保对应模型的`profile`中包含`structured_output`字段，且值为`True`。
 
-??? note "3. reasoning_keep_policy"
 
-    用于控制历史消息（messages）中`reasoning_content` 字段的保留策略，主要适配于不同模型甚至同一模型在不同场景下的思考模式。
+#### 传递额外参数
 
-    支持以下取值：
+由于该类继承自 `BaseChatOpenAI`，因此支持传递 `BaseChatOpenAI` 的模型参数，例如 `temperature`、`extra_body` 等。
+
+例如，使用 `extra_body` 传递额外参数（此处为关闭思考模式）：
+
+```python
+from langchain_core.messages import HumanMessage
+
+model = ChatVLLM(
+    model="qwen3-4b",
+    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+)
+response = model.invoke([HumanMessage("Hello")])
+print(response)
+```
+
+#### 传递多模态数据
+
+支持传递多模态数据。你可以使用 OpenAI 兼容的多模态数据格式，或直接使用 LangChain 中的 `content_block`。
+
+传递图片类数据：
+
+```python
+from langchain_core.messages import HumanMessage
+messages = [
+    HumanMessage(
+        content_blocks=[
+            {
+                "type": "image",
+                "url": "https://example.com/image.png",
+            },
+            {"type": "text", "text": "描述这张图片"},
+        ]
+    )
+]
+
+model = ChatVLLM(model="qwen3-vl-2b")
+response = model.invoke(messages)
+print(response)
+```
+传递视频类数据：
+
+```python
+from langchain_core.messages import HumanMessage
+
+messages = [
+    HumanMessage(
+        content_blocks=[
+            {
+                "type": "video",
+                "url": "https://example.com/video.mp4",
+            },
+            {"type": "text", "text": "描述这段视频"},
+        ]
+    )
+]
+
+model = ChatVLLM(model="qwen3-vl-2b")
+response = model.invoke(messages)
+print(response)
+```
+   
+#### 使用推理模型
+
+本库创建的模型类的一大特点就是进一步适配了更多的推理模型。
+
+例如：
+
+```python
+from langchain_core.messages import HumanMessage
+
+model = ChatVLLM(model="qwen3-4b")
+response = model.invoke("为什么鹦鹉的羽毛如此鲜艳？")
+reasoning_steps = [b for b in response.content_blocks if b["type"] == "reasoning"]
+print(" ".join(step["reasoning"] for step in reasoning_steps))
+```
+
+??? note "不同推理模式的支持"
+    不同模型可能采用不同推理模式：有些模型要求在本次调用时显式传递 `reasoning_content` 字段，而有些则不需要。本库引入 `reasoning_keep_policy` 兼容性配置来适配差异。
+
+    该配置项支持以下取值：
 
     - `never`：在历史消息中**不保留任何**推理内容（默认)；
 
@@ -302,28 +484,56 @@ export VLLM_API_KEY=vllm_api_key
 
     **注意**：若本轮对话不涉及工具调用，则`current`与`never`效果相同。
 
-    !!! info "提示"
-        根据模型提供商对 `reasoning_content` 的保留要求灵活配置：
+    值得注意的是，虽然该参数属于兼容性配置项，但同一提供商的不同模型、甚至同一模型在不同场景下对 `reasoning_content` 的保留策略要求也可能不同，因此**建议在实例化时显式指定**，创建类时无需赋值。
 
-        - 若提供商要求**全程保留**推理内容，设为 `all`；  
-        - 若仅要求在**本轮工具调用**中保留，设为 `current`；  
-        - 若无特殊要求，保持默认 `never` 即可。  
+    例如，以 GLM-4.7-Flash 模型为例，由于其支持交错式思考（Interleaved Thinking）模式，一般需要在实例化时将 `reasoning_keep_policy` 设置为 `current`，以便仅保留当前轮次的 `reasoning_content`。例如：
 
-        该参数既可在创建时统一设置，也可在实例化时针对单模型动态覆盖。由于同一提供商的不同模型、甚至同一模型在不同场景下对 `reasoning_content` 保留策略的要求可能不同，**建议在实例化时显式指定**，创建类时无需赋值。
+    ```python
+    from langchain_core.messages import HumanMessage
 
-??? note "4. include_usage"
+    model = ChatVLLM(model="glm-4.7-flash", reasoning_keep_policy="current")
+    bind_model = model.bind_tools(tools=[get_current_weather])
+    response = bind_model.invoke([HumanMessage(content="查纽约天气如何？")])
+    print(response)
+    ```
+    同时，GLM-4.7-Flash 模型也支持另一种思考模式，被称之为Preserved Thinking。此时需要保留历史消息中的所有 `reasoning_content` 字段，可以将 `reasoning_keep_policy` 设置为 `all`。例如：
 
-    控制是否在流式响应末尾附加 token 使用情况（`prompt_tokens` 和 `completion_tokens`）。
+    ```python
+    from langchain_core.messages import HumanMessage
 
-    对于OpenAI兼容的API，一般是通过 `stream_options={"include_usage": true}` 设置，因此只有支持 `stream_options` 参数的提供商才能使用。默认值为 `True`，如遇到不支持的提供商，或不希望记录 token 使用情况，可显式设为 `False`。
+    model = ChatVLLM(
+        model="glm-4.7-flash",
+        reasoning_keep_policy="all",
+        extra_body={"chat_template_kwargs": {"clear_thinking": False}},
+    )
+    bind_model = model.bind_tools(tools=[get_current_weather])
+    response = bind_model.invoke([HumanMessage(content="查纽约天气如何？")])
+    print(response)
+    ```
 
 
-#### model_profiles参数设置
+#### Model profiles
 
-如果要使用 `model.profile` 参数，则必须在创建时显式传入。
+可以通过 `model.profile` 获取模型的 profile。默认情况下返回空字典。
+
+你也可以在实例化时显式传入 `profile` 参数指定模型 profile。
 
 例如：
+```python
+from langchain_core.messages import HumanMessage
 
+custom_profile = {
+    "max_input_tokens": 100_000,
+    "tool_calling": True,
+    "structured_output": True,
+    # ...
+}
+model = ChatVLLM(model="qwen3-4b", profile=custom_profile)
+print(model.profile)
+```
+或者直接在创建时传入模型提供商的所有模型的`profile`参数。
+
+例如：
 ```python
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
@@ -355,306 +565,132 @@ model = ChatVLLM(
 print(model.profile)
 ```
 
-!!! warning "注意"
-    尽管已提供上述兼容性配置，本库仍无法保证 100% 适配所有 OpenAI 兼容接口。若模型提供商已有官方或社区集成类，请优先采用该集成类。如遇到任何兼容性问题，欢迎在本库 GitHub 仓库提交 issue。
+#### 支持 OpenAI 最新的 Responses API
 
+该模型类也支持 OpenAI 最新的 `responses` API（参数名为 `use_responses_api`）。目前仅少量提供商支持该风格接口；若你的提供商支持，可通过 `use_responses_api=True` 开启。
+
+例如 vLLM 支持 `responses` API，则可以这样使用：
+
+```python
+from langchain_core.messages import HumanMessage
+
+model = ChatVLLM(model="qwen3-4b", use_responses_api=True)
+response = model.invoke([HumanMessage(content="你好")])
+print(response)
+```
+
+!!! warning "注意"
+    该功能暂未保证完全支持，可以用于简单测试，但不要用于生产环境。
+
+
+!!! warning "注意"
+    本库目前无法保证 100% 适配所有 OpenAI 兼容接口（尽管可以使用兼容性配置来提升兼容性）。若模型提供商已有官方或社区集成类，请优先采用该集成类。如遇到任何兼容性问题，欢迎在本库 GitHub 仓库提交 issue。
+
+
+## 嵌入模型的创建与使用
 
 ### 创建嵌入模型类
 
-与对话模型类类似，可以使用`create_openai_compatible_embedding`来创建嵌入模型类。
+与对话模型类类似，可以使用 `create_openai_compatible_embedding` 创建嵌入模型集成类。该函数接受以下参数：
 
-#### 示例代码
-同样，我们使用`create_openai_compatible_embedding`来集成vLLM的嵌入模型。
+| 参数 | 说明 |
+|------|------|
+| `embedding_provider` | 嵌入模型提供商名称，例如 `vllm`。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。<br><br>**类型**: `str`<br>**必填**: 是 |
+| `base_url` | 模型提供商默认 API 地址。<br><br>**类型**: `str`<br>**必填**: 否 |
+| `embedding_model_cls_name` | 嵌入模型类名（需符合 Python 类名规范）。默认值为 `{Provider}Embeddings`（其中 `{Provider}` 为首字母大写的提供商名称）。<br><br>**类型**: `str`<br>**必填**: 否 |
 
-!!! note "补充"  
-    vLLM 可部署嵌入模型并暴露 OpenAI 兼容接口，例如：
-
-    ```bash
-    vllm serve Qwen/Qwen3-Embedding-4B \
-    --task embed \
-    --served-model-name qwen3-embedding-4b \
-    --host 0.0.0.0 --port 8000
-    ```
-
-    服务地址为 `http://localhost:8000/v1`。
-
+同样，我们使用 `create_openai_compatible_embedding` 来集成 vLLM 的嵌入模型。
 
 ```python
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
-VLLMEmbedding = create_openai_compatible_embedding(
+VLLMEmbeddings = create_openai_compatible_embedding(
     embedding_provider="vllm",
     base_url="http://localhost:8000/v1",
-    embedding_model_cls_name="VLLMEmbedding",
+    embedding_model_cls_name="VLLMEmbeddings",
 )
 
-embedding = VLLMEmbedding(model="qwen3-embedding-8b")
-
+embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
 print(embedding.embed_query("你好"))
 ```
 
-同样，`base_url`可以省略，此时需要设置环境变量 `VLLM_API_BASE`。
+`base_url` 也可以省略。未传入时，本库会默认读取环境变量 `VLLM_API_BASE`：
 
 ```bash
 export VLLM_API_BASE="http://localhost:8000/v1"
 ```
 
-代码处可以省略`base_url`。
+此时代码可以省略 `base_url`：
 
 ```python
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
-VLLMEmbedding = create_openai_compatible_embedding(
+VLLMEmbeddings = create_openai_compatible_embedding(
     embedding_provider="vllm",
-    embedding_model_cls_name="VLLMEmbedding",
+    embedding_model_cls_name="VLLMEmbeddings",
 )
 
-embedding = VLLMEmbedding(model="qwen3-embedding-8b")
-
+embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
 print(embedding.embed_query("你好"))
 ```
 
-!!! warning "注意"
-    与模型管理类似，上述两个函数底层使用 `pydantic.create_model` 创建模型类，会带来一定的性能开销。此外，`create_openai_compatible_model` 使用全局字典记录各模型提供商的 `profiles`，为了避免多线程并发问题，建议在项目启动阶段创建好集成类，后续避免动态创建。
+**注意**：上述代码成功运行的前提是已配置环境变量 `VLLM_API_KEY`。虽然 vLLM 本身不要求 API Key，但嵌入模型类初始化时需要传入，因此请先设置该变量，例如：
 
-## 集成类的使用
+```bash
+export VLLM_API_KEY=vllm_api_key
+```
 
-### 对话模型类的使用
+### 使用嵌入模型类
 
-首先，我们需要创建对话模型类。我们使用之前创建好的`ChatVLLM`类。
+这里使用前面创建好的 `VLLMEmbeddings` 类来初始化嵌入模型实例。
 
-- 支持`invoke`、`ainvoke`、`stream`、`astream`等方法。
+#### 向量化查询
 
-??? example "普通调用"
+```python
+embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
+print(embedding.embed_query("你好"))
+```
 
-    支持`invoke`进行简单的调用：
+同样，也支持异步调用：
 
-    ```python
-    from langchain_core.messages import HumanMessage
+```python
+embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
+res = await embedding.aembed_query("你好")
+print(res)
+```
 
-    model = ChatVLLM("qwen3-4b")
-    response = model.invoke([HumanMessage("Hello")])
-    print(response)
-    ```
+#### 向量化字符串列表
 
-    同时也支持`ainvoke`进行异步调用：
+```python
+documents = ["你好", "你好，我是张三"]
+embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
+print(embedding.embed_documents(documents))
+```
+同样，也支持异步调用：
 
-    ```python
-    from langchain_core.messages import HumanMessage
-
-    model = ChatVLLM("qwen3-4b")
-    response = await model.ainvoke([HumanMessage("Hello")])
-    print(response)
-    ```
-
-??? example "流式输出"
-
-    支持`stream`进行流式输出：
-
-    ```python
-    from langchain_core.messages import HumanMessage
-
-    model = ChatVLLM("qwen3-4b")
-    for chunk in model.stream([HumanMessage("Hello")]):
-        print(chunk)
-    ```
-
-    以及`astream`进行异步流式调用：
-
-    ```python
-    from langchain_core.messages import HumanMessage
-
-    model = ChatVLLM("qwen3-4b")
-    async for chunk in model.astream([HumanMessage("Hello")]):
-        print(chunk)
-    ```
-
-- 支持`bind_tools`方法，进行工具调用。
-
-如果模型本身支持工具调用，那么可以直接使用`bind_tools`方法进行工具调用：
-
-??? example "工具调用"
-
-    ```python
-    from langchain_core.messages import HumanMessage
-    from langchain_core.tools import tool
-    import datetime
-
-    @tool
-    def get_current_time() -> str:
-        """获取当前时间戳"""
-        return str(datetime.datetime.now().timestamp())
-
-    model = ChatVLLM("qwen3-4b").bind_tools([get_current_time])
-    response = model.invoke([HumanMessage("获取当前时间戳")])
-    print(response)
-    ```
-
-- 支持`with_structured_output`方法，进行结构化输出。
-
-如果该模型类的`supported_response_format`参数中包含`json_schema`，则`with_structured_output` 优先使用 `json_schema`进行结构化输出，否则回退 `function_calling`；如需 `json_mode`，显式指定 `method="json_mode"` 并确保注册时包含 `json_mode`。
-
-??? example "结构化输出"
-
-    ```python
-    from langchain_core.messages import HumanMessage
-    from langchain_core.tools import tool
-    from pydantic import BaseModel
-
-    class User(BaseModel):
-        name: str
-        age: int
-
-    model = ChatVLLM("qwen3-4b").with_structured_output(User)
-    response = model.invoke([HumanMessage("你好，我叫张三，今年25岁")])
-    print(response)
-    ```
-
-
-- 支持传递`BaseChatOpenAI`的参数，例如`temperature`、`top_p`、`max_tokens`等。
-
-除此之外，由于该类继承了`BaseChatOpenAI`,因此支持传递`BaseChatOpenAI`的模型参数，例如`temperature`, `extra_body`等：
-
-??? example "传递模型参数"
-
-    ```python
-    from langchain_core.messages import HumanMessage
-
-    model = ChatVLLM("qwen3-4b",extra_body={"chat_template_kwargs": {"enable_thinking": False}}) #利用extra_body传递额外参数，这里是关闭思考模式
-    response = model.invoke([HumanMessage("Hello")])
-    print(response)
-    ```
-
-
-- 支持传递多模态数据
-
-支持传递多模态数据，你可以使用 OpenAI 兼容的多模态数据格式或者直接使用`langchain`中的`content_block`。
-
-??? example "传递多模态数据"
-
-    **传递图片类数据**：
-
-    ```python
-    from langchain_core.messages import HumanMessage
-    messages = [
-        HumanMessage(
-            content_blocks=[
-                {
-                    "type": "image",
-                    "url": "https://example.com/image.png",
-                },
-                {"type": "text", "text": "描述这张图片"},
-            ]
-        )
-    ]
-
-    model = ChatVLLM("qwen3-vl-2b")
-    response = model.invoke(messages)
-    print(response)
-    ```
-
-    **传递视频类数据**：
-    
-
-    ```python
-    from langchain_core.messages import HumanMessage
-
-    messages = [
-        HumanMessage(
-            content_blocks=[
-                {
-                    "type": "video",
-                    "url": "https://example.com/video.mp4",
-                },
-                {"type": "text", "text": "描述这视频"},
-            ]
-        )
-    ]
-
-    model = ChatVLLM("qwen3-vl-2b")
-    response = model.invoke(messages)
-    print(response)
-    ```
-    
-!!! note "补充"
-    vllm 也支持部署多模态模型，例如 `qwen3-vl-2b`：
-    ```bash
-    vllm serve Qwen/Qwen3-VL-2B-Instruct \
-    --trust-remote-code \
-    --host 0.0.0.0 --port 8000 \
-    --served-model-name qwen3-vl-2b
-    ```
-
-
-- 支持 OpenAI 最新的`responses api` (暂未保证完全支持，可以用于简单测试，但不要用于生产环境)
-
-该模型类也支持 OpenAI 最新的`responses_api`。但是目前仅有少量的提供商支持该风格的 API。如果你的模型提供商支持该 API 风格，则可以在传入`use_responses_api`参数为`True`。
-    例如 vllm 支持`responses_api`，则可以这样使用：
-
-??? example "OpenAI 最新的`responses_api`"
-
-    ```python
-    from langchain_core.messages import HumanMessage
-
-    model = ChatVLLM("qwen3-4b", use_responses_api=True)
-    response = model.invoke([HumanMessage(content="你好")])
-    print(response)
-    ```
-
-
-### 嵌入模型类的使用
-
-我们使用前面创建的`VLLMEmbeddings`类来初始化嵌入模型实例。
-
-- 向量化查询
-
-??? example "向量化查询"
-
-    ```python
-    embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
-    print(embedding.embed_query("你好"))
-    ```
-
-    **异步写法**
-
-    ```python
-    embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
-    res = await embedding.aembed_query("你好")
-    print(res)
-    ```
-
-- 向量化字符串列表
-
-??? example "向量化字符串列表"
-
-    ```python
-    documents = ["你好", "你好，我是张三"]
-    embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
-    print(embedding.embed_documents(documents))
-    ```
-
-    **异步写法**
-
-    ```python
-    documents = ["你好", "你好，我是张三"]
-    embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
-    res = await embedding.aembed_documents(documents)
-    print(res)
-    ```
+```python
+documents = ["你好", "你好，我是张三"]
+embedding = VLLMEmbeddings(model="qwen3-embedding-4b")
+res = await embedding.aembed_documents(documents)
+print(res)
+```
 
 !!! warning "嵌入模型兼容性说明"
     兼容 OpenAI 的嵌入 API 通常表现出较好的兼容性，但仍需注意以下差异点：
 
     1. `check_embedding_ctx_length`：仅在使用官方 OpenAI 嵌入服务时设为 `True`；其余嵌入模型一律设为 `False`。
 
-    2. `dimensions`：若模型支持自定义维度（如 1024、4096），可直接传入该参数。
+    2. `dimensions`：若模型支持自定义向量维度（如 1024、4096），可直接传入该参数。
 
-    3. `chunk_size`：单次请求可携带的最大文本数（即`embed_documents`方法中的传入的列表长度），默认 100。请按提供商实际要求调整。
+    3. `chunk_size`：为单次API调用中能处理的文本数量上限。例如`chunk_size`大小为10，意味着一次请求最多可传入10个文本进行向量化。
     
     4. 单文本 token 上限：无法通过参数控制，需在预处理分块阶段自行保证。
 
-**注意**：使用本功能创建的对话模型类和嵌入模型类支持传入任何`BaseChatOpenAI`和`OpenAIEmbeddings`的参数，例如`temperature`, `extra_body`,`dimensions`等。
+**注意**：使用本功能创建的对话模型类和嵌入模型类，均支持传入 `BaseChatOpenAI` 与 `OpenAIEmbeddings` 的参数，例如 `temperature`、`extra_body`、`dimensions` 等。
 
+
+!!! warning "注意"
+    与模型管理类似，上述两个函数底层使用 `pydantic.create_model` 创建模型类，会带来一定的性能开销。此外，`create_openai_compatible_model` 使用全局字典记录各模型提供商的 `profiles`，为了避免多线程并发问题，建议在项目启动阶段创建好集成类，后续避免动态创建。
 
 
 ## 与模型管理功能集成
@@ -740,3 +776,16 @@ register_embeddings_provider(
 
 ```
 
+
+!!! success "最佳实践"
+    接入 OpenAI 兼容 API 时，可以直接使用 `langchain-openai` 的 `ChatOpenAI` 或 `OpenAIEmbeddings`，并通过 `base_url` 与 `api_key` 指向你的提供商服务。该方式足够简单，适用于比较简单的场景（尤其是使用的是普通的对话模型而不是推理模型）。
+
+    但是会存在以下问题：
+
+    1. 无法显示非 OpenAI 官方推理模型的思维链（即`reasoning_content`返回的内容）
+
+    2. 不支持 `video` 类型的 content_block
+
+    3. 结构化输出的默认策略覆盖率较低
+
+    当你遇到上述差异时，可以使用本库提供的 OpenAI 兼容集成类进行适配。对于嵌入模型，兼容性通常更好：多数情况下直接使用 `OpenAIEmbeddings` 并将 `check_embedding_ctx_length=False` 即可。
