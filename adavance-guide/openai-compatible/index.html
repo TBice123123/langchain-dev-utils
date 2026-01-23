@@ -1791,41 +1791,29 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>model_provider</code></td>
-<td><code>str</code></td>
-<td>Yes</td>
-<td>Model provider name, e.g., <code>vllm</code>. Must start with a letter or number, contain only letters, numbers, and underscores, and be no longer than 20 characters.</td>
+<td>Model provider name, e.g., <code>vllm</code>. Must start with a letter or number, contain only letters, numbers, and underscores, and be no longer than 20 characters.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Default API address for the model provider.</td>
+<td>Default API address for the model provider.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>compatibility_options</code></td>
-<td><code>dict</code></td>
-<td>No</td>
-<td>Compatibility option configuration.</td>
+<td>Compatibility option configuration.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td><code>dict</code></td>
-<td>No</td>
-<td>Dictionary of profile configurations for the provider's models.</td>
+<td>Dictionary of profile configurations for the provider's models.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Chat model class name (must conform to Python class naming conventions). Default is <code>Chat{model_provider}</code> (with <code>{model_provider}</code> capitalized).</td>
+<td>Chat model class name (must conform to Python class naming conventions). Default is <code>Chat{model_provider}</code> (with <code>{model_provider}</code> capitalized).<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
@@ -1835,35 +1823,25 @@ The service address is <code>http://localhost:8000/v1</code>.</p>
 <thead>
 <tr>
 <th>Configuration Item</th>
-<th>Type</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>supported_tool_choice</code></td>
-<td><code>list[str]</code></td>
-<td><code>["auto"]</code></td>
-<td>List of supported <code>tool_choice</code> strategies.</td>
+<td>List of supported <code>tool_choice</code> strategies.<br><br><strong>Type</strong>: <code>list[str]</code><br><strong>Default</strong>: <code>["auto"]</code></td>
 </tr>
 <tr>
 <td><code>supported_response_format</code></td>
-<td><code>list[str]</code></td>
-<td><code>[]</code></td>
-<td>List of supported <code>response_format</code> formats (<code>json_schema</code>, <code>json_object</code>).</td>
+<td>List of supported <code>response_format</code> formats (<code>json_schema</code>, <code>json_object</code>).<br><br><strong>Type</strong>: <code>list[str]</code><br><strong>Default</strong>: <code>[]</code></td>
 </tr>
 <tr>
 <td><code>reasoning_keep_policy</code></td>
-<td><code>str</code></td>
-<td><code>"never"</code></td>
-<td>Retention policy for the <code>reasoning_content</code> field in historical messages.</td>
+<td>Retention policy for the <code>reasoning_content</code> field in historical messages.<br><br><strong>Type</strong>: <code>str</code><br><strong>Default</strong>: <code>"never"</code></td>
 </tr>
 <tr>
 <td><code>include_usage</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
-<td>Whether to include <code>usage</code> information in streaming results.</td>
+<td>Whether to include <code>usage</code> information in streaming results.<br><br><strong>Type</strong>: <code>bool</code><br><strong>Default</strong>: <code>True</code></td>
 </tr>
 </tbody>
 </table>
@@ -2107,7 +2085,7 @@ Passing video type data:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="using-reasoning-models">Using Reasoning Models</h4>
-<p>One major feature of this function is further adaptation to more reasoning models.</p>
+<p>A key feature of the model classes created by this library is their enhanced compatibility with a wider range of reasoning models.</p>
 <p>For example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
@@ -2274,29 +2252,21 @@ Or directly pass the <code>profile</code> parameter for all models of the model 
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>embedding_provider</code></td>
-<td><code>str</code></td>
-<td>Yes</td>
-<td>Embedding model provider name, e.g., <code>vllm</code>.</td>
+<td>Embedding model provider name, e.g., <code>vllm</code>. Must start with a letter or number, can only contain letters, numbers, and underscores, and must be no more than 20 characters long.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Default API address for the model provider.</td>
+<td>Default API address for the model provider.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>embedding_model_cls_name</code></td>
-<td><code>str</code></td>
-<td>No</td>
-<td>Embedding model class name (must conform to Python class naming conventions). Default is <code>{Provider}Embeddings</code> (where <code>{Provider}</code> is the provider name capitalized).</td>
+<td>Embedding model class name (must conform to Python class naming conventions). Default is <code>{Provider}Embeddings</code> (where <code>{Provider}</code> is the provider name capitalized).<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>

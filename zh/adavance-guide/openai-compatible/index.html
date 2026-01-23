@@ -958,12 +958,12 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        嵌入模型类的使用
+        使用嵌入模型类
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="嵌入模型类的使用">
+    <nav class="md-nav" aria-label="使用嵌入模型类">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1629,12 +1629,12 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        嵌入模型类的使用
+        使用嵌入模型类
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="嵌入模型类的使用">
+    <nav class="md-nav" aria-label="使用嵌入模型类">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1791,41 +1791,29 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>model_provider</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>模型提供商名称，例如 <code>vllm</code>。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。</td>
+<td>模型提供商名称，例如 <code>vllm</code>。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>模型提供商默认 API 地址。</td>
+<td>模型提供商默认 API 地址。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>compatibility_options</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td>兼容性选项配置。</td>
+<td>兼容性选项配置。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td><code>dict</code></td>
-<td>否</td>
-<td>该提供商各模型的 profile 配置字典。</td>
+<td>该提供商各模型的 profile 配置字典。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>对话模型类名（需符合 Python 类名规范）。默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。</td>
+<td>对话模型类名（需符合 Python 类名规范）。默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -1835,35 +1823,25 @@
 <thead>
 <tr>
 <th>配置项</th>
-<th>类型</th>
-<th>默认值</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>supported_tool_choice</code></td>
-<td><code>list[str]</code></td>
-<td><code>["auto"]</code></td>
-<td>支持的 <code>tool_choice</code> 策略列表。</td>
+<td>支持的 <code>tool_choice</code> 策略列表。<br><br><strong>类型</strong>: <code>list[str]</code><br><strong>默认值</strong>: <code>["auto"]</code></td>
 </tr>
 <tr>
 <td><code>supported_response_format</code></td>
-<td><code>list[str]</code></td>
-<td><code>[]</code></td>
-<td>支持的 <code>response_format</code> 格式列表（<code>json_schema</code>、<code>json_object</code>）。</td>
+<td>支持的 <code>response_format</code> 格式列表（<code>json_schema</code>、<code>json_object</code>）。<br><br><strong>类型</strong>: <code>list[str]</code><br><strong>默认值</strong>: <code>[]</code></td>
 </tr>
 <tr>
 <td><code>reasoning_keep_policy</code></td>
-<td><code>str</code></td>
-<td><code>"never"</code></td>
-<td>历史消息中 <code>reasoning_content</code> 字段的保留策略。</td>
+<td>历史消息中 <code>reasoning_content</code> 字段的保留策略。<br><br><strong>类型</strong>: <code>str</code><br><strong>默认值</strong>: <code>"never"</code></td>
 </tr>
 <tr>
 <td><code>include_usage</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
-<td>是否在流式返回结果中包含 <code>usage</code> 信息。</td>
+<td>是否在流式返回结果中包含 <code>usage</code> 信息。<br><br><strong>类型</strong>: <code>bool</code><br><strong>默认值</strong>: <code>True</code></td>
 </tr>
 </tbody>
 </table>
@@ -2274,29 +2252,21 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
-<th>必填</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>embedding_provider</code></td>
-<td><code>str</code></td>
-<td>是</td>
-<td>嵌入模型提供商名称，例如 <code>vllm</code>。</td>
+<td>嵌入模型提供商名称，例如 <code>vllm</code>。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>模型提供商默认 API 地址。</td>
+<td>模型提供商默认 API 地址。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>embedding_model_cls_name</code></td>
-<td><code>str</code></td>
-<td>否</td>
-<td>嵌入模型类名（需符合 Python 类名规范）。默认值为 <code>{Provider}Embeddings</code>（其中 <code>{Provider}</code> 为首字母大写的提供商名称）。</td>
+<td>嵌入模型类名（需符合 Python 类名规范）。默认值为 <code>{Provider}Embeddings</code>（其中 <code>{Provider}</code> 为首字母大写的提供商名称）。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
 </tr>
 </tbody>
 </table>
@@ -2329,7 +2299,7 @@
 <p><strong>注意</strong>：上述代码成功运行的前提是已配置环境变量 <code>VLLM_API_KEY</code>。虽然 vLLM 本身不要求 API Key，但嵌入模型类初始化时需要传入，因此请先设置该变量，例如：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm_api_key
 </code></pre></div>
-<h3 id="_14">嵌入模型类的使用</h3>
+<h3 id="_14">使用嵌入模型类</h3>
 <p>这里使用前面创建好的 <code>VLLMEmbeddings</code> 类来初始化嵌入模型实例。</p>
 <h4 id="_15">向量化查询</h4>
 <div class="highlight"><pre><span></span><code><span class="n">embedding</span> <span class="o">=</span> <span class="n">VLLMEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-embedding-4b&quot;</span><span class="p">)</span>
