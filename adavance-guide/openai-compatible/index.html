@@ -1761,16 +1761,16 @@
 <p>The following example demonstrates how to use this feature by integrating with <a href="https://github.com/vllm-project/vllm">vLLM</a>.</p>
 <details class="note">
 <summary>vLLM Introduction</summary>
-<p>vLLM is a popular LLM inference framework that can deploy large models as an OpenAI compatible API.</p>
-<p>For example:</p>
-<p>Deploying a normal text model such as <strong>Qwen3-4B</strong>:</p>
+<p>vLLM is a popular LLM inference framework for high-performance local or self-hosted serving. It can expose chat and embedding models through an OpenAI-compatible API, enabling reuse of existing SDKs and calling patterns, and it supports multi-model serving, tool calling, and reasoning outputs for chat, tool use, and multimodal scenarios.</p>
+<p>The following deployment commands are for the models used later in this guide:</p>
+<p><strong>Qwen3-4B</strong>:</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
 --reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
 --enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
 --host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-4b
 </code></pre></div>
-<p>Deploying a model that requires special handling, such as <strong>GLM-4.7-Flash</strong>:</p>
+<p><strong>GLM-4.7-Flash</strong>:</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>zai-org/GLM-4.7-Flash<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--tensor-parallel-size<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--speculative-config.method<span class="w"> </span>mtp<span class="w"> </span><span class="se">\</span>
@@ -1780,13 +1780,13 @@
 <span class="w"> </span>--enable-auto-tool-choice<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--served-model-name<span class="w"> </span>glm-4.7-flash
 </code></pre></div>
-<p>Deploying a multimodal model such as <strong>Qwen3-VL-2B-Instruct</strong>:</p>
+<p><strong>Qwen3-VL-2B-Instruct</strong>:</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
 --trust-remote-code<span class="w"> </span><span class="se">\</span>
 --host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-vl-2b
 </code></pre></div>
-<p>Deploying an embedding model such as <strong>Qwen3-Embedding-4B</strong>:</p>
+<p><strong>Qwen3-Embedding-4B</strong>:</p>
 <p><div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-Embedding-4B<span class="w"> </span><span class="se">\</span>
 --task<span class="w"> </span>embed<span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-embedding-4b<span class="w"> </span><span class="se">\</span>
@@ -2106,7 +2106,7 @@ Passing video type data:</p>
 </code></pre></div>
 <details class="note">
 <summary>Support for Different Reasoning Modes</summary>
-<p>Different models may adopt different reasoning modes: some models require explicit passing of the <code>reasoning_content</code> field in the current call, while others do not. This library introduces the <code>reasoning_keep_policy</code> compatibility configuration to adapt to these differences.</p>
+<p>Reasoning modes vary across models, which is especially important in Agent development: some models require explicitly passing the <code>reasoning_content</code> field in the current call, while others do not. This library provides the <code>reasoning_keep_policy</code> compatibility configuration to adapt to these differences.</p>
 <p>This configuration item supports the following values:</p>
 <ul>
 <li>
@@ -2127,11 +2127,11 @@ Passing video type data:</p>
     C --&gt; F[Send to model];
     D --&gt; F;
     E --&gt; F;</code></pre>
-<p>For example, the user first asks "What is the weather in New York?", then follows up with "What is the weather in London?". Currently, the second round of dialogue is about to take place, and the last model call is imminent.</p>
+<p>For example, a user first asks "What's the weather in New York?" and then follows up with "What's the weather in London?" The second round of dialogue is about to begin, and the final model call is imminent.</p>
 <ul>
-<li>When value is <code>never</code></li>
+<li>When the value is <code>never</code></li>
 </ul>
-<p>The messages passed to the model will <strong>not have any</strong> <code>reasoning_content</code> field. The messages received by the model are:</p>
+<p>The messages passed to the model will <strong>not include any</strong> <code>reasoning_content</code> field. The messages received by the model are:</p>
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
@@ -2143,9 +2143,9 @@ Passing video type data:</p>
 <span class="p">]</span>
 </code></pre></div>
 <ul>
-<li>When value is <code>current</code></li>
+<li>When the value is <code>current</code></li>
 </ul>
-<p>Only retain the <code>reasoning_content</code> field of the <strong>current conversation</strong>. This policy is suitable for Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls. In this case, the reasoning content of the current round needs to be retained. The messages received by the model are:
+<p>Only retain the <code>reasoning_content</code> field of the <strong>current conversation</strong>. This policy suits Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls, so the reasoning content of the current round needs to be retained. The messages received by the model are:
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
@@ -2154,7 +2154,7 @@ Passing video type data:</p>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, I should call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain current round&#39;s reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain current round&#39;s reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
@@ -2162,14 +2162,14 @@ Passing video type data:</p>
 <span class="p">]</span>
 </code></pre></div></p>
 <ul>
-<li>When value is <code>all</code></li>
+<li>When the value is <code>all</code></li>
 </ul>
 <p>Retain the <code>reasoning_content</code> field of <strong>all</strong> conversations. The messages received by the model are:
 <div class="highlight"><pre><span></span><code><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check New York&#39;s weather, I should call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check New York&#39;s weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
@@ -2182,7 +2182,7 @@ Passing video type data:</p>
     <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, I should call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London&#39;s weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
         <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
     <span class="p">},</span>
@@ -2190,16 +2190,19 @@ Passing video type data:</p>
 <span class="p">]</span>
 </code></pre></div></p>
 <p><strong>Note</strong>: If the current round of conversation does not involve tool calls, <code>current</code> and <code>never</code> have the same effect.</p>
-<p>It is worth noting that although this parameter belongs to the compatibility configuration item, different models of the same provider, or even the same model in different scenarios, may have different requirements for the <code>reasoning_content</code> retention policy. Therefore, <strong>it is recommended to specify explicitly during instantiation</strong>, and there is no need to assign a value when creating the class.</p>
-<p>For example, with the GLM-4.7-Flash model: since it supports Interleaved Thinking, you typically need to set <code>reasoning_keep_policy</code> to <code>current</code> at instantiation time so that only the current turn's <code>reasoning_content</code> is retained. For example:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<p>It is worth noting that although this parameter is part of the compatibility configuration, different models from the same provider—and even the same model in different scenarios—may require different <code>reasoning_content</code> retention policies. Therefore, <strong>it is recommended to specify it explicitly during instantiation</strong>, and there is no need to assign a value when creating the class.</p>
+<p>For example, with the GLM-4.7-Flash model: since it supports Interleaved Thinking, you typically need to set <code>reasoning_keep_policy</code> to <code>current</code> during instantiation so that only the current turn's <code>reasoning_content</code> is retained. For example:</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
-<span class="n">bind_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">bind_model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What is the weather in New York?&quot;</span><span class="p">)])</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>GLM-4.7-Flash also supports another reasoning mode called Preserved Thinking. In that case, you need to retain all <code>reasoning_content</code> fields from the conversation history. You can set <code>reasoning_keep_policy</code> to <code>all</code>. For example:</p>
+GLM-4.7-Flash also supports another reasoning mode called Preserved Thinking. In this case, you need to retain all <code>reasoning_content</code> fields in historical messages, so you can set <code>reasoning_keep_policy</code> to <code>all</code>. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
@@ -2207,8 +2210,12 @@ Passing video type data:</p>
     <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
     <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clear_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
 <span class="p">)</span>
-<span class="n">bind_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">bind_model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What is the weather in New York?&quot;</span><span class="p">)])</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;What&#39;s the weather in New York?&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>

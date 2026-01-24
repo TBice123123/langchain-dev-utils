@@ -1761,16 +1761,16 @@
 <p>以下将以接入 <a href="https://github.com/vllm-project/vllm">vLLM</a> 为例，展示如何使用本功能。</p>
 <details class="note">
 <summary>vLLM 介绍</summary>
-<p>vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API。</p>
-<p>例如：</p>
-<p>部署普通的文本模型，如<strong>Qwen3-4B</strong>：</p>
+<p>vLLM 是常用的大模型推理框架，适合本地或自建环境下的高性能推理服务。它可以将大模型部署为 OpenAI 兼容的 API，便于复用现有的 SDK 与调用方式；同时支持对话模型与嵌入模型的部署，以及多模型服务、工具调用与推理输出等能力，适用于对话、工具调用与多模态等场景。</p>
+<p>以下示例均为后续内容中会用到的模型部署命令：</p>
+<p><strong>Qwen3-4B</strong>：</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
 --reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
 --enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
 --host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-4b
 </code></pre></div>
-<p>部署需要特殊处理的模型，如<strong>GLM-4.7-Flash</strong>：</p>
+<p><strong>GLM-4.7-Flash</strong>：</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>zai-org/GLM-4.7-Flash<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--tensor-parallel-size<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--speculative-config.method<span class="w"> </span>mtp<span class="w"> </span><span class="se">\</span>
@@ -1780,13 +1780,13 @@
 <span class="w"> </span>--enable-auto-tool-choice<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--served-model-name<span class="w"> </span>glm-4.7-flash
 </code></pre></div>
-<p>部署多模态模型，如<strong>Qwen3-VL-2B-Instruct</strong>：</p>
+<p><strong>Qwen3-VL-2B-Instruct</strong>：</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
 --trust-remote-code<span class="w"> </span><span class="se">\</span>
 --host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-vl-2b
 </code></pre></div>
-<p>部署嵌入模型，如<strong>Qwen3-Embedding-4B</strong>：</p>
+<p><strong>Qwen3-Embedding-4B</strong>：</p>
 <p><div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-Embedding-4B<span class="w"> </span><span class="se">\</span>
 --task<span class="w"> </span>embed<span class="w"> </span><span class="se">\</span>
 --served-model-name<span class="w"> </span>qwen3-embedding-4b<span class="w"> </span><span class="se">\</span>
@@ -2106,7 +2106,7 @@
 </code></pre></div>
 <details class="note">
 <summary>不同推理模式的支持</summary>
-<p>不同模型可能采用不同推理模式：有些模型要求在本次调用时显式传递 <code>reasoning_content</code> 字段，而有些则不需要。本库引入 <code>reasoning_keep_policy</code> 兼容性配置来适配差异。</p>
+<p>不同模型的推理模式不尽相同（这点在Agent开发中尤为重要）：有些需要在本次调用中显式传递 <code>reasoning_content</code> 字段，有些则无需。本库提供 <code>reasoning_keep_policy</code> 兼容性配置以适配这些差异。</p>
 <p>该配置项支持以下取值：</p>
 <ul>
 <li>
@@ -2195,8 +2195,11 @@
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
-<span class="n">bind_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">bind_model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">)])</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 同时，GLM-4.7-Flash 模型也支持另一种思考模式，被称之为Preserved Thinking。此时需要保留历史消息中的所有 <code>reasoning_content</code> 字段，可以将 <code>reasoning_keep_policy</code> 设置为 <code>all</code>。例如：</p>
@@ -2207,8 +2210,12 @@
     <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
     <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clear_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
 <span class="p">)</span>
-<span class="n">bind_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">bind_model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">)])</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 </details>

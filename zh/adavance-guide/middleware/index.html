@@ -2401,15 +2401,7 @@
     <span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是一个智能的AI助手，可以解决用户的问题&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="c1"># big_text 是一个包含大量内容的文本，这里省略</span>
-<span class="n">big_messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好，你是谁&quot;</span><span class="p">),</span>
-    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;我是你的AI助手&quot;</span><span class="p">),</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;写一段优美的长文本&quot;</span><span class="p">),</span>
-    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;好的，我会写一段优美的长文本，内容是：</span><span class="si">{</span><span class="n">big_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你为啥要写这段长文本呢？&quot;</span><span class="p">),</span>
-<span class="p">]</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">big_messages</span><span class="p">})</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div></p>
 </div>

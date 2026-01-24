@@ -2403,15 +2403,7 @@
     <span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent AI assistant that can solve user problems&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="c1"># big_text is a text containing a lot of content, omitted here</span>
-<span class="n">big_messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello, who are you&quot;</span><span class="p">),</span>
-    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;I am your AI assistant&quot;</span><span class="p">),</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Write a beautiful long text&quot;</span><span class="p">),</span>
-    <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Okay, I will write a beautiful long text, the content is: </span><span class="si">{</span><span class="n">big_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Why did you write this long text?&quot;</span><span class="p">),</span>
-<span class="p">]</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">big_messages</span><span class="p">})</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div></p>
 </div>
