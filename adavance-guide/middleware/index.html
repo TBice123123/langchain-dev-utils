@@ -2093,6 +2093,10 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>Through <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
+<div class="admonition note">
+<p class="admonition-title">Parallel Execution</p>
+<p>Using middleware to implement model routing, only one task is assigned for execution at a time. If you want to decompose a task into multiple subtasks and execute them in parallel with multiple models, please refer to <a href="../pipeline/">State Graph Orchestration</a>.</p>
+</div>
 <h2 id="agent-handoffs">Agent Handoffs</h2>
 <p><code>HandoffAgentMiddleware</code> is a middleware used for <strong>flexibly switching between multiple sub-agents</strong>, fully implementing LangChain's official <code>handoffs</code> multi-agent collaboration scheme.</p>
 <h3 id="parameter-description_2">Parameter Description</h3>
