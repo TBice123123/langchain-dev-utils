@@ -181,6 +181,9 @@ print(response)
 
 Through `ModelRouterMiddleware`, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.
 
+!!! note "Parallel Execution"
+    Using middleware to implement model routing, only one task is assigned for execution at a time. If you want to decompose a task into multiple subtasks and execute them in parallel with multiple models, please refer to [State Graph Orchestration](pipeline.md).
+
 ## Agent Handoffs
 
 `HandoffAgentMiddleware` is a middleware used for **flexibly switching between multiple sub-agents**, fully implementing LangChain's official `handoffs` multi-agent collaboration scheme.
@@ -502,14 +505,6 @@ print(response)
         ],
         system_prompt="You are an intelligent AI assistant that can solve user problems",
     )
-    # big_text is a text containing a lot of content, omitted here
-    big_messages = [
-        HumanMessage(content="Hello, who are you"),
-        AIMessage(content="I am your AI assistant"),
-        HumanMessage(content="Write a beautiful long text"),
-        AIMessage(content=f"Okay, I will write a beautiful long text, the content is: {big_text}"),
-        HumanMessage(content="Why did you write this long text?"),
-    ]
-    response = agent.invoke({"messages": big_messages})
+    response = agent.invoke({"messages": messages})
     print(response)
     ```

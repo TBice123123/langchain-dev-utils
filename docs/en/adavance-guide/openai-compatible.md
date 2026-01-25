@@ -21,11 +21,11 @@ This library provides two utility functions for creating chat model integration 
 The following example demonstrates how to use this feature by integrating with [vLLM](https://github.com/vllm-project/vllm).
 
 ??? note "vLLM Introduction"
-    vLLM is a popular LLM inference framework that can deploy large models as an OpenAI compatible API.
+    vLLM is a popular LLM inference framework for high-performance local or self-hosted serving. It can expose chat and embedding models through an OpenAI-compatible API, enabling reuse of existing SDKs and calling patterns, and it supports multi-model serving, tool calling, and reasoning outputs for chat, tool use, and multimodal scenarios.
 
-    For example:
+    The following deployment commands are for the models used later in this guide:
 
-    Deploying a normal text model such as **Qwen3-4B**:
+    **Qwen3-4B**:
 
     ```bash
     vllm serve Qwen/Qwen3-4B \
@@ -35,7 +35,7 @@ The following example demonstrates how to use this feature by integrating with [
     --served-model-name qwen3-4b
     ```
 
-    Deploying a model that requires special handling, such as **GLM-4.7-Flash**:
+    **GLM-4.7-Flash**:
 
     ```bash
     vllm serve zai-org/GLM-4.7-Flash \
@@ -48,7 +48,7 @@ The following example demonstrates how to use this feature by integrating with [
      --served-model-name glm-4.7-flash
     ```
 
-    Deploying a multimodal model such as **Qwen3-VL-2B-Instruct**:
+    **Qwen3-VL-2B-Instruct**:
 
     ```bash
     vllm serve Qwen/Qwen3-VL-2B-Instruct \
@@ -57,7 +57,7 @@ The following example demonstrates how to use this feature by integrating with [
     --served-model-name qwen3-vl-2b
     ```
 
-    Deploying an embedding model such as **Qwen3-Embedding-4B**:
+    **Qwen3-Embedding-4B**:
 
     ```bash
     vllm serve Qwen/Qwen3-Embedding-4B \
@@ -394,7 +394,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 ```
 
 ??? note "Support for Different Reasoning Modes"
-    Different models may adopt different reasoning modes: some models require explicit passing of the `reasoning_content` field in the current call, while others do not. This library introduces the `reasoning_keep_policy` compatibility configuration to adapt to these differences.
+    Reasoning modes vary across models, which is especially important in Agent development: some models require explicitly passing the `reasoning_content` field in the current call, while others do not. This library provides the `reasoning_keep_policy` compatibility configuration to adapt to these differences.
 
     This configuration item supports the following values:
 
@@ -415,11 +415,11 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         E --> F;
     ```
 
-    For example, the user first asks "What is the weather in New York?", then follows up with "What is the weather in London?". Currently, the second round of dialogue is about to take place, and the last model call is imminent.
+    For example, a user first asks "What's the weather in New York?" and then follows up with "What's the weather in London?" The second round of dialogue is about to begin, and the final model call is imminent.
 
-    - When value is `never`
+    - When the value is `never`
 
-    The messages passed to the model will **not have any** `reasoning_content` field. The messages received by the model are:
+    The messages passed to the model will **not include any** `reasoning_content` field. The messages received by the model are:
 
     ```python
     messages = [
@@ -433,9 +433,9 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
     ]
     ```
 
-    - When value is `current`
+    - When the value is `current`
 
-    Only retain the `reasoning_content` field of the **current conversation**. This policy is suitable for Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls. In this case, the reasoning content of the current round needs to be retained. The messages received by the model are:
+    Only retain the `reasoning_content` field of the **current conversation**. This policy suits Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls, so the reasoning content of the current round needs to be retained. The messages received by the model are:
     ```python
     messages = [
         {"content": "What's the weather in New York?", "role": "user"},
@@ -445,7 +445,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         {"content": "What's the weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "To check London's weather, I should call the weather tool directly.",  # Only retain current round's reasoning_content
+            "reasoning_content": "To check London's weather, I need to call the weather tool directly.",  # Only retain current round's reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -453,7 +453,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
     ]
     ```
 
-    - When value is `all`
+    - When the value is `all`
 
     Retain the `reasoning_content` field of **all** conversations. The messages received by the model are:
     ```python
@@ -461,7 +461,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         {"content": "What's the weather in New York?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "To check New York's weather, I should call the weather tool directly.",  # Retain reasoning_content
+            "reasoning_content": "To check New York's weather, I need to call the weather tool directly.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -474,7 +474,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         {"content": "What's the weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "To check London's weather, I should call the weather tool directly.",  # Retain reasoning_content
+            "reasoning_content": "To check London's weather, I need to call the weather tool directly.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -484,20 +484,22 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 
     **Note**: If the current round of conversation does not involve tool calls, `current` and `never` have the same effect.
 
-    It is worth noting that although this parameter belongs to the compatibility configuration item, different models of the same provider, or even the same model in different scenarios, may have different requirements for the `reasoning_content` retention policy. Therefore, **it is recommended to specify explicitly during instantiation**, and there is no need to assign a value when creating the class.
+    It is worth noting that although this parameter is part of the compatibility configuration, different models from the same provider—and even the same model in different scenarios—may require different `reasoning_content` retention policies. Therefore, **it is recommended to specify it explicitly during instantiation**, and there is no need to assign a value when creating the class.
 
-    For example, with the GLM-4.7-Flash model: since it supports Interleaved Thinking, you typically need to set `reasoning_keep_policy` to `current` at instantiation time so that only the current turn's `reasoning_content` is retained. For example:
+    For example, with the GLM-4.7-Flash model: since it supports Interleaved Thinking, you typically need to set `reasoning_keep_policy` to `current` during instantiation so that only the current turn's `reasoning_content` is retained. For example:
 
     ```python
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM(model="glm-4.7-flash", reasoning_keep_policy="current")
-    bind_model = model.bind_tools(tools=[get_current_weather])
-    response = bind_model.invoke([HumanMessage(content="What is the weather in New York?")])
+    agent = create_agent(
+        model=model,
+        tools=[get_current_weather],
+    )
+    response = agent.invoke({"messages": [HumanMessage(content="What's the weather in New York?")]})
     print(response)
     ```
-
-    GLM-4.7-Flash also supports another reasoning mode called Preserved Thinking. In that case, you need to retain all `reasoning_content` fields from the conversation history. You can set `reasoning_keep_policy` to `all`. For example:
+    GLM-4.7-Flash also supports another reasoning mode called Preserved Thinking. In this case, you need to retain all `reasoning_content` fields in historical messages, so you can set `reasoning_keep_policy` to `all`. For example:
 
     ```python
     from langchain_core.messages import HumanMessage
@@ -507,8 +509,12 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         reasoning_keep_policy="all",
         extra_body={"chat_template_kwargs": {"clear_thinking": False}},
     )
-    bind_model = model.bind_tools(tools=[get_current_weather])
-    response = bind_model.invoke([HumanMessage(content="What is the weather in New York?")])
+
+    agent = create_agent(
+        model=model,
+        tools=[get_current_weather],
+    )
+    response = agent.invoke({"messages": [HumanMessage(content="What's the weather in New York?")]})
     print(response)
     ```
 

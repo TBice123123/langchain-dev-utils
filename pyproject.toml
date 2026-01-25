@@ -31,7 +31,11 @@ python_functions = ["test_*"]
 
 [dependency-groups]
 dev = ["langchain-model-profiles>=0.0.5", "ruff>=0.14.5"]
-docs = ["mkdocs-material>=9.7.0", "mkdocs-static-i18n>=1.3.0"]
+docs = [
+    "jupyter>=1.1.1",
+    "mkdocs-material>=9.7.0",
+    "mkdocs-static-i18n>=1.3.0",
+]
 tests = [
     "python-dotenv>=1.1.1",
     "langchain-tests>=1.0.0",

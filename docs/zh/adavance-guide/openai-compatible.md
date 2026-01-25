@@ -21,11 +21,11 @@
 以下将以接入 [vLLM](https://github.com/vllm-project/vllm) 为例，展示如何使用本功能。
 
 ??? note "vLLM 介绍"
-    vLLM 是常用的大模型推理框架，其可以将大模型部署为 OpenAI 兼容的 API。
+    vLLM 是常用的大模型推理框架，适合本地或自建环境下的高性能推理服务。它可以将大模型部署为 OpenAI 兼容的 API，便于复用现有的 SDK 与调用方式；同时支持对话模型与嵌入模型的部署，以及多模型服务、工具调用与推理输出等能力，适用于对话、工具调用与多模态等场景。
 
-    例如：
+    以下示例均为后续内容中会用到的模型部署命令：
     
-    部署普通的文本模型，如**Qwen3-4B**：
+    **Qwen3-4B**：
 
     ```bash
     vllm serve Qwen/Qwen3-4B \
@@ -35,7 +35,7 @@
     --served-model-name qwen3-4b
     ```
 
-    部署需要特殊处理的模型，如**GLM-4.7-Flash**：
+    **GLM-4.7-Flash**：
 
     ```bash
     vllm serve zai-org/GLM-4.7-Flash \
@@ -48,7 +48,7 @@
      --served-model-name glm-4.7-flash
     ```
 
-    部署多模态模型，如**Qwen3-VL-2B-Instruct**：
+    **Qwen3-VL-2B-Instruct**：
 
     ```bash
     vllm serve Qwen/Qwen3-VL-2B-Instruct \
@@ -57,7 +57,7 @@
     --served-model-name qwen3-vl-2b
     ```
 
-    部署嵌入模型，如**Qwen3-Embedding-4B**：
+    **Qwen3-Embedding-4B**：
 
     ```bash
     vllm serve Qwen/Qwen3-Embedding-4B \
@@ -394,7 +394,8 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 ```
 
 ??? note "不同推理模式的支持"
-    不同模型可能采用不同推理模式：有些模型要求在本次调用时显式传递 `reasoning_content` 字段，而有些则不需要。本库引入 `reasoning_keep_policy` 兼容性配置来适配差异。
+
+    不同模型的推理模式不尽相同（这点在Agent开发中尤为重要）：有些需要在本次调用中显式传递 `reasoning_content` 字段，有些则无需。本库提供 `reasoning_keep_policy` 兼容性配置以适配这些差异。
 
     该配置项支持以下取值：
 
@@ -492,8 +493,11 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM(model="glm-4.7-flash", reasoning_keep_policy="current")
-    bind_model = model.bind_tools(tools=[get_current_weather])
-    response = bind_model.invoke([HumanMessage(content="查纽约天气如何？")])
+    agent = create_agent(
+        model=model,
+        tools=[get_current_weather],
+    )
+    response = agent.invoke({"messages": [HumanMessage(content="查纽约天气如何？")]})
     print(response)
     ```
     同时，GLM-4.7-Flash 模型也支持另一种思考模式，被称之为Preserved Thinking。此时需要保留历史消息中的所有 `reasoning_content` 字段，可以将 `reasoning_keep_policy` 设置为 `all`。例如：
@@ -506,8 +510,12 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         reasoning_keep_policy="all",
         extra_body={"chat_template_kwargs": {"clear_thinking": False}},
     )
-    bind_model = model.bind_tools(tools=[get_current_weather])
-    response = bind_model.invoke([HumanMessage(content="查纽约天气如何？")])
+
+    agent = create_agent(
+        model=model,
+        tools=[get_current_weather],
+    )
+    response = agent.invoke({"messages": [HumanMessage(content="查纽约天气如何？")]})
     print(response)
     ```
 

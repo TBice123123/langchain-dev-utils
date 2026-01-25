@@ -9,10 +9,11 @@
   <a href="https://tbice123123.github.io/langchain-dev-utils/zh/">中文</a>
 </p>
 
-[![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package)](https://pypi.org/project/langchain-dev-utils/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/python-3.11|3.12|3.13|3.14-%2334D058)](https://www.python.org/downloads)
-[![Downloads](https://static.pepy.tech/badge/langchain-dev-utils/month)](https://pepy.tech/project/langchain-dev-utils)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-black.svg?logo=github)](https://github.com/TBice123123/langchain-dev-utils)
+[![PyPI](https://img.shields.io/pypi/v/langchain-dev-utils.svg?color=%2334D058&label=pypi%20package&logo=python)](https://pypi.org/project/langchain-dev-utils/)
+[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg?logo=python&label=Python)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?label=License)](https://opensource.org/licenses/MIT)
+[![Last Commit](https://img.shields.io/github/last-commit/TBice123123/langchain-dev-utils)](https://github.com/TBice123123/langchain-dev-utils)
 [![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://tbice123123.github.io/langchain-dev-utils/zh/)
 
 > 当前为中文版，英文版请访问[English Version](https://github.com/TBice123123/langchain-dev-utils/blob/master/README.md)

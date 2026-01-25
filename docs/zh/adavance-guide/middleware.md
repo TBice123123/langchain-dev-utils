@@ -184,6 +184,8 @@ print(response)
 
 通过 `ModelRouterMiddleware`，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。
 
+!!! note "并行执行"
+    采用中间件实现模型路由，每次仅会分配一个任务进行执行，如果你想要将任务分解为多个子任务由多个模型进行并行执行，请参考[状态图编排](pipeline.md)。
 
 ## 智能体交接
 
@@ -506,14 +508,6 @@ print(response)
         ],
         system_prompt="你是一个智能的AI助手，可以解决用户的问题",
     )
-    # big_text 是一个包含大量内容的文本，这里省略
-    big_messages = [
-        HumanMessage(content="你好，你是谁"),
-        AIMessage(content="我是你的AI助手"),
-        HumanMessage(content="写一段优美的长文本"),
-        AIMessage(content=f"好的，我会写一段优美的长文本，内容是：{big_text}"),
-        HumanMessage(content="你为啥要写这段长文本呢？"),
-    ]
-    response = agent.invoke({"messages": big_messages})
+    response = agent.invoke({"messages": messages})
     print(response)
     ```
