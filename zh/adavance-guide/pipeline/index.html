@@ -1489,7 +1489,53 @@
 </table>
 <h2 id="_3">顺序编排</h2>
 <p>顺序编排（Sequential Pipeline）将复杂任务拆解为连续、有序的子任务，并交由不同的专门化智能体依次处理。</p>
-<p>使用 <code>create_sequential_pipeline</code> 可将多个状态图以顺序方式组合。</p>
+<p>使用 <code>create_sequential_pipeline</code> 可将多个状态图以顺序方式组合。对于该函数，所接收的参数如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sub_graphs</code></td>
+<td>要组合的状态图列表。<br><br><strong>类型</strong>: <code>list[SubGraph]</code><br><strong>必填</strong>: 是</td>
+</tr>
+<tr>
+<td><code>state_schema</code></td>
+<td>最终生成图的 State Schema。<br><br><strong>类型</strong>: <code>type[StateT]</code><br><strong>必填</strong>: 是</td>
+</tr>
+<tr>
+<td><code>graph_name</code></td>
+<td>最终生成图的名称。<br><br><strong>类型</strong>: <code>Optional[str]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>context_schema</code></td>
+<td>最终生成图的 Context Schema。<br><br><strong>类型</strong>: <code>type[ContextT]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>input_schema</code></td>
+<td>最终生成图的输入 Schema。<br><br><strong>类型</strong>: <code>type[InputT]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>output_schema</code></td>
+<td>最终生成图的输出 Schema。<br><br><strong>类型</strong>: <code>type[OutputT]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>checkpointer</code></td>
+<td>最终生成图的 Checkpointer。<br><br><strong>类型</strong>: <code>Checkpointer</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td>最终生成图的 Store。<br><br><strong>类型</strong>: <code>BaseStore</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td>最终生成图的 Cache。<br><br><strong>类型</strong>: <code>BaseCache</code><br><strong>必填</strong>: 否</td>
+</tr>
+</tbody>
+</table>
 <h3 id="_4">典型应用场景</h3>
 <p>以用户购买商品为例，典型流程如下：</p>
 <pre class="mermaid"><code>graph LR
@@ -1753,7 +1799,57 @@
 </div>
 <h2 id="_7">并行编排</h2>
 <p>并行编排（Parallel Pipeline）将多个状态图并行组合，并发执行各任务，从而提高执行效率。</p>
-<p>使用 <code>create_parallel_pipeline</code> 可将多个状态图以并行方式组合，实现并行执行。</p>
+<p>使用 <code>create_parallel_pipeline</code> 可将多个状态图以并行方式组合，实现并行执行。对于该函数，所接收的参数如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sub_graphs</code></td>
+<td>要组合的状态图列表。<br><br><strong>类型</strong>: <code>list[SubGraph]</code><br><strong>必填</strong>: 是</td>
+</tr>
+<tr>
+<td><code>state_schema</code></td>
+<td>最终生成图的 State Schema。<br><br><strong>类型</strong>: <code>type[StateT]</code><br><strong>必填</strong>: 是</td>
+</tr>
+<tr>
+<td><code>graph_name</code></td>
+<td>最终生成图的名称。<br><br><strong>类型</strong>: <code>Optional[str]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>context_schema</code></td>
+<td>最终生成图的 Context Schema。<br><br><strong>类型</strong>: <code>type[ContextT]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>input_schema</code></td>
+<td>最终生成图的输入 Schema。<br><br><strong>类型</strong>: <code>type[InputT]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>output_schema</code></td>
+<td>最终生成图的输出 Schema。<br><br><strong>类型</strong>: <code>type[OutputT]</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>checkpointer</code></td>
+<td>最终生成图的 Checkpointer。<br><br><strong>类型</strong>: <code>Checkpointer</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td>最终生成图的 Store。<br><br><strong>类型</strong>: <code>BaseStore</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td>最终生成图的 Cache。<br><br><strong>类型</strong>: <code>BaseCache</code><br><strong>必填</strong>: 否</td>
+</tr>
+<tr>
+<td><code>branches_fn</code></td>
+<td>并行分支函数，返回 Send 列表控制并行执行。<br><br><strong>类型</strong>: <code>Callable</code><br><strong>必填</strong>: 否</td>
+</tr>
+</tbody>
+</table>
 <h3 id="_8">典型应用场景</h3>
 <p>在商品购买场景中，用户可能同时需要多种查询，例如商品详情、库存、优惠与运费估算，可并行执行。</p>
 <p>流程如下：</p>
@@ -2118,6 +2214,17 @@
     <span class="k">return</span> <span class="n">sends</span>
 </code></pre></div>
 <p>最终使用 <code>create_parallel_agent</code> 创建并行智能体，并传入分支函数。</p>
+<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
+    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">order_agent</span><span class="p">,</span>
+        <span class="n">product_agent</span><span class="p">,</span>
+        <span class="n">refund_agent</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">RouterState</span><span class="p">,</span>
+    <span class="n">input_schema</span><span class="o">=</span><span class="n">RouterInput</span><span class="p">,</span>
+    <span class="n">branches_fn</span><span class="o">=</span><span class="n">branch_fn</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <p>运行测试：</p>
 <div class="highlight"><pre><span></span><code><span class="n">response_single</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
