@@ -667,6 +667,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#code-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -706,6 +717,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#use-cases_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#code-example_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -743,6 +765,17 @@
   
     <nav class="md-nav" aria-label="String">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-cases_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#code-example_2" class="md-nav__link">
@@ -1367,6 +1400,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#code-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1406,6 +1450,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#use-cases_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#code-example_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1443,6 +1498,17 @@
   
     <nav class="md-nav" aria-label="String">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-cases_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#code-example_2" class="md-nav__link">
@@ -1501,6 +1567,11 @@
 <p>Used to format a list consisting of Documents, Messages, or strings into a single text string. The specific function is <code>format_sequence</code>.</p>
 <h2 id="usage-examples">Usage Examples</h2>
 <h3 id="message">Message</h3>
+<h4 id="use-cases">Use Cases</h4>
+<ul>
+<li>Convert conversation history (system/human/ai/tool) into readable text, making it easy to inject into the next prompt.</li>
+<li>Debug printing: render a message list into a readable format for logs.</li>
+</ul>
 <h4 id="code-example">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
 
@@ -1536,36 +1607,51 @@
 <div class="highlight"><pre><span></span><code>-System: You are a weather query assistant
 -Human: Check the weather in London and San Francisco
 -AI: I will use the get_weather tool to check the weather for these two cities
-&lt;/think&gt;&lt;tool_call&gt;get_weather&lt;/arg_value&gt;
-&lt;tool_call&gt;get_weather&lt;/arg_value&gt;
+&lt;tool_call&gt;get_weather&lt;/tool_call&gt;
+&lt;tool_call&gt;get_weather&lt;/tool_call&gt;
 -Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
 -Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
 -AI: Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
 </code></pre></div>
 <h3 id="document">Document</h3>
+<h4 id="use-cases_1">Use Cases</h4>
+<ul>
+<li>RAG: format the retrieved <code>Document</code> list into a <code>context</code> text block and paste it directly into your prompt.</li>
+</ul>
 <h4 id="code-example_1">Code Example</h4>
-<div class="highlight"><pre><span></span><code><span class="n">format2</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.documents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_sequence</span>
+
+<span class="n">format2</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;content1&quot;</span><span class="p">),</span>
-        <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;content2&quot;</span><span class="p">),</span>
-        <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;content3&quot;</span><span class="p">),</span>
+        <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;[Source: Product Manual] Refund policy: refunds are allowed within 7 days.&quot;</span><span class="p">),</span>
+        <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;[Source: FAQ] Refunds usually take 1-3 business days to arrive.&quot;</span><span class="p">),</span>
+        <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;[Source: Support Guidelines] In disputes, apologize first and ask for the order ID.&quot;</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span>
+    <span class="n">with_num</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">format2</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="output-result_1">Output Result</h4>
-<div class="highlight"><pre><span></span><code>&gt;content1
-&gt;content2
-&gt;content3
+<div class="highlight"><pre><span></span><code>&gt;1. [Source: Product Manual] Refund policy: refunds are allowed within 7 days.
+&gt;2. [Source: FAQ] Refunds usually take 1-3 business days to arrive.
+&gt;3. [Source: Support Guidelines] In disputes, apologize first and ask for the order ID.
 </code></pre></div>
 <h3 id="string">String</h3>
+<h4 id="use-cases_2">Use Cases</h4>
+<ul>
+<li>Format a set of bullet points (requirements, checklist items, todos, etc.) into multi-line text for prompt composition.</li>
+</ul>
 <h4 id="code-example_2">Code Example</h4>
-<div class="highlight"><pre><span></span><code><span class="n">format3</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_sequence</span>
+
+<span class="n">format3</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="s2">&quot;str1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;str2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;str3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Answer the user&#39;s question only; do not add extra content.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;If uncertain, state your assumptions clearly.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Use a Markdown list in the output.&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span>
     <span class="n">with_num</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1573,9 +1659,9 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">format3</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="output-result_2">Output Result</h4>
-<div class="highlight"><pre><span></span><code>&gt;1. str1
-&gt;2. str2
-&gt;3. str3
+<div class="highlight"><pre><span></span><code>&gt;1. Answer the user&#39;s question only; do not add extra content.
+&gt;2. If uncertain, state your assumptions clearly.
+&gt;3. Use a Markdown list in the output.
 </code></pre></div>
 
 
