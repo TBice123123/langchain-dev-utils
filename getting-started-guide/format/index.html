@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#formatting-sequence" class="md-skip">
+        <a href="#sequence-formatting" class="md-skip">
           Skip to content
         </a>
       
@@ -993,14 +993,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adavance-guide/pipeline/" class="md-nav__link">
+      <a href="../../adavance-guide/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration
+    State-Graph Building
   
 
     
@@ -1250,14 +1250,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/pipeline/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration Module API Reference
+    State-Graph Building Module API Reference
   
 
     
@@ -1496,29 +1496,51 @@
   
 
 
-<h1 id="formatting-sequence">Formatting Sequence</h1>
+<h1 id="sequence-formatting">Sequence Formatting</h1>
 <h2 id="overview">Overview</h2>
 <p>Used to format a list consisting of Documents, Messages, or strings into a single text string. The specific function is <code>format_sequence</code>.</p>
 <h2 id="usage-examples">Usage Examples</h2>
 <h3 id="message">Message</h3>
 <h4 id="code-example">Code Example</h4>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.documents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_sequence</span>
 
 <span class="n">formated1</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello1&quot;</span><span class="p">),</span>
-        <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello2&quot;</span><span class="p">),</span>
-        <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello3&quot;</span><span class="p">),</span>
+        <span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;You are a weather query assistant&quot;</span><span class="p">),</span>
+        <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Check the weather in London and San Francisco&quot;</span><span class="p">),</span>
+        <span class="n">AIMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;I will use the get_weather tool to check the weather for these two cities&quot;</span><span class="p">,</span>
+            <span class="n">tool_calls</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_weather&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_weather&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;San Francisco&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;456&quot;</span><span class="p">},</span>
+            <span class="p">],</span>
+        <span class="p">),</span>
+        <span class="n">ToolMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius&quot;</span><span class="p">,</span>
+            <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">ToolMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius&quot;</span><span class="p">,</span>
+            <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;456&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">AIMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">formated1</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="output-result">Output Result</h4>
-<div class="highlight"><pre><span></span><code>-Hello1
--Hello2
--Hello3
+<div class="highlight"><pre><span></span><code>-System: You are a weather query assistant
+-Human: Check the weather in London and San Francisco
+-AI: I will use the get_weather tool to check the weather for these two cities
+&lt;/think&gt;&lt;tool_call&gt;get_weather&lt;/arg_value&gt;
+&lt;tool_call&gt;get_weather&lt;/arg_value&gt;
+-Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
+-Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
+-AI: Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
 </code></pre></div>
 <h3 id="document">Document</h3>
 <h4 id="code-example_1">Code Example</h4>

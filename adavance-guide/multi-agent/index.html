@@ -1082,14 +1082,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../pipeline/" class="md-nav__link">
+      <a href="../graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration
+    State-Graph Building
   
 
     
@@ -1339,14 +1339,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/pipeline/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration Module API Reference
+    State-Graph Building Module API Reference
   
 
     
@@ -2003,7 +2003,7 @@
 <span class="s2">            3) Current status or progress.</span>
 <span class="s2">            Keep the summary length under 200 characters.&quot;&quot;&quot;</span>
         <span class="p">),</span>
-        <span class="o">*</span><span class="n">messages</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">messages</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
     <span class="p">]</span>
 
     <span class="k">if</span> <span class="n">messages</span><span class="p">:</span>
@@ -2032,7 +2032,7 @@
 <span class="s2">            3) Current status or progress.</span>
 <span class="s2">            Keep the summary length under 200 characters.&quot;&quot;&quot;</span>
         <span class="p">),</span>
-        <span class="o">*</span><span class="n">messages</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">messages</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
     <span class="p">]</span>
 
     <span class="k">if</span> <span class="n">messages</span><span class="p">:</span>
@@ -2144,6 +2144,17 @@
     <span class="n">agent</span><span class="p">,</span> <span class="n">post_output_hooks</span><span class="o">=</span><span class="p">(</span><span class="n">process_output_sync</span><span class="p">,</span> <span class="n">process_output_async</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">tip</p>
+<p>For the <code>wrap_all_agents_as_tool</code> function, if you need different agents to use different <code>pre_input_hooks</code> or <code>post_output_hooks</code>, you can use <code>get_subagent_name</code> to get the name of the currently running agent and then apply different processing methods based on the name.
+For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.wrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_subagent_name</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
+    <span class="n">subagent_name</span> <span class="o">=</span> <span class="n">get_subagent_name</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
+    <span class="c1"># Process input based on the agent name; code omitted</span>
+</code></pre></div>
+</div>
 
 
 

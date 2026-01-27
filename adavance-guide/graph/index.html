@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/pipeline/">
+        <link rel="canonical" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/graph/">
       
       
         <link rel="prev" href="../middleware/">
@@ -20,7 +20,7 @@
         
           <link rel="alternate" href="./" hreflang="en">
         
-          <link rel="alternate" href="../../zh/adavance-guide/pipeline/" hreflang="zh">
+          <link rel="alternate" href="../../zh/adavance-guide/graph/" hreflang="zh">
         
       
       
@@ -29,7 +29,7 @@
     
     
       
-        <title>State-Graph Orchestration - Langchain Dev Utils</title>
+        <title>State-Graph Building - Langchain Dev Utils</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#state-graph-orchestration" class="md-skip">
+        <a href="#state-graph-construction" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              State-Graph Orchestration
+              State-Graph Building
             
           </span>
         </div>
@@ -167,7 +167,7 @@
           </li>
         
           <li class="md-select__item">
-            <a href="../../zh/adavance-guide/pipeline/" hreflang="zh" class="md-select__link">
+            <a href="../../zh/adavance-guide/graph/" hreflang="zh" class="md-select__link">
               中文
             </a>
           </li>
@@ -817,7 +817,7 @@
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration
+    State-Graph Building
   
 
     
@@ -835,7 +835,7 @@
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration
+    State-Graph Building
   
 
     
@@ -905,17 +905,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#context-engineering-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context Engineering Optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -956,15 +945,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-branch-functions-to-specify-parallel-sub-graphs" class="md-nav__link">
+  <a href="#using-branch-functions-to-specify-sub-graphs-for-parallel-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Branch Functions to Specify Parallel Sub-graphs
+        Using Branch Functions to Specify Sub-graphs for Parallel Execution
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using Branch Functions to Specify Parallel Sub-graphs">
+    <nav class="md-nav" aria-label="Using Branch Functions to Specify Sub-graphs for Parallel Execution">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1233,14 +1222,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/pipeline/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    State-Graph Orchestration Module API Reference
+    State-Graph Building Module API Reference
   
 
     
@@ -1359,17 +1348,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#context-engineering-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context Engineering Optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1410,15 +1388,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-branch-functions-to-specify-parallel-sub-graphs" class="md-nav__link">
+  <a href="#using-branch-functions-to-specify-sub-graphs-for-parallel-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Branch Functions to Specify Parallel Sub-graphs
+        Using Branch Functions to Specify Sub-graphs for Parallel Execution
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using Branch Functions to Specify Parallel Sub-graphs">
+    <nav class="md-nav" aria-label="Using Branch Functions to Specify Sub-graphs for Parallel Execution">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1462,34 +1440,34 @@
   
 
 
-<h1 id="state-graph-orchestration">State Graph Orchestration</h1>
+<h1 id="state-graph-construction">State Graph Construction</h1>
 <h2 id="overview">Overview</h2>
-<p>In LangGraph, state graph orchestration is a key capability for building complex AI applications. By combining multiple state graphs according to specific patterns, you can form powerful and logically clear workflows.</p>
-<p>This library provides two of the most common orchestration methods:</p>
+<p>LangGraph is the official orchestration framework by LangChain for building complex workflows. However, using LangGraph directly comes with a steep learning curve. Therefore, this library provides two preset functions to build state graphs for sequential or parallel execution. Developers only need to write the business logic for nodes, while edge connections, graph compilation, and state management are handled automatically.</p>
+<p>The two specific functions are as follows:</p>
 <table>
 <thead>
 <tr>
-<th>Orchestration Method</th>
-<th>Description</th>
+<th>Function Name</th>
+<th>Functionality</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Sequential Orchestration</strong></td>
-<td>Combines multiple state graphs in sequence to form a sequential workflow</td>
-<td>Tasks need to be executed step-by-step and depend on the output of the previous step</td>
+<td><strong>create_sequential_graph</strong></td>
+<td>Combines multiple nodes sequentially to form a sequential execution state graph.</td>
+<td>Tasks need to be executed step-by-step and depend on the output of the previous step.</td>
 </tr>
 <tr>
-<td><strong>Parallel Orchestration</strong></td>
-<td>Combines multiple state graphs in parallel to form a parallel workflow</td>
-<td>Multiple tasks are independent of each other and can be executed simultaneously to improve efficiency</td>
+<td><strong>create_parallel_graph</strong></td>
+<td>Combines multiple nodes in parallel to form a parallel execution state graph.</td>
+<td>Multiple tasks are independent and can be executed simultaneously to improve efficiency.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="sequential-orchestration">Sequential Orchestration</h2>
-<p>Sequential Orchestration (Sequential Pipeline) breaks down complex tasks into continuous, ordered sub-tasks, which are then handled by different specialized agents in turn.</p>
-<p>You can use <code>create_sequential_pipeline</code> to combine multiple state graphs sequentially. The parameters accepted by this function are as follows:</p>
+<p>Sequential orchestration breaks down complex tasks into continuous, ordered sub-tasks. In LangGraph, each sub-task corresponds to a node in the state graph.</p>
+<p>You can use <code>create_sequential_graph</code> to combine multiple nodes in a sequential manner. The parameters for this function are as follows:</p>
 <table>
 <thead>
 <tr>
@@ -1499,8 +1477,8 @@
 </thead>
 <tbody>
 <tr>
-<td><code>sub_graphs</code></td>
-<td>A list of state graphs to combine.<br><br><strong>Type</strong>: <code>list[SubGraph]</code><br><strong>Required</strong>: Yes</td>
+<td><code>nodes</code></td>
+<td>The list of nodes to combine, which can be node functions or tuples consisting of a node name and a node function.<br><br><strong>Type</strong>: <code>list[Node]</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>state_schema</code></td>
@@ -1537,22 +1515,22 @@
 </tbody>
 </table>
 <h3 id="typical-application-scenario">Typical Application Scenario</h3>
-<p>Taking user product purchase as an example, the typical process is as follows:</p>
+<p>Taking a user purchasing a product as an example, the typical flow is as follows:</p>
 <pre class="mermaid"><code>graph LR
     Start([User Order Request])
     Inv[Inventory Check]
     Ord[Create Order]
     Pay[Complete Payment]
     Del[Confirm Delivery]
-    End([Order Completed])
+    End([Order Complete])
 
     Start --&gt; Inv --&gt; Ord --&gt; Pay --&gt; Del --&gt; End</code></pre>
-<p>This process is interlinked and the sequence cannot be reversed.</p>
-<p>The four steps—Inventory Check, Create Order, Complete Payment, and Confirm Delivery—are handled by specialized agents respectively. By orchestrating the four state graphs sequentially using <code>create_sequential_pipeline</code>, you can form a highly automated product purchase workflow with clear responsibilities.</p>
+<p>This flow is tightly coupled, and the sequence cannot be reversed.</p>
+<p>These four steps (Inventory Check, Create Order, Complete Payment, Confirm Delivery) can be abstracted into independent nodes, with each being executed by a dedicated agent. Using <code>create_sequential_graph</code> to orchestrate these four nodes sequentially creates a highly automated product purchase workflow with clear responsibilities.</p>
 <h3 id="basic-example">Basic Example</h3>
-<p>The following example shows how to use <code>create_sequential_pipeline</code> to build a sequential product purchase workflow:</p>
-<p>First, create the chat model object. Here we take the local vllm deployed <code>qwen3-4b</code> as an example. Since its interface is compatible with OpenAI, we can directly use <code>create_openai_compatible_model</code> to build the model class.</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
+<p>The following example demonstrates how to use <code>create_sequential_graph</code> to build a sequential product purchase workflow:</p>
+<p>First, create the chat model object. Here we use <code>qwen3-4b</code> deployed locally via vLLM as an example. Since its interface is compatible with OpenAI, we can directly construct the model class using <code>create_openai_compatible_model</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
@@ -1560,246 +1538,112 @@
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-Then instantiate a <code>ChatVLLM</code> object for subsequent agent calls.</p>
-<p><div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<p>Next, instantiate a <code>ChatVLLM</code> object for subsequent agent calls.</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 </code></pre></div>
-Next, create relevant tools, such as checking inventory, creating orders, processing payments, etc.</p>
+<p>Then create the relevant tools, such as checking inventory, creating orders, processing payments, etc.</p>
 <details class="example">
-<summary>Reference for tool implementation</summary>
+<summary>Reference for Tool Implementation</summary>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_inventory</span><span class="p">(</span><span class="n">product_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check inventory&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query inventory&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;product_name&quot;</span><span class="p">:</span> <span class="n">product_name</span><span class="p">,</span> <span class="s2">&quot;in_stock&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;available&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">}</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="n">product_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an order&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Order ORD-10001 created, Product: </span><span class="si">{</span><span class="n">product_name</span><span class="si">}</span><span class="s2">, Quantity: </span><span class="si">{</span><span class="n">quantity</span><span class="si">}</span><span class="s2">.&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create order&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Order ORD-10001 created, product: </span><span class="si">{</span><span class="n">product_name</span><span class="si">}</span><span class="s2">, quantity: </span><span class="si">{</span><span class="n">quantity</span><span class="si">}</span><span class="s2">.&quot;</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">pay_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pay for the order&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pay for order&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> payment successful.&quot;</span>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">confirm_delivery</span><span class="p">(</span><span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Confirm delivery&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> arranged for delivery, Address: </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> arranged for delivery, address: </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">.&quot;</span>
 </code></pre></div>
 </details>
-<p>Then create the corresponding four sub-agents.</p>
+<p>Then create the four corresponding sub-agents.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
 
 <span class="n">inventory_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">check_inventory</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an inventory assistant responsible for confirming product availability.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an inventory assistant responsible for confirming product availability. Please output the inventory query result.&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inventory_agent&quot;</span><span class="p">,</span>
+
 <span class="p">)</span>
 
 <span class="n">order_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_order</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an order assistant responsible for creating orders.&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_agent&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_agent&quot;</span>
 <span class="p">)</span>
 
 <span class="n">payment_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">pay_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a payment assistant responsible for completing payments.&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;payment_agent&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a payment assistant responsible for completing payment.&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;payment_agent&quot;</span>
 <span class="p">)</span>
 
 <span class="n">delivery_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">confirm_delivery</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a delivery assistant responsible for confirming delivery information.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;You are a delivery assistant responsible for confirming delivery information and arranging shipment.&quot;</span>
+    <span class="p">),</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;delivery_agent&quot;</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Finally, use <code>create_sequential_pipeline</code> to orchestrate these four agents in sequence.</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
+<p>Next, write a utility function to create nodes that invoke agents.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.state</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompiledStateGraph</span>
 
-<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">inventory_agent</span><span class="p">,</span>
-        <span class="n">order_agent</span><span class="p">,</span>
-        <span class="n">payment_agent</span><span class="p">,</span>
-        <span class="n">delivery_agent</span><span class="p">,</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_call_agent_node</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">CompiledStateGraph</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_agent</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]})</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)]}</span>
+    <span class="k">return</span> <span class="n">call_agent</span>
+</code></pre></div>
+<p>Finally, use <code>create_sequential_graph</code> to orchestrate these four nodes in sequence.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_graph</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;inventory&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">inventory_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">order_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;payment&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">payment_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;delivery&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">delivery_agent</span><span class="p">)),</span>
     <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span>
 <span class="p">)</span>
 </code></pre></div>
-Run the test:</p>
+<p>Run a test:</p>
 <div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;I want to buy a pair of wireless headphones, quantity 2, please place the order, delivery address: X City, X District, X Road, X No.&quot;</span><span class="p">)</span>
+            <span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;I want to buy a pair of wireless headphones, quantity 2. Please place the order. Delivery address is X City, X District, X Road, No. X&quot;</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="context-engineering-optimization">Context Engineering Optimization</h3>
-<p>This example passes the complete context of all preceding agents to the current agent in sequence, which may cause context bloat and affect performance and effectiveness.</p>
-<p>The following solutions can be used to streamline the context:</p>
-<table>
-<thead>
-<tr>
-<th>Solution</th>
-<th>Description</th>
-<th>Advantages</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Use Middleware</strong></td>
-<td>Use <code>create_agent</code> with middleware to extract and pass only necessary information</td>
-<td>Simple implementation, minor code changes</td>
-</tr>
-<tr>
-<td><strong>Custom State Graph</strong></td>
-<td>Build a custom state graph based on <code>LangGraph</code> to explicitly control state fields and message flow</td>
-<td>High flexibility, precise control</td>
-</tr>
-</tbody>
-</table>
-<details class="example">
-<summary>Click to view reference code for the middleware solution</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMiddleware</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemoveMessage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runtime</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PurchaseState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">stock</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">order</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">payment</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">delivery</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ClearAgentContextMiddleware</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
-    <span class="n">state_schema</span> <span class="o">=</span> <span class="n">PurchaseState</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_save_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result_save_key</span> <span class="o">=</span> <span class="n">result_save_key</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">after_agent</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">PurchaseState</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Runtime</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">final_message</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">update_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_save_key</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="n">RemoveMessage</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="p">],</span>
-            <span class="n">update_key</span><span class="p">:</span> <span class="n">final_message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
-        <span class="p">}</span>
-
-
-<span class="n">inventory_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">check_inventory</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an inventory assistant responsible for confirming product availability. Finally, please output the inventory check result.&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inventory_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;stock&quot;</span><span class="p">)],</span>
-<span class="p">)</span>
-
-<span class="n">order_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;You are an order assistant responsible for creating orders.</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Inventory result: </span><span class="si">{stock}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Please create an order based on the inventory result and output the order number.&quot;</span>
-    <span class="p">),</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">)],</span>
-<span class="p">)</span>
-
-<span class="n">payment_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">pay_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;You are a payment assistant responsible for completing payments.</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Order result: </span><span class="si">{order}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Please get the order number from the order result and complete the payment.&quot;</span>
-    <span class="p">),</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;payment_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;payment&quot;</span><span class="p">)],</span>
-<span class="p">)</span>
-
-<span class="n">delivery_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">confirm_delivery</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;You are a delivery assistant responsible for confirming delivery information.</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Order result: </span><span class="si">{order}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Payment result: </span><span class="si">{payment}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;Please confirm delivery and repeat the delivery address.&quot;</span>
-    <span class="p">),</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;delivery_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;delivery&quot;</span><span class="p">)],</span>
-<span class="p">)</span>
-
-<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">inventory_agent</span><span class="p">,</span>
-        <span class="n">order_agent</span><span class="p">,</span>
-        <span class="n">payment_agent</span><span class="p">,</span>
-        <span class="n">delivery_agent</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;I want to buy a pair of wireless headphones, quantity 2, please place the order, delivery address: X City, X District, X Road, X No.&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Implementation Notes</strong>:</p>
-<ol>
-<li>
-<p><strong>Extended State Schema</strong>: Added four fields (<code>stock</code>, <code>order</code>, <code>payment</code>, <code>delivery</code>) to the agent's State Schema to store the final output of each agent.</p>
-</li>
-<li>
-<p><strong>Custom Middleware</strong>: Created the <code>ClearAgentContextMiddleware</code> middleware. After each agent finishes, it uses <code>RemoveMessage</code> to clear the context and then writes the final result (<code>final_message.content</code>) to the corresponding field.</p>
-</li>
-<li>
-<p><strong>Dynamic Prompt Formatting</strong>: Uses the <code>format_prompt</code> middleware to splice previous outputs into the <code>system_prompt</code> at runtime as needed.</p>
-</li>
-</ol>
-</details>
 <div class="admonition info">
-<p class="admonition-title">Hint</p>
-<p>For graphs combined sequentially, LangGraph's <code>StateGraph</code> provides <code>add_sequence</code> as a shorthand, which is more suitable for scenarios where nodes are functions (rather than subgraphs).</p>
-<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">AgentState</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add_sequence</span><span class="p">([(</span><span class="s2">&quot;graph1&quot;</span><span class="p">,</span> <span class="n">graph1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph2&quot;</span><span class="p">,</span> <span class="n">graph2</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph3&quot;</span><span class="p">,</span> <span class="n">graph3</span><span class="p">)])</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;__start__&quot;</span><span class="p">,</span> <span class="s2">&quot;graph1&quot;</span><span class="p">)</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-</code></pre></div>
-<p>However, the above writing is still slightly cumbersome. It is more recommended to use <code>create_sequential_pipeline</code>, which can quickly build a serial execution graph with one line of code.</p>
+<p class="admonition-title">Note</p>
+<p>Although LangGraph allows adding agents (sub-graphs) directly as nodes in a graph, this causes the context of the current agent to include the entire execution context of previous agents, which violates best practices for context engineering management. Therefore, it is recommended to wrap agents within nodes and only output the final result.</p>
 </div>
 <h2 id="parallel-orchestration">Parallel Orchestration</h2>
-<p>Parallel Orchestration (Parallel Pipeline) combines multiple state graphs in parallel and executes tasks concurrently to improve efficiency.</p>
-<p>You can use <code>create_parallel_pipeline</code> to combine multiple state graphs in parallel to achieve parallel execution. The parameters accepted by this function are as follows:</p>
+<p>Parallel orchestration combines multiple nodes to execute tasks concurrently, thereby improving execution efficiency.</p>
+<p>You can use <code>create_parallel_graph</code> to combine multiple nodes in a parallel manner to achieve parallel execution. The parameters for this function are as follows:</p>
 <table>
 <thead>
 <tr>
@@ -1809,8 +1653,8 @@ Run the test:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>sub_graphs</code></td>
-<td>A list of state graphs to combine.<br><br><strong>Type</strong>: <code>list[SubGraph]</code><br><strong>Required</strong>: Yes</td>
+<td><code>nodes</code></td>
+<td>The list of nodes to combine, which can be node functions or tuples consisting of a node name and a node function.<br><br><strong>Type</strong>: <code>list[Node]</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>state_schema</code></td>
@@ -1851,8 +1695,8 @@ Run the test:</p>
 </tbody>
 </table>
 <h3 id="typical-application-scenario_1">Typical Application Scenario</h3>
-<p>In the product purchase scenario, users may need multiple queries simultaneously, such as product details, inventory, promotions, and shipping fee estimation, which can be executed in parallel.</p>
-<p>The process is as follows:</p>
+<p>In a product purchase scenario, a user might need multiple queries simultaneously, such as product details, inventory, promotions, and shipping estimates. These can be executed in parallel.</p>
+<p>The flow is as follows:</p>
 <pre class="mermaid"><code>graph LR
     Start([User Request])
 
@@ -1861,7 +1705,7 @@ Run the test:</p>
         Prod[Product Detail Query]
         Inv[Inventory Query]
         Prom[Promotion Calculation]
-        Ship[Shipping Estimation]
+        Ship[Shipping Estimate]
     end
 
     End([Aggregate Results])
@@ -1878,7 +1722,7 @@ Run the test:</p>
 <h3 id="basic-example_1">Basic Example</h3>
 <p>First, create a few tools.</p>
 <details class="example">
-<summary>Reference for tool implementation</summary>
+<summary>Reference for Tool Implementation</summary>
 <div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_product_detail</span><span class="p">(</span><span class="n">product_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Query product details&quot;&quot;&quot;</span>
@@ -1886,7 +1730,7 @@ Run the test:</p>
         <span class="s2">&quot;product_name&quot;</span><span class="p">:</span> <span class="n">product_name</span><span class="p">,</span>
         <span class="s2">&quot;sku&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU-10001&quot;</span><span class="p">,</span>
         <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="mi">299</span><span class="p">,</span>
-        <span class="s2">&quot;highlights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Active Noise Cancellation&quot;</span><span class="p">,</span> <span class="s2">&quot;Bluetooth 5.3&quot;</span><span class="p">,</span> <span class="s2">&quot;30-hour battery life&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;highlights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Active Noise Cancellation&quot;</span><span class="p">,</span> <span class="s2">&quot;Bluetooth 5.3&quot;</span><span class="p">,</span> <span class="s2">&quot;30-hour Battery&quot;</span><span class="p">],</span>
     <span class="p">}</span>
 
 <span class="nd">@tool</span>
@@ -1900,7 +1744,7 @@ Run the test:</p>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;product_name&quot;</span><span class="p">:</span> <span class="n">product_name</span><span class="p">,</span>
         <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="n">quantity</span><span class="p">,</span>
-        <span class="s2">&quot;discounts&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;30 off 300&quot;</span><span class="p">,</span> <span class="s2">&quot;Member 5</span><span class="si">% o</span><span class="s2">ff&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;discounts&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Save 30 on orders over 300&quot;</span><span class="p">,</span> <span class="s2">&quot;Member 5</span><span class="si">% o</span><span class="s2">ff&quot;</span><span class="p">],</span>
         <span class="s2">&quot;estimated_discount&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
     <span class="p">}</span>
 
@@ -1918,7 +1762,7 @@ Run the test:</p>
 <div class="highlight"><pre><span></span><code><span class="n">product_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_product_detail</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a product assistant responsible for parsing user needs and querying product details.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a product assistant responsible for parsing user requests and querying product details.&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;product_agent&quot;</span><span class="p">,</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1934,7 +1778,7 @@ Run the test:</p>
 <span class="n">promotion_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">calculate_promotions</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a promotion assistant responsible for calculating current available promotions and estimated discounts.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a promotion assistant responsible for calculating available discounts and estimated savings.&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;promotion_agent&quot;</span><span class="p">,</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1942,37 +1786,38 @@ Run the test:</p>
 <span class="n">shipping_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">estimate_shipping</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a delivery assistant responsible for estimating shipping fees and delivery time.&quot;</span><span class="p">,</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a delivery assistant responsible for estimating shipping fees and delivery times.&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;shipping_agent&quot;</span><span class="p">,</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Use <code>create_parallel_pipeline</code> to combine the sub-agents.</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_pipeline</span>
+<p>Use <code>create_parallel_graph</code> to complete the orchestration of the parallel state graph.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_graph</span>
 
-<span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">product_agent</span><span class="p">,</span>
-        <span class="n">inventory_agent</span><span class="p">,</span>
-        <span class="n">promotion_agent</span><span class="p">,</span>
-        <span class="n">shipping_agent</span><span class="p">,</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+       <span class="p">(</span> <span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">product_agent</span><span class="p">)),</span>
+       <span class="p">(</span> <span class="s2">&quot;inventory&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">inventory_agent</span><span class="p">)),</span>
+       <span class="p">(</span> <span class="s2">&quot;promotion&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">promotion_agent</span><span class="p">)),</span>
+       <span class="p">(</span> <span class="s2">&quot;shipping&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">shipping_agent</span><span class="p">)),</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
+    <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;parallel_graph&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-Run the test:</p>
+<p>Run a test:</p>
 <div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;I want to buy a pair of wireless headphones, quantity 2, delivery address: X City, X District, X Road, X No.&quot;</span><span class="p">)]}</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;I want to buy a pair of wireless headphones, quantity 2. Delivery address: X City, X District, X Road, No. X&quot;</span><span class="p">)]}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="using-branch-functions-to-specify-parallel-sub-graphs">Using Branch Functions to Specify Parallel Sub-graphs</h3>
-<p>In most scenarios, you may not want all sub-graphs to execute in parallel, but rather execute a subset of sub-graphs based on conditions. In this case, you need to use the <code>branches_fn</code> to specify a branch function. The branch function must return a list of <code>Send</code> objects, where each <code>Send</code> contains the sub-graph name and input.</p>
+<h3 id="using-branch-functions-to-specify-sub-graphs-for-parallel-execution">Using Branch Functions to Specify Sub-graphs for Parallel Execution</h3>
+<p>In some cases, you may not want all nodes to execute in parallel, but rather execute specific nodes in parallel based on conditions. This requires using the <code>branches_fn</code> parameter to specify a branch function. The branch function must return a list of <code>Send</code> objects, where each <code>Send</code> contains the node name and the input payload.</p>
 <h4 id="application-scenario">Application Scenario</h4>
-<p><code>Router</code> is a typical architecture for multi-agent systems: a routing model analyzes user requests and decomposes tasks, then distributes them to several business agents for execution. In the order query scenario, users may care about order status, product information, or refunds simultaneously. The routing model can assign requests to order, product, and refund agents.</p>
+<p><code>Router</code> is a typical architecture for multi-agent systems: a router model analyzes user requests and breaks down tasks, then distributes them to several business agents for execution. In an order query scenario, a user might care about order status, product information, or refunds simultaneously. The router model can distribute requests to order, product, and refund agents.</p>
 <p>First, write the tools.</p>
 <details class="example">
-<summary>Reference for tool implementation</summary>
+<summary>Reference for Tool Implementation</summary>
 <div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_orders</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Query user order list&quot;&quot;&quot;</span>
@@ -2011,12 +1856,12 @@ Run the test:</p>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_shipping_trace</span><span class="p">(</span><span class="n">tracking_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query shipping trajectory&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query logistics trace&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-02 09:10&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Package picked up&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-02 18:45&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;In transit&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-03 11:20&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Arrived at delivery station&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-02 09:10&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Package Picked Up&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-02 18:45&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;In Transit&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-03 11:20&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Arrived at Delivery Station&quot;</span><span class="p">},</span>
         <span class="p">],</span>
     <span class="p">}</span>
 
@@ -2029,13 +1874,13 @@ Run the test:</p>
                 <span class="s2">&quot;product_id&quot;</span><span class="p">:</span> <span class="s2">&quot;P-10001&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Wireless Headphones Pro&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="mi">299</span><span class="p">,</span>
-                <span class="s2">&quot;highlights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Noise Cancellation&quot;</span><span class="p">,</span> <span class="s2">&quot;Bluetooth 5.3&quot;</span><span class="p">,</span> <span class="s2">&quot;30h Battery&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;highlights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Noise Cancellation&quot;</span><span class="p">,</span> <span class="s2">&quot;Bluetooth 5.3&quot;</span><span class="p">,</span> <span class="s2">&quot;30-hour Battery&quot;</span><span class="p">],</span>
             <span class="p">},</span>
             <span class="p">{</span>
                 <span class="s2">&quot;product_id&quot;</span><span class="p">:</span> <span class="s2">&quot;P-10002&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Wireless Headphones Lite&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="mi">199</span><span class="p">,</span>
-                <span class="s2">&quot;highlights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Lightweight&quot;</span><span class="p">,</span> <span class="s2">&quot;Low Latency&quot;</span><span class="p">,</span> <span class="s2">&quot;24h Battery&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;highlights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Lightweight&quot;</span><span class="p">,</span> <span class="s2">&quot;Low Latency&quot;</span><span class="p">,</span> <span class="s2">&quot;24-hour Battery&quot;</span><span class="p">],</span>
             <span class="p">},</span>
         <span class="p">],</span>
     <span class="p">}</span>
@@ -2054,7 +1899,7 @@ Run the test:</p>
 
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_inventory</span><span class="p">(</span><span class="n">product_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check inventory&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query inventory&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;product_name&quot;</span><span class="p">:</span> <span class="n">product_name</span><span class="p">,</span> <span class="s2">&quot;in_stock&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;available&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">}</span>
 
 <span class="nd">@tool</span>
@@ -2075,7 +1920,7 @@ Run the test:</p>
         <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Processing&quot;</span><span class="p">,</span>
         <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-03 12:05&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Submitted&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-03 12:20&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Customer Service Reviewing&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-03 12:20&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;CS Reviewing&quot;</span><span class="p">},</span>
         <span class="p">],</span>
         <span class="s2">&quot;estimated_days&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
     <span class="p">}</span>
@@ -2085,17 +1930,17 @@ Run the test:</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;View refund policy&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;window_days&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-        <span class="s2">&quot;requirements&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Item in good condition&quot;</span><span class="p">,</span> <span class="s2">&quot;All accessories included&quot;</span><span class="p">,</span> <span class="s2">&quot;Provide order number&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Some promotional items do not support no-reason refunds&quot;</span><span class="p">,</span> <span class="s2">&quot;Arrival time depends on payment channel&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;requirements&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Product in good condition&quot;</span><span class="p">,</span> <span class="s2">&quot;All accessories included&quot;</span><span class="p">,</span> <span class="s2">&quot;Provide order number&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Some promotional items do not support no-reason returns&quot;</span><span class="p">,</span> <span class="s2">&quot;Refund arrival time depends on payment channel&quot;</span><span class="p">],</span>
     <span class="p">}</span>
 </code></pre></div>
 </details>
 <p>Then create the corresponding sub-agents.</p>
 <div class="highlight"><pre><span></span><code><span class="n">ORDER_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;You are an order management assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;You can use tools to query order lists, order details, and shipping trajectories.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Prioritize using tools to get information, then draw conclusions based on the tool results.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Output requirement: Answer in Chinese, clear structure, list order information in bullet points if necessary.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;You are an Order Management Assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;You can use tools to query order lists, order details, and logistics traces.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Prioritize using tools to obtain information before giving conclusions based on the results.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Output Requirement: Answer in Chinese, with clear structure, listing order information in bullet points if necessary.</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 
 <span class="n">order_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2107,11 +1952,11 @@ Run the test:</p>
 
 
 <span class="n">PRODUCT_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;You are a product management assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;You are a Product Management Assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;You can use tools to search products, view product details, and check inventory.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Prioritize using tools to get information, then give suggestions based on the tool results.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;When user needs are unclear, ask a clarification question first (e.g., category/budget/usage).</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Output requirement: Answer in Chinese and provide actionable next steps.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Prioritize using tools to obtain information before giving suggestions based on the results.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;If the user&#39;s needs are unclear, ask a clarifying question first (e.g., category/budget/usage).</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Output Requirement: Answer in Chinese and provide actionable next steps.</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 
 
@@ -2124,10 +1969,10 @@ Run the test:</p>
 
 
 <span class="n">REFUND_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;You are a refund management assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;You are a Refund Management Assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;You can use tools to initiate refunds, query refund status, and view refund policies.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Prioritize using tools to get information; if the user is missing key fields (e.g., order number), ask for them first.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Output requirement: Answer in Chinese, clearly informing about refund progress/required materials/estimated time.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Prioritize using tools to obtain information; if the user is missing key fields (e.g., order number), ask follow-up questions first.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Output Requirement: Answer in Chinese, clearly stating refund progress/required materials/estimated time.</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 
 
@@ -2138,14 +1983,13 @@ Run the test:</p>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refund_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Next, write the branch function: The routing model returns the names of the agents to execute and the corresponding task descriptions based on the request.</p>
+<p>Next, write the branch function: the router model returns the names of the agents to execute and the corresponding task descriptions based on the request.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
-
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RouterInput</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
@@ -2157,17 +2001,17 @@ Run the test:</p>
 
 
 <span class="n">ROUTER_SYSTEM_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;You are a Router model, only responsible for splitting user questions and distributing them to appropriate business sub-agents.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;You are a Router model, responsible only for splitting user questions and distributing them to the appropriate business sub-agents.</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;The available business domains are only: order (orders), product (products), refund (refunds).</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;You must output a classifications list (used to call multiple sub-agents in parallel).</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;Rules:</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;1) source must be one of the three above;</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;2) query must be a directly executable task description sent to that sub-agent;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;2) query must be a task description sent to that sub-agent that can be directly executed;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;3) If a user sentence involves multiple business domains simultaneously (e.g., &#39;check order&#39; + &#39;look at product&#39; + &#39;ask refund&#39;), it must be split into multiple classifications for parallel execution;</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;4) If unable to determine, prioritize product and pass the question as is.</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Example A: User: &#39;Check logistics for ORD-1 and see if these headphones are in stock&#39; -&gt; Return 2 items: order(query logistics) + product(query inventory).</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;4) If unable to judge, prioritize product and pass the question to it as is.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Example A: User: &#39;Check logistics for ORD-1 and see if these headphones are in stock&#39; -&gt; Return 2 items: order(check logistics) + product(check inventory).</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;Example B: User: &#39;I want to return ORD-1, how long for refund&#39; -&gt; Return 1 item: refund(initiate/query refund).</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;Example C: User: &#39;I want to know the specs of these headphones&#39; -&gt; Return 1 item: product(query details).</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;Example C: User: &#39;I want to know the specs of this headphone&#39; -&gt; Return 1 item: product(query details).</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 
 
@@ -2189,7 +2033,7 @@ Run the test:</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">branch_fn</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RouterState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Send</span><span class="p">]:</span>
     <span class="n">structured_llm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">ClassificationResult</span><span class="p">)</span>
 
-    <span class="n">query</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span>
     <span class="n">classification_result</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
         <span class="n">ClassificationResult</span><span class="p">,</span>
         <span class="n">structured_llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
@@ -2209,42 +2053,41 @@ Run the test:</p>
         <span class="n">source</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;product&quot;</span><span class="p">}:</span>
             <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
-        <span class="n">sub_query</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="n">query</span>
-        <span class="n">sends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">_agent&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">sub_query</span><span class="p">)]}))</span>
+        <span class="n">sends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">))]}))</span>
     <span class="k">return</span> <span class="n">sends</span>
 </code></pre></div>
-<p>Finally, use <code>create_parallel_pipeline</code> to create the parallel agent and pass in the branch function.</p>
-<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">order_agent</span><span class="p">,</span>
-        <span class="n">product_agent</span><span class="p">,</span>
-        <span class="n">refund_agent</span><span class="p">,</span>
+<p>Finally, use <code>create_parallel_graph</code> to complete the orchestration of the parallel state graph and pass in the branch function.</p>
+<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">order_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">refund_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">product_agent</span><span class="p">)),</span>
     <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">RouterState</span><span class="p">,</span>
-    <span class="n">input_schema</span><span class="o">=</span><span class="n">RouterInput</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
+    <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;parallel_graph&quot;</span><span class="p">,</span>
     <span class="n">branches_fn</span><span class="o">=</span><span class="n">branch_fn</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Run the test:</p>
+<p>Run tests:</p>
 <div class="highlight"><pre><span></span><code><span class="n">response_single</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello, I want to check the products I purchased before&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello, I want to query a product I purchased before&quot;</span><span class="p">)],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response_single</span><span class="p">)</span>
 
 <span class="n">response_parallel</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Recommend a wireless headset suitable for commuting and check the stock; also, tell me what is your refund policy?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Recommend a pair of wireless headphones suitable for commuting and check inventory; meanwhile, tell me about your product refund policy?&quot;</span><span class="p">)],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response_parallel</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
+<p class="admonition-title">Hint</p>
 <ul>
-<li><strong>When <code>branches_fn</code> parameter is not passed</strong>: All sub-graphs will be executed in parallel.</li>
-<li><strong>When <code>branches_fn</code> parameter is passed</strong>: Which sub-graphs are executed is determined by the return value of this function.</li>
+<li><strong>When <code>branches_fn</code> parameter is NOT provided</strong>: All nodes will execute in parallel.</li>
+<li><strong>When <code>branches_fn</code> parameter IS provided</strong>: The execution of nodes is determined by the return value of this function.</li>
 </ul>
 </div>
 

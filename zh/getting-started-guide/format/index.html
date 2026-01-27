@@ -993,14 +993,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adavance-guide/pipeline/" class="md-nav__link">
+      <a href="../../adavance-guide/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    状态图编排
+    状态图构建
   
 
     
@@ -1250,14 +1250,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/pipeline/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    状态图编排模块 API参考
+    状态图构建模块 API参考
   
 
     
@@ -1502,23 +1502,45 @@
 <h2 id="_3">使用示例</h2>
 <h3 id="message">Message</h3>
 <h4 id="_4">代码示例</h4>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.documents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.message_convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_sequence</span>
 
 <span class="n">formated1</span> <span class="o">=</span> <span class="n">format_sequence</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello1&quot;</span><span class="p">),</span>
-        <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello2&quot;</span><span class="p">),</span>
-        <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello3&quot;</span><span class="p">),</span>
+        <span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你是一个天气查询助手&quot;</span><span class="p">),</span>
+        <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查询一下伦敦和旧金山的天气&quot;</span><span class="p">),</span>
+        <span class="n">AIMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;我将使用get_weather工具查询这两个城市的天气&quot;</span><span class="p">,</span>
+            <span class="n">tool_calls</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_weather&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;伦敦&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_weather&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;旧金山&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;456&quot;</span><span class="p">},</span>
+            <span class="p">],</span>
+        <span class="p">),</span>
+        <span class="n">ToolMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;伦敦的天气是25摄氏度，旧金山的天气是22摄氏度&quot;</span><span class="p">,</span>
+            <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">ToolMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;伦敦的天气是25摄氏度，旧金山的天气是22摄氏度&quot;</span><span class="p">,</span>
+            <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;456&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">AIMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;根据工具调用的结果，伦敦的天气是25摄氏度，旧金山的天气是22摄氏度&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">formated1</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="_5">输出结果</h4>
-<div class="highlight"><pre><span></span><code>-Hello1
--Hello2
--Hello3
+<div class="highlight"><pre><span></span><code>-System: 你是一个天气查询助手
+-Human: 查询一下伦敦和旧金山的天气
+-AI: 我将使用get_weather工具查询这两个城市的天气
+&lt;tool_call&gt;get_weather&lt;/tool_call&gt;
+&lt;tool_call&gt;get_weather&lt;/tool_call&gt;
+-Tool: 伦敦的天气是25摄氏度，旧金山的天气是22摄氏度
+-Tool: 伦敦的天气是25摄氏度，旧金山的天气是22摄氏度
+-AI: 根据工具调用的结果，伦敦的天气是25摄氏度，旧金山的天气是22摄氏度
 </code></pre></div>
 <h3 id="document">Document</h3>
 <h4 id="_6">代码示例</h4>

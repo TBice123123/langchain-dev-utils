@@ -14,7 +14,7 @@
         <link rel="prev" href="../multi-agent/">
       
       
-        <link rel="next" href="../pipeline/">
+        <link rel="next" href="../graph/">
       
       
         
@@ -1166,14 +1166,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../pipeline/" class="md-nav__link">
+      <a href="../graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    状态图编排
+    状态图构建
   
 
     
@@ -1423,14 +1423,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/pipeline/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    状态图编排模块 API参考
+    状态图构建模块 API参考
   
 
     
@@ -2095,7 +2095,7 @@
 <p>通过 <code>ModelRouterMiddleware</code>，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。</p>
 <div class="admonition note">
 <p class="admonition-title">并行执行</p>
-<p>采用中间件实现模型路由，每次仅会分配一个任务进行执行，如果你想要将任务分解为多个子任务由多个模型进行并行执行，请参考<a href="../pipeline/">状态图编排</a>。</p>
+<p>采用中间件实现模型路由，每次仅会分配一个任务进行执行，如果你想要将任务分解为多个子任务由多个模型进行并行执行，请参考<a href="../graph/">状态图构建</a>。</p>
 </div>
 <h2 id="_11">智能体交接</h2>
 <p><code>HandoffAgentMiddleware</code> 是一个用于<strong>在多个子 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>

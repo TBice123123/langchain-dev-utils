@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/pipeline/">
+        <link rel="canonical" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/graph/">
       
       
         <link rel="prev" href="../middleware/">
@@ -18,7 +18,7 @@
       
       
         
-          <link rel="alternate" href="../../../adavance-guide/pipeline/" hreflang="en">
+          <link rel="alternate" href="../../../adavance-guide/graph/" hreflang="en">
         
           <link rel="alternate" href="./" hreflang="zh">
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>状态图编排 - Langchain Dev Utils</title>
+        <title>状态图构建 - Langchain Dev Utils</title>
       
     
     
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              状态图编排
+              状态图构建
             
           </span>
         </div>
@@ -161,7 +161,7 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../../adavance-guide/pipeline/" hreflang="en" class="md-select__link">
+            <a href="../../../adavance-guide/graph/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -817,7 +817,7 @@
   <span class="md-ellipsis">
     
   
-    状态图编排
+    状态图构建
   
 
     
@@ -835,7 +835,7 @@
   <span class="md-ellipsis">
     
   
-    状态图编排
+    状态图构建
   
 
     
@@ -905,24 +905,13 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        上下文工程优化
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         并行编排
@@ -934,7 +923,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         典型应用场景
@@ -945,7 +934,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         基础示例
@@ -956,7 +945,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         使用分支函数指定并行执行的子图
@@ -968,7 +957,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         应用场景
@@ -1233,14 +1222,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/pipeline/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    状态图编排模块 API参考
+    状态图构建模块 API参考
   
 
     
@@ -1359,24 +1348,13 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        上下文工程优化
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         并行编排
@@ -1388,7 +1366,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         典型应用场景
@@ -1399,7 +1377,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         基础示例
@@ -1410,7 +1388,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         使用分支函数指定并行执行的子图
@@ -1422,7 +1400,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         应用场景
@@ -1462,34 +1440,34 @@
   
 
 
-<h1 id="_1">状态图编排</h1>
+<h1 id="_1">状态图构建</h1>
 <h2 id="_2">概述</h2>
-<p>在 LangGraph 中，状态图编排是构建复杂 AI 应用的关键能力。通过按特定模式组合多个状态图，可以形成强大且逻辑清晰的工作流。</p>
-<p>本库提供两种最常见的编排方式：</p>
+<p>LangGraph 是 LangChain 官方推出的编排框架，用于搭建复杂工作流。但直接使用 LangGraph 的门槛较高；因此本库提供两个预置函数，分别用于构建顺序执行或并行执行的状态图。开发者只需编写业务节点，其余的边连接、图编译与状态管理均由函数自动完成。</p>
+<p>具体的两个函数如下：</p>
 <table>
 <thead>
 <tr>
-<th>编排方式</th>
+<th>函数名</th>
 <th>功能描述</th>
 <th>适用场景</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>顺序编排</strong></td>
-<td>按顺序组合多个状态图，形成顺序工作流</td>
+<td><strong>create_sequential_graph</strong></td>
+<td>按顺序组合多个节点，形成顺序执行状态图</td>
 <td>任务需按步骤执行且依赖前一步输出</td>
 </tr>
 <tr>
-<td><strong>并行编排</strong></td>
-<td>并行组合多个状态图，形成并行工作流</td>
+<td><strong>create_parallel_graph</strong></td>
+<td>并行组合多个节点，形成并行执行状态图</td>
 <td>多个任务相互独立，可同时执行以提高效率</td>
 </tr>
 </tbody>
 </table>
 <h2 id="_3">顺序编排</h2>
-<p>顺序编排（Sequential Pipeline）将复杂任务拆解为连续、有序的子任务，并交由不同的专门化智能体依次处理。</p>
-<p>使用 <code>create_sequential_pipeline</code> 可将多个状态图以顺序方式组合。对于该函数，所接收的参数如下：</p>
+<p>顺序编排将复杂任务拆解为连续、有序的子任务。在 LangGraph 中，每个子任务对应一个状态图节点。</p>
+<p>使用 <code>create_sequential_graph</code> 可将多个节点以顺序方式组合。对于该函数，所接收的参数如下：</p>
 <table>
 <thead>
 <tr>
@@ -1499,8 +1477,8 @@
 </thead>
 <tbody>
 <tr>
-<td><code>sub_graphs</code></td>
-<td>要组合的状态图列表。<br><br><strong>类型</strong>: <code>list[SubGraph]</code><br><strong>必填</strong>: 是</td>
+<td><code>nodes</code></td>
+<td>要组合的节点列表，可为节点函数或由节点名称与节点函数组成的二元组。<br><br><strong>类型</strong>: <code>list[Node]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>state_schema</code></td>
@@ -1548,10 +1526,11 @@
 
     Start --&gt; Inv --&gt; Ord --&gt; Pay --&gt; Del --&gt; End</code></pre>
 <p>该流程环环相扣，顺序不可颠倒。</p>
-<p>其中，库存确认、创建订单、完成支付、确认发货四个步骤分别由专门智能体处理。通过 <code>create_sequential_pipeline</code> 将四个状态图顺序编排，即可形成高度自动化、职责清晰的商品购买工作流。</p>
+<p>其中这四个环节（库存确认、创建订单、完成支付、确认发货）可抽象为独立节点，并由专属智能体负责执行。
+使用 <code>create_sequential_graph</code> 将四个节点顺序编排，即可形成高度自动化、职责清晰的商品购买工作流。</p>
 <h3 id="_5">基础示例</h3>
-<p>下面示例展示如何用 <code>create_sequential_pipeline</code> 构建商品购买的顺序工作流：</p>
-<p>先创建对话模型对象。这里以接入本地 vllm 部署的 <code>qwen3-4b</code> 为例，其接口与 OpenAI 兼容，因此可直接用 <code>create_openai_compatible_model</code> 构建模型类。</p>
+<p>下面示例展示如何用 <code>create_sequential_graph</code> 构建商品购买的顺序工作流：</p>
+<p>先创建对话模型对象。这里以接入本地 vLLM 部署的 <code>qwen3-4b</code> 为例，其接口与 OpenAI 兼容，因此可直接用 <code>create_openai_compatible_model</code> 构建模型类。</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -1590,216 +1569,82 @@
 </code></pre></div>
 </details>
 <p>然后创建对应的四个子智能体。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
-
-<span class="n">inventory_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">check_inventory</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是库存助手，负责确认商品是否有货。&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inventory_agent&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">order_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是下单助手，负责创建订单。&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_agent&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">payment_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">pay_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是支付助手，负责完成支付。&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;payment_agent&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">delivery_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">confirm_delivery</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是发货助手，负责确认发货信息。&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;delivery_agent&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<p>最后使用 <code>create_sequential_pipeline</code> 将这四个智能体按顺序编排。</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
-
-<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">inventory_agent</span><span class="p">,</span>
-        <span class="n">order_agent</span><span class="p">,</span>
-        <span class="n">payment_agent</span><span class="p">,</span>
-        <span class="n">delivery_agent</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-运行测试：</p>
-<div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;我要买一副无线耳机，数量2，请下单，收货地址X市X区X路X号&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="_6">上下文工程优化</h3>
-<p>该示例会把前面所有智能体的完整上下文依次传给当前智能体，可能造成上下文膨胀，影响性能和效果。</p>
-<p>可采用以下方案精简上下文：</p>
-<table>
-<thead>
-<tr>
-<th>方案</th>
-<th>描述</th>
-<th>优点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>使用中间件</strong></td>
-<td>使用 <code>create_agent</code> 配合中间件，仅抽取并传递必要信息</td>
-<td>实现简单，代码改动小</td>
-</tr>
-<tr>
-<td><strong>自定义状态图</strong></td>
-<td>基于 <code>LangGraph</code> 自定义状态图，显式控制状态字段与消息流动</td>
-<td>灵活性高，可精确控制</td>
-</tr>
-</tbody>
-</table>
-<details class="example">
-<summary>点击查看利用中间件解决的参考代码</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMiddleware</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemoveMessage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runtime</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PurchaseState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">stock</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">order</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">payment</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">delivery</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ClearAgentContextMiddleware</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
-    <span class="n">state_schema</span> <span class="o">=</span> <span class="n">PurchaseState</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_save_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result_save_key</span> <span class="o">=</span> <span class="n">result_save_key</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">after_agent</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">PurchaseState</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Runtime</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">final_message</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">update_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_save_key</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="n">RemoveMessage</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="p">],</span>
-            <span class="n">update_key</span><span class="p">:</span> <span class="n">final_message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
-        <span class="p">}</span>
-
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
 
 <span class="n">inventory_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">check_inventory</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是库存助手，负责确认商品是否有货。最终请输出库存查询结果。&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inventory_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;stock&quot;</span><span class="p">)],</span>
+
 <span class="p">)</span>
 
 <span class="n">order_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;你是下单助手，负责创建订单。</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;库存结果：</span><span class="si">{stock}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;请基于库存结果创建订单，并输出订单号。&quot;</span>
-    <span class="p">),</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">)],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是下单助手，负责创建订单。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;order_agent&quot;</span>
 <span class="p">)</span>
 
 <span class="n">payment_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">pay_order</span><span class="p">],</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;你是支付助手，负责完成支付。</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;订单结果：</span><span class="si">{order}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;请从订单结果中获取订单号并完成支付。&quot;</span>
-    <span class="p">),</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;payment_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;payment&quot;</span><span class="p">)],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是支付助手，负责完成支付。&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;payment_agent&quot;</span>
 <span class="p">)</span>
 
 <span class="n">delivery_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">confirm_delivery</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;你是发货助手，负责确认发货信息。</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;订单结果：</span><span class="si">{order}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;支付结果：</span><span class="si">{payment}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;请确认发货并复述收货地址。&quot;</span>
+        <span class="s2">&quot;你是发货助手，负责确认发货信息后安排发货。&quot;</span>
     <span class="p">),</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;delivery_agent&quot;</span><span class="p">,</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
-    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">,</span> <span class="n">ClearAgentContextMiddleware</span><span class="p">(</span><span class="s2">&quot;delivery&quot;</span><span class="p">)],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span>
 <span class="p">)</span>
+</code></pre></div>
+接下来编写一个工具函数，用于创建调用智能体的节点。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.state</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompiledStateGraph</span>
 
-<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">inventory_agent</span><span class="p">,</span>
-        <span class="n">order_agent</span><span class="p">,</span>
-        <span class="n">payment_agent</span><span class="p">,</span>
-        <span class="n">delivery_agent</span><span class="p">,</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_call_agent_node</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">CompiledStateGraph</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_agent</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]})</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)]}</span>
+    <span class="k">return</span> <span class="n">call_agent</span>
+</code></pre></div>
+<p>最后使用 <code>create_sequential_graph</code> 将这四个节点按顺序编排。</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_graph</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;inventory&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">inventory_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">order_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;payment&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">payment_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;delivery&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">delivery_agent</span><span class="p">)),</span>
     <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">PurchaseState</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span>
 <span class="p">)</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+</code></pre></div>
+运行测试：</p>
+<div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;我要买一副无线耳机，数量2，请下单，收货地址X市X区X路X号&quot;</span><span class="p">)</span>
+            <span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;我要买一副无线耳机，数量2，请下单，收货地址是X市X区X路X号&quot;</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>实现说明</strong>：</p>
-<ol>
-<li>
-<p><strong>扩展状态模式</strong>：在智能体的 State Schema 中新增 <code>stock</code>、<code>order</code>、<code>payment</code>、<code>delivery</code> 四个字段，用于保存各智能体的最终输出。</p>
-</li>
-<li>
-<p><strong>自定义中间件</strong>：创建 <code>ClearAgentContextMiddleware</code> 中间件，在每个智能体结束后先用 <code>RemoveMessage</code> 清理上下文，再将最终结果（<code>final_message.content</code>）写入对应字段。</p>
-</li>
-<li>
-<p><strong>动态提示格式化</strong>：使用 <code>format_prompt</code> 中间件，在运行时按需将前置输出拼入 <code>system_prompt</code>。</p>
-</li>
-</ol>
-</details>
 <div class="admonition info">
-<p class="admonition-title">提示</p>
-<p>对于串行组合的图，LangGraph 的 <code>StateGraph</code> 提供 <code>add_sequence</code> 作为简写，更适合节点为函数（而非子图）的场景。</p>
-<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">AgentState</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add_sequence</span><span class="p">([(</span><span class="s2">&quot;graph1&quot;</span><span class="p">,</span> <span class="n">graph1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph2&quot;</span><span class="p">,</span> <span class="n">graph2</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;graph3&quot;</span><span class="p">,</span> <span class="n">graph3</span><span class="p">)])</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;__start__&quot;</span><span class="p">,</span> <span class="s2">&quot;graph1&quot;</span><span class="p">)</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-</code></pre></div>
-<p>但上述写法仍略显繁琐，更推荐使用 <code>create_sequential_pipeline</code>，一行代码即可快速构建串行执行图。</p>
+<p class="admonition-title">注意</p>
+<p>虽然 LangGraph 可直接将智能体（子图）作为节点加入图中，但这样会导致当前智能体的上下文中包含先前智能体的全部运行上下文，违背上下文工程管理的最佳实践。因此推荐将智能体封装在节点内部，仅输出最终结果。</p>
 </div>
-<h2 id="_7">并行编排</h2>
-<p>并行编排（Parallel Pipeline）将多个状态图并行组合，并发执行各任务，从而提高执行效率。</p>
-<p>使用 <code>create_parallel_pipeline</code> 可将多个状态图以并行方式组合，实现并行执行。对于该函数，所接收的参数如下：</p>
+<h2 id="_6">并行编排</h2>
+<p>并行编排将多个节点并行组合，并发执行各任务，从而提高执行效率。</p>
+<p>使用 <code>create_parallel_graph</code> 可将多个节点以并行方式组合，实现并行执行。对于该函数，所接收的参数如下：</p>
 <table>
 <thead>
 <tr>
@@ -1809,8 +1654,8 @@
 </thead>
 <tbody>
 <tr>
-<td><code>sub_graphs</code></td>
-<td>要组合的状态图列表。<br><br><strong>类型</strong>: <code>list[SubGraph]</code><br><strong>必填</strong>: 是</td>
+<td><code>nodes</code></td>
+<td>要组合的节点列表，可为节点函数或由节点名称与节点函数组成的二元组。<br><br><strong>类型</strong>: <code>list[Node]</code><br><strong>必填</strong>: 是</td>
 </tr>
 <tr>
 <td><code>state_schema</code></td>
@@ -1850,7 +1695,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_8">典型应用场景</h3>
+<h3 id="_7">典型应用场景</h3>
 <p>在商品购买场景中，用户可能同时需要多种查询，例如商品详情、库存、优惠与运费估算，可并行执行。</p>
 <p>流程如下：</p>
 <pre class="mermaid"><code>graph LR
@@ -1875,7 +1720,7 @@
     Inv --&gt; End
     Prom --&gt; End
     Ship --&gt; End</code></pre>
-<h3 id="_9">基础示例</h3>
+<h3 id="_8">基础示例</h3>
 <p>先创建几个工具。</p>
 <details class="example">
 <summary>工具的实现参考</summary>
@@ -1947,17 +1792,18 @@
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>用 <code>create_parallel_pipeline</code> 组合子智能体。</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_pipeline</span>
+<p>用 <code>create_parallel_graph</code> 完成并行状态图的编排。</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_graph</span>
 
-<span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">product_agent</span><span class="p">,</span>
-        <span class="n">inventory_agent</span><span class="p">,</span>
-        <span class="n">promotion_agent</span><span class="p">,</span>
-        <span class="n">shipping_agent</span><span class="p">,</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+       <span class="p">(</span> <span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">product_agent</span><span class="p">)),</span>
+       <span class="p">(</span> <span class="s2">&quot;inventory&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">inventory_agent</span><span class="p">)),</span>
+       <span class="p">(</span> <span class="s2">&quot;promotion&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">promotion_agent</span><span class="p">)),</span>
+       <span class="p">(</span> <span class="s2">&quot;shipping&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">shipping_agent</span><span class="p">)),</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
+    <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;parallel_graph&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 运行测试：</p>
@@ -1966,9 +1812,9 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="_10">使用分支函数指定并行执行的子图</h3>
-<p>在多数场景下，不希望所有子图都并行执行，而是按条件并行部分子图。此时需使用 <code>branches_fn</code> 指定分支函数。分支函数需返回 <code>Send</code> 列表，每个 <code>Send</code> 包含子图名称与输入。</p>
-<h4 id="_11">应用场景</h4>
+<h3 id="_9">使用分支函数指定并行执行的子图</h3>
+<p>有些情况下，不希望所有节点都并行执行，而是按条件并行部分节点。此时需使用 <code>branches_fn</code> 指定分支函数。分支函数需返回 <code>Send</code> 列表，每个 <code>Send</code> 包含节点名称与输入。</p>
+<h4 id="_10">应用场景</h4>
 <p><code>Router</code> 是多智能体系统的典型架构：由路由模型根据用户请求进行需求分析与任务拆解，再分发给若干业务智能体执行。在订单查询场景中，用户可能同时关心订单状态、商品信息或退款，此时可由路由模型将请求分配给订单、商品、退款等智能体。</p>
 <p>先编写工具。</p>
 <details class="example">
@@ -2138,14 +1984,13 @@
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refund_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>再编写分支函数：由路由模型根据请求返回要执行的智能体名称及对应任务描述。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
-
+<p>再编写分支函数：由路由模型根据请求返回要执行的智能体名称及对应的任务描述。</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RouterInput</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
@@ -2189,7 +2034,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">branch_fn</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RouterState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Send</span><span class="p">]:</span>
     <span class="n">structured_llm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">ClassificationResult</span><span class="p">)</span>
 
-    <span class="n">query</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span>
     <span class="n">classification_result</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
         <span class="n">ClassificationResult</span><span class="p">,</span>
         <span class="n">structured_llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
@@ -2209,33 +2054,32 @@
         <span class="n">source</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;product&quot;</span><span class="p">}:</span>
             <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
-        <span class="n">sub_query</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="n">query</span>
-        <span class="n">sends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">_agent&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">sub_query</span><span class="p">)]}))</span>
+        <span class="n">sends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">))]}))</span>
     <span class="k">return</span> <span class="n">sends</span>
 </code></pre></div>
-<p>最终使用 <code>create_parallel_agent</code> 创建并行智能体，并传入分支函数。</p>
-<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_pipeline</span><span class="p">(</span>
-    <span class="n">sub_graphs</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">order_agent</span><span class="p">,</span>
-        <span class="n">product_agent</span><span class="p">,</span>
-        <span class="n">refund_agent</span><span class="p">,</span>
+最后使用 <code>create_parallel_graph</code> 完成并行状态图的编排，并传入分支函数。</p>
+<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">order_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">refund_agent</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">create_call_agent_node</span><span class="p">(</span><span class="n">product_agent</span><span class="p">)),</span>
     <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">RouterState</span><span class="p">,</span>
-    <span class="n">input_schema</span><span class="o">=</span><span class="n">RouterInput</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
+    <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;parallel_graph&quot;</span><span class="p">,</span>
     <span class="n">branches_fn</span><span class="o">=</span><span class="n">branch_fn</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>运行测试：</p>
 <div class="highlight"><pre><span></span><code><span class="n">response_single</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;你好，我要查询一下之前购买的产品&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;你好，我要查询一下之前购买的产品&quot;</span><span class="p">)],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response_single</span><span class="p">)</span>
 
 <span class="n">response_parallel</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？&quot;</span><span class="p">)],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response_parallel</span><span class="p">)</span>
@@ -2243,8 +2087,8 @@
 <div class="admonition tip">
 <p class="admonition-title">提示</p>
 <ul>
-<li><strong>未传入 <code>branches_fn</code> 参数时</strong>：所有子图都会并行执行</li>
-<li><strong>传入 <code>branches_fn</code> 参数时</strong>：执行哪些子图由该函数的返回值决定</li>
+<li><strong>未传入 <code>branches_fn</code> 参数时</strong>：所有节点都会并行执行</li>
+<li><strong>传入 <code>branches_fn</code> 参数时</strong>：执行哪些节点由该函数的返回值决定</li>
 </ul>
 </div>
 
