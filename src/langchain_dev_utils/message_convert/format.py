@@ -10,6 +10,39 @@ from langchain_core.messages import (
 )
 
 
+def _format_message(item: BaseMessage) -> str:
+    if (
+        isinstance(item, HumanMessage)
+        or isinstance(item, SystemMessage)
+        or isinstance(item, ToolMessage)
+    ):
+        text = "\n".join(
+            [block["text"] for block in item.content_blocks if block["type"] == "text"]
+        )
+
+        role = item.type.title()
+        return f"{role}: {text}"
+    elif isinstance(item, AIMessage):
+        content = (
+            "\n".join(
+                [
+                    block["text"]
+                    for block in item.content_blocks
+                    if block["type"] == "text"
+                ]
+            )
+            or ""
+        )
+
+        for tool_call in item.tool_calls:
+            content += f"\n<tool_call>{tool_call['name']}</tool_call>"
+        return f"AI: {content}"
+    else:
+        raise ValueError(
+            f"Unsupported message type: {type(item)},expected HumanMessage, AIMessage, SystemMessage, ToolMessage"
+        )
+
+
 def format_sequence(
     inputs: Union[Sequence[Document], Sequence[BaseMessage], Sequence[str]],
     separator: str = "-",
@@ -57,7 +90,7 @@ def format_sequence(
         if isinstance(
             input_item, (HumanMessage, AIMessage, SystemMessage, ToolMessage)
         ):
-            outputs.append(input_item.content)
+            outputs.append(_format_message(input_item))
         elif isinstance(input_item, Document):
             outputs.append(input_item.page_content)
         elif isinstance(input_item, str):

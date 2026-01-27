@@ -1,12 +1,13 @@
-import asyncio
-from typing import Any, Awaitable, Callable, Optional
+import inspect
+from typing import Any, Awaitable, Callable, Optional, cast
 
 from langchain.tools import ToolRuntime
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.tools import BaseTool, StructuredTool
 from langgraph.graph.state import CompiledStateGraph
 
 from langchain_dev_utils.message_convert import format_sequence
+from langchain_dev_utils.tool_calling import parse_tool_calling
 
 
 def _process_input(request: str, runtime: ToolRuntime) -> str:
@@ -17,6 +18,18 @@ def _process_output(
     request: str, response: dict[str, Any], runtime: ToolRuntime
 ) -> Any:
     return response["messages"][-1].content
+
+
+def get_subagent_name(runtime: ToolRuntime) -> str:
+    messages = runtime.state.get("messages", [])
+    last_ai_msg = cast(
+        AIMessage,
+        next((msg for msg in reversed(messages) if isinstance(msg, AIMessage)), None),
+    )
+
+    _, args = parse_tool_calling(last_ai_msg, first_tool_call_only=True)
+    args = cast(dict[str, Any], args)
+    return args["agent_name"]
 
 
 def wrap_agent_as_tool(
@@ -115,7 +128,7 @@ def wrap_agent_as_tool(
         request: str,
         runtime: ToolRuntime,
     ):
-        if asyncio.iscoroutinefunction(process_input_async):
+        if inspect.iscoroutinefunction(process_input_async):
             _processed_input = await process_input_async(request, runtime)
         else:
             _processed_input = (
@@ -135,7 +148,7 @@ def wrap_agent_as_tool(
 
         response = await agent.ainvoke(agent_input)
 
-        if asyncio.iscoroutinefunction(process_output_async):
+        if inspect.iscoroutinefunction(process_output_async):
             response = await process_output_async(request, response, runtime)
         else:
             response = (
@@ -277,7 +290,7 @@ def wrap_all_agents_as_tool(
         if agent_name not in agents_map:
             raise ValueError(f"Agent {agent_name} not found")
 
-        if asyncio.iscoroutinefunction(process_input_async):
+        if inspect.iscoroutinefunction(process_input_async):
             _processed_input = await process_input_async(description, runtime)
         else:
             _processed_input = (
@@ -297,7 +310,7 @@ def wrap_all_agents_as_tool(
 
         response = await agents_map[agent_name].ainvoke(agent_input)
 
-        if asyncio.iscoroutinefunction(process_output_async):
+        if inspect.iscoroutinefunction(process_output_async):
             response = await process_output_async(description, response, runtime)
         else:
             response = (

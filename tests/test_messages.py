@@ -1,6 +1,12 @@
 import pytest
 from langchain_core.documents import Document
-from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage
+from langchain_core.messages import (
+    AIMessage,
+    AIMessageChunk,
+    BaseMessage,
+    HumanMessage,
+    SystemMessage,
+)
 
 from langchain_dev_utils.message_convert import (
     aconvert_reasoning_content_for_chunk_iterator,
@@ -105,10 +111,10 @@ async def test_aconvert_reasoning_content_for_chunk_iterator():
         (
             [
                 AIMessage(content="Hello"),
-                AIMessage(content="Hello"),
-                AIMessage(content="Hello"),
+                HumanMessage(content="Hello"),
+                SystemMessage(content="Hello"),
             ],
-            "-Hello\n-Hello\n-Hello",
+            "-AI: Hello\n-Human: Hello\n-System: Hello",
             False,
             "-",
         ),
@@ -116,10 +122,10 @@ async def test_aconvert_reasoning_content_for_chunk_iterator():
         (
             [
                 AIMessage(content="Hello"),
-                AIMessage(content="Hello"),
-                AIMessage(content="Hello"),
+                HumanMessage(content="Hello"),
+                SystemMessage(content="Hello"),
             ],
-            "-1. Hello\n-2. Hello\n-3. Hello",
+            "-1. AI: Hello\n-2. Human: Hello\n-3. System: Hello",
             True,
             "-",
         ),
@@ -127,10 +133,10 @@ async def test_aconvert_reasoning_content_for_chunk_iterator():
         (
             [
                 AIMessage(content="Hello"),
-                AIMessage(content="Hello"),
-                AIMessage(content="Hello"),
+                HumanMessage(content="Hello"),
+                SystemMessage(content="Hello"),
             ],
-            "|1. Hello\n|2. Hello\n|3. Hello",
+            "|1. AI: Hello\n|2. Human: Hello\n|3. System: Hello",
             True,
             "|",
         ),

@@ -9,6 +9,7 @@ from langchain_dev_utils.agents import (
     wrap_agent_as_tool,
     wrap_all_agents_as_tool,
 )
+from langchain_dev_utils.agents.wrap import get_subagent_name
 
 
 @tool
@@ -42,6 +43,38 @@ def process_output(request: str, response: dict[str, Any], runtime: ToolRuntime)
 async def process_output_async(
     request: str, response: dict[str, Any], runtime: ToolRuntime
 ) -> str:
+    human_message = response["messages"][0]
+    assert human_message.content.startswith(
+        "<task_description>"
+    ) and human_message.content.endswith("</task_description>")
+    return "<task_response>" + response["messages"][-1].content + "</task_response>"
+
+
+def process_input_all_agents(request: str, runtime: ToolRuntime) -> str:
+    assert get_subagent_name(runtime) == "time_agent"
+    return "<task_description>" + request + "</task_description>"
+
+
+async def process_input_async_all_agents(request: str, runtime: ToolRuntime) -> str:
+    assert get_subagent_name(runtime) == "time_agent"
+    return "<task_description>" + request + "</task_description>"
+
+
+def process_output_all_agents(
+    request: str, response: dict[str, Any], runtime: ToolRuntime
+) -> str:
+    assert get_subagent_name(runtime) == "time_agent"
+    human_message = response["messages"][0]
+    assert human_message.content.startswith(
+        "<task_description>"
+    ) and human_message.content.endswith("</task_description>")
+    return "<task_response>" + response["messages"][-1].content + "</task_response>"
+
+
+async def process_output_async_all_agents(
+    request: str, response: dict[str, Any], runtime: ToolRuntime
+) -> str:
+    assert get_subagent_name(runtime) == "time_agent"
     human_message = response["messages"][0]
     assert human_message.content.startswith(
         "<task_description>"
@@ -147,12 +180,12 @@ def test_wrap_all_agents():
     "pre_input_hooks,post_output_hooks",
     [
         (
-            process_input,
-            process_output,
+            process_input_all_agents,
+            process_output_all_agents,
         ),
         (
-            (process_input, process_input_async),
-            (process_output, process_output_async),
+            (process_input_all_agents, process_input_async_all_agents),
+            (process_output_all_agents, process_output_async_all_agents),
         ),
     ],
 )

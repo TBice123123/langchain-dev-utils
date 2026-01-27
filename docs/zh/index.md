@@ -55,11 +55,11 @@
     
     简化智能体创建流程，扩充更多的常用中间件
     
--   :fontawesome-solid-circle-nodes: __灵活的状态图组合__
+-   :fontawesome-solid-circle-nodes: __方便的状态图构建__
     
     ---
     
-    支持串行和并行方式组合多个 StateGraph
+    提供预构建的两个函数，方便用于构建顺序执行和并行执行的状态图。
 
 </div>
 

@@ -1,4 +1,4 @@
-# Formatting Sequence
+# Sequence Formatting
 
 ## Overview
 
@@ -11,15 +11,32 @@ Used to format a list consisting of Documents, Messages, or strings into a singl
 #### Code Example
 
 ```python
-from langchain_core.documents import Document
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+
 from langchain_dev_utils.message_convert import format_sequence
 
 formated1 = format_sequence(
     [
-        AIMessage(content="Hello1"),
-        AIMessage(content="Hello2"),
-        AIMessage(content="Hello3"),
+        SystemMessage(content="You are a weather query assistant"),
+        HumanMessage(content="Check the weather in London and San Francisco"),
+        AIMessage(
+            content="I will use the get_weather tool to check the weather for these two cities",
+            tool_calls=[
+                {"name": "get_weather", "args": {"location": "London"}, "id": "123"},
+                {"name": "get_weather", "args": {"location": "San Francisco"}, "id": "456"},
+            ],
+        ),
+        ToolMessage(
+            content="The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius",
+            tool_call_id="123",
+        ),
+        ToolMessage(
+            content="The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius",
+            tool_call_id="456",
+        ),
+        AIMessage(
+            content="Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius",
+        ),
     ]
 )
 print(formated1)
@@ -28,9 +45,14 @@ print(formated1)
 #### Output Result
 
 ```
--Hello1
--Hello2
--Hello3
+-System: You are a weather query assistant
+-Human: Check the weather in London and San Francisco
+-AI: I will use the get_weather tool to check the weather for these two cities
+</think><tool_call>get_weather</arg_value>
+<tool_call>get_weather</arg_value>
+-Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
+-Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
+-AI: Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
 ```
 
 ### Document

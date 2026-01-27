@@ -34,7 +34,7 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
 - **💬 Flexible message handling** - Support for chain-of-thought concatenation, streaming processing, and message formatting
 - **🛠️ Powerful tool calling** - Built-in tool call detection, parameter parsing, and human review functionality
 - **🤖 Efficient Agent development** - Simplify agent creation process, expand more common middleware
-- **📊 Flexible state graph composition** - Support for serial and parallel composition of multiple StateGraphs
+- **📊 Convenient State Graph Construction** - Provides pre-built functions to easily create sequential or parallel state graphs
 
 ## ⚡ Quick Start
 

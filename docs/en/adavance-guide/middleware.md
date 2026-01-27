@@ -182,7 +182,7 @@ print(response)
 Through `ModelRouterMiddleware`, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.
 
 !!! note "Parallel Execution"
-    Using middleware to implement model routing, only one task is assigned for execution at a time. If you want to decompose a task into multiple subtasks and execute them in parallel with multiple models, please refer to [State Graph Orchestration](pipeline.md).
+    Using middleware to implement model routing, only one task is assigned for execution at a time. If you want to decompose a task into multiple subtasks and execute them in parallel with multiple models, please refer to [State Graph Building](graph.md).
 
 ## Agent Handoffs
 

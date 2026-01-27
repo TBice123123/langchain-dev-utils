@@ -6,10 +6,16 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.store.base import BaseStore
 from langgraph.types import Checkpointer, Send
 from langgraph.typing import ContextT, InputT, OutputT, StateT
+from typing_extensions import deprecated
 
 from .types import SubGraph
 
 
+@deprecated(
+    """The function create_parallel_pipeline is deprecated since v1.4.0. And it will be remove in v1.5.0.
+    Please use create_parallel_graph instead（from graph module）.
+    """
+)
 def create_parallel_pipeline(
     sub_graphs: list[SubGraph],
     state_schema: type[StateT],

@@ -56,11 +56,11 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
     
     Simplifies the agent creation process and expands more common middleware
     
--   :fontawesome-solid-circle-nodes: __Flexible State Graph Composition__
+-   :fontawesome-solid-circle-nodes: __Convenient State Graph Building__
     
     ---
     
-    Supports combining multiple StateGraphs in serial and parallel ways
+    Provides pre-built two functions for easily constructing sequential and parallel state graphs.
 
 </div>
 

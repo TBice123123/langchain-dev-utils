@@ -1,21 +1,34 @@
-# 状态图编排
+# 状态图构建
 
 ## 概述
 
-在 LangGraph 中，状态图编排是构建复杂 AI 应用的关键能力。通过按特定模式组合多个状态图，可以形成强大且逻辑清晰的工作流。
+LangGraph 是 LangChain 官方推出的编排框架，用于搭建复杂工作流。但直接使用 LangGraph 的门槛较高；因此本库提供两个预置函数，分别用于构建顺序执行或并行执行的状态图。开发者只需编写业务节点，其余的边连接、图编译与状态管理均由函数自动完成。
 
-本库提供两种最常见的编排方式：
+具体的两个函数如下：
 
-| 编排方式 | 功能描述 | 适用场景 |
+| 函数名 | 功能描述 | 适用场景 |
 |----------|----------|----------|
-| **顺序编排** | 按顺序组合多个状态图，形成顺序工作流 | 任务需按步骤执行且依赖前一步输出 |
-| **并行编排** | 并行组合多个状态图，形成并行工作流 | 多个任务相互独立，可同时执行以提高效率 |
+| **create_sequential_graph** | 按顺序组合多个节点，形成顺序执行状态图 | 任务需按步骤执行且依赖前一步输出 |
+| **create_parallel_graph** | 并行组合多个节点，形成并行执行状态图 | 多个任务相互独立，可同时执行以提高效率 |
+
 
 ## 顺序编排
 
-顺序编排（Sequential Pipeline）将复杂任务拆解为连续、有序的子任务，并交由不同的专门化智能体依次处理。
+顺序编排将复杂任务拆解为连续、有序的子任务。在 LangGraph 中，每个子任务对应一个状态图节点。
 
-使用 `create_sequential_pipeline` 可将多个状态图以顺序方式组合。
+使用 `create_sequential_graph` 可将多个节点以顺序方式组合。对于该函数，所接收的参数如下：
+
+| 参数 | 说明 |
+|------|------|
+| `nodes` | 要组合的节点列表，可为节点函数或由节点名称与节点函数组成的二元组。<br><br>**类型**: `list[Node]`<br>**必填**: 是 |
+| `state_schema` | 最终生成图的 State Schema。<br><br>**类型**: `type[StateT]`<br>**必填**: 是 |
+| `graph_name` | 最终生成图的名称。<br><br>**类型**: `Optional[str]`<br>**必填**: 否 |
+| `context_schema` | 最终生成图的 Context Schema。<br><br>**类型**: `type[ContextT]`<br>**必填**: 否 |
+| `input_schema` | 最终生成图的输入 Schema。<br><br>**类型**: `type[InputT]`<br>**必填**: 否 |
+| `output_schema` | 最终生成图的输出 Schema。<br><br>**类型**: `type[OutputT]`<br>**必填**: 否 |
+| `checkpointer` | 最终生成图的 Checkpointer。<br><br>**类型**: `Checkpointer`<br>**必填**: 否 |
+| `store` | 最终生成图的 Store。<br><br>**类型**: `BaseStore`<br>**必填**: 否 |
+| `cache` | 最终生成图的 Cache。<br><br>**类型**: `BaseCache`<br>**必填**: 否 |
 
 ### 典型应用场景
 
@@ -35,15 +48,16 @@ graph LR
 
 该流程环环相扣，顺序不可颠倒。
 
-其中，库存确认、创建订单、完成支付、确认发货四个步骤分别由专门智能体处理。通过 `create_sequential_pipeline` 将四个状态图顺序编排，即可形成高度自动化、职责清晰的商品购买工作流。
+其中这四个环节（库存确认、创建订单、完成支付、确认发货）可抽象为独立节点，并由专属智能体负责执行。
+使用 `create_sequential_graph` 将四个节点顺序编排，即可形成高度自动化、职责清晰的商品购买工作流。
 
 
 ### 基础示例
 
-下面示例展示如何用 `create_sequential_pipeline` 构建商品购买的顺序工作流：
+下面示例展示如何用 `create_sequential_graph` 构建商品购买的顺序工作流：
 
 
-先创建对话模型对象。这里以接入本地 vllm 部署的 `qwen3-4b` 为例，其接口与 OpenAI 兼容，因此可直接用 `create_openai_compatible_model` 构建模型类。
+先创建对话模型对象。这里以接入本地 vLLM 部署的 `qwen3-4b` 为例，其接口与 OpenAI 兼容，因此可直接用 `create_openai_compatible_model` 构建模型类。
 
 ```python
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -95,46 +109,63 @@ from langchain.agents import create_agent
 inventory_agent = create_agent(
     model=model,
     tools=[check_inventory],
-    system_prompt="你是库存助手，负责确认商品是否有货。",
+    system_prompt="你是库存助手，负责确认商品是否有货。最终请输出库存查询结果。",
     name="inventory_agent",
+    
 )
 
 order_agent = create_agent(
     model=model,
     tools=[create_order],
     system_prompt="你是下单助手，负责创建订单。",
-    name="order_agent",
+    name="order_agent"
 )
 
 payment_agent = create_agent(
     model=model,
     tools=[pay_order],
     system_prompt="你是支付助手，负责完成支付。",
-    name="payment_agent",
+    name="payment_agent"
 )
 
 delivery_agent = create_agent(
     model=model,
     tools=[confirm_delivery],
-    system_prompt="你是发货助手，负责确认发货信息。",
+    system_prompt=(
+        "你是发货助手，负责确认发货信息后安排发货。"
+    ),
     name="delivery_agent",
+    state_schema=AgentState
 )
 ```
-
-最后使用 `create_sequential_pipeline` 将这四个智能体按顺序编排。
+接下来编写一个工具函数，用于创建调用智能体的节点。
 
 ```python
-from langchain_dev_utils.pipeline import create_sequential_pipeline
 from langchain.agents import AgentState
+from langchain_core.messages import AIMessage, HumanMessage
+from langgraph.graph.state import CompiledStateGraph
 
-graph = create_sequential_pipeline(
-    sub_graphs=[
-        inventory_agent,
-        order_agent,
-        payment_agent,
-        delivery_agent,
+
+def create_call_agent_node(agent: CompiledStateGraph):
+    def call_agent(state: AgentState) -> dict:
+        response = agent.invoke({"messages": state["messages"]})
+        return {"messages": [AIMessage(content=response["messages"][-1].content)]}
+    return call_agent
+```
+
+最后使用 `create_sequential_graph` 将这四个节点按顺序编排。
+
+```python
+from langchain_dev_utils.graph import create_sequential_graph
+
+graph = create_sequential_graph(
+    nodes=[
+        ("inventory", create_call_agent_node(inventory_agent)),
+        ("order", create_call_agent_node(order_agent)),
+        ("payment", create_call_agent_node(payment_agent)),
+        ("delivery", create_call_agent_node(delivery_agent)),
     ],
-    state_schema=AgentState,
+    state_schema=AgentState
 )
 ```
 运行测试：
@@ -143,160 +174,37 @@ graph = create_sequential_pipeline(
 response = graph.invoke(
     {
         "messages": [
-            HumanMessage("我要买一副无线耳机，数量2，请下单，收货地址X市X区X路X号")
+            HumanMessage("我要买一副无线耳机，数量2，请下单，收货地址是X市X区X路X号")
         ]
     }
 )
 print(response)
 ```
 
-### 上下文工程优化
 
-该示例会把前面所有智能体的完整上下文依次传给当前智能体，可能造成上下文膨胀，影响性能和效果。
+!!! info "注意"
 
-可采用以下方案精简上下文：
+    虽然 LangGraph 可直接将智能体（子图）作为节点加入图中，但这样会导致当前智能体的上下文中包含先前智能体的全部运行上下文，违背上下文工程管理的最佳实践。因此推荐将智能体封装在节点内部，仅输出最终结果。
 
-| 方案 | 描述 | 优点 |
-|------|------|------|
-| **使用中间件** | 使用 `create_agent` 配合中间件，仅抽取并传递必要信息 | 实现简单，代码改动小 |
-| **自定义状态图** | 基于 `LangGraph` 自定义状态图，显式控制状态字段与消息流动 | 灵活性高，可精确控制 |
-
-??? example "点击查看利用中间件解决的参考代码"
-
-    ```python
-    from typing import Any
-
-    from langchain.agents.middleware import AgentMiddleware
-    from langchain_core.messages import RemoveMessage
-    from langgraph.runtime import Runtime
-
-    from langchain_dev_utils.agents.middleware import format_prompt
-
-
-    class PurchaseState(AgentState, total=False):
-        stock: str
-        order: str
-        payment: str
-        delivery: str
-
-
-    class ClearAgentContextMiddleware(AgentMiddleware):
-        state_schema = PurchaseState
-
-        def __init__(self, result_save_key: str) -> None:
-            super().__init__()
-            self.result_save_key = result_save_key
-
-        def after_agent(
-            self, state: PurchaseState, runtime: Runtime
-        ) -> dict[str, Any] | None:
-            final_message = state["messages"][-1]
-            update_key = self.result_save_key
-            return {
-                "messages": [
-                    RemoveMessage(id=msg.id or "") for msg in state["messages"][1:]
-                ],
-                update_key: final_message.content,
-            }
-
-
-    inventory_agent = create_agent(
-        model=model,
-        tools=[check_inventory],
-        system_prompt="你是库存助手，负责确认商品是否有货。最终请输出库存查询结果。",
-        name="inventory_agent",
-        state_schema=PurchaseState,
-        middleware=[format_prompt, ClearAgentContextMiddleware("stock")],
-    )
-
-    order_agent = create_agent(
-        model=model,
-        tools=[create_order],
-        system_prompt=(
-            "你是下单助手，负责创建订单。\n"
-            "库存结果：{stock}\n"
-            "请基于库存结果创建订单，并输出订单号。"
-        ),
-        name="order_agent",
-        state_schema=PurchaseState,
-        middleware=[format_prompt, ClearAgentContextMiddleware("order")],
-    )
-
-    payment_agent = create_agent(
-        model=model,
-        tools=[pay_order],
-        system_prompt=(
-            "你是支付助手，负责完成支付。\n"
-            "订单结果：{order}\n"
-            "请从订单结果中获取订单号并完成支付。"
-        ),
-        name="payment_agent",
-        state_schema=PurchaseState,
-        middleware=[format_prompt, ClearAgentContextMiddleware("payment")],
-    )
-
-    delivery_agent = create_agent(
-        model=model,
-        tools=[confirm_delivery],
-        system_prompt=(
-            "你是发货助手，负责确认发货信息。\n"
-            "订单结果：{order}\n"
-            "支付结果：{payment}\n"
-            "请确认发货并复述收货地址。"
-        ),
-        name="delivery_agent",
-        state_schema=PurchaseState,
-        middleware=[format_prompt, ClearAgentContextMiddleware("delivery")],
-    )
-
-    graph = create_sequential_pipeline(
-        sub_graphs=[
-            inventory_agent,
-            order_agent,
-            payment_agent,
-            delivery_agent,
-        ],
-        state_schema=PurchaseState,
-    )
-
-    response = graph.invoke(
-        {
-            "messages": [
-                HumanMessage("我要买一副无线耳机，数量2，请下单，收货地址X市X区X路X号")
-            ]
-        }
-    )
-    print(response)
-    ```
-
-    **实现说明**：
-
-    1. **扩展状态模式**：在智能体的 State Schema 中新增 `stock`、`order`、`payment`、`delivery` 四个字段，用于保存各智能体的最终输出。
-
-    2. **自定义中间件**：创建 `ClearAgentContextMiddleware` 中间件，在每个智能体结束后先用 `RemoveMessage` 清理上下文，再将最终结果（`final_message.content`）写入对应字段。
-
-    3. **动态提示格式化**：使用 `format_prompt` 中间件，在运行时按需将前置输出拼入 `system_prompt`。
-
-
-
-!!! info "提示"
-
-    对于串行组合的图，LangGraph 的 `StateGraph` 提供 `add_sequence` 作为简写，更适合节点为函数（而非子图）的场景。
-
-    ```python
-    graph = StateGraph(AgentState)
-    graph.add_sequence([("graph1", graph1), ("graph2", graph2), ("graph3", graph3)])
-    graph.add_edge("__start__", "graph1")
-    graph = graph.compile()
-    ```
-
-    但上述写法仍略显繁琐，更推荐使用 `create_sequential_pipeline`，一行代码即可快速构建串行执行图。
 
 ## 并行编排
 
-并行编排（Parallel Pipeline）将多个状态图并行组合，并发执行各任务，从而提高执行效率。
+并行编排将多个节点并行组合，并发执行各任务，从而提高执行效率。
 
-使用 `create_parallel_pipeline` 可将多个状态图以并行方式组合，实现并行执行。
+使用 `create_parallel_graph` 可将多个节点以并行方式组合，实现并行执行。对于该函数，所接收的参数如下：
+
+| 参数 | 说明 |
+|------|------|
+| `nodes` | 要组合的节点列表，可为节点函数或由节点名称与节点函数组成的二元组。<br><br>**类型**: `list[Node]`<br>**必填**: 是 |
+| `state_schema` | 最终生成图的 State Schema。<br><br>**类型**: `type[StateT]`<br>**必填**: 是 |
+| `graph_name` | 最终生成图的名称。<br><br>**类型**: `Optional[str]`<br>**必填**: 否 |
+| `context_schema` | 最终生成图的 Context Schema。<br><br>**类型**: `type[ContextT]`<br>**必填**: 否 |
+| `input_schema` | 最终生成图的输入 Schema。<br><br>**类型**: `type[InputT]`<br>**必填**: 否 |
+| `output_schema` | 最终生成图的输出 Schema。<br><br>**类型**: `type[OutputT]`<br>**必填**: 否 |
+| `checkpointer` | 最终生成图的 Checkpointer。<br><br>**类型**: `Checkpointer`<br>**必填**: 否 |
+| `store` | 最终生成图的 Store。<br><br>**类型**: `BaseStore`<br>**必填**: 否 |
+| `cache` | 最终生成图的 Cache。<br><br>**类型**: `BaseCache`<br>**必填**: 否 |
+| `branches_fn` | 并行分支函数，返回 Send 列表控制并行执行。<br><br>**类型**: `Callable`<br>**必填**: 否 |
 
 ### 典型应用场景
 
@@ -408,19 +316,20 @@ shipping_agent = create_agent(
 )
 ```
 
-用 `create_parallel_pipeline` 组合子智能体。
+用 `create_parallel_graph` 完成并行状态图的编排。
 
 ```python
-from langchain_dev_utils.pipeline import create_parallel_pipeline
+from langchain_dev_utils.graph import create_parallel_graph
 
-graph = create_parallel_pipeline(
-    sub_graphs=[
-        product_agent,
-        inventory_agent,
-        promotion_agent,
-        shipping_agent,
+graph = create_parallel_graph(
+    nodes=[
+       ( "product", create_call_agent_node(product_agent)),
+       ( "inventory", create_call_agent_node(inventory_agent)),
+       ( "promotion", create_call_agent_node(promotion_agent)),
+       ( "shipping", create_call_agent_node(shipping_agent)),
     ],
     state_schema=AgentState,
+    graph_name="parallel_graph",
 )
 ```
 运行测试：
@@ -435,7 +344,7 @@ print(response)
 
 ### 使用分支函数指定并行执行的子图
 
-在多数场景下，不希望所有子图都并行执行，而是按条件并行部分子图。此时需使用 `branches_fn` 指定分支函数。分支函数需返回 `Send` 列表，每个 `Send` 包含子图名称与输入。
+有些情况下，不希望所有节点都并行执行，而是按条件并行部分节点。此时需使用 `branches_fn` 指定分支函数。分支函数需返回 `Send` 列表，每个 `Send` 包含节点名称与输入。
 
 #### 应用场景
 
@@ -614,16 +523,15 @@ refund_agent = create_agent(
 )
 ```
 
-再编写分支函数：由路由模型根据请求返回要执行的智能体名称及对应任务描述。
+再编写分支函数：由路由模型根据请求返回要执行的智能体名称及对应的任务描述。
 
 ```python
 from typing import Literal, cast
-from typing_extensions import TypedDict
-
 
 from langchain_core.messages import SystemMessage
 from langgraph.types import Send
 from pydantic import BaseModel, Field
+from typing_extensions import TypedDict
 
 
 class RouterInput(TypedDict):
@@ -667,7 +575,7 @@ class ClassificationResult(BaseModel):
 def branch_fn(state: RouterState) -> list[Send]:
     structured_llm = model.with_structured_output(ClassificationResult)
 
-    query = state.get("query")
+    query = state.get("messages")[-1].content
     classification_result = cast(
         ClassificationResult,
         structured_llm.invoke(
@@ -687,27 +595,37 @@ def branch_fn(state: RouterState) -> list[Send]:
         source = res.get("source")
         if source not in {"order", "refund", "product"}:
             source = "product"
-        sub_query = (res.get("query") or query).strip() or query
-        sends.append(Send(f"{source}_agent", {"messages": [HumanMessage(sub_query)]}))
+        sends.append(Send(f"{source}", {"messages": [HumanMessage(res.get("query"))]}))
     return sends
 ```
+最后使用 `create_parallel_graph` 完成并行状态图的编排，并传入分支函数。
 
-最终使用 `create_parallel_agent` 创建并行智能体，并传入分支函数。
-
+```python
+graph = create_parallel_graph(
+    nodes=[
+        ("order", create_call_agent_node(order_agent)),
+        ("refund", create_call_agent_node(refund_agent)),
+        ("product", create_call_agent_node(product_agent)),
+    ],
+    state_schema=AgentState,
+    graph_name="parallel_graph",
+    branches_fn=branch_fn,
+)
+```
 
 运行测试：
 
 ```python
 response_single = graph.invoke(
     {
-        "query": "你好，我要查询一下之前购买的产品",
+        "messages": [HumanMessage("你好，我要查询一下之前购买的产品")],
     }
 )
 print(response_single)
 
 response_parallel = graph.invoke(
     {
-        "query": "推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？",
+        "messages": [HumanMessage("推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？")],
     }
 )
 print(response_parallel)
@@ -716,5 +634,5 @@ print(response_parallel)
 
 !!! tip "提示"
 
-    - **未传入 `branches_fn` 参数时**：所有子图都会并行执行
-    - **传入 `branches_fn` 参数时**：执行哪些子图由该函数的返回值决定
+    - **未传入 `branches_fn` 参数时**：所有节点都会并行执行
+    - **传入 `branches_fn` 参数时**：执行哪些节点由该函数的返回值决定

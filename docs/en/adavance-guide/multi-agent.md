@@ -289,7 +289,7 @@ def process_input(request: str, runtime: ToolRuntime) -> str:
             3) Current status or progress.
             Keep the summary length under 200 characters."""
         ),
-        *messages,
+        *messages[:-1],
     ]
 
     if messages:
@@ -318,7 +318,7 @@ async def process_input_async(request: str, runtime: ToolRuntime) -> str:
             3) Current status or progress.
             Keep the summary length under 200 characters."""
         ),
-        *messages,
+        *messages[:-1],
     ]
 
     if messages:
@@ -424,3 +424,15 @@ call_agent_tool = wrap_agent_as_tool(
     agent, post_output_hooks=(process_output_sync, process_output_async)
 )
 ```
+
+!!! tip "tip"
+    For the `wrap_all_agents_as_tool` function, if you need different agents to use different `pre_input_hooks` or `post_output_hooks`, you can use `get_subagent_name` to get the name of the currently running agent and then apply different processing methods based on the name.
+    For example:
+
+    ```python
+    from langchain_dev_utils.agents.wrap import get_subagent_name
+    
+    def process_input(request: str, runtime: ToolRuntime):
+        subagent_name = get_subagent_name(runtime)
+        # Process input based on the agent name; code omitted
+    ```

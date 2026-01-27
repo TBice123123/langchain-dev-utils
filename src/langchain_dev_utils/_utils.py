@@ -1,7 +1,25 @@
 from importlib import util
-from typing import Literal, Optional
+from typing import Literal, Optional, cast
 
+from langgraph.graph import StateGraph
+from langgraph.graph.state import StateNode
 from pydantic import BaseModel
+
+
+def _transform_node_to_tuple(
+    node: StateNode | tuple[str, StateNode],
+) -> tuple[str, StateNode]:
+    if not isinstance(node, tuple):
+        if isinstance(node, StateGraph):
+            node = node.compile()
+            name = node.name
+            return name, node
+        name = cast(str, getattr(node, "name", getattr(node, "__name__", None)))
+        if name is None:
+            raise ValueError("Node name must be provided if action is not a function")
+        return name, node
+    else:
+        return node
 
 
 def _check_pkg_install(

@@ -290,7 +290,7 @@ def process_input(request: str, runtime: ToolRuntime) -> str:
             3) 当前状态或进展。
             摘要长度控制在200字以内。"""
         ),
-        *messages,
+        *messages[:-1],
     ]
 
     if messages:
@@ -319,7 +319,7 @@ async def process_input_async(request: str, runtime: ToolRuntime) -> str:
             3) 当前状态或进展。
             摘要长度控制在200字以内。"""
         ),
-        *messages,
+        *messages[:-1],
     ]
 
     if messages:
@@ -426,3 +426,14 @@ call_agent_tool = wrap_agent_as_tool(
 )
 ```
 
+!!! tip "提示"
+    对于 `wrap_all_agents_as_tool` 函数，如果需要让不同智能体使用不同的 `pre_input_hooks` 或 `post_output_hooks`，可以用 `get_subagent_name` 获取当前运行的智能体名称，再根据名称使用不同的处理方法。
+    例如：
+
+    ```python
+    from langchain_dev_utils.agents.wrap import get_subagent_name
+    
+    def process_input(request: str, runtime: ToolRuntime):
+        subagent_name = get_subagent_name(runtime)
+        # 根据不同的agent名称处理输入，代码略
+    ```
