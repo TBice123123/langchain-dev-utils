@@ -1089,7 +1089,7 @@
   <span class="md-ellipsis">
     
   
-    状态图构建
+    预置状态图构建函数
   
 
     
@@ -1346,7 +1346,7 @@
   <span class="md-ellipsis">
     
   
-    状态图构建模块 API参考
+    状态图构建函数模块 API参考
   
 
     
@@ -2146,13 +2146,18 @@
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">提示</p>
-<p>对于 <code>wrap_all_agents_as_tool</code> 函数，如果需要让不同智能体使用不同的 <code>pre_input_hooks</code> 或 <code>post_output_hooks</code>，可以用 <code>get_subagent_name</code> 获取当前运行的智能体名称，再根据名称使用不同的处理方法。
-例如：</p>
+<p>对于<code>wrap_all_agents_as_tool</code> 函数，若需为不同子智能体定制 <code>pre_input_hooks</code> 或 <code>post_output_hooks</code>，可在钩子内调用 <code>get_subagent_name(runtime)</code> 获取当前智能体名称，再按名称分别处理。
+例如，假设当前仅需要对于<code>weather_agent</code> 子智能体定制 <code>pre_input_hooks</code>(例如添加当前城市和时间)，则可以这样实现：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.wrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_subagent_name</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
     <span class="n">subagent_name</span> <span class="o">=</span> <span class="n">get_subagent_name</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
-    <span class="c1"># 根据不同的agent名称处理输入，代码略</span>
+    <span class="k">if</span> <span class="n">subagent_name</span> <span class="o">==</span> <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span>
+        <span class="n">city</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;未知城市&quot;</span><span class="p">)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;当前城市是：</span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">，时间为：</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2">。请根据上述内容，完成任务&quot;</span> <span class="o">+</span> <span class="n">request</span> 
+    <span class="k">return</span> <span class="n">request</span>
 </code></pre></div>
 </div>
 

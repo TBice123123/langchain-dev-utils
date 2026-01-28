@@ -1089,7 +1089,7 @@
   <span class="md-ellipsis">
     
   
-    State-Graph Building
+    Prebuilt State-Graph Building Functions
   
 
     
@@ -1346,7 +1346,7 @@
   <span class="md-ellipsis">
     
   
-    State-Graph Building Module API Reference
+    State-Graph Building Functions Module API Reference
   
 
     
@@ -2145,14 +2145,23 @@
 <span class="p">)</span>
 </code></pre></div>
 <div class="admonition tip">
-<p class="admonition-title">tip</p>
-<p>For the <code>wrap_all_agents_as_tool</code> function, if you need different agents to use different <code>pre_input_hooks</code> or <code>post_output_hooks</code>, you can use <code>get_subagent_name</code> to get the name of the currently running agent and then apply different processing methods based on the name.
-For example:</p>
+<p class="admonition-title">Tip</p>
+<p>For <code>wrap_all_agents_as_tool</code>, if you need to customize <code>pre_input_hooks</code> or <code>post_output_hooks</code> per subagent, you can call <code>get_subagent_name(runtime)</code> inside the hook to get the current subagent name, then handle each case by name.</p>
+<p>For example, suppose you only want to customize <code>pre_input_hooks</code> for the <code>weather_agent</code> subagent (e.g., inject the current city and time). You can implement it like this:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.wrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_subagent_name</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">):</span>
     <span class="n">subagent_name</span> <span class="o">=</span> <span class="n">get_subagent_name</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
-    <span class="c1"># Process input based on the agent name; code omitted</span>
+    <span class="k">if</span> <span class="n">subagent_name</span> <span class="o">==</span> <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span>
+        <span class="n">city</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Current city: </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">, time: </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="s2">&quot;Please complete the task based on the above. &quot;</span>
+            <span class="o">+</span> <span class="n">request</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">request</span>
 </code></pre></div>
 </div>
 

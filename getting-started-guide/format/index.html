@@ -1033,7 +1033,7 @@
   <span class="md-ellipsis">
     
   
-    State-Graph Building
+    Prebuilt State-Graph Building Functions
   
 
     
@@ -1290,7 +1290,7 @@
   <span class="md-ellipsis">
     
   
-    State-Graph Building Module API Reference
+    State-Graph Building Functions Module API Reference
   
 
     
@@ -1589,11 +1589,11 @@
             <span class="p">],</span>
         <span class="p">),</span>
         <span class="n">ToolMessage</span><span class="p">(</span>
-            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;The weather in London is 25 degrees Celsius&quot;</span><span class="p">,</span>
             <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">ToolMessage</span><span class="p">(</span>
-            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;The weather in San Francisco is 22 degrees Celsius&quot;</span><span class="p">,</span>
             <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;456&quot;</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">AIMessage</span><span class="p">(</span>
@@ -1609,8 +1609,8 @@
 -AI: I will use the get_weather tool to check the weather for these two cities
 &lt;tool_call&gt;get_weather&lt;/tool_call&gt;
 &lt;tool_call&gt;get_weather&lt;/tool_call&gt;
--Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
--Tool: The weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
+-Tool: The weather in London is 25 degrees Celsius
+-Tool: The weather in San Francisco is 22 degrees Celsius
 -AI: Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius
 </code></pre></div>
 <h3 id="document">Document</h3>
