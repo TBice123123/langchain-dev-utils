@@ -2056,7 +2056,7 @@
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for comprehensive high-difficulty tasks&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant, good at handling comprehensive high-difficulty tasks&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
-            <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
         <span class="p">),</span>  <span class="c1"># Directly pass the instance, where model_name is only for identification, model_kwargs is ignored</span>
     <span class="p">},</span>
 <span class="p">]</span>
@@ -2083,7 +2083,7 @@
 <p>Through <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
 <div class="admonition note">
 <p class="admonition-title">Parallel Execution</p>
-<p>Using middleware to implement model routing, only one task is assigned for execution at a time. If you want to decompose a task into multiple subtasks and execute them in parallel with multiple models, please refer to <a href="../graph/">State Graph Building</a>.</p>
+<p>Using middleware to implement model routing, only one task is assigned for execution at a time. If you want to decompose a task into multiple subtasks and execute them in parallel with multiple models, please refer to <a href="../graph/">Prebuilt State-Graph Construction Functions</a>.</p>
 </div>
 <h2 id="agent-handoffs">Agent Handoffs</h2>
 <p><code>HandoffAgentMiddleware</code> is a middleware used for <strong>flexibly switching between multiple sub-agents</strong>, fully implementing LangChain's official <code>handoffs</code> multi-agent collaboration scheme.</p>

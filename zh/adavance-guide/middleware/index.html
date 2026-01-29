@@ -2056,7 +2056,7 @@
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合综合类高难度任务&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手，擅长处理综合类的高难度任务&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
-            <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
         <span class="p">),</span>  <span class="c1"># 直接传入实例，此时 model_name 仅作标识，model_kwargs 被忽略</span>
     <span class="p">},</span>
 <span class="p">]</span>
@@ -2083,7 +2083,7 @@
 <p>通过 <code>ModelRouterMiddleware</code>，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。</p>
 <div class="admonition note">
 <p class="admonition-title">并行执行</p>
-<p>采用中间件实现模型路由，每次仅会分配一个任务进行执行，如果你想要将任务分解为多个子任务由多个模型进行并行执行，请参考<a href="../graph/">状态图构建</a>。</p>
+<p>采用中间件实现模型路由，每次仅会分配一个任务进行执行，如果你想要将任务分解为多个子任务由多个模型进行并行执行，请参考<a href="../graph/">预置StateGraph构建函数</a>。</p>
 </div>
 <h2 id="_10">智能体交接</h2>
 <p><code>HandoffAgentMiddleware</code> 是一个用于<strong>在多个子 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>

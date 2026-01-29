@@ -2040,7 +2040,7 @@ This library enables this option by default; if you need to disable it, you can 
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <code>supported_response_format</code> includes <code>json_schema</code>, the <code>structured_output</code> field in <code>model.profile</code> will automatically be set to <code>True</code>. In this case, when using <code>create_agent</code> and no specific structured output strategy is specified, <code>json_schema</code> will be used as the default structured output strategy.</p>
+<p>If <code>supported_response_format</code> contains <code>json_schema</code>, the <code>structured_output</code> field in <code>model.profile</code> will be automatically set to <code>True</code>. When using <code>create_agent</code> for structured output without specifying a specific structured output strategy, <code>json_schema</code> will be used as the default structured output strategy.</p>
 <p>For example:
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 

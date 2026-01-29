@@ -1937,6 +1937,34 @@
 </div>
 <h2 id="hook-functions">Hook Functions</h2>
 <p>This library includes a flexible hook mechanism that allows you to insert custom logic before and after a subagent runs. This mechanism applies to both <code>wrap_agent_as_tool</code> and <code>wrap_all_agents_as_tool</code>. The following description uses <code>wrap_agent_as_tool</code> as an example.</p>
+<p>The execution flow of hook functions is shown in the diagram below:</p>
+<pre class="mermaid"><code>graph LR
+    Start([Start]) --&gt; InHook{process_input exists?}
+
+    %% --- Input Hook ---
+    InHook -- Yes --&gt; DoInHook[Execute process_input]
+    InHook -- No --&gt; Raw[Use original request]
+
+    DoInHook --&gt; TypeCheck{Return type check}
+    Raw --&gt; TypeCheck
+
+    TypeCheck -- String --&gt; BuildDict[Build dict containing messages]
+    TypeCheck -- Dict --&gt; UseDict[Use the dict directly]
+
+    BuildDict --&gt; Core
+    UseDict --&gt; Core
+
+    %% --- Core Execution ---
+    Core([Execute agent.invoke])
+
+    %% --- Output Hook ---
+    Core --&gt; OutHook{process_output exists?}
+
+    OutHook -- Yes --&gt; DoOutHook[Execute process_output]
+    OutHook -- No --&gt; ExtractContent[Extract content of the last item in&lt;br/&gt;the response messages list]
+
+    DoOutHook --&gt; End([Return result])
+    ExtractContent --&gt; End</code></pre>
 <h3 id="1-pre_input_hooks">1. pre_input_hooks</h3>
 <p>Preprocesses the input before the agent runs. Useful for input enhancement, context injection, format validation, permission checks, etc.</p>
 <h4 id="supported-input-types">Supported Input Types</h4>

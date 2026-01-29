@@ -1937,6 +1937,34 @@
 </div>
 <h2 id="_10">钩子函数</h2>
 <p>本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。该机制同时适用于 <code>wrap_agent_as_tool</code> 与 <code>wrap_all_agents_as_tool</code>，下文以 <code>wrap_agent_as_tool</code> 为例进行说明。</p>
+<p>对于钩子函数的运行流程，如下图所示：</p>
+<pre class="mermaid"><code>graph LR
+    Start([开始]) --&gt; InHook{process_input 存在?}
+
+    %% --- 输入钩子 ---
+    InHook -- 是 --&gt; DoInHook[执行 process_input]
+    InHook -- 否 --&gt; Raw[使用原始 request]
+
+    DoInHook --&gt; TypeCheck{返回值类型判断}
+    Raw --&gt; TypeCheck
+
+    TypeCheck -- 字符串 --&gt; BuildDict[构造包含 messages 的字典]
+    TypeCheck -- 字典 --&gt; UseDict[直接使用该字典]
+
+    BuildDict --&gt; Core
+    UseDict --&gt; Core
+
+    %% --- 中间执行 ---
+    Core([执行 agent.invoke])
+
+    %% --- 输出钩子 ---
+    Core --&gt; OutHook{process_output 存在?}
+
+    OutHook -- 是 --&gt; DoOutHook[执行 process_output]
+    OutHook -- 否 --&gt; ExtractContent[提取 response 响应中的&lt;br/&gt; messages 列表最后一项的 content]
+
+    DoOutHook --&gt; End([返回结果])
+    ExtractContent --&gt; End</code></pre>
 <h3 id="1-pre_input_hooks">1. pre_input_hooks</h3>
 <p>在智能体运行前对输入进行预处理。可用于输入增强、上下文注入、格式校验、权限检查等。</p>
 <h4 id="_11">支持的传入类型</h4>

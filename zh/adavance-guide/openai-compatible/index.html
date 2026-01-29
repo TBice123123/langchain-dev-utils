@@ -2040,7 +2040,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
-<p>若 <code>supported_response_format</code> 包含 <code>json_schema</code>，则 <code>model.profile</code> 中的 <code>structured_output</code> 字段将自动置为 <code>True</code>，此时使用 <code>create_agent</code> 时如果未指定具体的结构化输出策略，默认会采用 <code>json_schema</code> 作为结构化输出策略。</p>
+<p>若 <code>supported_response_format</code> 包含 <code>json_schema</code>，则 <code>model.profile</code> 中的 <code>structured_output</code> 字段将自动置为 <code>True</code>，此时使用 <code>create_agent</code> 进行结构化输出时如果未指定具体的结构化输出策略，默认会采用 <code>json_schema</code> 作为结构化输出策略。</p>
 <p>例如:
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
