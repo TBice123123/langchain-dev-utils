@@ -953,34 +953,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="使用示例">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        步骤一：定义模型列表
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        步骤二：创建 Agent 并启用中间件
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -989,7 +961,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         智能体交接
@@ -1001,7 +973,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         参数说明
@@ -1025,6 +997,17 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
   
 </li>
         
@@ -1099,6 +1082,17 @@
   <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
+        变量解析顺序
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用示例
       
     </span>
@@ -1130,7 +1124,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         变量覆盖示例
@@ -1625,34 +1619,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="使用示例">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        步骤一：定义模型列表
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        步骤二：创建 Agent 并启用中间件
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -1661,7 +1627,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         智能体交接
@@ -1673,7 +1639,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         参数说明
@@ -1697,6 +1663,17 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
   
 </li>
         
@@ -1771,6 +1748,17 @@
   <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
+        变量解析顺序
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用示例
       
     </span>
@@ -1802,7 +1790,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         变量覆盖示例
@@ -2040,7 +2028,7 @@
 </ul>
 </div>
 <h3 id="_9">使用示例</h3>
-<h4 id="_10">步骤一：定义模型列表</h4>
+<p><strong>步骤一：定义模型列表</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.model_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelDict</span>
 
 <span class="n">model_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -2073,7 +2061,7 @@
     <span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div>
-<h4 id="agent">步骤二：创建 Agent 并启用中间件</h4>
+<p><strong>步骤二：创建 Agent 并启用中间件</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelRouterMiddleware</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
@@ -2097,9 +2085,9 @@
 <p class="admonition-title">并行执行</p>
 <p>采用中间件实现模型路由，每次仅会分配一个任务进行执行，如果你想要将任务分解为多个子任务由多个模型进行并行执行，请参考<a href="../graph/">状态图构建</a>。</p>
 </div>
-<h2 id="_11">智能体交接</h2>
+<h2 id="_10">智能体交接</h2>
 <p><code>HandoffAgentMiddleware</code> 是一个用于<strong>在多个子 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>
-<h3 id="_12">参数说明</h3>
+<h3 id="_11">参数说明</h3>
 <table>
 <thead>
 <tr>
@@ -2155,7 +2143,7 @@
 </tbody>
 </table>
 <p>对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具。本中间件利用每个智能体的 <code>handoffs</code> 配置，自动为每个智能体创建对应的交接工具。如果要自定义交接工具的描述，则可以通过 <code>custom_handoffs_tool_descriptions</code> 参数实现。</p>
-<p><strong>使用示例</strong></p>
+<h3 id="_12">使用示例</h3>
 <p>本示例中，将使用四个智能体：<code>time_agent</code>、<code>weather_agent</code>、<code>code_agent</code> 和 <code>default_agent</code>。</p>
 <p>接下来要创建对应智能体的配置字典 <code>agent_config</code>。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.handoffs</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
@@ -2268,7 +2256,10 @@
 <h2 id="_13">工具调用修复</h2>
 <p><code>ToolCallRepairMiddleware</code> 是一个<strong>自动修复大模型无效工具调用（<code>invalid_tool_calls</code>）</strong>的中间件。</p>
 <p>大模型在输出工具调用的 JSON Schema 时，可能因模型自身原因生成 JSON 格式错误的内容（错误的内容常见于 <code>arguments</code> 字段），导致 JSON 解析失败。这类调用会被存到 <code>invalid_tool_calls</code> 字段中。<code>ToolCallRepairMiddleware</code> 会在模型返回结果后自动检测 <code>invalid_tool_calls</code>，并尝试调用 <code>json-repair</code> 进行修复，使工具调用得以正常执行。</p>
-<p>请确保已安装 <code>langchain-dev-utils[standard]</code>，详见<strong>安装指南</strong>。</p>
+<div class="admonition warning">
+<p class="admonition-title">使用须知</p>
+<p>使用本中间件前，请确保已安装 <code>langchain-dev-utils[standard]</code>，详见<strong>安装指南</strong>。</p>
+</div>
 <h3 id="_14">参数说明</h3>
 <p>该中间件零配置开箱即用，无需额外参数。</p>
 <h3 id="_15">使用示例</h3>
@@ -2282,20 +2273,51 @@
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">提示</p>
+<p>由于本中间件实例化时无需传入任何参数，故本库在模块加载的时候已创建了一个全局实例<code>tool_call_repair</code>，可以直接使用此实例，例如：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool_call_repair</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">run_python_code</span><span class="p">,</span> <span class="n">get_current_time</span><span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">tool_call_repair</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
 <p>本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 <code>json-repair</code> 的修复能力；此外，它仅作用于 <code>invalid_tool_calls</code> 字段中的无效工具调用内容。</p>
 </div>
 <h2 id="_16">格式化系统提示词</h2>
-<p><code>format_prompt</code> 是一个<strong>中间件实例</strong>，允许您在 <code>system_prompt</code> 中使用 <code>f-string</code> 风格的占位符（如 <code>{name}</code>），并在运行时动态地用实际值替换它们。</p>
+<p><code>FormatPromptMiddleware</code> 是一个用于<strong>格式化系统提示词</strong>的中间件。</p>
 <h3 id="_17">参数说明</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>template_format</code></td>
+<td>指定系统提示词模板语法。<br><br><strong>类型</strong>: <code>Literal["f-string", "jinja2"]</code><br><strong>必填</strong>: 否<br><strong>默认值</strong>: <code>"f-string"</code></td>
+</tr>
+</tbody>
+</table>
+<p>一般 <code>f-string</code> 风格的模板字符串最为常用，本库预置了全局实例 <code>format_prompt</code>，推荐直接使用。仅在需要 <code>jinja2</code> 风格（如 <code>{{ name }}</code>）时，才需手动实例化 <code>FormatPromptMiddleware</code> 并指定 <code>template_format="jinja2"</code>。后续示例均以 <code>format_prompt</code> 为准。</p>
+<div class="admonition warning">
+<p class="admonition-title">使用须知</p>
+<p>若需使用本中间件格式化 <code>jinja2</code> 风格模板，请先安装 <code>langchain-dev-utils[standard]</code>，详见<strong>安装指南</strong>。</p>
+</div>
+<h3 id="_18">变量解析顺序</h3>
 <p>占位符中的变量值遵循一个明确的解析顺序：</p>
 <ol>
 <li><strong>优先从 <code>state</code> 中查找</strong>：会先从 <code>state</code> 字典中查找与占位符同名的字段</li>
 <li><strong>其次从 <code>context</code> 中查找</strong>：如果在 <code>state</code> 中未找到该字段，则会继续在 <code>context</code> 对象中查找</li>
 </ol>
 <p>这个顺序意味着 <code>state</code> 中的值拥有更高的优先级，可以覆盖 <code>context</code> 中同名的值。</p>
-<h3 id="_18">使用示例</h3>
+<h3 id="_19">使用示例</h3>
 <h4 id="state">仅从 <code>state</code> 中获取变量</h4>
 <p>这是最基础的用法，所有占位符变量都由 <code>state</code> 提供。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
@@ -2344,7 +2366,7 @@
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<h4 id="_19">变量覆盖示例</h4>
+<h4 id="_20">变量覆盖示例</h4>
 <p>此示例展示了当 <code>state</code> 和 <code>context</code> 中存在同名变量时，<code>state</code> 的值会优先生效。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
@@ -2375,12 +2397,6 @@
 <span class="c1"># 因为 state 的优先级更高</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">注意</p>
-<p>自定义中间件有两种实现方式：装饰器或继承类。<br />
-- 继承类实现：<code>PlanMiddleware</code>、<code>ModelMiddleware</code>、<code>HandoffAgentMiddleware</code>、<code>ToolCallRepairMiddleware</code><br />
-- 装饰器实现：<code>format_prompt</code>（装饰器会把函数直接变成中间件实例，因此无需手动实例化即可使用）</p>
-</div>
 <div class="admonition info">
 <p class="admonition-title">官方中间件扩充</p>
 <p>本库扩充了以下官方中间件，支持通过字符串参数指定已被 <code>register_model_provider</code> 注册的模型：</p>

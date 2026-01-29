@@ -2038,9 +2038,24 @@ This library enables this option by default; if you need to disable it, you can 
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Attention</p>
-<p><code>supported_response_format</code> currently only affects the <code>model.with_structured_output</code> method. For structured output in <code>create_agent</code>, if you need to use the <code>json_schema</code> implementation, you need to ensure that the corresponding model's <code>profile</code> contains the <code>structured_output</code> field with a value of <code>True</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code>supported_response_format</code> includes <code>json_schema</code>, the <code>structured_output</code> field in <code>model.profile</code> will automatically be set to <code>True</code>. In this case, when using <code>create_agent</code> and no specific structured output strategy is specified, <code>json_schema</code> will be used as the default structured output strategy.</p>
+<p>For example:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
+
+<span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
+    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+</code></pre></div></p>
+<p>The output is:</p>
+<div class="highlight"><pre><span></span><code>{&#39;structured_output&#39;: True}
+</code></pre></div>
 </div>
 </details>
 <h4 id="passing-extra-parameters">Passing Extra Parameters</h4>

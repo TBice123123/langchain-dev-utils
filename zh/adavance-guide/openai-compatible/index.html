@@ -2038,9 +2038,24 @@
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition warning">
+<div class="admonition note">
 <p class="admonition-title">注意</p>
-<p><code>supported_response_format</code>目前仅影响<code>model.with_structured_output</code>方法。对于<code>create_agent</code>中的结构化输出，若需要使用<code>json_schema</code>的实现方式，你需要确保对应模型的<code>profile</code>中包含<code>structured_output</code>字段，且值为<code>True</code>。</p>
+<p>若 <code>supported_response_format</code> 包含 <code>json_schema</code>，则 <code>model.profile</code> 中的 <code>structured_output</code> 字段将自动置为 <code>True</code>，此时使用 <code>create_agent</code> 时如果未指定具体的结构化输出策略，默认会采用 <code>json_schema</code> 作为结构化输出策略。</p>
+<p>例如:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
+
+<span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
+    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+</code></pre></div></p>
+<p>输出结果为</p>
+<div class="highlight"><pre><span></span><code>{&#39;structured_output&#39;: True}
+</code></pre></div>
 </div>
 </details>
 <h4 id="_9">传递额外参数</h4>

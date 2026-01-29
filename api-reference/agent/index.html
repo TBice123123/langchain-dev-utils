@@ -1528,15 +1528,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#format_prompt" class="md-nav__link">
+  <a href="#formatpromptmiddleware" class="md-nav__link">
     <span class="md-ellipsis">
       
-        format_prompt
+        FormatPromptMiddleware
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="format_prompt">
+    <nav class="md-nav" aria-label="FormatPromptMiddleware">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1544,6 +1544,28 @@
     <span class="md-ellipsis">
       
         Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
       
     </span>
   </a>
@@ -2510,15 +2532,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#format_prompt" class="md-nav__link">
+  <a href="#formatpromptmiddleware" class="md-nav__link">
     <span class="md-ellipsis">
       
-        format_prompt
+        FormatPromptMiddleware
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="format_prompt">
+    <nav class="md-nav" aria-label="FormatPromptMiddleware">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2526,6 +2548,28 @@
     <span class="md-ellipsis">
       
         Function Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
       
     </span>
   </a>
@@ -3457,11 +3501,39 @@
 <div class="highlight"><pre><span></span><code><span class="n">tool_call_repair_middleware</span> <span class="o">=</span> <span class="n">ToolCallRepairMiddleware</span><span class="p">()</span>
 </code></pre></div>
 <hr />
-<h2 id="format_prompt">format_prompt</h2>
-<p>Helper for formatting prompts.</p>
+<h2 id="formatpromptmiddleware">FormatPromptMiddleware</h2>
+<p>Middleware for formatting prompts.</p>
 <h3 id="function-signature_3">Function Signature</h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dynamic_prompt</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">format_prompt</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ModelRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FormatPromptMiddleware</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">template_format</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;f-string&quot;</span><span class="p">,</span> <span class="s2">&quot;jinja2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;f-string&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</code></pre></div>
+<h3 id="parameters_10">Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template_format</td>
+<td>Literal["f-string", "jinja2"]</td>
+<td>No</td>
+<td>"f-string"</td>
+<td>Template syntax. Valid values: <code>f-string</code> or <code>jinja2</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_11">Example</h3>
+<div class="highlight"><pre><span></span><code><span class="n">format_prompt_middleware</span> <span class="o">=</span> <span class="n">FormatPromptMiddleware</span><span class="p">(</span><span class="n">template_format</span><span class="o">=</span><span class="s2">&quot;jinja2&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="planstate">PlanState</h2>

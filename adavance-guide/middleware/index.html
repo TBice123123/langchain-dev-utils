@@ -953,34 +953,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage Example">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-define-the-model-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Define the Model List
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-create-agent-and-enable-middleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Create Agent and Enable Middleware
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -1028,6 +1000,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#usage-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1057,7 +1040,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-example_2" class="md-nav__link">
+  <a href="#usage-example_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Usage Example
@@ -1096,7 +1079,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-example_3" class="md-nav__link">
+  <a href="#variable-resolution-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Resolution Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage-example_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Usage Example
@@ -1625,34 +1619,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage Example">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-define-the-model-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Define the Model List
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-create-agent-and-enable-middleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Create Agent and Enable Middleware
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -1700,6 +1666,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#usage-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1729,7 +1706,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-example_2" class="md-nav__link">
+  <a href="#usage-example_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Usage Example
@@ -1768,7 +1745,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-example_3" class="md-nav__link">
+  <a href="#variable-resolution-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Resolution Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage-example_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Usage Example
@@ -2040,7 +2028,7 @@
 </ul>
 </div>
 <h3 id="usage-example_1">Usage Example</h3>
-<h4 id="step-1-define-the-model-list">Step 1: Define the Model List</h4>
+<p><strong>Step 1: Define the Model List</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.model_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelDict</span>
 
 <span class="n">model_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -2073,7 +2061,7 @@
     <span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div>
-<h4 id="step-2-create-agent-and-enable-middleware">Step 2: Create Agent and Enable Middleware</h4>
+<p><strong>Step 2: Create Agent and Enable Middleware</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelRouterMiddleware</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
@@ -2155,7 +2143,7 @@
 </tbody>
 </table>
 <p>For this paradigm of multi-agent implementation, a tool used for handoffs is often required. This middleware utilizes the <code>handoffs</code> configuration of each agent to automatically create the corresponding handoff tool for each agent. If you wish to customize the description of the handoff tool, you can achieve this via the <code>custom_handoffs_tool_descriptions</code> parameter.</p>
-<p><strong>Usage Example</strong></p>
+<h3 id="usage-example_2">Usage Example</h3>
 <p>In this example, we will use four agents: <code>time_agent</code>, <code>weather_agent</code>, <code>code_agent</code>, and <code>default_agent</code>.</p>
 <p>Next, we need to create the corresponding agent configuration dictionary <code>agent_config</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.handoffs</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
@@ -2270,10 +2258,13 @@
 <h2 id="tool-call-repair">Tool Call Repair</h2>
 <p><code>ToolCallRepairMiddleware</code> is a middleware for <strong>automatically fixing invalid tool calls (<code>invalid_tool_calls</code>) from large models</strong>.</p>
 <p>When large models output the JSON Schema for tool calls, they may generate JSON format errors due to the model's own reasons (errors are common in the <code>arguments</code> field), leading to JSON parsing failures. Such calls are stored in the <code>invalid_tool_calls</code> field. <code>ToolCallRepairMiddleware</code> will automatically detect <code>invalid_tool_calls</code> after the model returns results and attempt to fix them by calling <code>json-repair</code>, allowing the tool calls to execute normally.</p>
-<p>Please ensure you have installed <code>langchain-dev-utils[standard]</code>, see the <strong>Installation Guide</strong> for details.</p>
+<div class="admonition warning">
+<p class="admonition-title">Usage Notes</p>
+<p>Before using this middleware, make sure you have installed <code>langchain-dev-utils[standard]</code>. See the <strong>Installation Guide</strong> for details.</p>
+</div>
 <h3 id="parameter-description_3">Parameter Description</h3>
 <p>This middleware is zero-configuration and ready to use out of the box, no additional parameters required.</p>
-<h3 id="usage-example_2">Usage Example</h3>
+<h3 id="usage-example_3">Usage Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolCallRepairMiddleware</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2284,20 +2275,51 @@
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Tip</p>
+<p>Since this middleware requires no parameters, the library creates a global instance <code>tool_call_repair</code> at import time. You can use this instance directly, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool_call_repair</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">run_python_code</span><span class="p">,</span> <span class="n">get_current_time</span><span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">tool_call_repair</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
 <p>This middleware cannot guarantee 100% fixing of all invalid tool calls; the actual effect depends on the repair capability of <code>json-repair</code>. Additionally, it only acts on invalid tool call content in the <code>invalid_tool_calls</code> field.</p>
 </div>
 <h2 id="formatting-system-prompts">Formatting System Prompts</h2>
-<p><code>format_prompt</code> is a <strong>middleware instance</strong> that allows you to use <code>f-string</code> style placeholders (like <code>{name}</code>) in <code>system_prompt</code> and dynamically replace them with actual values at runtime.</p>
+<p><code>FormatPromptMiddleware</code> is a middleware for <strong>formatting system prompts</strong>.</p>
 <h3 id="parameter-description_4">Parameter Description</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>template_format</code></td>
+<td>Template syntax for <code>system_prompt</code>.<br><br><strong>Type</strong>: <code>Literal["f-string", "jinja2"]</code><br><strong>Required</strong>: No<br><strong>Default</strong>: <code>"f-string"</code></td>
+</tr>
+</tbody>
+</table>
+<p>In most cases, <code>f-string</code>-style template strings are the most common. This library provides a pre-created global instance <code>format_prompt</code>, and it is recommended to use it directly. Only when you need <code>jinja2</code> style (e.g., <code>{{ name }}</code>) do you need to instantiate <code>FormatPromptMiddleware</code> and set <code>template_format="jinja2"</code>. The examples below use <code>format_prompt</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Usage Notes</p>
+<p>To format <code>jinja2</code>-style templates with this middleware, first install <code>langchain-dev-utils[standard]</code>. See the <strong>Installation Guide</strong> for details.</p>
+</div>
+<h3 id="variable-resolution-order">Variable Resolution Order</h3>
 <p>The values of variables in placeholders follow a clear resolution order:</p>
 <ol>
 <li><strong>First look up in <code>state</code></strong>: It first looks for fields with the same name as the placeholder in the <code>state</code> dictionary</li>
 <li><strong>Then look up in <code>context</code></strong>: If the field is not found in <code>state</code>, it continues to look in the <code>context</code> object</li>
 </ol>
 <p>This order means that values in <code>state</code> have higher priority and can override values with the same name in <code>context</code>.</p>
-<h3 id="usage-example_3">Usage Example</h3>
+<h3 id="usage-example_4">Usage Example</h3>
 <h4 id="getting-variables-only-from-state">Getting Variables Only from <code>state</code></h4>
 <p>This is the most basic usage, where all placeholder variables are provided by <code>state</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt</span>
@@ -2377,11 +2399,9 @@
 <span class="c1"># Because state has higher priority</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition warning">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>There are two ways to implement custom middleware: decorators or class inheritance.<br />
-- Class inheritance implementation: <code>PlanMiddleware</code>, <code>ModelMiddleware</code>, <code>HandoffAgentMiddleware</code>, <code>ToolCallRepairMiddleware</code><br />
-- Decorator implementation: <code>format_prompt</code> (the decorator directly turns the function into a middleware instance, so no manual instantiation is needed to use it)</p>
+<p><code>format_prompt</code> is a pre-instantiated <code>FormatPromptMiddleware()</code> for the default <code>"f-string"</code> template format.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Official Middleware Extensions</p>
