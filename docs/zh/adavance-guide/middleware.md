@@ -124,7 +124,7 @@ print(response)
 
 ### 使用示例
 
-#### 步骤一：定义模型列表
+**步骤一：定义模型列表**
 
 ```python
 from langchain_dev_utils.agents.middleware.model_router import ModelDict
@@ -160,7 +160,7 @@ model_list: list[ModelDict] = [
 ]
 ```
 
-#### 步骤二：创建 Agent 并启用中间件
+**步骤二：创建 Agent 并启用中间件**
 
 ```python
 from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
@@ -214,7 +214,7 @@ print(response)
 对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具。本中间件利用每个智能体的 `handoffs` 配置，自动为每个智能体创建对应的交接工具。如果要自定义交接工具的描述，则可以通过 `custom_handoffs_tool_descriptions` 参数实现。
 
 
-**使用示例**
+### 使用示例
 
 本示例中，将使用四个智能体：`time_agent`、`weather_agent`、`code_agent` 和 `default_agent`。
 
@@ -347,7 +347,8 @@ agent = create_agent(
 
 大模型在输出工具调用的 JSON Schema 时，可能因模型自身原因生成 JSON 格式错误的内容（错误的内容常见于 `arguments` 字段），导致 JSON 解析失败。这类调用会被存到 `invalid_tool_calls` 字段中。`ToolCallRepairMiddleware` 会在模型返回结果后自动检测 `invalid_tool_calls`，并尝试调用 `json-repair` 进行修复，使工具调用得以正常执行。
 
-请确保已安装 `langchain-dev-utils[standard]`，详见**安装指南**。
+!!! warning "使用须知"
+    使用本中间件前，请确保已安装 `langchain-dev-utils[standard]`，详见**安装指南**。
 
 ### 参数说明
 
@@ -367,15 +368,38 @@ agent = create_agent(
 )
 ```
 
+!!! note "提示"
+    由于本中间件实例化时无需传入任何参数，故本库在模块加载的时候已创建了一个全局实例`tool_call_repair`，可以直接使用此实例，例如：
+
+    ```python
+    from langchain_dev_utils.agents.middleware import tool_call_repair
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[run_python_code, get_current_time],
+        middleware=[tool_call_repair],
+    )
+    ```
+
 !!! warning "注意"
     本中间件无法保证 100% 修复所有无效工具调用，实际效果取决于 `json-repair` 的修复能力；此外，它仅作用于 `invalid_tool_calls` 字段中的无效工具调用内容。
 
 
 ## 格式化系统提示词
 
-`format_prompt` 是一个**中间件实例**，允许您在 `system_prompt` 中使用 `f-string` 风格的占位符（如 `{name}`），并在运行时动态地用实际值替换它们。
+`FormatPromptMiddleware` 是一个用于**格式化系统提示词**的中间件。
 
 ### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `template_format` | 指定系统提示词模板语法。<br><br>**类型**: `Literal["f-string", "jinja2"]`<br>**必填**: 否<br>**默认值**: `"f-string"` |
+
+一般 `f-string` 风格的模板字符串最为常用，本库预置了全局实例 `format_prompt`，推荐直接使用。仅在需要 `jinja2` 风格（如 `{{ name }}`）时，才需手动实例化 `FormatPromptMiddleware` 并指定 `template_format="jinja2"`。后续示例均以 `format_prompt` 为准。
+
+!!! warning "使用须知"
+    若需使用本中间件格式化 `jinja2` 风格模板，请先安装 `langchain-dev-utils[standard]`，详见**安装指南**。
+
+### 变量解析顺序
 
 占位符中的变量值遵循一个明确的解析顺序：
 
@@ -476,11 +500,6 @@ response = agent.invoke(
 # 因为 state 的优先级更高
 print(response)
 ```
-
-!!! warning "注意"
-    自定义中间件有两种实现方式：装饰器或继承类。  
-    - 继承类实现：`PlanMiddleware`、`ModelMiddleware`、`HandoffAgentMiddleware`、`ToolCallRepairMiddleware`  
-    - 装饰器实现：`format_prompt`（装饰器会把函数直接变成中间件实例，因此无需手动实例化即可使用）
 
 
 !!! info "官方中间件扩充"

@@ -56,3 +56,4 @@ If you install the `standard` version, the following additional dependencies wil
 
 - `langchain-openai` (for model management)
 - `json-repair` (for fixing tool-call errors in middleware)
+- `jinja2` (for formatting system prompt templates in middleware)

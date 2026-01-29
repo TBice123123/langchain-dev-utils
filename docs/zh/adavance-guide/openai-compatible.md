@@ -311,8 +311,28 @@ print(response)
     model = ChatVLLM(model="qwen3-4b")
     ``` 
 
-    !!! warning "注意"
-        `supported_response_format`目前仅影响`model.with_structured_output`方法。对于`create_agent`中的结构化输出，若需要使用`json_schema`的实现方式，你需要确保对应模型的`profile`中包含`structured_output`字段，且值为`True`。
+    !!! note "注意"
+        若 `supported_response_format` 包含 `json_schema`，则 `model.profile` 中的 `structured_output` 字段将自动置为 `True`，此时使用 `create_agent` 时如果未指定具体的结构化输出策略，默认会采用 `json_schema` 作为结构化输出策略。
+
+        例如:
+        ```python
+        from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
+
+        ChatVLLM = create_openai_compatible_model(
+            model_provider="vllm",
+            base_url="http://localhost:8000/v1",
+            compatibility_options={"supported_response_format": ["json_schema"]},
+        )
+
+        model = ChatVLLM(model="qwen3-4b")
+        print(model.profile)
+        ```
+
+        输出结果为
+
+        ```
+        {'structured_output': True}
+        ```
 
 
 #### 传递额外参数

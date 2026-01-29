@@ -261,6 +261,8 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 payload_messages.append(_convert_message_to_dict(m))
 
         payload["messages"] = payload_messages
+        if "tools" in payload and len(payload["tools"]) == 0:
+            payload.pop("tools")
         return payload
 
     @model_validator(mode="after")
@@ -302,6 +304,8 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 ModelProfile,
                 _get_profile_by_provider_and_model(self._provider, self.model_name),
             )
+        if "json_schema" in self.supported_response_format:
+            self.profile.update({"structured_output": True})
         return self
 
     def _create_chat_result(
@@ -347,9 +351,9 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             if isinstance(model_extra, dict) and (
                 reasoning := model_extra.get("reasoning")
             ):
-                rtn.generations[0].message.additional_kwargs["reasoning_content"] = (
-                    reasoning
-                )
+                rtn.generations[0].message.additional_kwargs[
+                    "reasoning_content"
+                ] = reasoning
 
         return rtn
 

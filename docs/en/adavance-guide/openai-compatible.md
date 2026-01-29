@@ -311,8 +311,28 @@ print(response)
     model = ChatVLLM(model="qwen3-4b")
     ``` 
 
-    !!! warning "Attention"
-        `supported_response_format` currently only affects the `model.with_structured_output` method. For structured output in `create_agent`, if you need to use the `json_schema` implementation, you need to ensure that the corresponding model's `profile` contains the `structured_output` field with a value of `True`.
+    !!! note "Note"
+        If `supported_response_format` includes `json_schema`, the `structured_output` field in `model.profile` will automatically be set to `True`. In this case, when using `create_agent` and no specific structured output strategy is specified, `json_schema` will be used as the default structured output strategy.
+
+        For example:
+        ```python
+        from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
+
+        ChatVLLM = create_openai_compatible_model(
+            model_provider="vllm",
+            base_url="http://localhost:8000/v1",
+            compatibility_options={"supported_response_format": ["json_schema"]},
+        )
+
+        model = ChatVLLM(model="qwen3-4b")
+        print(model.profile)
+        ```
+
+        The output is:
+
+        ```
+        {'structured_output': True}
+        ```
 
 
 #### Passing Extra Parameters

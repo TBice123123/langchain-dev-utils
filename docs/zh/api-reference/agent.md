@@ -437,15 +437,31 @@ tool_call_repair_middleware = ToolCallRepairMiddleware()
 
 ---
 
-## format_prompt
+## FormatPromptMiddleware
 
 用于格式化提示词的中间件。
 
 ### 函数签名
 
 ```python
-@dynamic_prompt
-def format_prompt(request: ModelRequest) -> str
+class FormatPromptMiddleware(AgentMiddleware):
+    def __init__(
+        self,
+        *,
+        template_format: Literal["f-string", "jinja2"] = "f-string",
+    ) -> None:
+```
+
+### 参数
+
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| template_format | Literal["f-string", "jinja2"] | 否 | `"f-string"` | 模板语法，取值为`f-string`或`jinja2` |
+
+### 示例
+
+```python
+format_prompt_middleware = FormatPromptMiddleware(template_format="jinja2")
 ```
 
 ---

@@ -435,18 +435,35 @@ tool_call_repair_middleware = ToolCallRepairMiddleware()
 
 ---
 
-## format_prompt
+## FormatPromptMiddleware
 
-Helper for formatting prompts.
+Middleware for formatting prompts.
 
 ### Function Signature
 
 ```python
-@dynamic_prompt
-def format_prompt(request: ModelRequest) -> str
+class FormatPromptMiddleware(AgentMiddleware):
+    def __init__(
+        self,
+        *,
+        template_format: Literal["f-string", "jinja2"] = "f-string",
+    ) -> None:
+```
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| template_format | Literal["f-string", "jinja2"] | No | "f-string" | Template syntax. Valid values: `f-string` or `jinja2` |
+
+### Example
+
+```python
+format_prompt_middleware = FormatPromptMiddleware(template_format="jinja2")
 ```
 
 ---
+
 
 ## PlanState
 

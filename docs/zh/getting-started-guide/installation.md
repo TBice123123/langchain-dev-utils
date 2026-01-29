@@ -57,5 +57,7 @@ print(langchain_dev_utils.__version__)
 
 - `langchain-openai`（用于模型管理）
 - `json-repair`(用于中间件的工具调用错误修复)
+- `jinja2`(用于中间件的格式化系统提示词模板)
+
 
 

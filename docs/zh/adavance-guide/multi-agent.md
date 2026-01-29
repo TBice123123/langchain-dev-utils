@@ -427,13 +427,18 @@ call_agent_tool = wrap_agent_as_tool(
 ```
 
 !!! tip "提示"
-    对于 `wrap_all_agents_as_tool` 函数，如果需要让不同智能体使用不同的 `pre_input_hooks` 或 `post_output_hooks`，可以用 `get_subagent_name` 获取当前运行的智能体名称，再根据名称使用不同的处理方法。
-    例如：
+    对于`wrap_all_agents_as_tool` 函数，若需为不同子智能体定制 `pre_input_hooks` 或 `post_output_hooks`，可在钩子内调用 `get_subagent_name(runtime)` 获取当前智能体名称，再按名称分别处理。
+    例如，假设当前仅需要对于`weather_agent` 子智能体定制 `pre_input_hooks`(例如添加当前城市和时间)，则可以这样实现：
 
     ```python
     from langchain_dev_utils.agents.wrap import get_subagent_name
+    from datetime import datetime
     
     def process_input(request: str, runtime: ToolRuntime):
         subagent_name = get_subagent_name(runtime)
-        # 根据不同的agent名称处理输入，代码略
+        if subagent_name == "weather_agent":
+            city = runtime.state.get("city", "未知城市")
+            time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            return f"当前城市是：{city}，时间为：{time}。请根据上述内容，完成任务" + request 
+        return request
     ```

@@ -1,11 +1,15 @@
 [project]
 name = "langchain-dev-utils"
-version = "1.4.0"
+version = "1.4.1"
 description = "A practical utility library for LangChain and LangGraph development"
 readme = "README.md"
 authors = [{ name = "tiebingice", email = "tiebingice123@outlook.com" }]
 requires-python = ">=3.11"
-dependencies = ["langchain>=1.2.0", "langchain-core>=1.2.5", "langgraph>=1.0.0"]
+dependencies = [
+    "langchain>=1.2.0",
+    "langchain-core>=1.2.5",
+    "langgraph>=1.0.0",
+]
 
 [project.urls]
 "Source Code" = "https://github.com/TBice123123/langchain-dev-utils"
@@ -14,7 +18,11 @@ documentation = "https://tbice123123.github.io/langchain-dev-utils"
 
 
 [project.optional-dependencies]
-standard = ["json-repair>=0.53.1", "langchain-openai"]
+standard = [
+    "jinja2>=3.1.6",
+    "json-repair>=0.53.1",
+    "langchain-openai",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -30,7 +38,11 @@ python_files = ["test_*.py"]
 python_functions = ["test_*"]
 
 [dependency-groups]
-dev = ["langchain-model-profiles>=0.0.5", "ruff>=0.14.5"]
+dev = [
+    "dashscope>=1.25.9",
+    "langchain-model-profiles>=0.0.5",
+    "ruff>=0.14.5",
+]
 docs = [
     "jupyter>=1.1.1",
     "mkdocs-material>=9.7.0",

@@ -81,7 +81,7 @@ plugins:
             - OpenAI Compatible API Integration: adavance-guide/openai-compatible.md
             - Subagent Tools (Agent as Tool): adavance-guide/multi-agent.md
             - Middleware: adavance-guide/middleware.md
-            - State-Graph Building: adavance-guide/graph.md
+            - Prebuilt State-Graph Building Functions: adavance-guide/graph.md
             - Add Human-in-the-Loop Support: adavance-guide/human-in-the-loop.md
           - API Reference:
             - Agent Development Module API Reference: api-reference/agent.md
@@ -89,7 +89,7 @@ plugins:
             - Embedding Model Management Module API Reference: api-reference/embeddings.md
             - Message Handling Module API Reference: api-reference/message_convert.md
             - Tool Calling Handling Module API Reference: api-reference/tool_calling.md
-            - State-Graph Building Module API Reference: api-reference/graph.md
+            - State-Graph Building Functions Module API Reference: api-reference/graph.md
           - Usage Examples: example-project.md
           
         - locale: zh
@@ -108,7 +108,7 @@ plugins:
             - OpenAI 兼容 API 集成: adavance-guide/openai-compatible.md
             - 子智能体工具（Agent as Tool）: adavance-guide/multi-agent.md
             - 中间件: adavance-guide/middleware.md
-            - 状态图构建: adavance-guide/graph.md
+            - 预置状态图构建函数: adavance-guide/graph.md
             - 为工具调用添加人工审核: adavance-guide/human-in-the-loop.md  
           - API 参考: 
             - 智能体开发模块 API参考: api-reference/agent.md
@@ -116,7 +116,7 @@ plugins:
             - 嵌入模型管理模块 API参考: api-reference/embeddings.md
             - 消息处理模块 API参考: api-reference/message_convert.md
             - 工具调用处理模块 API参考: api-reference/tool_calling.md
-            - 状态图构建模块 API参考: api-reference/graph.md
+            - 状态图构建函数模块 API参考: api-reference/graph.md
           - 使用示例: example-project.md
           
           

@@ -23,13 +23,15 @@ def _transform_node_to_tuple(
 
 
 def _check_pkg_install(
-    pkg: Literal["langchain_openai", "json_repair"],
+    pkg: Literal["langchain_openai", "json_repair", "jinja2"],
 ) -> None:
     if not util.find_spec(pkg):
         if pkg == "langchain_openai":
             msg = "Please install langchain_dev_utils[standard],when use 'openai-compatible'"
-        else:
+        elif pkg == "json_repair":
             msg = "Please install langchain_dev_utils[standard] to use ToolCallRepairMiddleware."
+        else:
+            msg = "Please install langchain_dev_utils[standard] to use FormatPromptMiddleware."
         raise ImportError(msg)
 
 

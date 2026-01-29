@@ -425,14 +425,24 @@ call_agent_tool = wrap_agent_as_tool(
 )
 ```
 
-!!! tip "tip"
-    For the `wrap_all_agents_as_tool` function, if you need different agents to use different `pre_input_hooks` or `post_output_hooks`, you can use `get_subagent_name` to get the name of the currently running agent and then apply different processing methods based on the name.
-    For example:
+!!! tip "Tip"
+    For `wrap_all_agents_as_tool`, if you need to customize `pre_input_hooks` or `post_output_hooks` per subagent, you can call `get_subagent_name(runtime)` inside the hook to get the current subagent name, then handle each case by name.
+
+    For example, suppose you only want to customize `pre_input_hooks` for the `weather_agent` subagent (e.g., inject the current city and time). You can implement it like this:
 
     ```python
     from langchain_dev_utils.agents.wrap import get_subagent_name
-    
+    from datetime import datetime
+
     def process_input(request: str, runtime: ToolRuntime):
         subagent_name = get_subagent_name(runtime)
-        # Process input based on the agent name; code omitted
+        if subagent_name == "weather_agent":
+            city = runtime.state.get("city", "Unknown")
+            time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            return (
+                f"Current city: {city}, time: {time}. "
+                "Please complete the task based on the above. "
+                + request
+            )
+        return request
     ```

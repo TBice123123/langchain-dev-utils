@@ -121,7 +121,7 @@ Each model configuration is a dictionary containing the following fields:
 
 ### Usage Example
 
-#### Step 1: Define the Model List
+**Step 1: Define the Model List**
 
 ```python
 from langchain_dev_utils.agents.middleware.model_router import ModelDict
@@ -157,7 +157,7 @@ model_list: list[ModelDict] = [
 ]
 ```
 
-#### Step 2: Create Agent and Enable Middleware
+**Step 2: Create Agent and Enable Middleware**
 
 ```python
 from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
@@ -211,7 +211,7 @@ Each agent is configured as a dictionary containing the following fields:
 For this paradigm of multi-agent implementation, a tool used for handoffs is often required. This middleware utilizes the `handoffs` configuration of each agent to automatically create the corresponding handoff tool for each agent. If you wish to customize the description of the handoff tool, you can achieve this via the `custom_handoffs_tool_descriptions` parameter.
 
 
-**Usage Example**
+### Usage Example
 
 In this example, we will use four agents: `time_agent`, `weather_agent`, `code_agent`, and `default_agent`.
 
@@ -346,7 +346,8 @@ agent = create_agent(
 
 When large models output the JSON Schema for tool calls, they may generate JSON format errors due to the model's own reasons (errors are common in the `arguments` field), leading to JSON parsing failures. Such calls are stored in the `invalid_tool_calls` field. `ToolCallRepairMiddleware` will automatically detect `invalid_tool_calls` after the model returns results and attempt to fix them by calling `json-repair`, allowing the tool calls to execute normally.
 
-Please ensure you have installed `langchain-dev-utils[standard]`, see the **Installation Guide** for details.
+!!! warning "Usage Notes"
+    Before using this middleware, make sure you have installed `langchain-dev-utils[standard]`. See the **Installation Guide** for details.
 
 ### Parameter Description
 
@@ -366,14 +367,37 @@ agent = create_agent(
 )
 ```
 
+!!! note "Tip"
+    Since this middleware requires no parameters, the library creates a global instance `tool_call_repair` at import time. You can use this instance directly, for example:
+
+    ```python
+    from langchain_dev_utils.agents.middleware import tool_call_repair
+    agent = create_agent(
+        model="vllm:qwen3-4b",
+        tools=[run_python_code, get_current_time],
+        middleware=[tool_call_repair],
+    )
+    ```
+
 !!! warning "Note"
     This middleware cannot guarantee 100% fixing of all invalid tool calls; the actual effect depends on the repair capability of `json-repair`. Additionally, it only acts on invalid tool call content in the `invalid_tool_calls` field.
 
 ## Formatting System Prompts
 
-`format_prompt` is a **middleware instance** that allows you to use `f-string` style placeholders (like `{name}`) in `system_prompt` and dynamically replace them with actual values at runtime.
+`FormatPromptMiddleware` is a middleware for **formatting system prompts**.
 
 ### Parameter Description
+
+| Parameter | Description |
+|-----------|-------------|
+| `template_format` | Template syntax for `system_prompt`.<br><br>**Type**: `Literal["f-string", "jinja2"]`<br>**Required**: No<br>**Default**: `"f-string"` |
+
+In most cases, `f-string`-style template strings are the most common. This library provides a pre-created global instance `format_prompt`, and it is recommended to use it directly. Only when you need `jinja2` style (e.g., `{{ name }}`) do you need to instantiate `FormatPromptMiddleware` and set `template_format="jinja2"`. The examples below use `format_prompt`.
+
+!!! warning "Usage Notes"
+    To format `jinja2`-style templates with this middleware, first install `langchain-dev-utils[standard]`. See the **Installation Guide** for details.
+
+### Variable Resolution Order
 
 The values of variables in placeholders follow a clear resolution order:
 
@@ -475,10 +499,8 @@ response = agent.invoke(
 print(response)
 ```
 
-!!! warning "Note"
-    There are two ways to implement custom middleware: decorators or class inheritance.  
-    - Class inheritance implementation: `PlanMiddleware`, `ModelMiddleware`, `HandoffAgentMiddleware`, `ToolCallRepairMiddleware`  
-    - Decorator implementation: `format_prompt` (the decorator directly turns the function into a middleware instance, so no manual instantiation is needed to use it)
+!!! note "Note"
+    `format_prompt` is a pre-instantiated `FormatPromptMiddleware()` for the default `"f-string"` template format.
 
 !!! info "Official Middleware Extensions"
     This library extends the following official middleware, supporting model specification through string parameters for models registered with `register_model_provider`:

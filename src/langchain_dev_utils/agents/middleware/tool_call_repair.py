@@ -94,3 +94,6 @@ class ToolCallRepairMiddleware(AgentMiddleware):
             result=results,
             structured_response=response.structured_response,
         )
+
+
+tool_call_repair = ToolCallRepairMiddleware()
