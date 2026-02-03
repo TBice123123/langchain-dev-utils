@@ -1921,6 +1921,10 @@
     <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">user_role</span><span class="o">=</span><span class="s2">&quot;VIP&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Jinja2 模板注意事项</p>
+<p>启用 Jinja2 模板后，<code>system_prompt</code> 会被编译为 Template 对象。<strong>务必将提示词主干硬编码在代码中</strong>，仅通过 <code>state</code> 或 <code>context</code> 传入动态数据；<strong>不要</strong>将用户输入直接作为 <code>system_prompt</code> 参数传入 <code>create_agent</code>。（实际上，无论是否启用本功能，大部分情况下，<code>system_prompt</code> 均应由开发者全权控制，而不应该直接采用外部用户输入作为主干系统提示词）</p>
+</div>
 
 
 

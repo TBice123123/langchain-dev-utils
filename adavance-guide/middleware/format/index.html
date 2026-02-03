@@ -1921,6 +1921,10 @@
     <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">user_role</span><span class="o">=</span><span class="s2">&quot;VIP&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Jinja2 Template Caution</p>
+<p>When Jinja2 templating is enabled, <code>system_prompt</code> will be compiled into a Template object. <strong>Always hardcode the prompt skeleton in your codebase</strong>, injecting dynamic values solely via <code>state</code> or <code>context</code>. <strong>Never</strong> pass raw user input directly as the <code>system_prompt</code> argument to <code>create_agent</code>. (Regardless of this feature, <code>system_prompt</code> should always be fully controlled by developers and never directly accept external user input as the core system prompt.)</p>
+</div>
 
 
 
