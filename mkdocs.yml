@@ -46,7 +46,8 @@ markdown_extensions:
   - md_in_html          
   - tables              
   - toc                 
-  - footnotes            
+  - footnotes     
+  - def_list       
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg       
@@ -77,12 +78,23 @@ plugins:
             - Formatting Sequences: getting-started-guide/format.md
             - Message Processing: getting-started-guide/message.md
             - Tool Calling Processing: getting-started-guide/tool.md
+            - Add Human-in-the-Loop Support in Tool Calling: getting-started-guide/human-in-the-loop.md
           - Advanced Guides:
-            - OpenAI Compatible API Integration: adavance-guide/openai-compatible.md
+            - OpenAI Compatible API Integration:
+              - Overview: adavance-guide/openai-compatible/overview.md
+              - Creating and Using Chat Models: adavance-guide/openai-compatible/chat.md
+              - Creating and Using Embedding Models: adavance-guide/openai-compatible/embedding.md
+              - Integration with Model Management: adavance-guide/openai-compatible/register.md
+            - Middleware:
+              - Overview: adavance-guide/middleware/overview.md
+              - Task Planning: adavance-guide/middleware/plan.md
+              - Model Routing: adavance-guide/middleware/router.md
+              - Agent Handoff: adavance-guide/middleware/handoffs.md
+              - Tool Call Repair: adavance-guide/middleware/tool-call-repair.md
+              - Format System Prompts: adavance-guide/middleware/format.md
+              - LangChain Built-in Middleware Extensions: adavance-guide/middleware/official.md
             - Subagent Tools (Agent as Tool): adavance-guide/multi-agent.md
-            - Middleware: adavance-guide/middleware.md
             - Prebuilt State-Graph Building Functions: adavance-guide/graph.md
-            - Add Human-in-the-Loop Support: adavance-guide/human-in-the-loop.md
           - API Reference:
             - Agent Development Module API Reference: api-reference/agent.md
             - Chat Model Management Module API Reference: api-reference/chat_model.md
@@ -104,12 +116,23 @@ plugins:
             - 格式化序列: getting-started-guide/format.md
             - 消息处理: getting-started-guide/message.md
             - 工具调用处理: getting-started-guide/tool.md
+            - 为工具调用添加人工审核: getting-started-guide/human-in-the-loop.md
           - 高级指南:
-            - OpenAI 兼容 API 集成: adavance-guide/openai-compatible.md
+            - OpenAI 兼容 API 集成: 
+              - 概述: adavance-guide/openai-compatible/overview.md
+              - 对话模型的创建与使用: adavance-guide/openai-compatible/chat.md
+              - 嵌入模型的创建与使用: adavance-guide/openai-compatible/embedding.md
+              - 与模型管理功能集成: adavance-guide/openai-compatible/register.md
+            - 中间件: 
+              - 概述: adavance-guide/middleware/overview.md
+              - 任务规划: adavance-guide/middleware/plan.md
+              - 模型路由: adavance-guide/middleware/router.md
+              - 智能体交接: adavance-guide/middleware/handoffs.md
+              - 工具调用修复: adavance-guide/middleware/tool-call-repair.md
+              - 格式化系统提示词: adavance-guide/middleware/format.md
+              - LangChain内置中间件扩展: adavance-guide/middleware/official.md
             - 子智能体工具（Agent as Tool）: adavance-guide/multi-agent.md
-            - 中间件: adavance-guide/middleware.md
-            - 预置状态图构建函数: adavance-guide/graph.md
-            - 为工具调用添加人工审核: adavance-guide/human-in-the-loop.md  
+            - 预置状态图构建函数: adavance-guide/graph.md 
           - API 参考: 
             - 智能体开发模块 API参考: api-reference/agent.md
             - 对话模型管理模块 API参考: api-reference/chat_model.md

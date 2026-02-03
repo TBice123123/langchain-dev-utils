@@ -1,62 +1,47 @@
-# Prebuilt State-Graph Construction Functions
+# Pre-built StateGraph Construction Functions
 
 ## Overview
 
-LangGraph is the official orchestration framework introduced by LangChain for building complex workflows. However, in real-world business scenarios, using LangGraph directly often requires writing a significant amount of boilerplate code (node naming, edge connection, graph compilation, etc.).
+LangGraph is the official orchestration framework by LangChain for building complex workflows. However, in real-world business scenarios, using LangGraph directly often requires writing a significant amount of boilerplate code (node naming, edge connection, graph compilation, etc.).
 
-To lower the barrier to entry, this library provides two preset functions for quickly building state graphs with sequential or parallel execution patterns. Developers only need to focus on implementing the business logic for nodes, while the orchestration work is handled automatically by the functions.
+To lower the barrier to entry, this library provides two preset functions for quickly building state graphs that execute sequentially or in parallel. Developers can focus solely on implementing business logic nodes, while the functions handle the orchestration automatically.
 
-The two functions are as follows:
+The two functions are:
 
-| Function Name | Function Description | Applicable Scenarios |
-|---------------|----------------------|----------------------|
+| Function Name | Functional Description | Applicable Scenarios |
+|--------------|------------------------|----------------------|
 | **create_sequential_graph** | Combines multiple nodes in sequence to form a sequential execution state graph | Tasks must be executed step-by-step and depend on the output of the previous step |
 | **create_parallel_graph** | Combines multiple nodes in parallel to form a parallel execution state graph | Multiple tasks are independent of each other and can be executed simultaneously to improve efficiency |
 
 ## Sequential Workflow
 
-Sequential workflows are suitable for scenarios where "tasks must be executed in steps, and the subsequent step depends on the output of the previous one." In LangGraph, each step usually corresponds to a state graph node.
+A sequential workflow applies to scenarios where "tasks must be executed in a specific order, and subsequent steps depend on the output of previous ones." In LangGraph, each step typically corresponds to a node in the state graph.
 
 You can use `create_sequential_graph` to combine multiple nodes into a state graph in a fixed order.
 
-### Parameter Description
-
-| Parameter | Description |
-|-----------|-------------|
-| `nodes` | A list of nodes to combine, which can be node functions or tuples consisting of a node name and a node function.<br><br>**Type**: `list[Node]`<br>**Required**: Yes |
-| `state_schema` | The State Schema of the final generated graph.<br><br>**Type**: `StateT`<br>**Required**: Yes |
-| `graph_name` | The name of the final generated graph.<br><br>**Type**: `str`<br>**Required**: No |
-| `context_schema` | The Context Schema of the final generated graph.<br><br>**Type**: `ContextT`<br>**Required**: No |
-| `input_schema` | The Input Schema of the final generated graph.<br><br>**Type**: `InputT`<br>**Required**: No |
-| `output_schema` | The Output Schema of the final generated graph.<br><br>**Type**: `OutputT`<br>**Required**: No |
-| `checkpointer` | The Checkpointer of the final generated graph.<br><br>**Type**: `Checkpointer`<br>**Required**: No |
-| `store` | The Store of the final generated graph.<br><br>**Type**: `BaseStore`<br>**Required**: No |
-| `cache` | The Cache of the final generated graph.<br><br>**Type**: `BaseCache`<br>**Required**: No |
-
 ### Typical Scenario
 
-Taking a user purchasing a product as an example, the typical flow is as follows:
+Taking a user purchasing a product as an example, the typical process looks like this:
 
 ```mermaid
 graph LR
-    Start([User Order Request])
+    Start([User order request])
     Inv[Inventory Check]
     Ord[Create Order]
     Pay[Complete Payment]
-    Del[Confirm Shipment]
-    End([Order Complete])
+    Del[Confirm Delivery]
+    End([Order Completed])
 
     Start --> Inv --> Ord --> Pay --> Del --> End
 ```
 
-This process is tightly linked, and the sequence cannot be reversed.
+This process is tightly linked, and the order cannot be reversed.
 
-These four stages (inventory check, create order, complete payment, confirm shipment) can be abstracted into independent nodes, with dedicated agents responsible for execution.
-Using `create_sequential_graph` to connect these four nodes in sequence creates a highly automated product purchase workflow with clear responsibilities.
+These four stages (Inventory Check, Create Order, Complete Payment, Confirm Delivery) can be abstracted into independent nodes, each managed by a dedicated agent. By using `create_sequential_graph` to connect these four nodes in order, you can form a highly automated product purchase workflow with clear responsibilities.
 
-The following example shows how to use `create_sequential_graph` to build a sequential workflow for product purchasing.
+The following example shows how to use `create_sequential_graph` to build a sequential workflow for product purchase.
 
-First, create the chat model object. Here we use accessing the locally deployed `qwen3-4b` via vLLM as an example. Since its interface is compatible with OpenAI, we can directly use `create_openai_compatible_model` to construct the model class.
+First, create a chat model object. Here, we use the locally deployed `qwen3-4b` via vLLM as an example. Since its interface is compatible with OpenAI, we can directly use `create_openai_compatible_model` to construct the model class.
 
 ```python
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -67,12 +52,14 @@ ChatVLLM = create_openai_compatible_model(
     chat_model_cls_name="ChatVLLM",
 )
 ```
-Then instantiate a `ChatVLLM` object for subsequent agents to call.
+
+Next, instantiate a `ChatVLLM` object for subsequent agents to call.
 
 ```python
 model = ChatVLLM(model="qwen3-4b")
 ```
-Next, create the relevant tools, such as checking inventory, creating orders, processing payments, etc.
+
+Then, create relevant tools, such as checking inventory, creating orders, making payments, etc.
 
 ??? example "Reference for Tool Implementation"
 
@@ -81,13 +68,13 @@ Next, create the relevant tools, such as checking inventory, creating orders, pr
 
     @tool
     def check_inventory(product_name: str) -> dict:
-        """Query inventory"""
+        """Check inventory"""
         return {"product_name": product_name, "in_stock": True, "available": 42}
 
     @tool
     def create_order(product_name: str, quantity: int) -> str:
         """Create order"""
-        return f"Order ORD-10001 created, Product: {product_name}, Quantity: {quantity}."
+        return f"Order ORD-10001 created, product: {product_name}, quantity: {quantity}."
 
     @tool
     def pay_order(order_id: str) -> str:
@@ -96,11 +83,11 @@ Next, create the relevant tools, such as checking inventory, creating orders, pr
 
     @tool
     def confirm_delivery(order_id: str, address: str) -> str:
-        """Confirm shipment"""
-        return f"Order {order_id} arranged for shipment, Delivery address: {address}."
+        """Confirm delivery"""
+        return f"Order {order_id} arranged for delivery, address: {address}."
     ```
 
-Then create the corresponding four sub-agents and the node functions that invoke these agents.
+Then, create the corresponding four sub-agents and the node functions that invoke these agents.
 
 ```python
 from langchain.agents import create_agent
@@ -131,7 +118,7 @@ delivery_agent = create_agent(
     model=model,
     tools=[confirm_delivery],
     system_prompt=(
-        "You are a delivery assistant responsible for confirming shipment information and arranging delivery."
+        "You are a delivery assistant responsible for confirming delivery information and arranging shipment."
     ),
     name="delivery_agent",
     state_schema=AgentState
@@ -156,9 +143,9 @@ def delivery(state: AgentState):
 
 !!! info "Note"
 
-    Although LangGraph allows adding agents (sub-graphs) directly as nodes to the graph, doing so causes the current agent's context to include the entire execution context of previous agents, which violates best practices for context engineering management. Therefore, it is recommended to wrap agents inside node functions and only output the final result.
+    Although LangGraph allows adding agents (subgraphs) directly as nodes, this causes the current agent's context to include the entire execution context of previous agents, violating best practices for context engineering management. Therefore, it is recommended to wrap agents inside node functions and only output the final result.
 
-Finally, use `create_sequential_graph` to connect these four nodes in sequence to form a state graph.
+Finally, use `create_sequential_graph` to connect these four nodes in sequence to form the state graph.
 
 ```python
 from langchain_dev_utils.graph import create_sequential_graph
@@ -173,46 +160,31 @@ graph = create_sequential_graph(
     state_schema=AgentState
 )
 ```
-Running example:
+
+Execution example:
 
 ```python
 response = graph.invoke(
     {
         "messages": [
-            HumanMessage("I want to buy a pair of wireless headphones, quantity 2. Please place the order. Delivery address is X City, X District, X Road, X No.")
+            HumanMessage("I want to buy a pair of wireless headphones, quantity 2. Please place the order. Delivery address: No. X, X Road, X District, X City")
         ]
     }
 )
 print(response)
 ```
 
-
 ## Parallel Workflow
 
-Parallel workflows are suitable for scenarios where "multiple tasks are independent of each other and can be executed simultaneously," improving overall throughput or reducing end-to-end latency through concurrent execution.
+Parallel workflows apply to scenarios where "multiple tasks are independent of each other and can be executed simultaneously," improving overall throughput or reducing end-to-end latency through concurrent execution.
 
 You can use `create_parallel_graph` to combine multiple nodes into a state graph in a parallel fashion.
 
-### Parameter Description
-
-| Parameter | Description |
-|-----------|-------------|
-| `nodes` | A list of nodes to combine, which can be node functions or tuples consisting of a node name and a node function.<br><br>**Type**: `list[Node]`<br>**Required**: Yes |
-| `state_schema` | The State Schema of the final generated graph.<br><br>**Type**: `StateT`<br>**Required**: Yes |
-| `graph_name` | The name of the final generated graph.<br><br>**Type**: `str`<br>**Required**: No |
-| `context_schema` | The Context Schema of the final generated graph.<br><br>**Type**: `ContextT`<br>**Required**: No |
-| `input_schema` | The Input Schema of the final generated graph.<br><br>**Type**: `InputT`<br>**Required**: No |
-| `output_schema` | The Output Schema of the final generated graph.<br><br>**Type**: `OutputT`<br>**Required**: No |
-| `checkpointer` | The Checkpointer of the final generated graph.<br><br>**Type**: `Checkpointer`<br>**Required**: No |
-| `store` | The Store of the final generated graph.<br><br>**Type**: `BaseStore`<br>**Required**: No |
-| `cache` | The Cache of the final generated graph.<br><br>**Type**: `BaseCache`<br>**Required**: No |
-| `branches_fn` | Parallel branch function that returns a list of Send objects to control parallel execution.<br><br>**Type**: `Callable`<br>**Required**: No |
-
 ### Typical Scenario
 
-In the product purchasing scenario, users may need multiple queries simultaneously, such as product details, inventory, promotions, and shipping estimates, which can be executed in parallel.
+In a product purchase scenario, users might need multiple types of queries simultaneously, such as product details, inventory, promotions, and shipping estimation. These can be executed in parallel.
 
-The flow is as follows:
+The process is as follows:
 
 ```mermaid
 graph LR
@@ -220,10 +192,10 @@ graph LR
     
     subgraph Parallel [Parallel Execution]
         direction TB
-        Prod[Product Details]
-        Inv[Inventory Check]
+        Prod[Product Detail Query]
+        Inv[Inventory Query]
         Prom[Promotion Calculation]
-        Ship[Shipping Estimate]
+        Ship[Shipping Estimation]
     end
     
     End([Aggregate Results])
@@ -239,7 +211,7 @@ graph LR
     Ship --> End
 ```
 
-Next, we create a parallel workflow to implement the above process.
+Next, we will create a parallel workflow to implement the above process.
 
 First, create a few tools.
 
@@ -295,7 +267,7 @@ product_agent = create_agent(
 inventory_agent = create_agent(
     model,
     tools=[check_inventory],
-    system_prompt="You are an inventory assistant responsible for checking inventory based on SKU.",
+    system_prompt="You are an inventory assistant responsible for querying inventory based on SKU.",
     name="inventory_agent",
     state_schema=AgentState,
 )
@@ -303,7 +275,7 @@ inventory_agent = create_agent(
 promotion_agent = create_agent(
     model,
     tools=[calculate_promotions],
-    system_prompt="You are a promotion assistant responsible for calculating current available discounts and estimated discounts.",
+    system_prompt="You are a promotion assistant responsible for calculating current available promotions and estimated discounts.",
     name="promotion_agent",
     state_schema=AgentState,
 )
@@ -349,25 +321,25 @@ graph = create_parallel_graph(
     graph_name="parallel_graph",
 )
 ```
-Running example:
+
+Execution example:
 
 ```python
 response = graph.invoke(
-    {"messages": [HumanMessage("I want to buy a pair of wireless headphones, quantity 2. Delivery address: X City, X District, X Road, X No.")]}
+    {"messages": [HumanMessage("I want to buy a pair of wireless headphones, quantity 2. Delivery address: No. X, X Road, X District, X City")]}
 )
 print(response)
 ```
 
-
 ### On-demand Parallelism
 
-In some cases, you may not want all nodes to participate in parallel execution, but instead prefer to "selectively run a subset of nodes in parallel based on conditions." This can be achieved by specifying a branch function via `branches_fn`.
+In some cases, you may not want all nodes to participate in parallel execution, but rather "selectively run a subset of nodes in parallel based on conditions." This can be achieved by specifying a `branches_fn` (branch function).
 
 The branch function needs to return a list of `Send` objects, where each `Send` contains the target node name and the input for that node.
 
 #### Implementation of Router Multi-Agent Architecture
 
-The `Router` is a typical architecture for multi-agent systems: a router model analyzes the user request and decomposes the task, then dispatches it to several business agents for execution. In the order query scenario, users may be concerned about order status, product information, or refunds simultaneously. The router model can distribute the request to order, product, and refund agents.
+`Router` is a typical architecture for multi-agent systems: a router model analyzes user requests and decomposes tasks, then distributes them to several business agents for execution. In an order query scenario, users might care about order status, product information, or refunds simultaneously. The router model can assign requests to agents for orders, products, refunds, etc.
 
 First, write the tools.
 
@@ -412,7 +384,7 @@ First, write the tools.
 
     @tool
     def get_shipping_trace(tracking_no: str) -> dict:
-        """Query shipping tracking"""
+        """Query shipping trace"""
         return {
             "events": [
                 {"time": "2025-01-02 09:10", "status": "Package picked up"},
@@ -430,7 +402,7 @@ First, write the tools.
                     "product_id": "P-10001",
                     "name": "Wireless Headphones Pro",
                     "price": 299,
-                    "highlights": ["Noise Cancelling", "Bluetooth 5.3", "30h Battery"],
+                    "highlights": ["ANC", "Bluetooth 5.3", "30h Battery"],
                 },
                 {
                     "product_id": "P-10002",
@@ -449,7 +421,7 @@ First, write the tools.
             "name": "Wireless Headphones Pro",
             "price": 299,
             "specs": {"color": ["Black", "White"], "warranty_months": 12},
-            "description": "True wireless headphones featuring noise cancellation and long battery life.",
+            "description": "True wireless headphones featuring active noise cancellation and long battery life.",
         }
 
 
@@ -476,7 +448,7 @@ First, write the tools.
             "status": "Processing",
             "progress": [
                 {"time": "2025-01-03 12:05", "status": "Submitted"},
-                {"time": "2025-01-03 12:20", "status": "Customer Service Review"},
+                {"time": "2025-01-03 12:20", "status": "CS Reviewing"},
             ],
             "estimated_days": 2,
         }
@@ -486,19 +458,19 @@ First, write the tools.
         """View refund policy"""
         return {
             "window_days": 7,
-            "requirements": ["Product in good condition", "Complete accessories", "Provide order number"],
-            "notes": ["Some promotional items do not support no-reason refunds", "Arrival time depends on payment channel"],
+            "requirements": ["Product intact", "Accessories complete", "Provide order number"],
+            "notes": ["Some promotional items do not support unconditional refunds", "Time to arrival depends on payment method"],
         }
     ```
 
-Then create the corresponding sub-agents.
+Then, create the corresponding sub-agents.
 
 ```python
 ORDER_AGENT_PROMPT = (
     "You are an order management assistant.\n"
-    "You can use tools to query order lists, order details, and shipping tracking.\n"
-    "Prioritize using tools to get information, then provide conclusions based on the tool results.\n"
-    "Output Requirement: Answer in Chinese, structure clearly, and list order information in items if necessary.\n"
+    "You can use tools to query order lists, order details, and shipping traces.\n"
+    "Prioritize using tools to get information, then draw conclusions based on tool results.\n"
+    "Output requirements: Answer in Chinese, with a clear structure, list order information in items if necessary.\n"
 )
 
 order_agent = create_agent(
@@ -510,10 +482,10 @@ order_agent = create_agent(
 
 PRODUCT_AGENT_PROMPT = (
     "You are a product management assistant.\n"
-    "You can use tools to search products, view product details, and query inventory.\n"
-    "Prioritize using tools to get information, then give suggestions based on the tool results.\n"
+    "You can use tools to search products, view product details, and check inventory.\n"
+    "Prioritize using tools to get information, then make suggestions based on tool results.\n"
     "When the user's needs are unclear, ask a clarifying question first (e.g., category/budget/usage).\n"
-    "Output Requirement: Answer in Chinese and give actionable next steps.\n"
+    "Output requirements: Answer in Chinese, and give actionable next steps.\n"
 )
 
 
@@ -526,9 +498,9 @@ product_agent = create_agent(
 
 REFUND_AGENT_PROMPT = (
     "You are a refund management assistant.\n"
-    "You can use tools to initiate refunds, query refund status, and view refund policy.\n"
-    "Prioritize using tools to get information; if the user is missing key fields (e.g., order number), ask for it first.\n"
-    "Output Requirement: Answer in Chinese, clearly stating refund progress/required materials/estimated time.\n"
+    "You can use tools to initiate refunds, check refund status, and view refund policies.\n"
+    "Prioritize using tools to get information; if the user is missing key fields (e.g., order number), ask for them first.\n"
+    "Output requirements: Answer in Chinese, clearly stating refund progress/required materials/estimated time.\n"
 )
 
 refund_agent = create_agent(
@@ -551,7 +523,7 @@ def refund(state: AgentState):
     return {"messages": [AIMessage(content=response["messages"][-1].content)]}
 ```
 
-Next, write the branch function: the router model generates the names of the sub-agents to be executed based on the request, as well as the task description to be sent to that sub-agent.
+Next, write the branch function: The router model generates the names of the sub-agents to be executed based on the request, along with the task description to be sent to that sub-agent.
 
 ```python
 from typing import Literal, cast
@@ -571,17 +543,17 @@ class RouterState(AgentState):
 
 
 ROUTER_SYSTEM_PROMPT = (
-    "You are a Router model, only responsible for splitting user questions and distributing them to appropriate business sub-agents.\n"
-    "Available business domains are only: order (orders), product (products), refund (refunds).\n"
-    "You must output a classifications list (used to call multiple sub-agents in parallel).\n"
+    "You are a Router model, responsible only for splitting user questions and distributing them to the appropriate business sub-agents.\n"
+    "Available business domains are only: order (Order), product (Product), refund (Refund).\n"
+    "You must output a classifications list (used for calling multiple sub-agents in parallel).\n"
     "Rules:\n"
-    "1) source must be one of the three above;\n"
-    "2) query must be a task description sent to that sub-agent that can be executed directly;\n"
-    "3) If a user sentence involves multiple business domains at the same time (e.g., 'check order' + 'view product' + 'ask refund'), it must be split into multiple classifications for parallel execution;\n"
-    "4) If unable to judge, prioritize choosing product and pass the question to it as is.\n"
-    "Example A: User: 'Check ORD-1 shipping and see if this headset is in stock' -> Return 2 items: order(query shipping) + product(query inventory).\n"
+    "1) source must be one of the above three;\n"
+    "2) query must be a directly executable task description sent to that sub-agent;\n"
+    "3) If a user sentence involves multiple business domains simultaneously (e.g., 'check order' + 'look at product' + 'ask refund'), it must be split into multiple classifications for parallel execution;\n"
+    "4) If unable to judge, prioritize 'product', and pass the question to it as is.\n"
+    "Example A: User: 'Check tracking for ORD-1 and see if these headphones are in stock' -> Return 2 items: order(query tracking) + product(query inventory).\n"
     "Example B: User: 'I want to return ORD-1, how long for refund' -> Return 1 item: refund(initiate/query refund).\n"
-    "Example C: User: 'I want to know the specs of this headset' -> Return 1 item: product(query details).\n"
+    "Example C: User: 'I want to know the specs of these headphones' -> Return 1 item: product(query details).\n"
 )
 
 
@@ -596,7 +568,7 @@ class ClassificationResult(BaseModel):
     """Result of classifying a user query into sub-problems for agents."""
 
     classifications: list[Classification] = Field(
-        description="List of agents to call and their corresponding sub-problems"
+        description="List of agents to call and their corresponding sub-questions"
     )
 
 
@@ -626,7 +598,8 @@ def branch_fn(state: RouterState) -> list[Send]:
         sends.append(Send(f"{source}", {"messages": [HumanMessage(res.get("query"))]}))
     return sends
 ```
-Finally, use `create_parallel_graph` to complete the orchestration of the parallel state graph and pass in the branch function.
+
+Finally, use `create_parallel_graph` to complete the orchestration of the parallel state graph, passing in the branch function.
 
 ```python
 graph = create_parallel_graph(
@@ -641,7 +614,7 @@ graph = create_parallel_graph(
 )
 ```
 
-Running example:
+Execution example:
 
 ```python
 response = graph.invoke(
@@ -653,14 +626,13 @@ print(response)
 
 response = graph.invoke(
     {
-        "messages": [HumanMessage("Recommend a pair of wireless headphones suitable for commuting and check stock; also, tell me your product refund policy?")],
+        "messages": [HumanMessage("Recommend a pair of wireless headphones suitable for commuting and check inventory; also, tell me your product refund policy?")],
     }
 )
 print(response)
 ```
 
-
 !!! tip "Tip"
 
-    - **When `branches_fn` parameter is NOT passed**: All nodes will be executed in parallel.
-    - **When `branches_fn` parameter IS passed**: Which nodes are executed is determined by the return value of that function.
+    - **When the `branches_fn` parameter is NOT passed**: All nodes will execute in parallel.
+    - **When the `branches_fn` parameter IS passed**: Which nodes execute is determined by the return value of this function.

@@ -20,20 +20,6 @@ LangGraph 是 LangChain 官方推出的编排框架，用于搭建复杂工作�
 
 使用 `create_sequential_graph` 可将多个节点按固定顺序组合成状态图。
 
-### 参数说明
-
-| 参数 | 说明 |
-|------|------|
-| `nodes` | 要组合的节点列表，可为节点函数或由节点名称与节点函数组成的二元组。<br><br>**类型**: `list[Node]`<br>**必填**: 是 |
-| `state_schema` | 最终生成图的 State Schema。<br><br>**类型**: `StateT`<br>**必填**: 是 |
-| `graph_name` | 最终生成图的名称。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `context_schema` | 最终生成图的 Context Schema。<br><br>**类型**: `ContextT`<br>**必填**: 否 |
-| `input_schema` | 最终生成图的输入 Schema。<br><br>**类型**: `InputT`<br>**必填**: 否 |
-| `output_schema` | 最终生成图的输出 Schema。<br><br>**类型**: `OutputT`<br>**必填**: 否 |
-| `checkpointer` | 最终生成图的 Checkpointer。<br><br>**类型**: `Checkpointer`<br>**必填**: 否 |
-| `store` | 最终生成图的 Store。<br><br>**类型**: `BaseStore`<br>**必填**: 否 |
-| `cache` | 最终生成图的 Cache。<br><br>**类型**: `BaseCache`<br>**必填**: 否 |
-
 ### 典型场景
 
 以用户购买商品为例，典型流程如下：
@@ -194,21 +180,6 @@ print(response)
 并行工作流适用于“多个任务相互独立、可同时执行”的场景，通过并发执行提升整体吞吐或降低端到端耗时。
 
 使用 `create_parallel_graph` 可将多个节点以并行方式组合成状态图。
-
-### 参数说明
-
-| 参数 | 说明 |
-|------|------|
-| `nodes` | 要组合的节点列表，可为节点函数或由节点名称与节点函数组成的二元组。<br><br>**类型**: `list[Node]`<br>**必填**: 是 |
-| `state_schema` | 最终生成图的 State Schema。<br><br>**类型**: `StateT`<br>**必填**: 是 |
-| `graph_name` | 最终生成图的名称。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `context_schema` | 最终生成图的 Context Schema。<br><br>**类型**: `ContextT`<br>**必填**: 否 |
-| `input_schema` | 最终生成图的输入 Schema。<br><br>**类型**: `InputT`<br>**必填**: 否 |
-| `output_schema` | 最终生成图的输出 Schema。<br><br>**类型**: `OutputT`<br>**必填**: 否 |
-| `checkpointer` | 最终生成图的 Checkpointer。<br><br>**类型**: `Checkpointer`<br>**必填**: 否 |
-| `store` | 最终生成图的 Store。<br><br>**类型**: `BaseStore`<br>**必填**: 否 |
-| `cache` | 最终生成图的 Cache。<br><br>**类型**: `BaseCache`<br>**必填**: 否 |
-| `branches_fn` | 并行分支函数，返回 Send 列表控制并行执行。<br><br>**类型**: `Callable`<br>**必填**: 否 |
 
 ### 典型场景
 

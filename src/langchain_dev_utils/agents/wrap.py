@@ -17,7 +17,7 @@ def _process_input(request: str, runtime: ToolRuntime) -> str:
 def _process_output(
     request: str, response: dict[str, Any], runtime: ToolRuntime
 ) -> Any:
-    return response["messages"][-1].content
+    return response["messages"][-1].text
 
 
 def get_subagent_name(runtime: ToolRuntime) -> str:

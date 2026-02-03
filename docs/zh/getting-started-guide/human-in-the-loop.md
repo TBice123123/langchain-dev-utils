@@ -9,12 +9,6 @@
 | `human_in_the_loop` | 用于同步工具函数 |
 | `human_in_the_loop_async` | 用于异步工具函数 |
 
-## 参数说明
-
-| 参数 | 说明 |
-|------|------|
-| `handler` | 自定义处理函数，若为 `None` 则使用默认处理函数。<br><br>**类型**: `Callable`<br>**必填**: 否 |
-
 ## 使用示例
 
 ### 使用默认的 handler

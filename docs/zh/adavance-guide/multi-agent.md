@@ -21,23 +21,14 @@
 2. 把智能体实例作为参数传入
 3. 获得可直接被其他智能体调用的工具对象
 
-### 函数参数说明
-
-| 参数 | 说明 |
-|------|------|
-| `agent` | 智能体实例，必须已定义 `name` 属性。<br><br>**类型**: `CompiledStateGraph`<br>**必填**: 是 |
-| `tool_name` | 工具名称，默认为 `transfer_to_{agent_name}`。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `tool_description` | 工具描述，默认为 `This tool transforms input to {agent_name}`。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
-| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
-
 ### 使用示例
 
 下面我们以 `supervisor` 智能体为例，介绍如何通过 `wrap_agent_as_tool` 将子智能体封装为工具。
 
 首先实现两个子智能体，一个用于发送邮件，一个用于日程查询和安排。
 
-#### 邮件智能体
+首先是邮件智能体的实现
+
 ```python
 from langchain_core.tools import tool
 from langchain_dev_utils.chat_models import register_model_provider
@@ -78,7 +69,8 @@ email_agent = create_agent(
 )
 ```
 
-#### 日程智能体
+以及日常日程智能体的实现
+
 ```python
 @tool
 def create_calendar_event(
@@ -145,6 +137,11 @@ manage_email = wrap_agent_as_tool(
 )
 ```
 
+!!! note "提示"
+    `wrap_agent_as_tool` 的 `tool_name` 与 `tool_description` 均为可选参数；若省略，工具名默认为 `transfer_to_{agent_name}`，描述默认为 `This tool transforms input to {agent_name}`。  
+    为让主智能体更精准地识别与调用子智能体，建议显式指定这两项（尤其是描述），以清晰传达子智能体的职责与能力。
+
+
 最终创建一个 `supervisor_agent`，它可以调用这两个工具。
 
 ```python
@@ -172,6 +169,7 @@ print(
 )
 ```
 
+
 !!! info "提示"
 
     上述示例中，我们是从 `langchain_dev_utils.agents` 中导入了 `create_agent` 函数，而不是 `langchain.agents`。这是因为本库也提供了一个与官方 `create_agent` 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 `register_model_provider` 注册的模型，而无需初始化模型实例后传入。
@@ -185,15 +183,6 @@ print(
 2. 把多个智能体实例作为列表一次性传入
 3. 获得可直接被其他智能体调用的统一工具对象
 
-### 函数参数说明
-
-| 参数 | 说明 |
-|------|------|
-| `agents` | 智能体实例列表。<br><br>**类型**: `list[CompiledStateGraph]`<br>**必填**: 是 |
-| `tool_name` | 工具名称，默认为 `task`。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `tool_description` | 工具描述，默认包含所有可用智能体信息。<br><br>**类型**: `str`<br>**必填**: 否 |
-| `pre_input_hooks` | 智能体运行前的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
-| `post_output_hooks` | 智能体运行后的钩子函数。<br><br>**类型**: `tuple[Callable, Callable] | Callable`<br>**必填**: 否 |
 
 ### 使用示例
 
@@ -225,14 +214,51 @@ main_agent = create_agent(
 )
 ```
 
+!!! note "提示"
+
+    `wrap_all_agents_as_tool` 的 `tool_name` 与 `tool_description` 均为可选参数；若省略，工具名默认为 `task`，描述默认为 `Launch an ephemeral subagent for a task.\nAvailable agents:\n {available_agents}`。  
+    为确保主智能体准确识别并调用子智能体，建议显式填写这两项，尤其是描述，以便清晰传达各子智能体的职责与能力。
+
+
 !!! info "提示"
 
     除了使用本库提供的 `wrap_all_agents_as_tool` 将多个智能体封装为单一工具外，你还可以使用 `deepagents` 库提供的 `SubAgentMiddleware` 中间件实现类似的效果。
 
-## 钩子函数
+## 钩子函数机制
 
 本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。该机制同时适用于 `wrap_agent_as_tool` 与 `wrap_all_agents_as_tool`，下文以 `wrap_agent_as_tool` 为例进行说明。
 
+对于钩子函数的运行流程，如下图所示：
+
+```mermaid
+graph LR
+    Start([开始]) --> InHook{process_input 存在?}
+
+    %% --- 输入钩子 ---
+    InHook -- 是 --> DoInHook[执行 process_input]
+    InHook -- 否 --> Raw[使用原始 request]
+    
+    DoInHook --> TypeCheck{返回值类型判断}
+    Raw --> TypeCheck
+
+    TypeCheck -- 字符串 --> BuildDict[构造包含 messages 的字典]
+    TypeCheck -- 字典 --> UseDict[直接使用该字典]
+    
+    BuildDict --> Core
+    UseDict --> Core
+
+    %% --- 中间执行 ---
+    Core([执行 agent.invoke])
+
+    %% --- 输出钩子 ---
+    Core --> OutHook{process_output 存在?}
+    
+    OutHook -- 是 --> DoOutHook[执行 process_output]
+    OutHook -- 否 --> ExtractContent[提取 response 响应中的<br/> messages 列表最后一项的 文本内容]
+    
+    DoOutHook --> End([返回结果])
+    ExtractContent --> End
+```
 ### 1. pre_input_hooks
 
 在智能体运行前对输入进行预处理。可用于输入增强、上下文注入、格式校验、权限检查等。
@@ -270,76 +296,28 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 
 #### 使用示例
 
-例如，在调用子智能体之前，可以使用模型对主智能体的对话历史进行摘要，从而为子智能体提供更精准的任务上下文。
+例如，将额外的会话上下文传递给SubAgent，以提供更精准的任务上下文。
 
 ```python
 from langchain.tools import ToolRuntime
-from langchain_core.messages import SystemMessage
 from langchain_dev_utils.agents import wrap_agent_as_tool
 
 
 def process_input(request: str, runtime: ToolRuntime) -> str:
-    messages = runtime.state.get("messages", [])
-
-    new_messages = [
-        SystemMessage(
-            content="""请基于以下对话历史，生成简洁准确的摘要。
-            摘要应包含：
-            1) 对话主题；
-            2) 关键内容；
-            3) 当前状态或进展。
-            摘要长度控制在200字以内。"""
-        ),
-        *messages[:-1],
-    ]
-
-    if messages:
-        summary = model.invoke(new_messages)
-
-        return (
-            "<history_summary>\n"
-            + summary.content
-            + "\n</history_summary>\n"
-            + "<task_description>\n"
-            + request
-            + "\n</task_description>"
-        )
-    return "<task_description>\n" + request + "\n</task_description>"
-
-
-async def process_input_async(request: str, runtime: ToolRuntime) -> str:
-    messages = runtime.state.get("messages", [])
-
-    new_messages = [
-        SystemMessage(
-            content="""请基于以下对话历史，生成简洁准确的摘要。
-            摘要应包含：
-            1) 对话主题；
-            2) 关键信息点；
-            3) 当前状态或进展。
-            摘要长度控制在200字以内。"""
-        ),
-        *messages[:-1],
-    ]
-
-    if messages:
-        summary = await model.ainvoke(new_messages)
-
-        return (
-            "<history_summary>\n"
-            + summary.content
-            + "\n</history_summary>\n"
-            + "<task_description>\n"
-            + request
-            + "\n</task_description>"
-        )
-    return "<task_description>\n" + request + "\n</task_description>"
+    original_user_message = next(
+        message for message in runtime.state["messages"] if message.type == "human"
+    )
+    prompt = (
+        "你正在协助处理以下用户询问：\n\n"
+        f"{original_user_message.text}\n\n"
+        "你被分配了以下子任务：\n\n"
+        f"{request}"
+    )
+    return prompt
 
 
 # 使用
-call_agent_tool = wrap_agent_as_tool(
-    agent, pre_input_hooks=(process_input, process_input_async)
-)
+call_agent_tool = wrap_agent_as_tool(agent, pre_input_hooks=process_input)
 ```
 
 
@@ -375,55 +353,28 @@ def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntim
 
 - 钩子函数的两个入参，`request` 是未经处理的原始输入，`response` 是 agent 返回的完整响应（即 `agent.invoke(input)` 的返回值）。
 
-- 若未提供 `post_output_hooks`，则会将 agent 的最终响应直接作为工具的返回值（即 `response["messages"][-1].content`）。
+- 若未提供 `post_output_hooks`，则会将 agent 的最终响应直接作为工具的返回值（即 `response["messages"][-1].text`）。
 
 #### 使用示例
 
-例如，子智能体执行完毕后，除了更新 `messages` 键外，可能还会更新其它状态键。如果需要将这些额外的状态键保存到主智能体的状态中，可以使用 `Command` 对象进行返回。
+例如，增加额外的返回内容给主智能体。
 
 ```python
-from typing import Any
-from langchain.tools import ToolRuntime
-from langchain_core.messages import ToolMessage
-from langgraph.types import Command
+import json
 
+def process_output(request: str, response: dict[str, Any], runtime: ToolRuntime) -> str:
 
-def process_output_sync(
-    request: str, response: dict[str, Any], runtime: ToolRuntime
-) -> Command:
-    return Command(
-        update={
-            "messages": [
-                ToolMessage(
-                    content=response["messages"][-1].content,
-                    tool_call_id=runtime.tool_call_id,
-                )
-            ],
-            "example_state_key": response["example_state_key"],
-        }
-    )
-
-
-async def process_output_async(
-    request: str, response: dict[str, Any], runtime: ToolRuntime
-) -> Command:
-    return Command(
-        update={
-            "messages": [
-                ToolMessage(
-                    content=response["messages"][-1].content,
-                    tool_call_id=runtime.tool_call_id,
-                )
-            ],
-            "example_state_key": response["example_state_key"],
+    return json.dumps(
+        {
+            "status": "success",
+            "event_id": "evt_123",
+            "summary": response["messages"][-1].text,
         }
     )
 
 
 # 使用
-call_agent_tool = wrap_agent_as_tool(
-    agent, post_output_hooks=(process_output_sync, process_output_async)
-)
+call_agent_tool = wrap_agent_as_tool(agent, post_output_hooks=process_output)
 ```
 
 !!! tip "提示"
