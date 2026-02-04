@@ -2316,13 +2316,13 @@
 </code></pre></div>
 <p><strong>4. 封装智能体调用逻辑</strong></p>
 <p>将智能体的调用逻辑封装为节点函数。每个函数负责调用特定的智能体，并将结果格式化写入 <code>results</code> 字段。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">order_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">order</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">order_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">])]})</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
     <span class="p">}</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">product_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">product</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span> 
     <span class="n">response</span> <span class="o">=</span> <span class="n">product_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">])]}</span>
     <span class="p">)</span>
@@ -2330,7 +2330,7 @@
         <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
     <span class="p">}</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">refund_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">refund</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">refund_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">])]})</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
@@ -2389,9 +2389,9 @@
 
 <span class="n">router_graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
     <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">order_node</span><span class="p">,</span>
-        <span class="n">product_node</span><span class="p">,</span>
-        <span class="n">refund_node</span><span class="p">,</span>
+        <span class="n">order</span><span class="p">,</span>
+        <span class="n">product</span><span class="p">,</span>
+        <span class="n">refund</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">RouterState</span><span class="p">,</span>
 <span class="hll">    <span class="n">branches_fn</span><span class="o">=</span><span class="n">route_to_agents</span><span class="p">,</span> <span class="c1"># 核心逻辑：由函数决定运行哪些分支</span>
