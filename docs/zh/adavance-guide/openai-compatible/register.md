@@ -8,7 +8,7 @@
 
 **方式一：显式传参**
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -20,7 +20,7 @@ register_model_provider(
 
 **方式二：通过环境变量（推荐用于配置管理）**
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -34,7 +34,7 @@ register_model_provider(
 
 例如：
 
-```python
+```python hl_lines="7-11"
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -55,7 +55,7 @@ register_model_provider(
 
 **方式一：显式传参**
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.embeddings import register_embeddings_provider
 
 register_embeddings_provider(
@@ -71,7 +71,7 @@ register_embeddings_provider(
 export VLLM_API_BASE=http://localhost:8000/v1
 ```
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.embeddings import register_embeddings_provider
 
 register_embeddings_provider(

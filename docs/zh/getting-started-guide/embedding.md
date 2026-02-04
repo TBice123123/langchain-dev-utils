@@ -16,7 +16,7 @@ LangChain 的 `init_embeddings` 函数仅支持有限的嵌入模型提供商。
 
 #### 代码示例
 
-```python
+```python hl_lines="5 6"
 from langchain_core.embeddings.fake import FakeEmbeddings
 from langchain_dev_utils.embeddings import register_embeddings_provider
 
@@ -45,7 +45,7 @@ register_embeddings_provider(
 
 #### 代码示例
 
-```python
+```python hl_lines="2 3 4"
 register_embeddings_provider(
     provider_name="vllm",
     embeddings_model="openai-compatible",

@@ -98,7 +98,6 @@ inventory_agent = create_agent(
     tools=[check_inventory],
     system_prompt="你是库存助手，负责确认商品是否有货。最终请输出库存查询结果。",
     name="inventory_agent",
-    
 )
 
 order_agent = create_agent(
@@ -338,15 +337,43 @@ print(response)
 
 分支函数需要返回 `Send` 列表，每个 `Send` 包含目标节点名称与该节点的输入。
 
-#### Router 多智能体架构的实现
 
-`Router` 是多智能体系统的典型架构：由路由模型根据用户请求进行需求分析与任务拆解，再分发给若干业务智能体执行。在订单查询场景中，用户可能同时关心订单状态、商品信息或退款，此时可由路由模型将请求分配给订单、商品、退款等智能体。
+####  Router 多智能体架构
 
-先编写工具。
+按需并行功能可用于实现 Router 多智能体架构的核心部分。
 
-??? example "工具的实现参考"
+在多智能体系统中，`Router`（路由）架构通过将复杂任务拆解并分发给专门的子智能体，实现高效的并行处理。该架构包含三个核心步骤：
+
+1.  **意图识别**：由路由模型分析用户请求，拆解任务并确定调用的智能体。
+
+2.  **并行执行**：多个业务智能体同时处理子任务。
+
+3.  **结果汇总**：将各子智能体的回复整合成最终答案。
+
+在订单查询场景中，用户可能同时关心订单状态、商品信息或退款政策。此时，系统可以并行调用订单、商品和退款智能体，最后统一回复。
+
+```mermaid
+graph LR
+    Start([用户请求]) --> Router([意图分类器])
+    Router -->|订单查询| OrderAgent
+    Router -->|商品查询| ProductAgent
+    Router -->|退款查询| RefundAgent
+    OrderAgent --> Synthesize
+    ProductAgent --> Synthesize
+    RefundAgent --> Synthesize
+    Synthesize --> End([合成回复])
+```
+
+
+**1. 环境准备与工具定义**
+
+首先，定义各业务智能体需要用到的工具。
+
+??? example "点击展开工具实现代码"
 
     ```python
+    from langchain_core.tools import tool
+
     @tool
     def list_orders() -> dict:
         """查询用户订单列表"""
@@ -425,7 +452,6 @@ print(response)
             "description": "主打降噪与长续航的真无线耳机。",
         }
 
-
     @tool
     def check_inventory(product_name: str) -> dict:
         """查询库存"""
@@ -464,9 +490,50 @@ print(response)
         }
     ```
 
-然后创建对应的子智能体。
+**2. 定义状态 Schema**
+
+`RouterState` 代表最终状态图的状态Schema，而`AgentInput` 与 `AgentOutput` 分别定义子智能体节点的输入与输出状态。
 
 ```python
+import operator
+from typing import Annotated, Literal
+
+from typing_extensions import TypedDict
+
+
+class AgentInput(TypedDict):
+    """子智能体的输入结构"""
+    query: str
+
+
+class AgentOutput(TypedDict):
+    """子智能体的输出结构"""
+    source: str
+    result: str
+
+
+class Classification(TypedDict):
+    """路由分类结果"""
+    source: Literal["order", "refund", "product"]
+    query: str
+
+
+class RouterState(TypedDict):
+    """全局状态 Schema"""
+    query: str
+    classifications: list[Classification]
+    results: Annotated[list[AgentOutput], operator.add] 
+    final_answer: str
+```
+
+**3. 创建子智能体**
+
+利用 LangChain 的 `create_agent` 快速构建三个业务智能体，并为它们绑定对应的工具和提示词。
+
+```python
+from langchain.agents import create_agent
+from langchain_core.messages import HumanMessage
+
 ORDER_AGENT_PROMPT = (
     "你是订单管理助手。\n"
     "你可以使用工具来查询订单列表、订单详情、物流轨迹。\n"
@@ -489,7 +556,6 @@ PRODUCT_AGENT_PROMPT = (
     "输出要求：用中文回答，给出可执行的下一步建议。\n"
 )
 
-
 product_agent = create_agent(
     model,
     system_prompt=PRODUCT_AGENT_PROMPT,
@@ -510,38 +576,50 @@ refund_agent = create_agent(
     tools=[create_refund, get_refund_status, refund_policy],
     name="refund_agent",
 )
-
-def order(state: AgentState):
-    response = order_agent.invoke({"messages": state["messages"]})
-    return {"messages": [AIMessage(content=response["messages"][-1].content)]}
-
-def product(state: AgentState):
-    response = product_agent.invoke({"messages": state["messages"]})
-    return {"messages": [AIMessage(content=response["messages"][-1].content)]}
-
-def refund(state: AgentState):
-    response = refund_agent.invoke({"messages": state["messages"]})
-    return {"messages": [AIMessage(content=response["messages"][-1].content)]}
 ```
 
-再编写分支函数：由路由模型根据请求生成要执行的子智能体名称，以及发给该子智能体的任务描述。
+**4. 封装智能体调用逻辑**
+
+将智能体的调用逻辑封装为节点函数。每个函数负责调用特定的智能体，并将结果格式化写入 `results` 字段。
 
 ```python
-from typing import Literal, cast
+def order_node(state: AgentInput):
+    response = order_agent.invoke({"messages": [HumanMessage(content=state["query"])]})
+    return {
+        "results": [{"source": "order", "result": response["messages"][-1].content}]
+    }
 
+def product_node(state: AgentInput):
+    response = product_agent.invoke(
+        {"messages": [HumanMessage(content=state["query"])]}
+    )
+    return {
+        "results": [{"source": "product", "result": response["messages"][-1].content}]
+    }
+
+def refund_node(state: AgentInput):
+    response = refund_agent.invoke({"messages": [HumanMessage(content=state["query"])]})
+    return {
+        "results": [{"source": "refund", "result": response["messages"][-1].content}]
+    }
+```
+
+**5. 实现路由与分支逻辑**
+
+这里就需要使用**按需并行**的功能。我们定义两个节点：
+1.  **`classify_query`**：使用大模型进行意图识别，输出需要调用的智能体列表以及任务内容。
+2.  **`route_to_agents`**：根据分类结果，生成 `Send` 对象列表，决定并行执行哪些节点。
+
+```python
+from typing import cast
 from langchain_core.messages import SystemMessage
-from langgraph.types import Send
 from pydantic import BaseModel, Field
-from typing_extensions import TypedDict
+from langgraph.constants import Send
 
-
-class RouterInput(TypedDict):
-    query: str
-
-
-class RouterState(AgentState):
-    query: str
-
+class ClassificationResult(BaseModel):
+    classifications: list[Classification] = Field(
+        description="要调用的智能体列表及其对应的子问题"
+    )
 
 ROUTER_SYSTEM_PROMPT = (
     "你是一个Router模型，只负责把用户问题拆分并分发到合适的业务子智能体。\n"
@@ -557,83 +635,103 @@ ROUTER_SYSTEM_PROMPT = (
     "示例C：用户：‘我想知道这款耳机的规格’ -> 返回1条：product(查询详情)。\n"
 )
 
-
-class Classification(TypedDict):
-    """一次路由决策：调用哪个智能体并附带什么查询。"""
-
-    source: Literal["order", "refund", "product"]
-    query: str
-
-
-class ClassificationResult(BaseModel):
-    """将用户查询分类为面向智能体的子问题的结果。"""
-
-    classifications: list[Classification] = Field(
-        description="要调用的智能体列表及其对应的子问题"
-    )
-
-
-def branch_fn(state: RouterState) -> list[Send]:
+def classify_query(state: RouterState):
     structured_llm = model.with_structured_output(ClassificationResult)
 
-    query = state.get("messages")[-1].content
-    classification_result = cast(
+    classify_result = cast(
         ClassificationResult,
         structured_llm.invoke(
             [
                 SystemMessage(ROUTER_SYSTEM_PROMPT),
-                HumanMessage(query),
+                HumanMessage(state["query"]),
             ]
         ),
     )
 
-    classifications = classification_result.classifications or []
-    if not classifications:
-        classifications = [{"source": "product", "query": query}]
+    return {"classifications": classify_result.classifications}
 
-    sends: list[Send] = []
-    for res in classifications:
-        source = res.get("source")
-        if source not in {"order", "refund", "product"}:
-            source = "product"
-        sends.append(Send(f"{source}", {"messages": [HumanMessage(res.get("query"))]}))
-    return sends
+def route_to_agents(state: RouterState) -> list[Send]:
+    """根据分类结果生成并行执行的指令"""
+    return [Send(c["source"], {"query": c["query"]}) for c in state["classifications"]]
 ```
-最后使用 `create_parallel_graph` 完成并行状态图的编排，并传入分支函数。
 
-```python
-graph = create_parallel_graph(
+**6. 编排并行图与汇总**
+
+使用 `create_parallel_graph` 创建并行子图。这里传入 `branches_fn` 参数，实现了根据条件的动态并行执行。
+
+```python hl_lines="10"
+from langchain_dev_utils.graph import create_parallel_graph
+
+router_graph = create_parallel_graph(
     nodes=[
-        order,
-        refund,
-        product,
+        order_node,
+        product_node,
+        refund_node,
     ],
-    state_schema=AgentState,
-    graph_name="parallel_graph",
-    branches_fn=branch_fn,
+    state_schema=RouterState,
+    branches_fn=route_to_agents, # 核心逻辑：由函数决定运行哪些分支
 )
 ```
 
-运行示例：
+接下来编写汇总节点 `synthesize_results`，用于将并行执行的结果整合为通顺的回答。
 
 ```python
-response = graph.invoke(
-    {
-        "messages": [HumanMessage("你好，我要查询一下之前购买的产品")],
-    }
+SYNTHESIS_SYSTEM_PROMPT = (
+    "综合这些结果以回答原始问题：{query}\n"
+    "- 合并来自多个来源的信息，避免冗余\n"
+    "- 突出最相关且可操作的信息\n"
+    "- 注明来源之间的任何差异\n"
+    "- 保持回答简洁且条理清晰\n"
 )
-print(response)
 
-response = graph.invoke(
-    {
-        "messages": [HumanMessage("推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？")],
-    }
-)
-print(response)
+def synthesize_results(state: RouterState) -> dict:
+    if not state["results"]:
+        return {"final_answer": "No results found from any knowledge source."}
+
+    # 格式化各子智能体的输出
+    formatted = [
+        f"**From {r['source'].title()}:**\n{r['result']}" for r in state["results"]
+    ]
+
+    synthesis_response = model.invoke(
+        [
+            {
+                "role": "system",
+                "content": SYNTHESIS_SYSTEM_PROMPT.format(query=state["query"]),
+            },
+            {"role": "user", "content": "\n\n".join(formatted)},
+        ]
+    )
+
+    return {"final_answer": synthesis_response.content}
 ```
 
+**7. 构建最终的StateGraph**
 
-!!! tip "提示"
+最后，使用 `create_sequential_graph` 将“意图分类 -> 按需并行 -> 结果汇总”串联起来，形成完整的应用流。
 
-    - **未传入 `branches_fn` 参数时**：所有节点都会并行执行
-    - **传入 `branches_fn` 参数时**：执行哪些节点由该函数的返回值决定
+```python
+from langchain_dev_utils.graph import create_sequential_graph
+
+graph = create_sequential_graph(
+    nodes=[
+        classify_query,
+        router_graph,
+        synthesize_results,
+    ],
+    state_schema=RouterState,
+)
+```
+
+**8. 运行示例**
+
+```python
+# 示例 1：单一意图（产品查询）
+response = graph.invoke({"query": "你好，我要查询一下之前购买的产品"})
+print(response["final_answer"])
+
+# 示例 2：混合意图（产品查询 + 退款政策），将触发并行执行
+response = graph.invoke({"query": "推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？"})
+print(response["final_answer"])
+```
+

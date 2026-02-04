@@ -298,7 +298,7 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 
 For example, passing additional session context to the SubAgent to provide more precise task context.
 
-```python
+```python hl_lines="19"
 from langchain.tools import ToolRuntime
 from langchain_dev_utils.agents import wrap_agent_as_tool
 
@@ -359,11 +359,10 @@ def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntim
 
 For example, adding extra return content for the primary agent.
 
-```python
+```python hl_lines="14"
 import json
 
 def process_output(request: str, response: dict[str, Any], runtime: ToolRuntime) -> str:
-
     return json.dumps(
         {
             "status": "success",
@@ -381,7 +380,7 @@ call_agent_tool = wrap_agent_as_tool(agent, post_output_hooks=process_output)
     For the `wrap_all_agents_as_tool` function, if you need to customize `pre_input_hooks` or `post_output_hooks` for different subagents, you can call `get_subagent_name(runtime)` inside the hook to get the current agent name and then process them separately by name.
     For example, assume you only need to customize `pre_input_hooks` for the `weather_agent` subagent (e.g., adding the current city and time). You can implement it like this:
 
-    ```python
+    ```python hl_lines="5"
     from langchain_dev_utils.agents.wrap import get_subagent_name
     from datetime import datetime
     

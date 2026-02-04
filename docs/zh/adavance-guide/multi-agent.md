@@ -298,7 +298,7 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 
 例如，将额外的会话上下文传递给SubAgent，以提供更精准的任务上下文。
 
-```python
+```python hl_lines="19"
 from langchain.tools import ToolRuntime
 from langchain_dev_utils.agents import wrap_agent_as_tool
 
@@ -359,11 +359,10 @@ def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntim
 
 例如，增加额外的返回内容给主智能体。
 
-```python
+```python hl_lines="14"
 import json
 
 def process_output(request: str, response: dict[str, Any], runtime: ToolRuntime) -> str:
-
     return json.dumps(
         {
             "status": "success",
@@ -381,7 +380,7 @@ call_agent_tool = wrap_agent_as_tool(agent, post_output_hooks=process_output)
     对于`wrap_all_agents_as_tool` 函数，若需为不同子智能体定制 `pre_input_hooks` 或 `post_output_hooks`，可在钩子内调用 `get_subagent_name(runtime)` 获取当前智能体名称，再按名称分别处理。
     例如，假设当前仅需要对于`weather_agent` 子智能体定制 `pre_input_hooks`(例如添加当前城市和时间)，则可以这样实现：
 
-    ```python
+    ```python hl_lines="5"
     from langchain_dev_utils.agents.wrap import get_subagent_name
     from datetime import datetime
     

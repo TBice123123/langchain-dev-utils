@@ -13,7 +13,7 @@
 
 同样，我们使用 `create_openai_compatible_embedding` 来集成 vLLM 的嵌入模型。
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
 VLLMEmbeddings = create_openai_compatible_embedding(
@@ -34,7 +34,7 @@ export VLLM_API_BASE="http://localhost:8000/v1"
 
 此时代码可以省略 `base_url`：
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
 VLLMEmbeddings = create_openai_compatible_embedding(

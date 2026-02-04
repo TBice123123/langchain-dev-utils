@@ -14,7 +14,7 @@ LangChain 的 `init_chat_model` 函数仅支持有限的模型提供商。本库
 
 #### 代码示例
 
-```python
+```python hl_lines="5 6"
 from langchain_core.language_models.fake_chat_models import FakeChatModel
 from langchain_dev_utils.chat_models import register_model_provider
 
@@ -69,7 +69,7 @@ register_model_provider(
 
 #### 代码示例
 
-```python
+```python hl_lines="2 3 4"
 register_model_provider(
     provider_name="vllm",
     chat_model="openai-compatible",

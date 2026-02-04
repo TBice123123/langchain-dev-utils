@@ -102,7 +102,7 @@ def default_handler(params: InterruptParams) -> Any:
 
 你可以完全控制中断行为，例如只允许"接受/拒绝"，或自定义提示语：
 
-```python
+```python hl_lines="6-15 18"
 from typing import Any
 from langchain_dev_utils.tool_calling import human_in_the_loop_async, InterruptParams
 from langgraph.types import interrupt

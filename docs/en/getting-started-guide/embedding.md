@@ -14,7 +14,7 @@ If the embedding model provider already has a ready-made and suitable LangChain 
 
 #### Code Example
 
-```python
+```python hl_lines="5 6"
 from langchain_core.embeddings.fake import FakeEmbeddings
 from langchain_dev_utils.embeddings import register_embeddings_provider
 
@@ -41,7 +41,7 @@ Similar to chat model management, set `embeddings_model` to `"openai-compatible"
 
 #### Code Example
 
-```python
+```python hl_lines="2 3 4"
 register_embeddings_provider(
     provider_name="vllm",
     embeddings_model="openai-compatible",

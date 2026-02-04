@@ -43,6 +43,7 @@ formated1 = format_sequence(
             content="根据工具调用的结果，伦敦的天气是25摄氏度，旧金山的天气是22摄氏度",
         ),
     ]
+    # separator 参数默认为 "-"，with_num 参数默认为 False，此处使用默认值
 )
 print(formated1)
 ```
@@ -68,7 +69,7 @@ print(formated1)
 
 #### 代码示例
 
-```python
+```python hl_lines="11 12"
 from langchain_core.documents import Document
 
 from langchain_dev_utils.message_convert import format_sequence
@@ -79,8 +80,8 @@ format2 = format_sequence(
         Document(page_content="【来源: FAQ】退款到账一般需要 1-3 个工作日。"),
         Document(page_content="【来源: 客服规范】遇到争议先致歉并引导提交订单号。"),
     ],
-    separator=">",
-    with_num=True,
+    separator=">", # 指定分隔符为 ">"，每行文档前都会加上这个符号
+    with_num=True,  # 开启序号，文档将按顺序编号为 1, 2, 3...
 )
 print(format2)
 ```

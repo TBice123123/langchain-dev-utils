@@ -163,3 +163,7 @@ response = agent.invoke(
     context=Context(user_role="VIP"),
 )
 ```
+
+
+!!! warning "Jinja2 模板注意事项"
+    启用 Jinja2 模板后，`system_prompt` 会被编译为 Template 对象。**务必将提示词主干硬编码在代码中**，仅通过 `state` 或 `context` 传入动态数据；**不要**将用户输入直接作为 `system_prompt` 参数传入 `create_agent`。（实际上，无论是否启用本功能，大部分情况下，`system_prompt` 均应由开发者全权控制，而不应该直接采用外部用户输入作为主干系统提示词）

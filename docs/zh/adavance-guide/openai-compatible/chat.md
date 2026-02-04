@@ -38,7 +38,7 @@
 
 使用如下代码创建对话模型类：
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 ChatVLLM = create_openai_compatible_model(
@@ -59,7 +59,7 @@ export VLLM_API_BASE=http://localhost:8000/v1
 
 此时代码可以省略 `base_url`：
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 ChatVLLM = create_openai_compatible_model(
@@ -157,7 +157,7 @@ print(response)
     
     例如：
 
-    ```python
+    ```python hl_lines="11"
     from langchain_core.messages import HumanMessage
     from langchain_core.tools import tool
 
@@ -192,7 +192,7 @@ print(response)
 
     例如 vLLM 支持全部策略：
 
-    ```python
+    ```python hl_lines="6 7 8 12"
     from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
     ChatVLLM = create_openai_compatible_model(
@@ -229,7 +229,7 @@ print(response)
 
     例如，vLLM 部署的模型支持 `json_schema` 结构化输出方法，则可以在注册时进行声明：
 
-    ```python
+    ```python hl_lines="6"
     from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
     ChatVLLM = create_openai_compatible_model(
@@ -244,8 +244,8 @@ print(response)
     !!! note "注意"
         若 `supported_response_format` 包含 `json_schema`，则 `model.profile` 中的 `structured_output` 字段将自动置为 `True`，此时使用 `create_agent` 进行结构化输出时如果未指定具体的结构化输出策略，默认会采用 `json_schema` 作为结构化输出策略。
 
-        例如:
-        ```python
+        例如: 
+        ```python hl_lines="6"
         from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
         ChatVLLM = create_openai_compatible_model(
@@ -439,7 +439,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 
     例如，以 GLM-4.7-Flash 模型为例，由于其支持交错式思考（Interleaved Thinking）模式，一般需要在实例化时将 `reasoning_keep_policy` 设置为 `current`，以便仅保留当前轮次的 `reasoning_content`。例如：
 
-    ```python
+    ```python hl_lines="3"
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM(model="glm-4.7-flash", reasoning_keep_policy="current")
@@ -452,7 +452,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
     ```
     同时，GLM-4.7-Flash 模型也支持另一种思考模式，被称之为Preserved Thinking。此时需要保留历史消息中的所有 `reasoning_content` 字段，可以将 `reasoning_keep_policy` 设置为 `all`。例如：
 
-    ```python
+    ```python hl_lines="5"
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM(
@@ -492,7 +492,7 @@ print(model.profile)
 或者直接在创建时传入模型提供商的所有模型的`profile`参数。
 
 例如：
-```python
+```python hl_lines="22"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 model_profiles = {
@@ -529,7 +529,7 @@ print(model.profile)
 
 例如 vLLM 支持 `responses` API，则可以这样使用：
 
-```python
+```python hl_lines="3"
 from langchain_core.messages import HumanMessage
 
 model = ChatVLLM(model="qwen3-4b", use_responses_api=True)

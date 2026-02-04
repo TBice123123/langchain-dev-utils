@@ -102,7 +102,7 @@ The response must return data in the following JSON Schema format:
 
 You can fully control the interrupt behavior, such as only allowing "accept/reject", or customizing the prompt:
 
-```python
+```python hl_lines="6-15 18"
 from typing import Any
 from langchain_dev_utils.tool_calling import human_in_the_loop_async, InterruptParams
 from langgraph.types import interrupt

@@ -12,7 +12,7 @@ Similar to chat model classes, you can use `create_openai_compatible_embedding` 
 
 Similarly, we use `create_openai_compatible_embedding` to integrate vLLM's embedding model.
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
 VLLMEmbeddings = create_openai_compatible_embedding(
@@ -33,7 +33,7 @@ export VLLM_API_BASE="http://localhost:8000/v1"
 
 At this point, the code can omit `base_url`:
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
 VLLMEmbeddings = create_openai_compatible_embedding(

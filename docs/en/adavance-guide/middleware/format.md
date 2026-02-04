@@ -162,3 +162,6 @@ response = agent.invoke(
     context=Context(user_role="VIP"),
 )
 ```
+
+!!! warning "Jinja2 Template Caution"
+    When Jinja2 templating is enabled, `system_prompt` will be compiled into a Template object. **Always hardcode the prompt skeleton in your codebase**, injecting dynamic values solely via `state` or `context`. **Never** pass raw user input directly as the `system_prompt` argument to `create_agent`. (Regardless of this feature, `system_prompt` should always be fully controlled by developers and never directly accept external user input as the core system prompt.)

@@ -36,7 +36,7 @@ Currently supported configuration items:
 
 Use the following code to create a chat model class:
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 ChatVLLM = create_openai_compatible_model(
@@ -57,7 +57,7 @@ export VLLM_API_BASE=http://localhost:8000/v1
 
 At this point, the code can omit `base_url`:
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 ChatVLLM = create_openai_compatible_model(
@@ -154,7 +154,7 @@ print(response)
 
     For example:
 
-    ```python
+    ```python hl_lines="11"
     from langchain_core.messages import HumanMessage
     from langchain_core.tools import tool
 
@@ -189,7 +189,7 @@ print(response)
 
     For example, vLLM supports all strategies:
 
-    ```python
+    ```python hl_lines="6 7 8 12"  
     from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
     ChatVLLM = create_openai_compatible_model(
@@ -226,7 +226,7 @@ print(response)
 
     For example, if a model deployed via vLLM supports the `json_schema` structured output method, you can declare it during registration:
 
-    ```python
+    ```python hl_lines="6"
     from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
     ChatVLLM = create_openai_compatible_model(
@@ -241,8 +241,8 @@ print(response)
     !!! note "Note"
         If `supported_response_format` includes `json_schema`, the `structured_output` field in `model.profile` will automatically be set to `True`. In this case, when using `create_agent` for structured output without specifying a specific structured output strategy, `json_schema` will be used as the default structured output strategy.
 
-        For example:
-        ```python
+        For example: 
+        ```python hl_lines="6"
         from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
         ChatVLLM = create_openai_compatible_model(
@@ -436,7 +436,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 
     For example, for the GLM-4.7-Flash model, since it supports Interleaved Thinking mode, you generally need to set `reasoning_keep_policy` to `current` during instantiation to retain only the current round's `reasoning_content`. For example:
 
-    ```python
+    ```python hl_lines="3"
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM(model="glm-4.7-flash", reasoning_keep_policy="current")
@@ -449,7 +449,7 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
     ```
     Additionally, the GLM-4.7-Flash model also supports another thinking mode called Preserved Thinking. This requires retaining all `reasoning_content` fields from historical messages, so you can set `reasoning_keep_policy` to `all`. For example:
 
-    ```python
+    ```python hl_lines="5"
     from langchain_core.messages import HumanMessage
 
     model = ChatVLLM(
@@ -489,7 +489,7 @@ print(model.profile)
 Or directly pass the `profile` parameter for all models of the provider during creation.
 
 For example:
-```python
+```python hl_lines="22"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 model_profiles = {
@@ -526,7 +526,7 @@ This model class also supports OpenAI's latest `responses` API (parameter name `
 
 For example, if vLLM supports the `responses` API, you can use it like this:
 
-```python
+```python hl_lines="3"
 from langchain_core.messages import HumanMessage
 
 model = ChatVLLM(model="qwen3-4b", use_responses_api=True)

@@ -8,7 +8,7 @@ The specific code is as follows:
 
 **Method 1: Explicit parameter passing**
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -20,7 +20,7 @@ register_model_provider(
 
 **Method 2: Through environment variables (recommended for configuration management)**
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -34,7 +34,7 @@ Additionally, the `base_url`, `compatibility_options`, and `model_profiles` para
 
 For example:
 
-```python
+```python hl_lines="7-11"
 from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
@@ -55,7 +55,7 @@ Similar to chat model class registration:
 
 **Method 1: Explicit parameter passing**
 
-```python
+```python hl_lines="4 5 6"
 from langchain_dev_utils.embeddings import register_embeddings_provider
 
 register_embeddings_provider(
@@ -71,7 +71,7 @@ register_embeddings_provider(
 export VLLM_API_BASE=http://localhost:8000/v1
 ```
 
-```python
+```python hl_lines="4 5"
 from langchain_dev_utils.embeddings import register_embeddings_provider
 
 register_embeddings_provider(

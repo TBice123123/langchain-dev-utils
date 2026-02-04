@@ -43,6 +43,7 @@ formated1 = format_sequence(
             content="Based on the tool call results, the weather in London is 25 degrees Celsius, and the weather in San Francisco is 22 degrees Celsius",
         ),
     ]
+    # The separator parameter defaults to "-" and with_num defaults to False; using defaults here
 )
 print(formated1)
 ```
@@ -68,7 +69,7 @@ print(formated1)
 
 #### Code Example
 
-```python
+```python hl_lines="11 12"
 from langchain_core.documents import Document
 
 from langchain_dev_utils.message_convert import format_sequence
@@ -79,8 +80,8 @@ format2 = format_sequence(
         Document(page_content="[Source: FAQ] Refunds usually take 1-3 business days to arrive."),
         Document(page_content="[Source: Support Guidelines] In disputes, apologize first and ask for the order ID."),
     ],
-    separator=">",
-    with_num=True,
+    separator=">",  # Set the separator to ">" so each line starts with this symbol
+    with_num=True,  # Enable numbering so documents are labeled 1, 2, 3...
 )
 print(format2)
 ```
