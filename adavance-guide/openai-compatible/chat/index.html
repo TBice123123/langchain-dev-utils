@@ -1933,10 +1933,10 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
-    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
@@ -1948,9 +1948,9 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
-    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
@@ -2031,8 +2031,8 @@ This library enables this option by default; to disable it, you can pass the com
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The weather in </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2"> is sunny&quot;</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">parallel_tool_calls</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+<span class="hll">    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">parallel_tool_calls</span><span class="o">=</span><span class="kc">True</span>
+</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Get the weather in Los Angeles and London&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -2058,14 +2058,14 @@ This library enables this option by default; to disable it, you can pass the com
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]</span>
-    <span class="p">},</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]</span>
+</span><span class="hll">    <span class="p">},</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;required&quot;</span>
-<span class="p">)</span>
+<span class="hll">    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;required&quot;</span>
+</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h3 id="structured-output">Structured Output</h3>
@@ -2089,22 +2089,22 @@ This library enables this option by default; to disable it, you can pass the com
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If <code>supported_response_format</code> includes <code>json_schema</code>, the <code>structured_output</code> field in <code>model.profile</code> will automatically be set to <code>True</code>. In this case, when using <code>create_agent</code> for structured output without specifying a specific structured output strategy, <code>json_schema</code> will be used as the default structured output strategy.</p>
-<p>For example:
+<p>For example: 
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
@@ -2265,8 +2265,8 @@ Passing video data:</p>
 <p>For example, for the GLM-4.7-Flash model, since it supports Interleaved Thinking mode, you generally need to set <code>reasoning_keep_policy</code> to <code>current</code> during instantiation to retain only the current round's <code>reasoning_content</code>. For example:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+<span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
+</span><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span>
 <span class="p">)</span>
@@ -2278,8 +2278,8 @@ Additionally, the GLM-4.7-Flash model also supports another thinking mode called
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span>
-    <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
-    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clear_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
+<span class="hll">    <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+</span>    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clear_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
 <span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2328,8 +2328,8 @@ Or directly pass the <code>profile</code> parameter for all models of the provid
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span>
@@ -2341,8 +2341,8 @@ Or directly pass the <code>profile</code> parameter for all models of the provid
 <p>For example, if vLLM supports the <code>responses</code> API, you can use it like this:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
+<span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>Currently, the implementation of this feature relies entirely on <code>BaseChatOpenAI</code>'s implementation of the <code>responses</code> API, so there may be certain compatibility issues during use. Subsequent optimizations will be made based on actual circumstances.</p>

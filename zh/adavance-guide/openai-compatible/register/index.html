@@ -1652,18 +1652,18 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
 
 <span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
+</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>方式二：通过环境变量（推荐用于配置管理）</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
 
 <span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span>
-    <span class="c1"># 自动读取 VLLM_API_BASE</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span>
+</span>    <span class="c1"># 自动读取 VLLM_API_BASE</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>同时，<code>create_openai_compatible_model</code>函数中的<code>base_url</code>、<code>compatibility_options</code>、<code>model_profiles</code>参数也支持传入。只需要在<code>register_model_provider</code>函数中传入对应的参数即可。</p>
@@ -1674,12 +1674,12 @@
     <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">],</span>
+</span><span class="hll">        <span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]</span>
+</span><span class="hll">    <span class="p">},</span>
+</span><span class="hll">    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
+</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="_3">嵌入模型类注册</h2>
 <p>与对话模型类注册类似：</p>
@@ -1687,10 +1687,10 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_embeddings_provider</span>
 
 <span class="n">register_embeddings_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">embeddings_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">embeddings_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>方式二：环境变量（推荐）</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
@@ -1698,9 +1698,9 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_embeddings_provider</span>
 
 <span class="n">register_embeddings_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">embeddings_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">embeddings_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span>
+</span><span class="p">)</span>
 </code></pre></div>
 
 

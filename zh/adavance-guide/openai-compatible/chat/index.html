@@ -1933,10 +1933,10 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
-    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
@@ -1948,9 +1948,9 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
-    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
@@ -2035,8 +2035,8 @@
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;当前</span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">的天气是晴朗&quot;</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">parallel_tool_calls</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+<span class="hll">    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">parallel_tool_calls</span><span class="o">=</span><span class="kc">True</span>
+</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;获取洛杉矶和伦敦的天气&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -2062,14 +2062,14 @@
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]</span>
-    <span class="p">},</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">        <span class="s2">&quot;supported_tool_choice&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;specific&quot;</span><span class="p">]</span>
+</span><span class="hll">    <span class="p">},</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;required&quot;</span>
-<span class="p">)</span>
+<span class="hll">    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;required&quot;</span>
+</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h3 id="_7">结构化输出</h3>
@@ -2093,22 +2093,22 @@
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
 <p>若 <code>supported_response_format</code> 包含 <code>json_schema</code>，则 <code>model.profile</code> 中的 <code>structured_output</code> 字段将自动置为 <code>True</code>，此时使用 <code>create_agent</code> 进行结构化输出时如果未指定具体的结构化输出策略，默认会采用 <code>json_schema</code> 作为结构化输出策略。</p>
-<p>例如:
+<p>例如: 
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
@@ -2269,8 +2269,8 @@
 <p>例如，以 GLM-4.7-Flash 模型为例，由于其支持交错式思考（Interleaved Thinking）模式，一般需要在实例化时将 <code>reasoning_keep_policy</code> 设置为 <code>current</code>，以便仅保留当前轮次的 <code>reasoning_content</code>。例如：</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+<span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
+</span><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span>
 <span class="p">)</span>
@@ -2282,8 +2282,8 @@
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span>
-    <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
-    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clear_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
+<span class="hll">    <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+</span>    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clear_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
 <span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2332,8 +2332,8 @@
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
     <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">model_profiles</span><span class="o">=</span><span class="n">model_profiles</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span>
@@ -2345,8 +2345,8 @@
 <p>例如 vLLM 支持 <code>responses</code> API，则可以这样使用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>
+<span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>目前该功能的实现完全依托于<code>BaseChatOpenAI</code>对于<code>responses</code> API的实现，故在使用中可能存在一定的兼容性问题，后续将会根据实际情况进行优化。</p>

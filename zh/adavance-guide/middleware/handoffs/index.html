@@ -1842,13 +1842,13 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到时间助手去解决时间查询问题&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到天气助手去解决天气查询问题&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
+<span class="hll">            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到时间助手去解决时间查询问题&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到天气助手去解决天气查询问题&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">},</span>
+</span>        <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -1884,10 +1884,10 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
+<span class="hll">            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">},</span>
+</span>        <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>

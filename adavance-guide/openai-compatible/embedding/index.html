@@ -1729,10 +1729,10 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.embeddings.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_embedding</span>
 
 <span class="n">VLLMEmbeddings</span> <span class="o">=</span> <span class="n">create_openai_compatible_embedding</span><span class="p">(</span>
-    <span class="n">embedding_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">embedding_model_cls_name</span><span class="o">=</span><span class="s2">&quot;VLLMEmbeddings&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">embedding_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">embedding_model_cls_name</span><span class="o">=</span><span class="s2">&quot;VLLMEmbeddings&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">VLLMEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-embedding-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
@@ -1744,9 +1744,9 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.embeddings.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_embedding</span>
 
 <span class="n">VLLMEmbeddings</span> <span class="o">=</span> <span class="n">create_openai_compatible_embedding</span><span class="p">(</span>
-    <span class="n">embedding_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">embedding_model_cls_name</span><span class="o">=</span><span class="s2">&quot;VLLMEmbeddings&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">embedding_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">embedding_model_cls_name</span><span class="o">=</span><span class="s2">&quot;VLLMEmbeddings&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">VLLMEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-embedding-4b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>

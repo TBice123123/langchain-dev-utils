@@ -1972,9 +1972,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
 
 <span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="c1"># FakeChatModel is for testing only. In actual usage, you must pass a ChatModel class with real functionality.</span>
 </code></pre></div>
@@ -2013,10 +2013,10 @@
 <p>In this case, the <code>chat_model</code> parameter must be set to <code>"openai-compatible"</code>.</p>
 <h4 id="code-example_1">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
+</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Note</strong>: For more details about this part, please refer to <a href="../../adavance-guide/openai-compatible/register/">OpenAI-Compatible API Integration</a>.</p>
 <h2 id="batch-registration">Batch Registration</h2>

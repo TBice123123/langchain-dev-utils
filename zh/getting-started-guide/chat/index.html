@@ -1972,9 +1972,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
 
 <span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
+</span><span class="p">)</span>
 
 <span class="c1"># FakeChatModel仅用于测试，实际使用中必须传入具备真实功能的 ChatModel 类。</span>
 </code></pre></div>
@@ -2013,10 +2013,10 @@
 <p>这种情况下，需要<code>chat_model</code>参数必须设为 <code>"openai-compatible"</code>。</p>
 <h4 id="_6">代码示例</h4>
 <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
-<span class="p">)</span>
+<span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
+</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>注意</strong>：关于这部分更多的细节，请参考<a href="../../adavance-guide/openai-compatible/register/">OpenAI 兼容 API 集成</a>。</p>
 <h2 id="_7">批量注册</h2>

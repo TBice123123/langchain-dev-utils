@@ -1360,7 +1360,7 @@
   <a href="#router" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Router 多智能体架构的实现
+        Router 多智能体架构
       
     </span>
   </a>
@@ -1753,7 +1753,7 @@
   <a href="#router" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Router 多智能体架构的实现
+        Router 多智能体架构
       
     </span>
   </a>
@@ -1880,7 +1880,6 @@
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">check_inventory</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;你是库存助手，负责确认商品是否有货。最终请输出库存查询结果。&quot;</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inventory_agent&quot;</span><span class="p">,</span>
-
 <span class="p">)</span>
 
 <span class="n">order_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2089,12 +2088,37 @@
 <h3 id="_6">按需并行</h3>
 <p>有些情况下，并不希望所有节点都参与并行执行，而是希望“按条件选择其中部分节点并行运行”。此时可通过 <code>branches_fn</code> 指定分支函数。</p>
 <p>分支函数需要返回 <code>Send</code> 列表，每个 <code>Send</code> 包含目标节点名称与该节点的输入。</p>
-<h4 id="router">Router 多智能体架构的实现</h4>
-<p><code>Router</code> 是多智能体系统的典型架构：由路由模型根据用户请求进行需求分析与任务拆解，再分发给若干业务智能体执行。在订单查询场景中，用户可能同时关心订单状态、商品信息或退款，此时可由路由模型将请求分配给订单、商品、退款等智能体。</p>
-<p>先编写工具。</p>
+<h4 id="router">Router 多智能体架构</h4>
+<p>按需并行功能可用于实现 Router 多智能体架构的核心部分。</p>
+<p>在多智能体系统中，<code>Router</code>（路由）架构通过将复杂任务拆解并分发给专门的子智能体，实现高效的并行处理。该架构包含三个核心步骤：</p>
+<ol>
+<li>
+<p><strong>意图识别</strong>：由路由模型分析用户请求，拆解任务并确定调用的智能体。</p>
+</li>
+<li>
+<p><strong>并行执行</strong>：多个业务智能体同时处理子任务。</p>
+</li>
+<li>
+<p><strong>结果汇总</strong>：将各子智能体的回复整合成最终答案。</p>
+</li>
+</ol>
+<p>在订单查询场景中，用户可能同时关心订单状态、商品信息或退款政策。此时，系统可以并行调用订单、商品和退款智能体，最后统一回复。</p>
+<pre class="mermaid"><code>graph LR
+    Start([用户请求]) --&gt; Router([意图分类器])
+    Router --&gt;|订单查询| OrderAgent
+    Router --&gt;|商品查询| ProductAgent
+    Router --&gt;|退款查询| RefundAgent
+    OrderAgent --&gt; Synthesize
+    ProductAgent --&gt; Synthesize
+    RefundAgent --&gt; Synthesize
+    Synthesize --&gt; End([合成回复])</code></pre>
+<p><strong>1. 环境准备与工具定义</strong></p>
+<p>首先，定义各业务智能体需要用到的工具。</p>
 <details class="example">
-<summary>工具的实现参考</summary>
-<div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
+<summary>点击展开工具实现代码</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_orders</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;查询用户订单列表&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
@@ -2172,7 +2196,6 @@
         <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;主打降噪与长续航的真无线耳机。&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
-
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_inventory</span><span class="p">(</span><span class="n">product_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;查询库存&quot;&quot;&quot;</span>
@@ -2211,8 +2234,44 @@
     <span class="p">}</span>
 </code></pre></div>
 </details>
-<p>然后创建对应的子智能体。</p>
-<div class="highlight"><pre><span></span><code><span class="n">ORDER_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
+<p><strong>2. 定义状态 Schema</strong></p>
+<p><code>RouterState</code> 代表最终状态图的状态Schema，而<code>AgentInput</code> 与 <code>AgentOutput</code> 分别定义子智能体节点的输入与输出状态。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentInput</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;子智能体的输入结构&quot;&quot;&quot;</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentOutput</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;子智能体的输出结构&quot;&quot;&quot;</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">result</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Classification</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;路由分类结果&quot;&quot;&quot;</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;product&quot;</span><span class="p">]</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RouterState</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;全局状态 Schema&quot;&quot;&quot;</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">classifications</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Classification</span><span class="p">]</span>
+    <span class="n">results</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AgentOutput</span><span class="p">],</span> <span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">]</span> 
+    <span class="n">final_answer</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>3. 创建子智能体</strong></p>
+<p>利用 LangChain 的 <code>create_agent</code> 快速构建三个业务智能体，并为它们绑定对应的工具和提示词。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">ORDER_AGENT_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;你是订单管理助手。</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;你可以使用工具来查询订单列表、订单详情、物流轨迹。</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="s2">&quot;优先使用工具获取信息，再基于工具结果给出结论。</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -2234,7 +2293,6 @@
     <span class="s2">&quot;输出要求：用中文回答，给出可执行的下一步建议。</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 
-
 <span class="n">product_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">PRODUCT_AGENT_PROMPT</span><span class="p">,</span>
@@ -2255,35 +2313,42 @@
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_refund</span><span class="p">,</span> <span class="n">get_refund_status</span><span class="p">,</span> <span class="n">refund_policy</span><span class="p">],</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refund_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">order</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">):</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">order_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]})</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)]}</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">product</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">):</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">product_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]})</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)]}</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">refund</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">):</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">refund_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]})</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)]}</span>
 </code></pre></div>
-<p>再编写分支函数：由路由模型根据请求生成要执行的子智能体名称，以及发给该子智能体的任务描述。</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
+<p><strong>4. 封装智能体调用逻辑</strong></p>
+<p>将智能体的调用逻辑封装为节点函数。每个函数负责调用特定的智能体，并将结果格式化写入 <code>results</code> 字段。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">order_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">order_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">])]})</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
+    <span class="p">}</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">product_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">product_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">])]}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
+    <span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">refund_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">AgentInput</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">refund_agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">])]})</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
+    <span class="p">}</span>
+</code></pre></div>
+<p><strong>5. 实现路由与分支逻辑</strong></p>
+<p>这里就需要使用<strong>按需并行</strong>的功能。我们定义两个节点：
+1.  <strong><code>classify_query</code></strong>：使用大模型进行意图识别，输出需要调用的智能体列表以及任务内容。
+2.  <strong><code>route_to_agents</code></strong>：根据分类结果，生成 <code>Send</code> 对象列表，决定并行执行哪些节点。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">Send</span>
 
-
-<span class="k">class</span><span class="w"> </span><span class="nc">RouterInput</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">RouterState</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
-    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">classifications</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Classification</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;要调用的智能体列表及其对应的子问题&quot;</span>
+    <span class="p">)</span>
 
 <span class="n">ROUTER_SYSTEM_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;你是一个Router模型，只负责把用户问题拆分并分发到合适的业务子智能体。</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -2299,82 +2364,91 @@
     <span class="s2">&quot;示例C：用户：‘我想知道这款耳机的规格’ -&gt; 返回1条：product(查询详情)。</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Classification</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;一次路由决策：调用哪个智能体并附带什么查询。&quot;&quot;&quot;</span>
-
-    <span class="n">source</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;product&quot;</span><span class="p">]</span>
-    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;将用户查询分类为面向智能体的子问题的结果。&quot;&quot;&quot;</span>
-
-    <span class="n">classifications</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Classification</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;要调用的智能体列表及其对应的子问题&quot;</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">branch_fn</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RouterState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Send</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_query</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RouterState</span><span class="p">):</span>
     <span class="n">structured_llm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">ClassificationResult</span><span class="p">)</span>
 
-    <span class="n">query</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span>
-    <span class="n">classification_result</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
+    <span class="n">classify_result</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
         <span class="n">ClassificationResult</span><span class="p">,</span>
         <span class="n">structured_llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">SystemMessage</span><span class="p">(</span><span class="n">ROUTER_SYSTEM_PROMPT</span><span class="p">),</span>
-                <span class="n">HumanMessage</span><span class="p">(</span><span class="n">query</span><span class="p">),</span>
+                <span class="n">HumanMessage</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]),</span>
             <span class="p">]</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">classifications</span> <span class="o">=</span> <span class="n">classification_result</span><span class="o">.</span><span class="n">classifications</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">classifications</span><span class="p">:</span>
-        <span class="n">classifications</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">}]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;classifications&quot;</span><span class="p">:</span> <span class="n">classify_result</span><span class="o">.</span><span class="n">classifications</span><span class="p">}</span>
 
-    <span class="n">sends</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Send</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">classifications</span><span class="p">:</span>
-        <span class="n">source</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;refund&quot;</span><span class="p">,</span> <span class="s2">&quot;product&quot;</span><span class="p">}:</span>
-            <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
-        <span class="n">sends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">))]}))</span>
-    <span class="k">return</span> <span class="n">sends</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">route_to_agents</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RouterState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Send</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;根据分类结果生成并行执行的指令&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Send</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]})</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;classifications&quot;</span><span class="p">]]</span>
 </code></pre></div>
-最后使用 <code>create_parallel_graph</code> 完成并行状态图的编排，并传入分支函数。</p>
-<div class="highlight"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
+<p><strong>6. 编排并行图与汇总</strong></p>
+<p>使用 <code>create_parallel_graph</code> 创建并行子图。这里传入 <code>branches_fn</code> 参数，实现了根据条件的动态并行执行。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_graph</span>
+
+<span class="n">router_graph</span> <span class="o">=</span> <span class="n">create_parallel_graph</span><span class="p">(</span>
     <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">order</span><span class="p">,</span>
-        <span class="n">refund</span><span class="p">,</span>
-        <span class="n">product</span><span class="p">,</span>
+        <span class="n">order_node</span><span class="p">,</span>
+        <span class="n">product_node</span><span class="p">,</span>
+        <span class="n">refund_node</span><span class="p">,</span>
     <span class="p">],</span>
-    <span class="n">state_schema</span><span class="o">=</span><span class="n">AgentState</span><span class="p">,</span>
-    <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;parallel_graph&quot;</span><span class="p">,</span>
-    <span class="n">branches_fn</span><span class="o">=</span><span class="n">branch_fn</span><span class="p">,</span>
-<span class="p">)</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">RouterState</span><span class="p">,</span>
+<span class="hll">    <span class="n">branches_fn</span><span class="o">=</span><span class="n">route_to_agents</span><span class="p">,</span> <span class="c1"># 核心逻辑：由函数决定运行哪些分支</span>
+</span><span class="p">)</span>
 </code></pre></div>
-<p>运行示例：</p>
-<div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;你好，我要查询一下之前购买的产品&quot;</span><span class="p">)],</span>
-    <span class="p">}</span>
+<p>接下来编写汇总节点 <code>synthesize_results</code>，用于将并行执行的结果整合为通顺的回答。</p>
+<div class="highlight"><pre><span></span><code><span class="n">SYNTHESIS_SYSTEM_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;综合这些结果以回答原始问题：</span><span class="si">{query}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;- 合并来自多个来源的信息，避免冗余</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;- 突出最相关且可操作的信息</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;- 注明来源之间的任何差异</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;- 保持回答简洁且条理清晰</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
-<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？&quot;</span><span class="p">)],</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">synthesize_results</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RouterState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;final_answer&quot;</span><span class="p">:</span> <span class="s2">&quot;No results found from any knowledge source.&quot;</span><span class="p">}</span>
+
+    <span class="c1"># 格式化各子智能体的输出</span>
+    <span class="n">formatted</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">f</span><span class="s2">&quot;**From </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">:**</span><span class="se">\n</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">synthesis_response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">SYNTHESIS_SYSTEM_PROMPT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]),</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">formatted</span><span class="p">)},</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;final_answer&quot;</span><span class="p">:</span> <span class="n">synthesis_response</span><span class="o">.</span><span class="n">content</span><span class="p">}</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">提示</p>
-<ul>
-<li><strong>未传入 <code>branches_fn</code> 参数时</strong>：所有节点都会并行执行</li>
-<li><strong>传入 <code>branches_fn</code> 参数时</strong>：执行哪些节点由该函数的返回值决定</li>
-</ul>
-</div>
+<p><strong>7. 构建最终的StateGraph</strong></p>
+<p>最后，使用 <code>create_sequential_graph</code> 将“意图分类 -&gt; 按需并行 -&gt; 结果汇总”串联起来，形成完整的应用流。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sequential_graph</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">create_sequential_graph</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">classify_query</span><span class="p">,</span>
+        <span class="n">router_graph</span><span class="p">,</span>
+        <span class="n">synthesize_results</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">RouterState</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>8. 运行示例</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 示例 1：单一意图（产品查询）</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;你好，我要查询一下之前购买的产品&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;final_answer&quot;</span><span class="p">])</span>
+
+<span class="c1"># 示例 2：混合意图（产品查询 + 退款政策），将触发并行执行</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;推荐一款适合通勤的无线耳机并看看库存；同时，告诉我你们商品的退款政策？&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;final_answer&quot;</span><span class="p">])</span>
+</code></pre></div>
 
 
 
