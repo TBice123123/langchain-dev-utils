@@ -1,9 +1,46 @@
 from importlib import util
 from typing import Literal, Optional, cast
 
+from langchain_core.tools import BaseTool
 from langgraph.graph import StateGraph
 from langgraph.graph.state import StateNode
 from pydantic import BaseModel
+
+
+def _duplicate_tools(tools: list[BaseTool]) -> list[BaseTool]:
+    """Duplicate tools with the same name.
+
+    Args:
+        tools (list[BaseTool]): The list of tools.
+
+    Returns:
+        list[BaseTool]: The duplicated tools.
+    """
+    tool_name_set = set()
+    duplicated_tools = []
+    for tool_obj in tools:
+        if tool_obj.name not in tool_name_set:
+            duplicated_tools.append(tool_obj)
+            tool_name_set.add(tool_obj.name)
+    return duplicated_tools
+
+
+def _merge_tools(tools: list[BaseTool]) -> list[BaseTool]:
+    """Merge tools with the same name.
+
+    Args:
+        tools (list[BaseTool]): The list of tools.
+
+    Returns:
+        list[BaseTool]: The merged tools.
+    """
+    tool_name_set = set()
+    merged_tools = []
+    for tool_obj in tools:
+        if tool_obj.name not in tool_name_set:
+            merged_tools.append(tool_obj)
+            tool_name_set.add(tool_obj.name)
+    return merged_tools
 
 
 def _transform_node_to_tuple(

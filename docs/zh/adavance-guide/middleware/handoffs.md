@@ -18,11 +18,16 @@
 |------|------|
 | `model` | 指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen3-4b`）或 `BaseChatModel` 实例。<br><br>**类型**: `str` \| `BaseChatModel`<br>**必填**: 否 |
 | `prompt` | 智能体的系统提示词。<br><br>**类型**: `str` \| `SystemMessage`<br>**必填**: 是 |
-| `tools` | 智能体可调用的工具列表。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
+| `tools` | 智能体可调用的工具列表；若不传，该智能体仅拥有相关的交接工具。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
 | `default` | 是否设为默认智能体；缺省为 `False`。全部配置中必须且只能有一个智能体设为 `True`。<br><br>**类型**: `bool`<br>**必填**: 否 |
 | `handoffs` | 该智能体可交接给的其它智能体名称列表。若设为 `"all"`，则表示该智能体可交接给所有其它智能体。<br><br>**类型**: `list[str]` \| `str`<br>**必填**: 是 |
 
+
+!!! note "注意"
+    使用本中间件后，`create_agent` 的 `tools` 与 `system_prompt` 参数会被忽略，故无需填写。
+
 对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具。本中间件利用每个智能体的 `handoffs` 配置，自动为每个智能体创建对应的交接工具。如果要自定义交接工具的描述，则可以通过 `custom_handoffs_tool_descriptions` 参数实现。
+
 
 
 ## 基础用法
@@ -69,12 +74,6 @@ from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
 
 agent = create_agent(
     model="vllm:qwen3-4b",
-    tools=[
-        get_current_time,
-        get_current_weather,
-        get_current_city,
-        run_code,
-    ],
     middleware=[HandoffAgentMiddleware(agents_config=agent_config)],
 )
 
@@ -88,12 +87,6 @@ print(response)
 ```python hl_lines="12-17"
 agent = create_agent(
     model="vllm:qwen3-4b",
-    tools=[
-        get_current_time,
-        get_current_weather,
-        get_current_city,
-        run_code,
-    ],
     middleware=[
         HandoffAgentMiddleware(
             agents_config=agent_config,
@@ -108,6 +101,7 @@ agent = create_agent(
 )
 ```
 
+
 ## 自定义交接工具实现
 
 如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 `handoffs_tool_overrides`。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。
@@ -119,7 +113,7 @@ agent = create_agent(
 ```python hl_lines="29-31"
 @tool
 def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
-    """This tool help you transfer to the code agent."""
+    """此工具帮助你交接到代码助手"""
     #这里你可以添加自定义逻辑
     return Command(
         update={
@@ -136,12 +130,6 @@ def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
 
 agent = create_agent(
     model="vllm:qwen3-4b",
-    tools=[
-        get_current_time,
-        get_current_weather,
-        get_current_city,
-        run_code,
-    ],
     middleware=[
         HandoffAgentMiddleware(
             agents_config=agent_config,

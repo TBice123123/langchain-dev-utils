@@ -1,4 +1,4 @@
-### LangChain 内置中间件扩展
+# LangChain 内置中间件扩展
 
 本库对以下官方中间件进行了增强，支持通过字符串直接指定模型——**前提是模型必须已通过 `register_model_provider` 注册**：
 

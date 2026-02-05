@@ -583,13 +583,13 @@ refund_agent = create_agent(
 将智能体的调用逻辑封装为节点函数。每个函数负责调用特定的智能体，并将结果格式化写入 `results` 字段。
 
 ```python
-def order_node(state: AgentInput):
+def order(state: AgentInput):
     response = order_agent.invoke({"messages": [HumanMessage(content=state["query"])]})
     return {
         "results": [{"source": "order", "result": response["messages"][-1].content}]
     }
 
-def product_node(state: AgentInput):
+def product(state: AgentInput): 
     response = product_agent.invoke(
         {"messages": [HumanMessage(content=state["query"])]}
     )
@@ -597,7 +597,7 @@ def product_node(state: AgentInput):
         "results": [{"source": "product", "result": response["messages"][-1].content}]
     }
 
-def refund_node(state: AgentInput):
+def refund(state: AgentInput):
     response = refund_agent.invoke({"messages": [HumanMessage(content=state["query"])]})
     return {
         "results": [{"source": "refund", "result": response["messages"][-1].content}]
@@ -664,9 +664,9 @@ from langchain_dev_utils.graph import create_parallel_graph
 
 router_graph = create_parallel_graph(
     nodes=[
-        order_node,
-        product_node,
-        refund_node,
+        order,
+        product,
+        refund,
     ],
     state_schema=RouterState,
     branches_fn=route_to_agents, # 核心逻辑：由函数决定运行哪些分支

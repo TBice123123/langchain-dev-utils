@@ -7,7 +7,6 @@ from langchain_dev_utils.embeddings import load_embeddings
 @pytest.fixture(
     params=[
         "dashscope:text-embedding-v4",
-        "siliconflow:BAAI/bge-m3",
         "ollama:bge-m3:latest",
     ]
 )

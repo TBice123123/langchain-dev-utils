@@ -19,7 +19,7 @@
 |------|------|
 | `model_name` | 模型的唯一标识，使用 `provider:model-name` 格式。<br><br>**类型**: `str`<br>**必填**: 是 |
 | `model_description` | 模型能力或适用场景的简要描述。<br><br>**类型**: `str`<br>**必填**: 是 |
-| `tools` | 该模型可调用的工具白名单。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
+| `tools` | 该模型可调用的工具白名单，如果不传，默认该模型拥有所有工具的使用权限。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
 | `model_kwargs` | 模型加载时的额外参数。<br><br>**类型**: `dict`<br>**必填**: 否 |
 | `model_system_prompt` | 模型的系统级提示词。<br><br>**类型**: `str`<br>**必填**: 否 |
 | `model_instance` | 已实例化的模型对象。<br><br>**类型**: `BaseChatModel`<br>**必填**: 否 |
@@ -78,7 +78,7 @@ from langchain_core.messages import HumanMessage
 
 agent = create_agent(
     model="vllm:qwen3-4b",  # 此模型仅作占位，实际由中间件动态替换
-    tools=[run_python_code, get_current_time],
+    tools=[get_current_time],
     middleware=[
         ModelRouterMiddleware(
             router_model="vllm:qwen3-4b",
@@ -91,6 +91,10 @@ agent = create_agent(
 response = agent.invoke({"messages": [HumanMessage(content="帮我写一个冒泡排序代码")]})
 print(response)
 ```
+
+!!!tip "tools参数"
+    使用本中间件后，`create_agent` 的 `tools` 参数被视为“全局补充工具”。只有当`model_list`中的模型的`tools` 字段未定义时，这些全局工具才会被追加到该模型的可用工具列表中；且这些全局工具不能包含在`model_list`中的模型的`tools` 字段中。
+
 
 通过 `ModelRouterMiddleware`，你可以轻松构建一个多模型、多能力的 Agent，根据任务类型自动选择最优模型，提升响应质量与效率。
 

@@ -5,8 +5,8 @@ from langchain_tests.integration_tests.embeddings import EmbeddingsIntegrationTe
 
 from langchain_dev_utils.embeddings.adapters import create_openai_compatible_embedding
 
-SiliconFlowEmbeddings = create_openai_compatible_embedding(
-    "siliconflow", embedding_model_cls_name="SiliconFlowEmbeddings"
+ZAIEmbeddings = create_openai_compatible_embedding(
+    "zai", embedding_model_cls_name="ZAIEmbeddings"
 )
 
 
@@ -14,9 +14,9 @@ class TestStandard(EmbeddingsIntegrationTests):
     @property
     def embeddings_class(self) -> type[Embeddings]:
         """Embeddings class."""
-        return cast("type[Embeddings]", SiliconFlowEmbeddings)
+        return cast("type[Embeddings]", ZAIEmbeddings)
 
     @property
     def embedding_model_params(self) -> dict[str, Any]:
         """Embeddings model parameters."""
-        return {"model": "BAAI/bge-m3"}
+        return {"model": "embedding-3"}

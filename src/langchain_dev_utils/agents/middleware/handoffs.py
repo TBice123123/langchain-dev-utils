@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Callable, Literal, cast
+from typing import Awaitable, Callable, Literal, cast
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
@@ -9,6 +9,7 @@ from langchain_core.messages import SystemMessage, ToolMessage
 from langgraph.types import Command
 from typing_extensions import NotRequired, Optional, TypedDict
 
+from langchain_dev_utils._utils import _duplicate_tools, _merge_tools
 from langchain_dev_utils.chat_models import load_chat_model
 
 
@@ -19,7 +20,7 @@ class MultiAgentState(AgentState):
 class AgentConfig(TypedDict):
     model: NotRequired[str | BaseChatModel]
     prompt: str | SystemMessage
-    tools: NotRequired[list[BaseTool | dict[str, Any]]]
+    tools: NotRequired[list[BaseTool]]
     default: NotRequired[bool]
     handoffs: list[str] | Literal["all"]
 
@@ -176,7 +177,16 @@ class HandoffAgentMiddleware(AgentMiddleware):
             agents_config,
             handoffs_tools,
         )
-        self.tools = handoffs_tools
+
+        all_tools = [
+            *handoffs_tools,
+        ]
+
+        for agent_name in agents_config:
+            tools = agents_config.get(agent_name, {}).get("tools", [])
+            all_tools.extend(tools)
+
+        self.tools = _merge_tools(all_tools)
 
     def _get_override_request(self, request: ModelRequest) -> ModelRequest:
         active_agent_name = request.state.get("active_agent", self.default_agent_name)
@@ -184,15 +194,14 @@ class HandoffAgentMiddleware(AgentMiddleware):
         _config = self.agents_config[active_agent_name]
 
         params = {}
-        if _config.get("model"):
-            model = _config.get("model")
+        if model := _config.get("model"):
             if isinstance(model, str):
                 model = load_chat_model(model)
             params["model"] = model
-        if _config.get("prompt"):
-            params["system_prompt"] = _config.get("prompt")
-        if _config.get("tools"):
-            params["tools"] = _config.get("tools")
+        if prompt := _config.get("prompt"):
+            params["system_prompt"] = prompt
+        if tools := _config.get("tools"):
+            params["tools"] = _duplicate_tools(tools)
 
         if params:
             return request.override(**params)

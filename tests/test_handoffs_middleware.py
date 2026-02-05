@@ -6,9 +6,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
 
 from langchain_dev_utils.agents import create_agent
-from langchain_dev_utils.agents.middleware import (
-    HandoffAgentMiddleware,
-)
+from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
 from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
 from langchain_dev_utils.chat_models import load_chat_model
 
@@ -90,10 +88,6 @@ def test_handoffs_middleware():
                 custom_handoffs_tool_descriptions=custom_tool_descriptions,
                 handoffs_tool_overrides=handoffs_tool_map,
             )
-        ],
-        tools=[
-            get_current_time,
-            run_code,
         ],
         checkpointer=InMemorySaver(),
     )

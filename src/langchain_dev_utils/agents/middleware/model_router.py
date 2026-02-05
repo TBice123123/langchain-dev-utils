@@ -10,6 +10,7 @@ from langgraph.runtime import Runtime
 from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 
+from langchain_dev_utils._utils import _duplicate_tools, _merge_tools
 from langchain_dev_utils.chat_models import load_chat_model
 from langchain_dev_utils.message_convert import format_sequence
 
@@ -120,6 +121,13 @@ class ModelRouterMiddleware(AgentMiddleware):
 
         self.router_prompt = router_prompt
 
+        all_tools = []
+        for model in model_list:
+            if tools := model.get("tools"):
+                all_tools.extend(tools)
+
+        self.tools = _merge_tools(all_tools)
+
     def _select_model(self, messages: list[AnyMessage]):
         response = cast(
             SelectModel,
@@ -174,7 +182,7 @@ class ModelRouterMiddleware(AgentMiddleware):
                     model = load_chat_model(select_model_name)
             override_kwargs["model"] = model
             if model_values["tools"] is not None:
-                override_kwargs["tools"] = model_values["tools"]
+                override_kwargs["tools"] = _duplicate_tools(model_values["tools"])
             if model_values["system_prompt"] is not None:
                 override_kwargs["system_message"] = SystemMessage(
                     content=model_values["system_prompt"]

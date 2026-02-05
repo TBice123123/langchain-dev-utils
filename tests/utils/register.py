@@ -27,10 +27,6 @@ def register_all_model_providers():
 def register_all_embeddings_providers():
     batch_register_embeddings_provider(
         [
-            {
-                "provider_name": "siliconflow",
-                "embeddings_model": "openai-compatible",
-            },
             {"provider_name": "dashscope", "embeddings_model": DashScopeEmbeddings},
         ]
     )
