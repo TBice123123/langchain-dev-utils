@@ -1767,7 +1767,7 @@
 </tr>
 <tr>
 <td><code>tools</code></td>
-<td>智能体可调用的工具列表。<br><br><strong>类型</strong>: <code>list[BaseTool]</code><br><strong>必填</strong>: 否</td>
+<td>智能体可调用的工具列表；若不传，该智能体仅拥有相关的交接工具。<br><br><strong>类型</strong>: <code>list[BaseTool]</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>default</code></td>
@@ -1779,6 +1779,10 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>使用本中间件后，<code>create_agent</code> 的 <code>tools</code> 与 <code>system_prompt</code> 参数会被忽略，故无需填写。</p>
+</div>
 <p>对于这种范式的多智能体实现，往往需要一个用于交接（handoffs）的工具。本中间件利用每个智能体的 <code>handoffs</code> 配置，自动为每个智能体创建对应的交接工具。如果要自定义交接工具的描述，则可以通过 <code>custom_handoffs_tool_descriptions</code> 参数实现。</p>
 <h2 id="_3">基础用法</h2>
 <p>本示例中，将使用四个智能体：<code>time_agent</code>、<code>weather_agent</code>、<code>code_agent</code> 和 <code>default_agent</code>。</p>
@@ -1817,12 +1821,6 @@
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">get_current_time</span><span class="p">,</span>
-        <span class="n">get_current_weather</span><span class="p">,</span>
-        <span class="n">get_current_city</span><span class="p">,</span>
-        <span class="n">run_code</span><span class="p">,</span>
-    <span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">HandoffAgentMiddleware</span><span class="p">(</span><span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">)],</span>
 <span class="p">)</span>
 
@@ -1833,32 +1831,26 @@
 <p>如果想要自定义交接工具的描述，可以传递第二个参数 <code>custom_handoffs_tool_descriptions</code>。</p>
 <div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">get_current_time</span><span class="p">,</span>
-        <span class="n">get_current_weather</span><span class="p">,</span>
-        <span class="n">get_current_city</span><span class="p">,</span>
-        <span class="n">run_code</span><span class="p">,</span>
-    <span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-<span class="hll">            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
-</span><span class="hll">                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到时间助手去解决时间查询问题&quot;</span><span class="p">,</span>
-</span><span class="hll">                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到天气助手去解决天气查询问题&quot;</span><span class="p">,</span>
-</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
-</span><span class="hll">                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
-</span><span class="hll">            <span class="p">},</span>
-</span>        <span class="p">)</span>
-    <span class="p">],</span>
-<span class="p">)</span>
-</code></pre></div>
+            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到时间助手去解决时间查询问题&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到天气助手去解决天气查询问题&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+<span class="hll">        <span class="p">)</span>
+</span><span class="hll">    <span class="p">],</span>
+</span><span class="hll"><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="_5">自定义交接工具实现</h2>
 <p>如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 <code>handoffs_tool_overrides</code>。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。</p>
 <p>自定义交接工具必须返回一个 <code>Command</code> 对象，其 <code>update</code> 属性需包含 <code>messages</code> 键（返回工具响应）和 <code>active_agent</code> 键（值为要交接的智能体名称，用于切换当前智能体）。</p>
 <p>例如：</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">transfer_to_code_agent</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This tool help you transfer to the code agent.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;此工具帮助你交接到代码助手&quot;&quot;&quot;</span>
     <span class="c1">#这里你可以添加自定义逻辑</span>
     <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
         <span class="n">update</span><span class="o">=</span><span class="p">{</span>
@@ -1875,19 +1867,13 @@
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">get_current_time</span><span class="p">,</span>
-        <span class="n">get_current_weather</span><span class="p">,</span>
-        <span class="n">get_current_city</span><span class="p">,</span>
-        <span class="n">run_code</span><span class="p">,</span>
-    <span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-<span class="hll">            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
-</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
-</span><span class="hll">            <span class="p">},</span>
-</span>        <span class="p">)</span>
+            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>

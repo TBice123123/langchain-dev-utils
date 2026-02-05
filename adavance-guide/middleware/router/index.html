@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#model-routing" class="md-skip">
+        <a href="#model-router" class="md-skip">
           Skip to content
         </a>
       
@@ -1135,10 +1135,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage-example" class="md-nav__link">
+  <a href="#usage-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage Example
+        Usage Examples
       
     </span>
   </a>
@@ -1648,10 +1648,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage-example" class="md-nav__link">
+  <a href="#usage-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage Example
+        Usage Examples
       
     </span>
   </a>
@@ -1678,8 +1678,8 @@
   
 
 
-<h1 id="model-routing">Model Routing</h1>
-<p><code>ModelRouterMiddleware</code> is a middleware used for <strong>dynamically routing to the most suitable model based on the input content</strong>. It analyzes user requests through a "router model" and selects the most appropriate model from a predefined list to process the current task.</p>
+<h1 id="model-router">Model Router</h1>
+<p><code>ModelRouterMiddleware</code> is a middleware used to <strong>dynamically route to the most suitable model based on input content</strong>. It analyzes user requests using a "router model" and selects the model best suited for the current task from a predefined list.</p>
 <h3 id="parameter-description">Parameter Description</h3>
 <table>
 <thead>
@@ -1695,7 +1695,7 @@
 </tr>
 <tr>
 <td><code>model_list</code></td>
-<td>List of model configurations.<br><br><strong>Type</strong>: <code>list[ModelDict]</code><br><strong>Required</strong>: Yes</td>
+<td>A list of model configurations.<br><br><strong>Type</strong>: <code>list[ModelDict]</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>router_prompt</code></td>
@@ -1715,19 +1715,19 @@
 <tbody>
 <tr>
 <td><code>model_name</code></td>
-<td>Unique identifier for the model, using the <code>provider:model-name</code> format.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
+<td>The unique identifier for the model, using the <code>provider:model-name</code> format.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>model_description</code></td>
-<td>Brief description of the model's capabilities or suitable scenarios.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
+<td>A brief description of the model's capabilities or applicable scenarios.<br><br><strong>Type</strong>: <code>str</code><br><strong>Required</strong>: Yes</td>
 </tr>
 <tr>
 <td><code>tools</code></td>
-<td>Whitelist of tools callable by this model.<br><br><strong>Type</strong>: <code>list[BaseTool]</code><br><strong>Required</strong>: No</td>
+<td>A whitelist of tools callable by this model. If not passed, the model defaults to having permission to use all tools.<br><br><strong>Type</strong>: <code>list[BaseTool]</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>model_kwargs</code></td>
-<td>Additional parameters for model loading.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
+<td>Additional parameters when loading the model.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>model_system_prompt</code></td>
@@ -1735,59 +1735,59 @@
 </tr>
 <tr>
 <td><code>model_instance</code></td>
-<td>Instantiated model object.<br><br><strong>Type</strong>: <code>BaseChatModel</code><br><strong>Required</strong>: No</td>
+<td>An instantiated model object.<br><br><strong>Type</strong>: <code>BaseChatModel</code><br><strong>Required</strong>: No</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition tip">
-<p class="admonition-title">Notes on the <code>model_instance</code> Field</p>
+<p class="admonition-title">Explanation of the <code>model_instance</code> Field</p>
 <ul>
-<li><strong>If provided</strong>: Use this instance directly. <code>model_name</code> is used only for identification, and <code>model_kwargs</code> is ignored. Suitable for cases where the library's chat model management functions are not used.</li>
-<li><strong>If not provided</strong>: Load the model using <code>load_chat_model</code> based on <code>model_name</code> and <code>model_kwargs</code>.</li>
-<li><strong>Naming format</strong>: Regardless of the case, it is recommended to use the <code>provider:model-name</code> format for <code>model_name</code>.</li>
+<li><strong>If provided</strong>: The instance is used directly, <code>model_name</code> serves only as an identifier, and <code>model_kwargs</code> is ignored; suitable for scenarios not using this library's chat model management features.</li>
+<li><strong>If not provided</strong>: The model is loaded using <code>load_chat_model</code> based on <code>model_name</code> and <code>model_kwargs</code>.</li>
+<li><strong>Naming format</strong>: In either case, it is recommended that <code>model_name</code> follows the <code>provider:model-name</code> format.</li>
 </ul>
 </div>
-<h2 id="usage-example">Usage Example</h2>
+<h2 id="usage-examples">Usage Examples</h2>
 <p><strong>Step 1: Define the Model List</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware.model_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelDict</span>
 
 <span class="n">model_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks, such as dialogue, text generation, etc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for general tasks, such as conversation, text generation, etc.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
             <span class="s2">&quot;extra_body&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
         <span class="p">},</span>
-        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant skilled in handling general tasks, such as dialogue, text generation, etc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant skilled at handling general tasks, such as conversation and text generation.&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for visual tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># If the model does not require any tools, set this field to an empty list []</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># If the model does not require any tools, please set this field to an empty list []</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-coder-flash&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for code generation tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_python_code</span><span class="p">],</span>  <span class="c1"># Only allow the run_python_code tool</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_python_code</span><span class="p">],</span>  <span class="c1"># Only allow the use of the run_python_code tool</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openai:gpt-4o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for comprehensive and high-difficulty tasks&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant skilled in handling comprehensive and high-difficulty tasks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Suitable for comprehensive and complex tasks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an assistant skilled at handling comprehensive high-difficulty tasks&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_instance&quot;</span><span class="p">:</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
-        <span class="p">),</span>  <span class="c1"># Pass the instance directly. Here, model_name is used only for identification, and model_kwargs is ignored.</span>
+        <span class="p">),</span>  <span class="c1"># Pass the instance directly; here model_name serves only as an identifier, model_kwargs is ignored</span>
     <span class="p">},</span>
 <span class="p">]</span>
 </code></pre></div>
-<p><strong>Step 2: Create an Agent and Enable the Middleware</strong></p>
+<p><strong>Step 2: Create an Agent and Enable Middleware</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelRouterMiddleware</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># This model serves only as a placeholder; it will be dynamically replaced by the middleware</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">run_python_code</span><span class="p">,</span> <span class="n">get_current_time</span><span class="p">],</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># This model serves as a placeholder; it is dynamically replaced by the middleware</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">ModelRouterMiddleware</span><span class="p">(</span>
             <span class="n">router_model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
@@ -1800,10 +1800,14 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Help me write a bubble sort code&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
-<p>With <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on the task type, improving response quality and efficiency.</p>
+<div class="admonition tip">
+<p class="admonition-title">tools Parameter</p>
+<p>After using this middleware, the <code>tools</code> parameter of <code>create_agent</code> is treated as "global supplementary tools". These global tools are only appended to a model's available tool list if the <code>tools</code> field is not defined in that model's <code>model_list</code>; furthermore, these global tools must not be included in the <code>tools</code> field defined in <code>model_list</code>.</p>
+</div>
+<p>With <code>ModelRouterMiddleware</code>, you can easily build a multi-model, multi-capability Agent that automatically selects the optimal model based on task type, improving response quality and efficiency.</p>
 <div class="admonition note">
 <p class="admonition-title">Parallel Execution</p>
-<p>The middleware-based model routing implementation assigns only one task for execution at a time. If you want to break down a task into multiple subtasks for parallel execution by multiple models, please refer to <a href="../../graph/">Predefined StateGraph Construction Functions</a>.</p>
+<p>Implementing model routing via middleware assigns only one task for execution at a time. If you wish to decompose a task into multiple sub-tasks executed in parallel by multiple models, please refer to <a href="../../graph/">Predefined StateGraph Construction Functions</a>.</p>
 </div>
 
 
