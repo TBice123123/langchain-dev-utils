@@ -1834,16 +1834,16 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到时间助手去解决时间查询问题&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到天气助手去解决天气查询问题&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-<span class="hll">        <span class="p">)</span>
-</span><span class="hll">    <span class="p">],</span>
-</span><span class="hll"><span class="p">)</span>
-</span></code></pre></div>
+<span class="hll">            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到时间助手去解决时间查询问题&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到天气助手去解决天气查询问题&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到代码助手去解决代码问题&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;此工具用于交接到默认的助手&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">},</span>
+</span>        <span class="p">)</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
 <h2 id="_5">自定义交接工具实现</h2>
 <p>如果你想完全自定义实现交接工具的逻辑，则可以传递第三个参数 <code>handoffs_tool_overrides</code>。与第二个参数类似，它也是一个字典，键为智能体名称，值为对应的交接工具实现。</p>
 <p>自定义交接工具必须返回一个 <code>Command</code> 对象，其 <code>update</code> 属性需包含 <code>messages</code> 键（返回工具响应）和 <code>active_agent</code> 键（值为要交接的智能体名称，用于切换当前智能体）。</p>
@@ -1870,10 +1870,10 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
+<span class="hll">            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">},</span>
+</span>        <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>

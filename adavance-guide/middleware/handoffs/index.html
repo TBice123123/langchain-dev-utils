@@ -1834,16 +1834,16 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the time assistant to resolve time query issues&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the weather assistant to resolve weather query issues&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the coding assistant to resolve code issues&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the default assistant&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-<span class="hll">        <span class="p">)</span>
-</span><span class="hll">    <span class="p">],</span>
-</span><span class="hll"><span class="p">)</span>
-</span></code></pre></div>
+<span class="hll">            <span class="n">custom_handoffs_tool_descriptions</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">                <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the time assistant to resolve time query issues&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the weather assistant to resolve weather query issues&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the coding assistant to resolve code issues&quot;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this tool to hand off to the default assistant&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">},</span>
+</span>        <span class="p">)</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
 <h2 id="customizing-handoff-tool-implementation">Customizing Handoff Tool Implementation</h2>
 <p>If you want to fully customize the implementation logic of the handoff tool, you can pass a third parameter <code>handoffs_tool_overrides</code>. Similar to the second parameter, it is also a dictionary where the key is the agent name and the value is the corresponding handoff tool implementation.</p>
 <p>A custom handoff tool must return a <code>Command</code> object, whose <code>update</code> attribute needs to contain the <code>messages</code> key (returning the tool response) and the <code>active_agent</code> key (whose value is the name of the agent to hand off to, used to switch the current agent).</p>
@@ -1870,10 +1870,10 @@
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
-            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
+<span class="hll">            <span class="n">handoffs_tool_overrides</span><span class="o">=</span><span class="p">{</span>
+</span><span class="hll">                <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="n">transfer_to_code_agent</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">},</span>
+</span>        <span class="p">)</span>
     <span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
