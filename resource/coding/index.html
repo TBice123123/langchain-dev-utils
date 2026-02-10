@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,17 +8,17 @@
       
       
       
-        <link rel="canonical" href="https://tbice123123.github.io/langchain-dev-utils/zh/example-project/">
+        <link rel="canonical" href="https://tbice123123.github.io/langchain-dev-utils/resource/coding/">
       
       
-        <link rel="prev" href="../api-reference/graph/">
+        <link rel="prev" href="../example-project/">
       
       
       
         
-          <link rel="alternate" href="../../example-project/" hreflang="en">
+          <link rel="alternate" href="./" hreflang="en">
         
-          <link rel="alternate" href="./" hreflang="zh">
+          <link rel="alternate" href="../../zh/resource/coding/" hreflang="zh">
         
       
       
@@ -27,7 +27,7 @@
     
     
       
-        <title>使用示例 - Langchain Dev Utils</title>
+        <title>Use docs programmatically - Langchain Dev Utils</title>
       
     
     
@@ -48,10 +48,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Outfit";--md-code-font:"JetBrains Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -69,7 +71,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="light-blue">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -78,8 +80,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#langchain-dev-utils-example-project" class="md-skip">
-          跳转至
+        <a href="#programmatically-access-the-documentation" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -90,9 +92,11 @@
     
       
 
-<header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
-    <a href="../" title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Langchain Dev Utils" class="md-header__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              使用示例
+              Use docs programmatically
             
           </span>
         </div>
@@ -125,7 +129,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="light-blue"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -135,7 +139,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="light-blue"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -152,20 +156,20 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="选择当前语言">
+    <button class="md-header__button md-icon" aria-label="Select language">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../example-project/" hreflang="en" class="md-select__link">
+            <a href="./" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="./" hreflang="zh" class="md-select__link">
+            <a href="../../zh/resource/coding/" hreflang="zh" class="md-select__link">
               中文
             </a>
           </li>
@@ -186,21 +190,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -213,7 +217,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -225,7 +229,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/tbice123123/langchain-dev-utils" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -238,15 +242,9 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -256,13 +254,13 @@
   
   
     <li class="md-tabs__item">
-      <a href="../" class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
     
   
-  概述
+  Overview
 
       </a>
     </li>
@@ -277,11 +275,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../getting-started-guide/installation/" class="md-tabs__link">
+        <a href="../../getting-started-guide/installation/" class="md-tabs__link">
           
   
   
-  入门指南
+  Getting Started
 
         </a>
       </li>
@@ -304,11 +302,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../adavance-guide/openai-compatible/overview/" class="md-tabs__link">
+        <a href="../../adavance-guide/openai-compatible/overview/" class="md-tabs__link">
           
   
   
-  高级指南
+  Advanced Guides
 
         </a>
       </li>
@@ -327,11 +325,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../api-reference/agent/" class="md-tabs__link">
+        <a href="../../api-reference/agent/" class="md-tabs__link">
           
   
   
-  API 参考
+  API Reference
 
         </a>
       </li>
@@ -346,24 +344,31 @@
     
   
   
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../example-project/" class="md-tabs__link">
+          
   
-  使用示例
+  
+  Resource
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -380,9 +385,11 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../" title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
+    <a href="../.." title="Langchain Dev Utils" class="md-nav__button md-logo" aria-label="Langchain Dev Utils" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -392,7 +399,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/tbice123123/langchain-dev-utils" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/tbice123123/langchain-dev-utils" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -412,14 +419,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    概述
+    Overview
   
 
     
@@ -464,7 +471,7 @@
   <span class="md-ellipsis">
     
   
-    入门指南
+    Getting Started
   
 
     
@@ -480,7 +487,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    入门指南
+    Getting Started
   
 
           </label>
@@ -493,14 +500,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/installation/" class="md-nav__link">
+      <a href="../../getting-started-guide/installation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    安装
+    Installation
   
 
     
@@ -521,14 +528,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/chat/" class="md-nav__link">
+      <a href="../../getting-started-guide/chat/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    对话模型管理
+    Chat Model Management
   
 
     
@@ -549,14 +556,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/embedding/" class="md-nav__link">
+      <a href="../../getting-started-guide/embedding/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    嵌入模型管理
+    Embedding Model Management
   
 
     
@@ -577,14 +584,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/format/" class="md-nav__link">
+      <a href="../../getting-started-guide/format/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    格式化序列
+    Formatting Sequences
   
 
     
@@ -605,14 +612,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/message/" class="md-nav__link">
+      <a href="../../getting-started-guide/message/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    消息处理
+    Message Processing
   
 
     
@@ -633,14 +640,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/tool/" class="md-nav__link">
+      <a href="../../getting-started-guide/tool/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    工具调用处理
+    Tool Calling Processing
   
 
     
@@ -661,14 +668,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-guide/human-in-the-loop/" class="md-nav__link">
+      <a href="../../getting-started-guide/human-in-the-loop/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    为工具调用添加人工审核
+    Add Human-in-the-Loop Support in Tool Calling
   
 
     
@@ -721,7 +728,7 @@
   <span class="md-ellipsis">
     
   
-    高级指南
+    Advanced Guides
   
 
     
@@ -737,7 +744,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    高级指南
+    Advanced Guides
   
 
           </label>
@@ -775,7 +782,7 @@
   <span class="md-ellipsis">
     
   
-    OpenAI 兼容 API 集成
+    OpenAI Compatible API Integration
   
 
     
@@ -791,7 +798,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    OpenAI 兼容 API 集成
+    OpenAI Compatible API Integration
   
 
           </label>
@@ -804,14 +811,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/openai-compatible/overview/" class="md-nav__link">
+      <a href="../../adavance-guide/openai-compatible/overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    概述
+    Overview
   
 
     
@@ -832,14 +839,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/openai-compatible/chat/" class="md-nav__link">
+      <a href="../../adavance-guide/openai-compatible/chat/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    对话模型的创建与使用
+    Creating and Using Chat Models
   
 
     
@@ -860,14 +867,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/openai-compatible/embedding/" class="md-nav__link">
+      <a href="../../adavance-guide/openai-compatible/embedding/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    嵌入模型的创建与使用
+    Creating and Using Embedding Models
   
 
     
@@ -888,14 +895,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/openai-compatible/register/" class="md-nav__link">
+      <a href="../../adavance-guide/openai-compatible/register/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    与模型管理功能集成
+    Integration with Model Management
   
 
     
@@ -949,7 +956,7 @@
   <span class="md-ellipsis">
     
   
-    中间件
+    Middleware
   
 
     
@@ -965,7 +972,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    中间件
+    Middleware
   
 
           </label>
@@ -978,14 +985,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/overview/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    概述
+    Overview
   
 
     
@@ -1006,14 +1013,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/plan/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/plan/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    任务规划
+    Task Planning
   
 
     
@@ -1034,14 +1041,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/router/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/router/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    模型路由
+    Model Routing
   
 
     
@@ -1062,14 +1069,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/handoffs/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/handoffs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    智能体交接
+    Agent Handoff
   
 
     
@@ -1090,14 +1097,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/tool-call-repair/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/tool-call-repair/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    工具调用修复
+    Tool Call Repair
   
 
     
@@ -1118,14 +1125,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/format/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/format/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    格式化系统提示词
+    Format System Prompts
   
 
     
@@ -1146,14 +1153,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/middleware/official/" class="md-nav__link">
+      <a href="../../adavance-guide/middleware/official/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    LangChain内置中间件扩展
+    LangChain Built-in Middleware Extensions
   
 
     
@@ -1182,14 +1189,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/multi-agent/" class="md-nav__link">
+      <a href="../../adavance-guide/multi-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    子智能体工具（Agent as Tool）
+    Subagent Tools (Agent as Tool)
   
 
     
@@ -1210,14 +1217,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adavance-guide/graph/" class="md-nav__link">
+      <a href="../../adavance-guide/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    预置状态图构建函数
+    Prebuilt State-Graph Building Functions
   
 
     
@@ -1270,7 +1277,7 @@
   <span class="md-ellipsis">
     
   
-    API 参考
+    API Reference
   
 
     
@@ -1286,7 +1293,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API 参考
+    API Reference
   
 
           </label>
@@ -1299,14 +1306,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/agent/" class="md-nav__link">
+      <a href="../../api-reference/agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    智能体开发模块 API参考
+    Agent Development Module API Reference
   
 
     
@@ -1327,14 +1334,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/chat_model/" class="md-nav__link">
+      <a href="../../api-reference/chat_model/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    对话模型管理模块 API参考
+    Chat Model Management Module API Reference
   
 
     
@@ -1355,14 +1362,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/embeddings/" class="md-nav__link">
+      <a href="../../api-reference/embeddings/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    嵌入模型管理模块 API参考
+    Embedding Model Management Module API Reference
   
 
     
@@ -1383,14 +1390,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/message_convert/" class="md-nav__link">
+      <a href="../../api-reference/message_convert/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    消息处理模块 API参考
+    Message Handling Module API Reference
   
 
     
@@ -1411,14 +1418,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/tool_calling/" class="md-nav__link">
+      <a href="../../api-reference/tool_calling/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    工具调用处理模块 API参考
+    Tool Calling Handling Module API Reference
   
 
     
@@ -1439,14 +1446,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/graph/" class="md-nav__link">
+      <a href="../../api-reference/graph/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    状态图构建函数模块 API参考
+    State-Graph Building Functions Module API Reference
   
 
     
@@ -1475,6 +1482,91 @@
   
   
   
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resource
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resource
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../example-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -1490,7 +1582,7 @@
   <span class="md-ellipsis">
     
   
-    使用示例
+    Use docs programmatically
   
 
     
@@ -1508,7 +1600,7 @@
   <span class="md-ellipsis">
     
   
-    使用示例
+    Use docs programmatically
   
 
     
@@ -1520,7 +1612,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1529,15 +1621,15 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#quick-markdown-copy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        快速开始
+        Quick Markdown Copy
       
     </span>
   </a>
@@ -1545,10 +1637,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#integration-via-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        使用的功能
+        Integration via MCP
       
     </span>
   </a>
@@ -1556,58 +1648,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#best-practice-recommendation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        如何自定义
+        Best-practice recommendation
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="如何自定义">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. 替换对话模型提供商
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. 注册嵌入模型提供商
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. 自定义工具
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
     </ul>
   
 </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -1619,104 +1680,6 @@
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        快速开始
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        使用的功能
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        如何自定义
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="如何自定义">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. 替换对话模型提供商
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. 注册嵌入模型提供商
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. 自定义工具
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
             
           
           
@@ -1731,80 +1694,36 @@
   
 
 
-<h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
-<p>该仓库提供了一个示例项目<a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a>，目的是为了帮助开发者快速了解如何利用 <code>langchain-dev-utils</code> 提供的工具函数，高效构建两种典型的智能体（agent）系统：</p>
-<ul>
-<li><strong>单智能体（Single Agent）</strong>：适用于执行简单任务以及长期记忆存储相关的任务。</li>
-<li><strong>监督者-多智能体架构（Supervisor-Multi-Agent Architecture）</strong>：通过一个中央监督者协调多个专业化智能体，适用于需要任务分解、规划和迭代优化的复杂场景。</li>
-</ul>
+<h1 id="programmatically-access-the-documentation">Programmatically Access the Documentation</h1>
+<p>This documentation is designed for deep integration into AI workflows. You can seamlessly connect it to your development environment via AI assistants, IDE plugins, or the Model Context Protocol (MCP) for efficient, automated content retrieval and invocation.</p>
+<h2 id="quick-markdown-copy">Quick Markdown Copy</h2>
+<p>A convenient <strong>Copy button</strong> is located in the upper-right corner of every documentation page:</p>
 <p align="center">
-  <img src="../../assets/graph.png" alt="graph">
+  <img src="../../assets/img/coding-en.png" alt="Copy button illustration">
 </p>
 
-<h2 id="_1">快速开始</h2>
+<p><strong>Steps:</strong></p>
 <ol>
-<li>克隆本仓库：
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TBice123123/langchain-dev-utils-example.git<span class="w">  </span>
-<span class="nb">cd</span><span class="w"> </span>langchain-dev-utils-example
-</code></pre></div></li>
-<li>使用 uv 安装依赖：
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
-</code></pre></div></li>
-<li>创建.env文件
-<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-</code></pre></div></li>
 <li>
-<p>编辑 <code>.env</code> 文件，填入你的 API 密钥（需要 <code>ZhipuAI</code> 和 <code>Tavily</code> 的 API 密钥）。</p>
+<p>Click the copy button in the upper-right corner.</p>
 </li>
 <li>
-<p>启动项目
-<div class="highlight"><pre><span></span><code>langgraph<span class="w"> </span>dev
-</code></pre></div></p>
+<p>The complete Markdown content of the current page is automatically copied to your clipboard.</p>
+</li>
+<li>
+<p>Paste it directly into your code editor (e.g., VS Code) or an AI assistant dialog (e.g., ChatGPT, Claude) and start using it right away.</p>
 </li>
 </ol>
-<h2 id="_2">使用的功能</h2>
-<p><strong>单智能体（Simple Agent）</strong>：</p>
-<p>使用的本库的功能：</p>
-<ul>
-<li>对话模型管理（含OpenAI兼容API集成）：<code>register_model_provider</code>、<code>load_chat_model</code></li>
-<li>嵌入模型管理：<code>register_embeddings_provider</code>、<code>load_embeddings</code></li>
-<li>格式化序列：<code>format_sequence</code></li>
-<li>中间件：<code>format_prompt</code></li>
-</ul>
-<p><strong>监督者-多智能体架构（Supervisor-Multi-Agent Architecture）</strong>：</p>
-<p>使用的本库的功能：</p>
-<ul>
-<li>对话模型管理（含OpenAI兼容API集成）：<code>register_model_provider</code>、<code>load_chat_model</code></li>
-<li>多智能体构建：<code>wrap_agent_as_tool</code></li>
-</ul>
-<h2 id="_3">如何自定义</h2>
-<p>可以根据实际的需求，对本项目进行自定义修改。</p>
-<h3 id="1">1. 替换对话模型提供商</h3>
-<p>本项目默认使用智谱AI的GLM系列作为核心模型，具体如下：</p>
-<ul>
-<li><code>GLM-4.7</code>：用于<code>simple-agent</code></li>
-<li><code>GLM-4.6</code>：用于<code>supervisor-agent</code>的<code>supervisor</code></li>
-<li><code>GLM-4.5</code>：用于<code>supervisor-agent</code>的<code>subagent</code></li>
-<li><code>GLM-4.6V</code>：用于<code>supervisor-agent</code>的<code>vision subagent</code></li>
-</ul>
-<p>如需自定义模型提供商，请修改<code>src/utils/providers/chat_models/register.py</code>，在<code>register_all_model_providers</code>函数中使用<code>register_model_provider</code>函数注册你的模型提供商。</p>
-<p>同时建议修改<code>src/utils/providers/chat_models/load.py</code>，在<code>load_chat_model</code>函数中添加对应的加载逻辑。</p>
-<div class="admonition success">
-<p class="admonition-title">对话模型管理最佳实践</p>
-<p><code>load_chat_model</code>函数采用关键字参数接收不同对话模型类的额外参数（LangChain官方函数也采用此方式）。这种方式提升了通用性，但会削弱IDE类型提示，增加参数误用风险。因此，若已确定具体提供商，可针对其集成对话模型类（或嵌入模型类）扩展参数签名以恢复类型提示，参考<code>src/utils/providers/chat_models/load.py</code>进行针对性修改。</p>
+<h2 id="integration-via-mcp">Integration via MCP</h2>
+<p>This documentation is synchronized to the <a href="https://context7.com/">Context7</a> platform and can be invoked directly through Model Context Protocol (MCP) tools.</p>
+<p><strong>How to configure:</strong>
+Refer to the <a href="https://context7.com/docs">Context7 MCP tool configuration guide</a> to learn how to connect and configure MCP tools in your code editor or AI assistant.</p>
+<div class="admonition note">
+<p class="admonition-title">Search tip</p>
+<p>Because the Context7 library indexes three historical versions of this project, explicitly prompt the AI to <strong>"please consult the most recently updated version of the documentation"</strong> to ensure it retrieves the latest content.</p>
 </div>
-<h3 id="2">2. 注册嵌入模型提供商</h3>
-<p>嵌入模型提供商的注册方式与对话模型类似。请修改<code>src/utils/providers/embeddings/register.py</code>，在<code>register_all_embeddings_providers</code>函数中使用<code>register_embeddings_provider</code>函数注册你的嵌入模型提供商。</p>
-<p>如需自定义加载逻辑，可修改<code>src/utils/providers/embeddings/load.py</code>，在<code>load_embeddings</code>函数中添加相应的加载逻辑。</p>
-<h3 id="3">3. 自定义工具</h3>
-<p><strong>单智能体（simple-agent）</strong><br />
-工具实现位于 <code>src/agents/simple_agent/tools.py</code>，已内置：<br />
-- <code>save_user_memory</code> —— 持久化用户记忆<br />
-- <code>get_user_memory</code> —— 读取用户记忆  </p>
-<p>如需扩展，直接在该文件内新增对应的工具实现即可。</p>
-<p><strong>监督者-多智能体（supervisor-agent）</strong><br />
-工具实现位于 <code>src/agents/supervisor/subagent/tools.py</code>。是子智能体的工具实现，如需为子智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。</p>
-<p>注意：<code>supervisor</code> 默认仅持有“调用子智能体”的两个工具。若需为 <code>supervisor</code> 追加自定义工具，建议在 <code>src/agents/supervisor/</code> 下新建 <code>tools.py</code>，编写完成后在 <code>src/agents/supervisor/agent.py</code> 中导入并传递给 <code>create_agent</code> 函数即可。</p>
+<h2 id="best-practice-recommendation">Best-practice recommendation</h2>
+<p>Given that Context7's content sync cycle is roughly two weeks, search results may lag behind. <strong>To guarantee accuracy and real-time freshness, always prefer the "Copy" button in the upper-right corner</strong> to obtain the latest Markdown content instead of relying on Context7's cached data.</p>
 
 
 
@@ -1830,7 +1749,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -1862,10 +1781,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.footnote.tooltips", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/javascripts/extra.js"></script>
       
     
   </body>
