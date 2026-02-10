@@ -7,7 +7,7 @@
 
 
 <p align="center">
-  <img src="../../assets/graph.png" alt="graph">
+  <img src="../../../assets/img/graph.png" alt="graph">
 </p>
 
 

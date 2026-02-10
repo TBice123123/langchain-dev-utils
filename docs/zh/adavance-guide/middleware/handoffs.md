@@ -84,7 +84,7 @@ print(response)
 
 如果想要自定义交接工具的描述，可以传递第二个参数 `custom_handoffs_tool_descriptions`。
 
-```python hl_lines="12-17"
+```python hl_lines="6-11"
 agent = create_agent(
     model="vllm:qwen3-4b",
     middleware=[
@@ -110,7 +110,7 @@ agent = create_agent(
 
 例如：
 
-```python hl_lines="29-31"
+```python hl_lines="23-25"
 @tool
 def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
     """此工具帮助你交接到代码助手"""

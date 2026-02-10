@@ -84,7 +84,7 @@ print(response)
 
 If you want to customize the description of the handoff tools, you can pass a second parameter `custom_handoffs_tool_descriptions`.
 
-```python hl_lines="12-17"
+```python hl_lines="6-11"
 agent = create_agent(
     model="vllm:qwen3-4b",
     middleware=[
@@ -110,7 +110,7 @@ A custom handoff tool must return a `Command` object, whose `update` attribute n
 
 For example:
 
-```python hl_lines="29-31"
+```python hl_lines="23-25"
 @tool
 def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
     """This tool helps you hand off to the coding assistant"""

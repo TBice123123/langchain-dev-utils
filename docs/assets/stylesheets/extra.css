@@ -1,0 +1,380 @@
+:root {
+  /* ==========================================================================
+     Luminous Logic Theme - Palette Overrides
+     ========================================================================== */
+  
+  /* Primary Hues (Indigo/Violet/Cyan) */
+  --md-primary-fg-color:        #6366f1; /* Indigo 500 */
+  --md-primary-fg-color--light: #818cf8; /* Indigo 400 */
+  --md-primary-fg-color--dark:  #4f46e5; /* Indigo 600 */
+  --md-accent-fg-color:         #06b6d4; /* Cyan 500 */
+  
+  /* Fonts */
+  --md-text-font-family: "Outfit", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  --md-code-font-family: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Custom Glass Variables */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --glass-blur: 12px;
+}
+
+/* Dark Mode Overrides */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #0f172a; /* Slate 900 */
+  --md-default-fg-color--light: #94a3b8; /* Slate 400 */
+  
+  /* Deep Midnight Gradient Background */
+  --md-default-bg-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                         radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                         radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+                         
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Light Mode Overrides (Refined "Ethereal Daybreak" Theme) */
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #f8fafc; /* Slate 50 */
+  --md-default-fg-color: #334155; /* Slate 700 */
+  --md-default-fg-color--light: #64748b; /* Slate 500 */
+  
+  /* Soft Morning Gradient Background */
+  --md-default-bg-image: 
+    radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+    linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+
+  /* Cleaner, brighter glass for light mode */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 
+    0 4px 6px -1px rgba(148, 163, 184, 0.1), 
+    0 2px 4px -1px rgba(148, 163, 184, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5); /* Inner light ring */
+  --glass-blur: 16px;
+  
+  /* Stronger primary for contrast */
+  --md-primary-fg-color: #4f46e5; /* Indigo 600 */
+  --md-accent-fg-color: #0891b2; /* Cyan 600 */
+}
+
+/* ==========================================================================
+   Structural Enhancements
+   ========================================================================== */
+
+/* Header - Floating Glass Bar */
+.md-header {
+  background-color: transparent;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: none;
+}
+
+[data-md-color-scheme="default"] .md-header {
+  background-color: rgba(255, 255, 255, 0.85); /* Increased opacity */
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8); /* Slate 200 */
+  color: #1e293b; /* Slate 800 */
+}
+
+[data-md-color-scheme="default"] .md-header__title,
+[data-md-color-scheme="default"] .md-header__button,
+[data-md-color-scheme="default"] .md-tabs__link {
+  color: #334155; /* Slate 700 */
+  font-weight: 500;
+}
+
+[data-md-color-scheme="default"] .md-tabs__link:hover,
+[data-md-color-scheme="default"] .md-tabs__link--active {
+  color: #4f46e5; /* Indigo 600 */
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Light Mode H1 - Solid & Sharp (Clean up previous redundant rule) */
+/* The rule is now handled globally above with specific overrides */
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: rgba(15, 23, 42, 0.7);
+}
+
+/* Sidebar Navigation - Glassy */
+.md-sidebar {
+  background: transparent;
+}
+
+/* Tabs Navigation - Pill Style */
+.md-tabs {
+  background-color: transparent;
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(5px);
+}
+
+.md-tabs__link {
+  transition: color 0.3s ease;
+  border-radius: 0;
+  margin: 0 4px;
+}
+
+.md-tabs__link:hover {
+  background-color: transparent;
+  color: var(--md-accent-fg-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.md-tabs__link--active {
+  background-color: transparent;
+  color: var(--md-accent-fg-color);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Content Components
+   ========================================================================== */
+
+/* Main Content Area - Subtle Entry Animation */
+.md-content {
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Headings - Clean & Bold */
+h1 {
+  /* Removed gradient for cleaner look across both modes */
+  background: none;
+  -webkit-text-fill-color: initial;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+/* Light Mode H1 Override (Explicit) */
+[data-md-color-scheme="default"] .md-typeset h1 {
+  color: #0f172a; /* Slate 900 */
+}
+
+/* Dark Mode H1 Override (Explicit) */
+[data-md-color-scheme="slate"] .md-typeset h1 {
+  color: #f8fafc; /* Slate 50 - Bright white */
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Subtle glow */
+}
+
+/* Code Blocks - Floating Terminals */
+.md-typeset pre > code {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
+  padding: 1.2rem;
+  font-size: 0.9em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.md-typeset pre > code:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2);
+  border-color: var(--md-accent-fg-color);
+}
+
+/* Admonitions - Soft Glow */
+.md-typeset .admonition, 
+.md-typeset details {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.md-typeset .admonition:hover, 
+.md-typeset details:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: var(--md-primary-fg-color--light);
+}
+
+.md-typeset .admonition__title, 
+.md-typeset summary {
+  background: rgba(var(--md-primary-fg-color), 0.1);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* Tables - Rounded & Clean */
+.md-typeset table:not([class]) {
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--glass-border);
+  overflow: hidden;
+  background: var(--glass-bg);
+}
+
+.md-typeset table:not([class]) th {
+  background: rgba(99, 102, 241, 0.1); /* Indigo tint */
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Buttons - Neumorphic Lift */
+.md-button {
+  border-radius: 50px;
+  font-weight: 700;
+  padding: 0.6em 1.4em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-image: linear-gradient(135deg, var(--md-primary-fg-color), var(--md-primary-fg-color--dark));
+  color: white !important;
+  border: none;
+  box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+}
+
+.md-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 15px rgba(79, 70, 229, 0.4);
+  filter: brightness(1.1);
+}
+
+.md-button--primary {
+  background-image: linear-gradient(135deg, var(--md-accent-fg-color), #0891b2); /* Cyan to darker cyan */
+  box-shadow: 0 4px 6px rgba(6, 182, 212, 0.3);
+}
+
+/* ==========================================================================
+   Landing Page Hero (Custom Classes)
+   ========================================================================== */
+.hero-container {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  margin-bottom: 3rem;
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #6366f1, #06b6d4, #ec4899);
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: var(--md-default-fg-color--light);
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Card Grid Enhancements */
+.grid.cards > ul > li {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.grid.cards > ul > li:hover {
+  transform: translateY(-8px);
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.2);
+}
+
+.grid.cards > ul > li hr {
+  margin: 1rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ==========================================================================
+   Copy to LLM Button Styling (Inline H1 Action)
+   ========================================================================== */
+.copy-llm-inline-container {
+  float: right;
+  margin-left: 1rem;
+  margin-top: 0.2rem; /* Fine tune alignment with text baseline */
+  vertical-align: middle;
+}
+
+.copy-llm-btn-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--md-default-fg-color--lightest); /* Subtle border */
+  background: transparent;
+  border-radius: 6px; /* Slightly rounded, like standard buttons */
+  color: var(--md-default-fg-color--light);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1; /* Reset line-height inside H1 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  /* Reset H1 inheritances */
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.copy-llm-btn-inline svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  opacity: 0.8;
+}
+
+.copy-llm-btn-inline:hover {
+  background-color: var(--md-default-bg-color); /* Ensure readability on hover */
+  border-color: var(--md-default-fg-color--light);
+  color: var(--md-default-fg-color);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.copy-llm-btn-inline.copy-success {
+  color: #10b981; /* Emerald 500 */
+  border-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.copy-llm-text {
+  /* Ensure text is visible and properly sized */
+  font-size: 0.75rem;
+}
+
+/* Dark mode specific adjustments */
+[data-md-color-scheme="slate"] .copy-llm-btn-inline {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-md-color-scheme="slate"] .copy-llm-btn-inline:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 45em) {
+  .copy-llm-text {
+    display: none;
+  }
+  .copy-llm-btn-inline {
+    padding: 0.4rem;
+    border-radius: 4px;
+  }
+}

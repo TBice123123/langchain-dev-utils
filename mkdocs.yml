@@ -3,61 +3,71 @@ site_url: https://tbice123123.github.io/langchain-dev-utils/
 theme:
   name: material
   features:
-    - navigation.tabs         
-    - navigation.sections      
-    - navigation.expand        
-    - navigation.instant      
-    - navigation.tracking      
-    - navigation.top          
-    - search.suggest           
-    - search.highlight         
-    - search.share             
-    - content.code.copy       
-    - content.code.annotate    
-    - content.tabs.link       
-    - content.tooltips        
-    - content.footnote.tooltips 
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - content.footnote.tooltips
+    - toc.integrate
   palette:
     - scheme: default
-      primary: light blue
-      accent: light blue
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: 切换到深色模式
     - scheme: slate
-      primary: light blue
-      accent: light blue
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
   language: zh
+  font:
+    text: Outfit
+    code: JetBrains Mono
+
 repo_name: tbice123123/langchain-dev-utils
 repo_url: https://github.com/tbice123123/langchain-dev-utils
 
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/extra.js
 
 markdown_extensions:
-  - admonition         
-  - pymdownx.details    
-  - pymdownx.superfences 
+  - admonition
+  - pymdownx.details
   - pymdownx.tabbed:
-      alternate_style: true     
-  - pymdownx.highlight  
-  - attr_list           
-  - md_in_html          
-  - tables              
-  - toc                 
-  - footnotes     
-  - def_list       
+      alternate_style: true
+  - pymdownx.highlight
+  - attr_list
+  - md_in_html
+  - tables
+  - toc
+  - footnotes
+  - def_list
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg       
-  - pymdownx.tasklist   
-  - pymdownx.mark     
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist
+  - pymdownx.mark
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format            
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 
 plugins:
@@ -102,7 +112,9 @@ plugins:
             - Message Handling Module API Reference: api-reference/message_convert.md
             - Tool Calling Handling Module API Reference: api-reference/tool_calling.md
             - State-Graph Building Functions Module API Reference: api-reference/graph.md
-          - Usage Examples: example-project.md
+          - Resource:
+            - Example Project: resource/example-project.md
+            - Use docs programmatically: resource/coding.md
           
         - locale: zh
           name: 中文
@@ -140,6 +152,7 @@ plugins:
             - 消息处理模块 API参考: api-reference/message_convert.md
             - 工具调用处理模块 API参考: api-reference/tool_calling.md
             - 状态图构建函数模块 API参考: api-reference/graph.md
-          - 使用示例: example-project.md
-          
+          - 资源:
+            - 示例项目: resource/example-project.md
+            - 以编程方式使用文档: resource/coding.md
           
