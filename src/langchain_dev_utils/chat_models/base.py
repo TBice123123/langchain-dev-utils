@@ -1,6 +1,6 @@
 from typing import Any, Optional, cast
 
-from langchain.chat_models.base import _SUPPORTED_PROVIDERS, _init_chat_model_helper
+from langchain.chat_models import init_chat_model
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.utils import from_env
 
@@ -28,8 +28,7 @@ def _parse_model(model: str, model_provider: Optional[str]) -> tuple[str, str]:
     Raises:
         ValueError: If unable to infer model provider
     """
-    support_providers = list(_MODEL_PROVIDERS_DICT.keys()) + list(_SUPPORTED_PROVIDERS)
-    if not model_provider and ":" in model and model.split(":")[0] in support_providers:
+    if not model_provider and ":" in model:
         model_provider = model.split(":")[0]
         model = ":".join(model.split(":")[1:])
     if not model_provider:
@@ -71,7 +70,7 @@ def _load_chat_model_helper(
                 kwargs.update({"profile": model_profiles[model]})
         return chat_model(model=model, **kwargs)
 
-    return _init_chat_model_helper(model, model_provider=model_provider, **kwargs)
+    return init_chat_model(model, model_provider=model_provider, **kwargs)
 
 
 def register_model_provider(

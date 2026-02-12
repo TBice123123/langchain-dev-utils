@@ -115,7 +115,7 @@ embedding = load_embeddings("qwen3-embedding-4b", provider="vllm")
 
 ### 兼容官方提供商
 
-对于 LangChain 官方已支持的提供商（如 `openai`），可直接使用 `load_embeddings` 无需注册：
+`load_embeddings` 依据 `provider`参数查找全局注册字典：命中则使用该字典对应的模型类实例化，未命中则通过 `init_embeddings` 初始化。这意味着 LangChain 官方支持的提供商（如 openai）可直接调用，无需注册。
 
 ```python
 model = load_embeddings("openai:text-embedding-3-large")

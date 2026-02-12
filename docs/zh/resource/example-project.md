@@ -60,9 +60,8 @@ langgraph dev
 
 本项目默认使用智谱AI的GLM系列作为核心模型，具体如下：
 
-  - `GLM-4.7`：用于`simple-agent`
-  - `GLM-4.6`：用于`supervisor-agent`的`supervisor`
-  - `GLM-4.5`：用于`supervisor-agent`的`subagent`
+  - `GLM-5`：用于`simple-agent`以及`supervisor-agent`的主智能体
+  - `GLM-4.7-Flash`：用于`supervisor-agent`的`subagent`
   - `GLM-4.6V`：用于`supervisor-agent`的`vision subagent`
 
 如需自定义模型提供商，请修改`src/utils/providers/chat_models/register.py`，在`register_all_model_providers`函数中使用`register_model_provider`函数注册你的模型提供商。

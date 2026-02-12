@@ -1,6 +1,6 @@
 [project]
 name = "langchain-dev-utils"
-version = "1.4.2"
+version = "1.4.3"
 description = "A practical utility library for LangChain and LangGraph development"
 readme = "README.md"
 authors = [{ name = "tiebingice", email = "tiebingice123@outlook.com" }]
@@ -39,7 +39,6 @@ python_functions = ["test_*"]
 
 [dependency-groups]
 dev = [
-    "dashscope>=1.25.9",
     "langchain-model-profiles>=0.0.5",
     "ruff>=0.14.5",
 ]
@@ -55,6 +54,7 @@ tests = [
     "langchain-qwq>=0.3.0",
     "langchain-ollama>=1.0.0",
     "langchain-community>=0.4.1",
+    "dashscope>=1.25.12",
 ]
 
 

@@ -1,6 +1,7 @@
-from typing import Any, Literal, NotRequired, TypedDict, Union
+from typing import Any, Literal, Union
 
 from langchain_core.language_models.chat_models import BaseChatModel
+from typing_extensions import NotRequired, TypedDict
 
 ChatModelType = Union[type[BaseChatModel], Literal["openai-compatible"]]
 

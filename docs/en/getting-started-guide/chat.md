@@ -136,7 +136,7 @@ For supported model methods and parameters, refer to the usage documentation of 
 
 ### Compatibility with Official Providers
 
-For providers officially supported by LangChain (such as `openai`), you can directly use `load_chat_model` without registration:
+`load_chat_model` looks up the global registration dictionary based on the `model_provider` parameter: if found, it instantiates using the corresponding model class from the dictionary; if not found, it initializes via `init_chat_model`. This means providers officially supported by LangChain (e.g., openai) can be called directly without registration.
 
 ```python
 model = load_chat_model("openai:gpt-4o-mini")

@@ -1,7 +1,8 @@
-from typing import Any, Literal, NotRequired, Optional, TypedDict, Union
+from typing import Any, Literal, Optional, Union
 
-from langchain.embeddings.base import _SUPPORTED_PROVIDERS, Embeddings, init_embeddings
+from langchain.embeddings.base import Embeddings, init_embeddings
 from langchain_core.utils import from_env
+from typing_extensions import NotRequired, TypedDict
 
 from langchain_dev_utils._utils import (
     _check_pkg_install,
@@ -10,6 +11,7 @@ from langchain_dev_utils._utils import (
 )
 
 _EMBEDDINGS_PROVIDERS_DICT = {}
+
 
 EmbeddingsType = Union[type[Embeddings], Literal["openai-compatible"]]
 
@@ -218,10 +220,6 @@ def load_embeddings(
     """
     if provider is None:
         provider, model = _parse_model_string(model)
-    if provider not in list(_EMBEDDINGS_PROVIDERS_DICT.keys()) + list(
-        _SUPPORTED_PROVIDERS
-    ):
-        raise ValueError(f"Provider {provider} not registered")
 
     if provider in _EMBEDDINGS_PROVIDERS_DICT:
         embeddings = _EMBEDDINGS_PROVIDERS_DICT[provider]["embeddings_model"]

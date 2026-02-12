@@ -108,7 +108,8 @@ For supported model methods and parameters, refer to the usage documentation of 
 
 ### Compatibility with Official Providers
 
-For providers officially supported by LangChain (such as `openai`), you can directly use `load_embeddings` without registration:
+`load_embeddings` looks up the global registration dictionary based on the `provider` parameter: if found, it instantiates using the corresponding model class from the dictionary; if not found, it initializes via `init_embeddings`. This means providers officially supported by LangChain (such as OpenAI) can be called directly without registration.
+
 
 ```python
 model = load_embeddings("openai:text-embedding-3-large")

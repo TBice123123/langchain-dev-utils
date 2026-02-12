@@ -1,8 +1,9 @@
-from typing import Any, Callable, Optional, TypedDict, Union, overload
+from typing import Any, Callable, Optional, Union, overload
 
 from langchain_core.tools import BaseTool
 from langchain_core.tools import tool as create_tool
 from langgraph.types import interrupt
+from typing_extensions import TypedDict
 
 
 class InterruptParams(TypedDict):

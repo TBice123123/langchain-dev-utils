@@ -1,4 +1,4 @@
-from typing import Any, Callable, Sequence
+from typing import Annotated, Any, Callable, Generic, Sequence
 
 from langchain.agents import create_agent as _create_agent
 from langchain.agents.middleware.types import (
@@ -6,19 +6,32 @@ from langchain.agents.middleware.types import (
     AgentState,
     ResponseT,
     StateT_co,
-    _InputAgentState,
-    _OutputAgentState,
 )
 from langchain.agents.structured_output import ResponseFormat
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import AnyMessage, SystemMessage
 from langchain_core.tools import BaseTool
 from langgraph.cache.base import BaseCache
+from langgraph.graph.message import add_messages
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.store.base import BaseStore
 from langgraph.types import Checkpointer
 from langgraph.typing import ContextT
+from typing_extensions import NotRequired, Required, TypedDict
 
 from ..chat_models import load_chat_model
+
+
+class _InputAgentState(TypedDict):  # noqa: PYI049
+    """Input state schema for the agent."""
+
+    messages: Required[Annotated[list[AnyMessage | dict[str, Any]], add_messages]]
+
+
+class _OutputAgentState(TypedDict, Generic[ResponseT]):  # noqa: PYI049
+    """Output state schema for the agent."""
+
+    messages: Required[Annotated[list[AnyMessage], add_messages]]
+    structured_response: NotRequired[ResponseT]
 
 
 def create_agent(  # noqa: PLR0915
