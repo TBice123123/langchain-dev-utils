@@ -1949,7 +1949,7 @@
 <h3 id="model-methods-and-parameters">Model Methods and Parameters</h3>
 <p>For supported model methods and parameters, refer to the usage documentation of the corresponding chat model class. If you are using the second case, all methods and parameters of the <code>BaseChatOpenAI</code> class are supported.</p>
 <h3 id="compatibility-with-official-providers">Compatibility with Official Providers</h3>
-<p>For providers officially supported by LangChain (such as <code>openai</code>), you can directly use <code>load_chat_model</code> without registration:</p>
+<p><code>load_chat_model</code> looks up the global registration dictionary based on the <code>model_provider</code> parameter: if found, it instantiates using the corresponding model class from the dictionary; if not found, it initializes via <code>init_chat_model</code>. This means providers officially supported by LangChain (e.g., openai) can be called directly without registration.</p>
 <div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">)</span>
 <span class="c1"># or</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>

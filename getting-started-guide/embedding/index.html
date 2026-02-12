@@ -1931,7 +1931,7 @@
 <h2 id="model-methods-and-parameters">Model Methods and Parameters</h2>
 <p>For supported model methods and parameters, refer to the usage documentation of the corresponding embedding model class. If you are using the second case, all methods and parameters of the <code>OpenAIEmbeddings</code> class are supported.</p>
 <h3 id="compatibility-with-official-providers">Compatibility with Official Providers</h3>
-<p>For providers officially supported by LangChain (such as <code>openai</code>), you can directly use <code>load_embeddings</code> without registration:</p>
+<p><code>load_embeddings</code> looks up the global registration dictionary based on the <code>provider</code> parameter: if found, it instantiates using the corresponding model class from the dictionary; if not found, it initializes via <code>init_embeddings</code>. This means providers officially supported by LangChain (such as OpenAI) can be called directly without registration.</p>
 <div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;openai:text-embedding-3-large&quot;</span><span class="p">)</span>
 <span class="c1"># or</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;text-embedding-3-large&quot;</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>

@@ -1949,7 +1949,7 @@
 <h3 id="_12">模型方法和参数</h3>
 <p>对于支持的模型方法和参数，需要参考对应的对话模型类的使用说明。如果采用的是第二种情况，则支持所有的<code>BaseChatOpenAI</code> 类的方法和参数。</p>
 <h3 id="_13">兼容官方提供商</h3>
-<p>对于 LangChain 官方已支持的提供商（如 <code>openai</code>），可直接使用 <code>load_chat_model</code> 无需注册：</p>
+<p><code>load_chat_model</code> 依据 <code>model_provider</code>参数查找全局注册字典：命中则使用该字典对应的模型类实例化，未命中则通过 <code>init_chat_model</code> 初始化。这意味着 LangChain 官方支持的提供商（如 openai）可直接调用，无需注册。</p>
 <div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">)</span>
 <span class="c1"># 或</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>
