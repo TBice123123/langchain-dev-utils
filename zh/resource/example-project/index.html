@@ -1736,10 +1736,11 @@
 
 
 <h1 id="langchain-dev-utils-example-project">Langchain-dev-utils Example Project</h1>
-<p>该仓库提供了一个示例项目<a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a>，目的是为了帮助开发者快速了解如何利用 <code>langchain-dev-utils</code> 提供的工具函数，高效构建两种典型的智能体（agent）系统：</p>
+<p>该仓库提供了一个示例项目<a href="https://github.com/TBice123123/langchain-dev-utils-example"><code>langchain-dev-utils-example</code></a>，目的是为了帮助开发者快速了解如何利用 <code>langchain-dev-utils</code> 提供的工具函数，高效构建三种典型的智能体（agent）系统：</p>
 <ul>
 <li><strong>单智能体（Single Agent）</strong>：适用于执行简单任务以及长期记忆存储相关的任务。</li>
 <li><strong>监督者-多智能体架构（Supervisor-Multi-Agent Architecture）</strong>：通过一个中央监督者协调多个专业化智能体，适用于需要任务分解、规划和迭代优化的复杂场景。</li>
+<li><strong>交接架构（Handoffs Architecture）</strong>：每个智能体负责特定任务，并在需要时将控制权转移给其他智能体。</li>
 </ul>
 <p align="center">
   <img src="../../../assets/img/graph.png" alt="graph">
@@ -1779,15 +1780,21 @@
 <p>使用的本库的功能：</p>
 <ul>
 <li>对话模型管理（含OpenAI兼容API集成）：<code>register_model_provider</code>、<code>load_chat_model</code></li>
-<li>多智能体构建：<code>wrap_agent_as_tool</code></li>
+<li>多智能体构建：<code>wrap_all_agents_as_tool</code></li>
+</ul>
+<p><strong>交接架构（Handoffs Architecture）</strong>：</p>
+<p>使用的本库的功能：</p>
+<ul>
+<li>对话模型管理（含OpenAI兼容API集成）：<code>register_model_provider</code>、<code>load_chat_model</code></li>
+<li>中间件：<code>HandoffAgentMiddleware</code></li>
 </ul>
 <h2 id="_3">如何自定义</h2>
 <p>可以根据实际的需求，对本项目进行自定义修改。</p>
 <h3 id="1">1. 替换对话模型提供商</h3>
 <p>本项目默认使用智谱AI的GLM系列作为核心模型，具体如下：</p>
 <ul>
-<li><code>GLM-5</code>：用于<code>simple-agent</code>以及<code>supervisor-agent</code>的主智能体</li>
-<li><code>GLM-4.7-Flash</code>：用于<code>supervisor-agent</code>的<code>subagent</code></li>
+<li><code>GLM-5</code>：用于<code>simple-agent</code>,<code>supervisor-agent</code>的主智能体,以及<code>handoffs</code>架构的智能体</li>
+<li><code>GLM-4.7-Flash</code>：用于<code>supervisor-agent</code>的<code>search subagent</code></li>
 <li><code>GLM-4.6V</code>：用于<code>supervisor-agent</code>的<code>vision subagent</code></li>
 </ul>
 <p>如需自定义模型提供商，请修改<code>src/utils/providers/chat_models/register.py</code>，在<code>register_all_model_providers</code>函数中使用<code>register_model_provider</code>函数注册你的模型提供商。</p>
@@ -1807,7 +1814,9 @@
 <p>如需扩展，直接在该文件内新增对应的工具实现即可。</p>
 <p><strong>监督者-多智能体（supervisor-agent）</strong><br />
 工具实现位于 <code>src/agents/supervisor/subagent/tools.py</code>。是子智能体的工具实现，如需为子智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。</p>
-<p>注意：<code>supervisor</code> 默认仅持有“调用子智能体”的两个工具。若需为 <code>supervisor</code> 追加自定义工具，建议在 <code>src/agents/supervisor/</code> 下新建 <code>tools.py</code>，编写完成后在 <code>src/agents/supervisor/agent.py</code> 中导入并传递给 <code>create_agent</code> 函数即可。</p>
+<p>注意：<code>supervisor</code> 默认仅持有“调用子智能体”的<code>task</code>工具。若需为 <code>supervisor</code> 追加自定义工具，建议在 <code>src/agents/supervisor/</code> 下新建 <code>tools.py</code>，编写完成后在 <code>src/agents/supervisor/agent.py</code> 中导入并传递给 <code>create_agent</code> 函数即可。</p>
+<p><strong>交接架构（handoffs）</strong><br />
+工具实现位于 <code>src/agents/handoffs/tools.py</code>。是该架构下的所有智能体的工具实现，如需为某个特定智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。</p>
 
 
 
