@@ -1,9 +1,10 @@
 # Langchain-dev-utils Example Project
 
-This repository provides an example project [`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example) designed to help developers quickly understand how to use the utility functions provided by `langchain-dev-utils` to efficiently build two typical agent systems:
+This repository provides an example project [`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example) designed to help developers quickly understand how to use the utility functions provided by `langchain-dev-utils` to efficiently build three typical agent architectures:
 
 - **Single Agent**: Suitable for executing simple tasks and tasks related to long-term memory storage.
 - **Supervisor-Multi-Agent Architecture**: Coordinates multiple specialized agents through a central supervisor, suitable for complex scenarios requiring task decomposition, planning, and iterative optimization.
+- **Handoffs Architecture**: Each agent is responsible for a specific task and can transfer control to other agents when needed.
 
 <p align="center">
   <img src="../../assets/img/graph.png" alt="graph">
@@ -47,7 +48,14 @@ Features from this library used:
 Features from this library used:
 
 - Chat model management (including OpenAI compatible API integration): `register_model_provider`, `load_chat_model`
-- Multi-agent construction: `wrap_agent_as_tool`
+- Multi-agent construction: `wrap_all_agents_as_tool`
+
+**Handoffs Architecture**:
+
+Features from this library used:
+
+- Chat model management (including OpenAI compatible API integration): `register_model_provider`, `load_chat_model`
+- Middleware: `HandoffAgentMiddleware`
 
 ## How to Customize
 
@@ -57,8 +65,8 @@ You can customize this project according to your actual needs.
 
 This project uses ZhipuAI's GLM series as the core model by default, as follows:
 
-  - `GLM-5`: Used as the main agent for both `simple-agent` and `supervisor-agent`
-  - `GLM-4.7-Flash`: Used as the subagent for `supervisor-agent`
+  - `GLM-5`: Used as the main agent for `simple-agent` and `supervisor-agent`, and for agents in the `handoffs` architecture
+  - `GLM-4.7-Flash`: Used as the search subagent for `supervisor-agent`
   - `GLM-4.6V`: Used as the vision subagent for `supervisor-agent`
 
 To customize the model provider, please modify `src/utils/providers/chat_models/register.py` and register your model provider using the `register_model_provider` function in the `register_all_model_providers` function.
@@ -86,4 +94,7 @@ To extend, simply add new tool implementations directly in this file.
 **Supervisor-Multi-Agent (supervisor-agent)**  
 Tool implementations are located in `src/agents/supervisor/subagent/tools.py`. These are tool implementations for sub-agents. To add custom tools for sub-agents, simply add new tool implementations directly in this file.
   
-Note: The `supervisor` only has two tools for "calling sub-agents" by default. If you need to add custom tools for the `supervisor`, it is recommended to create a new `tools.py` under `src/agents/supervisor/`, write the implementations, and then import and pass them to the `create_agent` function in `src/agents/supervisor/agent.py`.
+Note: The `supervisor` only has the `task` tool for calling sub-agents by default. If you need to add custom tools for the `supervisor`, it is recommended to create a new `tools.py` under `src/agents/supervisor/`, write the implementations, and then import and pass them to the `create_agent` function in `src/agents/supervisor/agent.py`.
+
+**Handoffs Architecture (handoffs)**  
+Tool implementations are located in `src/agents/handoffs/tools.py`. These are the tool implementations for all agents in this architecture. To add a custom tool for a specific agent, simply add the corresponding tool implementation directly in this file.

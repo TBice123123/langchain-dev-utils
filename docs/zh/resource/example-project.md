@@ -1,10 +1,10 @@
 # Langchain-dev-utils Example Project
 
-该仓库提供了一个示例项目[`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example)，目的是为了帮助开发者快速了解如何利用 `langchain-dev-utils` 提供的工具函数，高效构建两种典型的智能体（agent）系统：
+该仓库提供了一个示例项目[`langchain-dev-utils-example`](https://github.com/TBice123123/langchain-dev-utils-example)，目的是为了帮助开发者快速了解如何利用 `langchain-dev-utils` 提供的工具函数，高效构建三种典型的智能体（agent）系统：
 
 - **单智能体（Single Agent）**：适用于执行简单任务以及长期记忆存储相关的任务。
 - **监督者-多智能体架构（Supervisor-Multi-Agent Architecture）**：通过一个中央监督者协调多个专业化智能体，适用于需要任务分解、规划和迭代优化的复杂场景。
-
+- **交接架构（Handoffs Architecture）**：每个智能体负责特定任务，并在需要时将控制权转移给其他智能体。
 
 <p align="center">
   <img src="../../../assets/img/graph.png" alt="graph">
@@ -49,8 +49,14 @@ langgraph dev
 使用的本库的功能：
 
 - 对话模型管理（含OpenAI兼容API集成）：`register_model_provider`、`load_chat_model`
-- 多智能体构建：`wrap_agent_as_tool`
+- 多智能体构建：`wrap_all_agents_as_tool`
 
+**交接架构（Handoffs Architecture）**：
+
+使用的本库的功能：
+
+- 对话模型管理（含OpenAI兼容API集成）：`register_model_provider`、`load_chat_model`
+- 中间件：`HandoffAgentMiddleware`
 
 ## 如何自定义
 
@@ -60,8 +66,8 @@ langgraph dev
 
 本项目默认使用智谱AI的GLM系列作为核心模型，具体如下：
 
-  - `GLM-5`：用于`simple-agent`以及`supervisor-agent`的主智能体
-  - `GLM-4.7-Flash`：用于`supervisor-agent`的`subagent`
+  - `GLM-5`：用于`simple-agent`,`supervisor-agent`的主智能体,以及`handoffs`架构的智能体
+  - `GLM-4.7-Flash`：用于`supervisor-agent`的`search subagent`
   - `GLM-4.6V`：用于`supervisor-agent`的`vision subagent`
 
 如需自定义模型提供商，请修改`src/utils/providers/chat_models/register.py`，在`register_all_model_providers`函数中使用`register_model_provider`函数注册你的模型提供商。
@@ -90,4 +96,7 @@ langgraph dev
 **监督者-多智能体（supervisor-agent）**  
 工具实现位于 `src/agents/supervisor/subagent/tools.py`。是子智能体的工具实现，如需为子智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。
   
-注意：`supervisor` 默认仅持有“调用子智能体”的两个工具。若需为 `supervisor` 追加自定义工具，建议在 `src/agents/supervisor/` 下新建 `tools.py`，编写完成后在 `src/agents/supervisor/agent.py` 中导入并传递给 `create_agent` 函数即可。
+注意：`supervisor` 默认仅持有“调用子智能体”的`task`工具。若需为 `supervisor` 追加自定义工具，建议在 `src/agents/supervisor/` 下新建 `tools.py`，编写完成后在 `src/agents/supervisor/agent.py` 中导入并传递给 `create_agent` 函数即可。
+
+**交接架构（handoffs）**  
+工具实现位于 `src/agents/handoffs/tools.py`。是该架构下的所有智能体的工具实现，如需为某个特定智能体添加自定义工具，直接在该文件内新增对应的工具实现即可。
