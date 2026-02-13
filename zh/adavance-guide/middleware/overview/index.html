@@ -1651,6 +1651,21 @@
 <li>ModelFallbackMiddleware</li>
 <li>LLMToolEmulator</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>后续示例中，我们均是从 <code>langchain_dev_utils.agents</code> 中导入了 <code>create_agent</code> 函数，而不是 <code>langchain.agents</code>。这是因为本库也提供了一个与官方 <code>create_agent</code> 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 <code>register_model_provider</code> 注册的模型，而无需初始化模型实例后传入。</p>
+<p>示例运行前，请确保：</p>
+<p>1.注册 <code>vllm</code> 模型提供商</p>
+<div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>2.从 <code>langchain_dev_utils.agents</code> 中导入 <code>create_agent</code> 函数</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+</code></pre></div>
+</div>
 
 
 

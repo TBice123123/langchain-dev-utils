@@ -1651,6 +1651,21 @@
 <li>ModelFallbackMiddleware</li>
 <li>LLMToolEmulator</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the subsequent examples, we import the <code>create_agent</code> function from <code>langchain_dev_utils.agents</code> rather than <code>langchain.agents</code>. This is because this library provides a function that is functionally identical to the official <code>create_agent</code>, but has been extended to support specifying models via strings. This allows for the direct use of models registered via <code>register_model_provider</code> without the need to initialize and pass in a model instance.</p>
+<p>Before running the examples, please ensure:</p>
+<p>1.Register the <code>vllm</code> model provider</p>
+<div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
+    <span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>2.Import the <code>create_agent</code> function from <code>langchain_dev_utils.agents</code></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+</code></pre></div>
+</div>
 
 
 

@@ -1927,7 +1927,7 @@
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;email_agent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>以及日常日程智能体的实现</p>
+<p>以及日程智能体的实现</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_calendar_event</span><span class="p">(</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1991,7 +1991,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">提示</p>
-<p><code>wrap_agent_as_tool</code> 的 <code>tool_name</code> 与 <code>tool_description</code> 均为可选参数；若省略，工具名默认为 <code>transfer_to_{agent_name}</code>，描述默认为 <code>This tool transforms input to {agent_name}</code>。<br />
+<p><code>wrap_agent_as_tool</code> 的 <code>tool_name</code> 与 <code>tool_description</code> 均为可选参数；若省略，工具名默认为 <code>transfer_to_{agent_name}</code>，描述默认为 <code>This tool transforms input to {agent_name}</code>。
 为让主智能体更精准地识别与调用子智能体，建议显式指定这两项（尤其是描述），以清晰传达子智能体的职责与能力。</p>
 </div>
 <p>最终创建一个 <code>supervisor_agent</code>，它可以调用这两个工具。</p>
@@ -2020,7 +2020,7 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
-<p>上述示例中，我们是从 <code>langchain_dev_utils.agents</code> 中导入了 <code>create_agent</code> 函数，而不是 <code>langchain.agents</code>。这是因为本库也提供了一个与官方 <code>create_agent</code> 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 <code>register_model_provider</code> 注册的模型，而无需初始化模型实例后传入。</p>
+<p>上述示例中，我们是从<code>langchain_dev_utils.agents</code> 中导入了 <code>create_agent</code> 函数，而不是 <code>langchain.agents</code>。这是因为本库也提供了一个与官方 <code>create_agent</code> 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 <code>register_model_provider</code> 注册的模型，而无需初始化模型实例后传入。</p>
 </div>
 <h2 id="_4">封装多个智能体为单一工具</h2>
 <p>将多个智能体封装为单一工具只需三步：</p>
@@ -2057,12 +2057,12 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">提示</p>
-<p><code>wrap_all_agents_as_tool</code> 的 <code>tool_name</code> 与 <code>tool_description</code> 均为可选参数；若省略，工具名默认为 <code>task</code>，描述默认为 <code>Launch an ephemeral subagent for a task.\nAvailable agents:\n {available_agents}</code>。<br />
+<p><code>wrap_all_agents_as_tool</code> 的 <code>tool_name</code> 与 <code>tool_description</code> 均为可选参数；若省略，工具名默认为 <code>task</code>，描述默认为 <code>Launch an ephemeral subagent for a task.\nAvailable agents:\n {available_agents}</code>。
 为确保主智能体准确识别并调用子智能体，建议显式填写这两项，尤其是描述，以便清晰传达各子智能体的职责与能力。</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">提示</p>
-<p>除了使用本库提供的 <code>wrap_all_agents_as_tool</code> 将多个智能体封装为单一工具外，你还可以使用 <code>deepagents</code> 库提供的 <code>SubAgentMiddleware</code> 中间件实现类似的效果。</p>
+<p>除了使用本库提供的<code>wrap_all_agents_as_tool</code> 将多个智能体封装为单一工具外，你还可以使用 <code>deepagents</code> 库提供的 <code>SubAgentMiddleware</code> 中间件实现类似的效果。</p>
 </div>
 <h2 id="_6">钩子函数机制</h2>
 <p>本库内置了灵活的钩子（hook）机制，允许在子智能体运行前后插入自定义逻辑。该机制同时适用于 <code>wrap_agent_as_tool</code> 与 <code>wrap_all_agents_as_tool</code>，下文以 <code>wrap_agent_as_tool</code> 为例进行说明。</p>
@@ -2128,18 +2128,10 @@
 </code></pre></div>
 <p><strong>注意</strong>：</p>
 <ul>
-<li>
-<p>钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。</p>
-</li>
-<li>
-<p>若返回 dict，则会被直接作为 agent 的实际输入。</p>
-</li>
-<li>
-<p>若返回 str，则会被包装为 <code>HumanMessage(content=...)</code>，最终以 <code>{"messages": [HumanMessage(content=...)]}</code> 作为 agent 的实际输入。</p>
-</li>
-<li>
-<p>若未提供 <code>pre_input_hooks</code>，则直接将原始输入以 <code>{"messages": [HumanMessage(content=request)]}</code> 作为 agent 的实际输入。</p>
-</li>
+<li>钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。</li>
+<li>若返回 dict，则会被直接作为 agent 的实际输入。</li>
+<li>若返回 str，则会被包装为 <code>HumanMessage(content=...)</code>，最终以 <code>{"messages": [HumanMessage(content=...)]}</code> 作为 agent 的实际输入。</li>
+<li>若未提供 <code>pre_input_hooks</code>，则直接将原始输入以 <code>{"messages": [HumanMessage(content=request)]}</code> 作为 agent 的实际输入。</li>
 </ul>
 <h4 id="_9">使用示例</h4>
 <p>例如，将额外的会话上下文传递给SubAgent，以提供更精准的任务上下文。</p>
@@ -2161,8 +2153,8 @@
 
 
 <span class="c1"># 使用</span>
-<span class="hll"><span class="n">call_agent_tool</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">pre_input_hooks</span><span class="o">=</span><span class="n">process_input</span><span class="p">)</span>
-</span></code></pre></div>
+<span class="n">call_agent_tool</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">pre_input_hooks</span><span class="o">=</span><span class="n">process_input</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="2-post_output_hooks">2. post_output_hooks</h3>
 <p>在智能体运行完成后，对其返回的完整消息列表进行后处理，以生成工具的最终返回值。可用于结果提取、结构化转换等。</p>
 <h4 id="_10">支持的传入类型</h4>
@@ -2198,15 +2190,9 @@
 </code></pre></div>
 <p><strong>注意</strong>：</p>
 <ul>
-<li>
-<p>钩子函数的返回值必须是可以被序列化为字符串的值或者 <code>Command</code> 对象。</p>
-</li>
-<li>
-<p>钩子函数的两个入参，<code>request</code> 是未经处理的原始输入，<code>response</code> 是 agent 返回的完整响应（即 <code>agent.invoke(input)</code> 的返回值）。</p>
-</li>
-<li>
-<p>若未提供 <code>post_output_hooks</code>，则会将 agent 的最终响应直接作为工具的返回值（即 <code>response["messages"][-1].text</code>）。</p>
-</li>
+<li>钩子函数的返回值必须是可以被序列化为字符串的值或者 <code>Command</code> 对象。</li>
+<li>钩子函数的两个入参，<code>request</code> 是未经处理的原始输入，<code>response</code> 是 agent 返回的完整响应（即 <code>agent.invoke(input)</code> 的返回值）。</li>
+<li>若未提供 <code>post_output_hooks</code>，则会将 agent 的最终响应直接作为工具的返回值（即 <code>response["messages"][-1].text</code>）。</li>
 </ul>
 <h4 id="_12">使用示例</h4>
 <p>例如，增加额外的返回内容给主智能体。</p>
@@ -2223,12 +2209,12 @@
 
 
 <span class="c1"># 使用</span>
-<span class="hll"><span class="n">call_agent_tool</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">post_output_hooks</span><span class="o">=</span><span class="n">process_output</span><span class="p">)</span>
-</span></code></pre></div>
+<span class="n">call_agent_tool</span> <span class="o">=</span> <span class="n">wrap_agent_as_tool</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">post_output_hooks</span><span class="o">=</span><span class="n">process_output</span><span class="p">)</span>
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">提示</p>
-<p>对于<code>wrap_all_agents_as_tool</code> 函数，若需为不同子智能体定制 <code>pre_input_hooks</code> 或 <code>post_output_hooks</code>，可在钩子内调用 <code>get_subagent_name(runtime)</code> 获取当前智能体名称，再按名称分别处理。
-例如，假设当前仅需要对于<code>weather_agent</code> 子智能体定制 <code>pre_input_hooks</code>(例如添加当前城市和时间)，则可以这样实现：</p>
+<p>对于 <code>wrap_all_agents_as_tool</code> 函数，若需为不同子智能体定制 <code>pre_input_hooks</code> 或 <code>post_output_hooks</code>，可在钩子内调用 <code>get_subagent_name(runtime)</code> 获取当前智能体名称，再按名称分别处理。
+例如，假设当前仅需要对于 <code>weather_agent</code> 子智能体定制 <code>pre_input_hooks</code>(例如添加当前城市和时间)，则可以这样实现：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.wrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_subagent_name</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
@@ -2237,7 +2223,7 @@
 </span>    <span class="k">if</span> <span class="n">subagent_name</span> <span class="o">==</span> <span class="s2">&quot;weather_agent&quot;</span><span class="p">:</span>
         <span class="n">city</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;未知城市&quot;</span><span class="p">)</span>
         <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;当前城市是：</span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">，时间为：</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2">。请根据上述内容，完成任务&quot;</span> <span class="o">+</span> <span class="n">request</span> 
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;当前城市是：</span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">，时间为：</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2">。请根据上述内容，完成任务&quot;</span> <span class="o">+</span> <span class="n">request</span>
     <span class="k">return</span> <span class="n">request</span>
 </code></pre></div>
 </div>
