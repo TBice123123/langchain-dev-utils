@@ -8,9 +8,9 @@
 
 本库提供了两个预构建函数来简化这种实现方式：
 
-| 函数名 | 功能描述 |
-|--------|----------|
-| `wrap_agent_as_tool` | 将单个智能体实例封装为一个独立工具 |
+| 函数名                      | 功能描述                                                         |
+| --------------------------- | ---------------------------------------------------------------- |
+| `wrap_agent_as_tool`      | 将单个智能体实例封装为一个独立工具                               |
 | `wrap_all_agents_as_tool` | 将多个智能体实例封装为一个统一工具，通过参数指定调用哪个子智能体 |
 
 ## 封装单个智能体为工具
@@ -69,7 +69,7 @@ email_agent = create_agent(
 )
 ```
 
-以及日常日程智能体的实现
+以及日程智能体的实现
 
 ```python
 @tool
@@ -138,9 +138,8 @@ manage_email = wrap_agent_as_tool(
 ```
 
 !!! note "提示"
-    `wrap_agent_as_tool` 的 `tool_name` 与 `tool_description` 均为可选参数；若省略，工具名默认为 `transfer_to_{agent_name}`，描述默认为 `This tool transforms input to {agent_name}`。  
+    `wrap_agent_as_tool` 的 `tool_name` 与 `tool_description` 均为可选参数；若省略，工具名默认为 `transfer_to_{agent_name}`，描述默认为 `This tool transforms input to {agent_name}`。
     为让主智能体更精准地识别与调用子智能体，建议显式指定这两项（尤其是描述），以清晰传达子智能体的职责与能力。
-
 
 最终创建一个 `supervisor_agent`，它可以调用这两个工具。
 
@@ -169,11 +168,9 @@ print(
 )
 ```
 
-
 !!! info "提示"
 
-    上述示例中，我们是从 `langchain_dev_utils.agents` 中导入了 `create_agent` 函数，而不是 `langchain.agents`。这是因为本库也提供了一个与官方 `create_agent` 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 `register_model_provider` 注册的模型，而无需初始化模型实例后传入。
-
+    上述示例中，我们是从`langchain_dev_utils.agents` 中导入了 `create_agent` 函数，而不是 `langchain.agents`。这是因为本库也提供了一个与官方 `create_agent` 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 `register_model_provider` 注册的模型，而无需初始化模型实例后传入。
 
 ## 封装多个智能体为单一工具
 
@@ -182,7 +179,6 @@ print(
 1. 导入 `wrap_all_agents_as_tool`
 2. 把多个智能体实例作为列表一次性传入
 3. 获得可直接被其他智能体调用的统一工具对象
-
 
 ### 使用示例
 
@@ -216,13 +212,12 @@ main_agent = create_agent(
 
 !!! note "提示"
 
-    `wrap_all_agents_as_tool` 的 `tool_name` 与 `tool_description` 均为可选参数；若省略，工具名默认为 `task`，描述默认为 `Launch an ephemeral subagent for a task.\nAvailable agents:\n {available_agents}`。  
+    `wrap_all_agents_as_tool` 的 `tool_name` 与 `tool_description` 均为可选参数；若省略，工具名默认为 `task`，描述默认为 `Launch an ephemeral subagent for a task.\nAvailable agents:\n {available_agents}`。
     为确保主智能体准确识别并调用子智能体，建议显式填写这两项，尤其是描述，以便清晰传达各子智能体的职责与能力。
-
 
 !!! info "提示"
 
-    除了使用本库提供的 `wrap_all_agents_as_tool` 将多个智能体封装为单一工具外，你还可以使用 `deepagents` 库提供的 `SubAgentMiddleware` 中间件实现类似的效果。
+    除了使用本库提供的`wrap_all_agents_as_tool` 将多个智能体封装为单一工具外，你还可以使用 `deepagents` 库提供的 `SubAgentMiddleware` 中间件实现类似的效果。
 
 ## 钩子函数机制
 
@@ -237,13 +232,13 @@ graph LR
     %% --- 输入钩子 ---
     InHook -- 是 --> DoInHook[执行 process_input]
     InHook -- 否 --> Raw[使用原始 request]
-    
+  
     DoInHook --> TypeCheck{返回值类型判断}
     Raw --> TypeCheck
 
     TypeCheck -- 字符串 --> BuildDict[构造包含 messages 的字典]
     TypeCheck -- 字典 --> UseDict[直接使用该字典]
-    
+  
     BuildDict --> Core
     UseDict --> Core
 
@@ -252,22 +247,23 @@ graph LR
 
     %% --- 输出钩子 ---
     Core --> OutHook{process_output 存在?}
-    
+  
     OutHook -- 是 --> DoOutHook[执行 process_output]
     OutHook -- 否 --> ExtractContent[提取 response 响应中的<br/> messages 列表最后一项的 文本内容]
-    
+  
     DoOutHook --> End([返回结果])
     ExtractContent --> End
 ```
+
 ### 1. pre_input_hooks
 
 在智能体运行前对输入进行预处理。可用于输入增强、上下文注入、格式校验、权限检查等。
 
 #### 支持的传入类型
 
-| 类型 | 说明 |
-|------|------|
-| 单个同步函数 | 同时用于同步（`invoke`）和异步（`ainvoke`）调用路径（异步路径中不会 `await`，直接调用） |
+| 类型                               | 说明                                                                                             |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 单个同步函数                       | 同时用于同步（`invoke`）和异步（`ainvoke`）调用路径（异步路径中不会 `await`，直接调用）    |
 | 二元组 `(sync_func, async_func)` | 第一个函数用于同步调用路径；第二个函数（必须是 `async def`）用于异步调用路径，并会被 `await` |
 
 #### 函数签名
@@ -287,18 +283,15 @@ def pre_input_hook(request: str, runtime: ToolRuntime) -> str | dict[str, Any]:
 **注意**：
 
 - 钩子函数的返回值必须是 str 或 dict，否则会引发 ValueError。
-
 - 若返回 dict，则会被直接作为 agent 的实际输入。
-
 - 若返回 str，则会被包装为 `HumanMessage(content=...)`，最终以 `{"messages": [HumanMessage(content=...)]}` 作为 agent 的实际输入。
-
 - 若未提供 `pre_input_hooks`，则直接将原始输入以 `{"messages": [HumanMessage(content=request)]}` 作为 agent 的实际输入。
 
 #### 使用示例
 
 例如，将额外的会话上下文传递给SubAgent，以提供更精准的任务上下文。
 
-```python hl_lines="19"
+```python
 from langchain.tools import ToolRuntime
 from langchain_dev_utils.agents import wrap_agent_as_tool
 
@@ -320,16 +313,15 @@ def process_input(request: str, runtime: ToolRuntime) -> str:
 call_agent_tool = wrap_agent_as_tool(agent, pre_input_hooks=process_input)
 ```
 
-
 ### 2. post_output_hooks
 
 在智能体运行完成后，对其返回的完整消息列表进行后处理，以生成工具的最终返回值。可用于结果提取、结构化转换等。
 
 #### 支持的传入类型
 
-| 类型 | 说明 |
-|------|------|
-| 单个函数 | 同时用于同步和异步路径（异步路径中不 `await`） |
+| 类型                               | 说明                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| 单个函数                           | 同时用于同步和异步路径（异步路径中不 `await`）                          |
 | 二元组 `(sync_func, async_func)` | 第一个用于同步路径；第二个（`async def`）用于异步路径，并会被 `await` |
 
 #### 函数签名
@@ -341,7 +333,7 @@ def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntim
         request: 未经处理的原始输入
         response: agent 返回的完整响应
         runtime: langchain 的 ToolRuntime
-    
+  
     返回:
         能够被序列化为字符串的值，或者是 Command 对象
     """
@@ -350,16 +342,14 @@ def post_output_hook(request: str, response: dict[str, Any], runtime: ToolRuntim
 **注意**：
 
 - 钩子函数的返回值必须是可以被序列化为字符串的值或者 `Command` 对象。
-
 - 钩子函数的两个入参，`request` 是未经处理的原始输入，`response` 是 agent 返回的完整响应（即 `agent.invoke(input)` 的返回值）。
-
 - 若未提供 `post_output_hooks`，则会将 agent 的最终响应直接作为工具的返回值（即 `response["messages"][-1].text`）。
 
 #### 使用示例
 
 例如，增加额外的返回内容给主智能体。
 
-```python hl_lines="14"
+```python
 import json
 
 def process_output(request: str, response: dict[str, Any], runtime: ToolRuntime) -> str:
@@ -377,18 +367,18 @@ call_agent_tool = wrap_agent_as_tool(agent, post_output_hooks=process_output)
 ```
 
 !!! tip "提示"
-    对于`wrap_all_agents_as_tool` 函数，若需为不同子智能体定制 `pre_input_hooks` 或 `post_output_hooks`，可在钩子内调用 `get_subagent_name(runtime)` 获取当前智能体名称，再按名称分别处理。
-    例如，假设当前仅需要对于`weather_agent` 子智能体定制 `pre_input_hooks`(例如添加当前城市和时间)，则可以这样实现：
+    对于 `wrap_all_agents_as_tool` 函数，若需为不同子智能体定制 `pre_input_hooks` 或 `post_output_hooks`，可在钩子内调用 `get_subagent_name(runtime)` 获取当前智能体名称，再按名称分别处理。
+    例如，假设当前仅需要对于 `weather_agent` 子智能体定制 `pre_input_hooks`(例如添加当前城市和时间)，则可以这样实现：
 
     ```python hl_lines="5"
     from langchain_dev_utils.agents.wrap import get_subagent_name
     from datetime import datetime
-    
+
     def process_input(request: str, runtime: ToolRuntime):
         subagent_name = get_subagent_name(runtime)
         if subagent_name == "weather_agent":
             city = runtime.state.get("city", "未知城市")
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            return f"当前城市是：{city}，时间为：{time}。请根据上述内容，完成任务" + request 
+            return f"当前城市是：{city}，时间为：{time}。请根据上述内容，完成任务" + request
         return request
     ```

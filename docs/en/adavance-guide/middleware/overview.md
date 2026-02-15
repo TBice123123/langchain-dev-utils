@@ -16,3 +16,26 @@ Furthermore, this library extends the functionality of official middleware, enha
 - LLMToolSelectorMiddleware
 - ModelFallbackMiddleware
 - LLMToolEmulator
+
+
+!!! note "Note"
+
+    In the subsequent examples, we import the `create_agent` function from `langchain_dev_utils.agents` rather than `langchain.agents`. This is because this library provides a function that is functionally identical to the official `create_agent`, but has been extended to support specifying models via strings. This allows for the direct use of models registered via `register_model_provider` without the need to initialize and pass in a model instance.
+
+    Before running the examples, please ensure:
+
+    1.Register the `vllm` model provider
+
+    ```python
+    register_model_provider(
+        "vllm",
+        "openai-compatible",
+        base_url="http://localhost:8000/v1",
+    )
+    ```
+
+    2.Import the `create_agent` function from `langchain_dev_utils.agents`
+
+    ```python
+    from langchain_dev_utils.agents import create_agent
+    ```

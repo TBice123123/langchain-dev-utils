@@ -136,10 +136,6 @@ async def test_handoffs_middleware_async():
                 handoffs_tool_overrides=handoffs_tool_map,
             )
         ],
-        tools=[
-            get_current_time,
-            run_code,
-        ],
         checkpointer=InMemorySaver(),
     )
 

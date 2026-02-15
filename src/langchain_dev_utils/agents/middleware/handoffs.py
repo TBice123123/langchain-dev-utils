@@ -25,14 +25,16 @@ class AgentConfig(TypedDict):
     handoffs: list[str] | Literal["all"]
 
 
-def _create_handoffs_tool(agent_name: str, tool_description: Optional[str] = None):
+def _create_handoffs_tool(
+    agent_name: str, tool_description: Optional[str] = None
+) -> BaseTool:
     """Create a tool for handoffs to a specified agent.
 
     Args:
         agent_name (str): The name of the agent to transfer to.
 
     Returns:
-        BaseTool: A tool instance for handoffs to the specified agent.
+        BaseTool: The tool instance for handoffs to the specified agent.
     """
 
     tool_name = f"transfer_to_{agent_name}"
@@ -67,13 +69,13 @@ def _get_default_active_agent(state: dict[str, AgentConfig]) -> Optional[str]:
 
 def _transform_agent_config(
     config: dict[str, AgentConfig],
-    handoffs_tools: list[BaseTool],
+    handoffs_tool_map: dict[str, BaseTool],
 ) -> dict[str, AgentConfig]:
     """Transform the agent config to add handoffs tools.
 
     Args:
         config (dict[str, AgentConfig]): The agent config.
-        handoffs_tools (list[BaseTool]): The list of handoffs tools.
+        handoffs_tool_map (dict[str, BaseTool]): The dict of {agent name: handoffs tool}.
 
     Returns:
         dict[str, AgentConfig]: The transformed agent config.
@@ -96,8 +98,8 @@ def _transform_agent_config(
         if handoffs == "all":
             handoff_tools = [
                 handoff_tool
-                for handoff_tool in handoffs_tools
-                if handoff_tool.name != f"transfer_to_{agent_name}"
+                for transfer_to_agent, handoff_tool in handoffs_tool_map.items()
+                if transfer_to_agent != agent_name
             ]
         else:
             if not isinstance(handoffs, list):
@@ -105,14 +107,13 @@ def _transform_agent_config(
                     f"handoffs for agent {agent_name} must be a list of agent names or 'all'"
                 )
 
+            if agent_name in handoffs:
+                raise ValueError(f"agent {agent_name} cannot handoff to itself")
+
             handoff_tools = [
                 handoff_tool
-                for handoff_tool in handoffs_tools
-                if handoff_tool.name
-                in [
-                    f"transfer_to_{_handoff_agent_name}"
-                    for _handoff_agent_name in handoffs
-                ]
+                for transfer_to_agent, handoff_tool in handoffs_tool_map.items()
+                if transfer_to_agent in handoffs
             ]
 
         new_config[agent_name]["tools"] = [
@@ -158,28 +159,28 @@ class HandoffAgentMiddleware(AgentMiddleware):
         if handoffs_tool_overrides is None:
             handoffs_tool_overrides = {}
 
-        handoffs_tools = []
+        handoffs_tool_map = {}
+
         for agent_name in agents_config.keys():
             if not handoffs_tool_overrides.get(agent_name):
-                handoffs_tools.append(
-                    _create_handoffs_tool(
-                        agent_name,
-                        custom_handoffs_tool_descriptions.get(agent_name),
-                    )
+                handoffs_tool_map[agent_name] = _create_handoffs_tool(
+                    agent_name,
+                    custom_handoffs_tool_descriptions.get(agent_name),
                 )
+
             else:
-                handoffs_tools.append(
-                    cast(BaseTool, handoffs_tool_overrides.get(agent_name))
+                handoffs_tool_map[agent_name] = cast(
+                    BaseTool, handoffs_tool_overrides.get(agent_name)
                 )
 
         self.default_agent_name = default_agent_name
         self.agents_config = _transform_agent_config(
             agents_config,
-            handoffs_tools,
+            handoffs_tool_map,
         )
 
         all_tools = [
-            *handoffs_tools,
+            *handoffs_tool_map.values(),
         ]
 
         for agent_name in agents_config:

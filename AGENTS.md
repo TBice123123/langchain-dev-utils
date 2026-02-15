@@ -6,6 +6,8 @@ This file provides guidelines for AI agents working in this repository.
 
 A Python utility library for LangChain and LangGraph development. Uses hatchling build system, uv for package management, ruff for linting, and pytest for testing.
 
+**Current Version:** 1.4.4
+
 ---
 
 ## Build/Lint/Test Commands
@@ -23,6 +25,9 @@ uv sync --group dev
 
 # Install test dependencies
 uv sync --group tests
+
+# Install docs dependencies
+uv sync --group docs
 ```
 
 ### Linting & Formatting (ruff)
@@ -74,6 +79,18 @@ uv build
 
 # Build wheel only
 uv build --wheel
+```
+
+### Documentation
+```bash
+# Serve docs locally
+mkdocs serve
+
+# Build docs
+mkdocs build
+
+# Deploy docs
+mkdocs gh-deploy
 ```
 
 ---
@@ -149,25 +166,120 @@ uv build --wheel
 langchain-dev-utils/
 ├── src/langchain_dev_utils/      # Source code
 │   ├── agents/                   # Agent utilities
+│   │   ├── factory.py            # Agent creation functions
+│   │   ├── wrap.py               # Agent wrapping utilities
+│   │   └── middleware/           # Agent middleware components
+│   │       ├── format_prompt.py      # Format prompt middleware
+│   │       ├── handoffs.py           # Multi-agent handoff middleware
+│   │       ├── model_fallback.py     # Model fallback middleware
+│   │       ├── model_router.py       # Model routing middleware
+│   │       ├── plan.py               # Planning middleware
+│   │       ├── summarization.py      # Message summarization middleware
+│   │       ├── tool_call_repair.py   # Tool call repair middleware
+│   │       ├── tool_emulator.py      # LLM tool emulator middleware
+│   │       └── tool_selection.py     # LLM tool selector middleware
 │   ├── chat_models/              # Chat model utilities
+│   │   ├── base.py               # Base chat model classes
+│   │   ├── types.py              # Type definitions
+│   │   └── adapters/             # Model provider adapters
 │   ├── embeddings/               # Embedding utilities
+│   │   ├── base.py               # Base embedding classes
+│   │   └── adapters/             # Embedding provider adapters
 │   ├── graph/                    # Graph utilities
-│   ├── message_convert/          # Message conversion
+│   │   ├── parallel.py           # Parallel graph construction
+│   │   ├── sequential.py         # Sequential graph construction
+│   │   └── types.py              # Graph type definitions
+│   ├── message_convert/          # Message conversion utilities
+│   │   ├── content.py            # Content conversion
+│   │   └── format.py             # Message formatting
 │   ├── pipeline/                 # Pipeline utilities (deprecated since v1.4.0, will be removed in v1.5.0)
+│   │   ├── parallel.py
+│   │   ├── sequential.py
+│   │   └── types.py
 │   └── tool_calling/             # Tool calling utilities
+│       ├── human_in_the_loop.py  # Human review functionality
+│       └── utils.py              # Tool calling utilities
 ├── tests/                        # Test files
-├── docs/                         # Documentation
+├── docs/                         # Documentation (MkDocs)
+│   ├── en/                       # English documentation
+│   └── zh/                       # Chinese documentation
 ├── pyproject.toml                # Project configuration
-└── uv.lock                       # Dependency lock file
+├── uv.lock                       # Dependency lock file
+└── mkdocs.yml                    # MkDocs configuration
 ```
+
+---
+
+## Middleware Components
+
+The `agents.middleware` module provides reusable middleware components for agent enhancement:
+
+| Middleware | Purpose |
+|------------|---------|
+| `SummarizationMiddleware` | Summarizes long message histories |
+| `LLMToolSelectorMiddleware` | Uses LLM to select appropriate tools |
+| `PlanMiddleware` | Adds planning capabilities to agents |
+| `ModelFallbackMiddleware` | Provides fallback to alternative models |
+| `LLMToolEmulator` | Emulates tool calling for models without native support |
+| `ModelRouterMiddleware` | Routes requests to different models based on criteria |
+| `ToolCallRepairMiddleware` | Repairs malformed tool calls |
+| `FormatPromptMiddleware` | Formats prompts with templates |
+| `HandoffAgentMiddleware` | Enables multi-agent handoff workflows |
 
 ---
 
 ## Dependencies
 
-- Core: langchain, langchain-core, langgraph
-- Optional: jinja2, json-repair, langchain-openai
-- Dev: ruff, dashscope, langchain-model-profiles
-- Test: python-dotenv, langchain-tests, langchain-deepseek, langchain-qwq, langchain-ollama, langchain-community
+### Core Dependencies
+- `langchain>=1.2.0` - LangChain framework
+- `langchain-core>=1.2.5` - Core LangChain components
+- `langgraph>=1.0.0` - LangGraph for graph-based workflows
 
-Python version: >=3.11
+### Optional Dependencies (standard)
+- `jinja2>=3.1.6` - Template engine for prompt formatting
+- `json-repair>=0.53.1` - JSON repair utilities
+- `langchain-openai` - OpenAI integration
+
+### Dev Dependencies
+- `langchain-model-profiles>=0.0.5` - Model profile management
+- `ruff>=0.14.5` - Linting and formatting
+
+### Docs Dependencies
+- `jupyter>=1.1.1` - Jupyter notebook support
+- `mkdocs-material>=9.7.0` - Material theme for MkDocs
+- `mkdocs-static-i18n>=1.3.0` - Internationalization support
+
+### Test Dependencies
+- `python-dotenv>=1.1.1` - Environment variable management
+- `langchain-tests>=1.0.0` - Standard LangChain test suite
+- `langchain-deepseek>=1.0.0` - DeepSeek model integration
+- `langchain-qwq>=0.3.0` - QwQ model integration
+- `langchain-ollama>=1.0.0` - Ollama integration
+- `langchain-community>=0.4.1` - Community model integrations
+- `dashscope>=1.25.12` - Alibaba DashScope integration
+
+**Python version:** >=3.11
+
+---
+
+## Documentation
+
+- Documentation is built with MkDocs using the Material theme
+- Supports internationalization (English and Chinese)
+- Hosted at: https://tbice123123.github.io/langchain-dev-utils/
+- Source files located in `docs/en/` and `docs/zh/`
+
+---
+
+## Release Checklist
+
+When preparing a new release:
+
+1. Update version in `src/langchain_dev_utils/__init__.py`
+2. Update version in `pyproject.toml` if needed
+3. Run full test suite: `uv run pytest`
+4. Run linting: `uv run ruff check .`
+5. Run formatting: `uv run ruff format .`
+6. Build package: `uv build`
+7. Update documentation if needed
+8. Tag release in git

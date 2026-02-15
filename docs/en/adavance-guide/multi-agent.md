@@ -69,7 +69,7 @@ email_agent = create_agent(
 )
 ```
 
-And the implementation of the daily calendar agent:
+And the implementation of the calendar agent:
 
 ```python
 @tool

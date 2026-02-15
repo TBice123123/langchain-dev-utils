@@ -17,3 +17,26 @@
 - LLMToolSelectorMiddleware
 - ModelFallbackMiddleware
 - LLMToolEmulator
+
+
+!!! note "注意"
+
+    后续示例中，我们均是从 `langchain_dev_utils.agents` 中导入了 `create_agent` 函数，而不是 `langchain.agents`。这是因为本库也提供了一个与官方 `create_agent` 函数功能完全相同的函数，只是扩充了通过字符串指定模型的功能。这使得可以直接使用 `register_model_provider` 注册的模型，而无需初始化模型实例后传入。
+
+    示例运行前，请确保：
+
+    1.注册 `vllm` 模型提供商
+
+    ```python
+    register_model_provider(
+        "vllm",
+        "openai-compatible",
+        base_url="http://localhost:8000/v1",
+    )
+    ```
+
+    2.从 `langchain_dev_utils.agents` 中导入 `create_agent` 函数
+
+    ```python
+    from langchain_dev_utils.agents import create_agent
+    ```
