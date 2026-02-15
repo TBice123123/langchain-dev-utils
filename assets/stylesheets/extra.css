@@ -22,17 +22,17 @@
 
 /* Dark Mode Overrides */
 [data-md-color-scheme="slate"] {
-  --md-default-bg-color: #0f172a; /* Slate 900 */
+  --md-default-bg-color: #030712; /* Slate 950 - Deeper dark */
   --md-default-fg-color--light: #94a3b8; /* Slate 400 */
   
-  /* Deep Midnight Gradient Background */
-  --md-default-bg-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                         radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                         radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+  /* Deep Midnight Gradient Background - Darker */
+  --md-default-bg-image: radial-gradient(at 0% 0%, hsla(253,16%,3%,1) 0, transparent 50%), 
+                         radial-gradient(at 50% 0%, hsla(225,39%,15%,1) 0, transparent 50%), 
+                         radial-gradient(at 100% 0%, hsla(339,49%,15%,1) 0, transparent 50%);
                          
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(3, 7, 18, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* Light Mode Overrides (Refined "Ethereal Daybreak" Theme) */
