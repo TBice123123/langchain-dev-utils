@@ -2134,8 +2134,8 @@ Passing video data:</p>
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
     <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;reasoning_field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
+<span class="hll">        <span class="s2">&quot;reasoning_field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
+</span>    <span class="p">},</span>
 <span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
@@ -2264,8 +2264,8 @@ Meanwhile, the GLM-4.7-Flash model also supports another thinking mode called Pr
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
+<p>Similarly, the GLM-4.7-Flash model is also a reasoning model. When deployed with <code>vLLM</code>, if you want to return reasoning content to enable interleaved thinking, the corresponding field is <code>reasoning</code> rather than <code>reasoning_content</code>. Therefore, you also need to specify the compatibility option <code>reasoning_field_name</code> as <code>reasoning</code> when creating the chat model class.</p>
 </div>
-<p>Similarly, the GLM-4.7-Flash model is a reasoning model, and the field for returning reasoning content is <code>reasoning</code>. Therefore, it is also necessary to specify the compatibility option <code>reasoning_field_name</code> as <code>reasoning</code> when creating the chat model class.</p>
 </details>
 <h3 id="model-profiles">Model profiles</h3>
 <p>You can access the model's profile via <code>model.profile</code>. By default, it returns an empty dictionary.</p>

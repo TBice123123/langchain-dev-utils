@@ -2134,8 +2134,8 @@ OpenAICompatibleChatModel 会根据模型提供商的实际能力，利用 <code
     <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
     <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
     <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;reasoning_field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
+<span class="hll">        <span class="s2">&quot;reasoning_field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
+</span>    <span class="p">},</span>
 <span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
@@ -2264,8 +2264,8 @@ OpenAICompatibleChatModel 会根据模型提供商的实际能力，利用 <code
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
+<p>同样，GLM-4.7-Flash 模型也为推理模型，在使用<code>vLLM</code>部署时，如果要回传推理内容实现交错式思考，则对应的字段为 <code>reasoning</code>而不是<code>reasoning_content</code>。故同样需要在创建对话模型类时指定兼容性选项<code>reasoning_field_name</code>取值为<code>reasoning</code>。</p>
 </div>
-<p>同样，GLM-4.7-Flash 模型也为推理模型，且回传推理内容的字段为 <code>reasoning</code>。故同样需要在创建对话模型类时指定兼容性选项<code>reasoning_field_name</code>取值为<code>reasoning</code>。</p>
 </details>
 <h3 id="model-profiles">Model profiles</h3>
 <p>可以通过 <code>model.profile</code> 获取模型的 profile。默认情况下返回空字典。</p>
