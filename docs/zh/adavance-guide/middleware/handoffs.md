@@ -1,6 +1,6 @@
 # 智能体交接
 
-`HandoffAgentMiddleware` 是一个用于**在多个子 Agent 之间灵活切换**的中间件，完整实现了 LangChain 官方的 `handoffs` 多智能体协作方案。
+`HandoffAgentMiddleware` 是一个用于**在多个 Agent 之间灵活切换**的中间件，完整实现了 LangChain 官方的 `handoffs` 多智能体协作方案。
 
 ## 参数说明
 
@@ -16,7 +16,7 @@
 
 | 字段 | 说明 |
 |------|------|
-| `model` | 指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen3-4b`）或 `BaseChatModel` 实例。<br><br>**类型**: `str` \| `BaseChatModel`<br>**必填**: 否 |
+| `model` | 指定该智能体使用的模型；若不传，则沿用 `create_agent` 的 `model` 参数对应的模型。支持字符串（须为 `provider:model-name` 格式，如 `vllm:qwen2.5-7b`）或 `BaseChatModel` 实例。<br><br>**类型**: `str` \| `BaseChatModel`<br>**必填**: 否 |
 | `prompt` | 智能体的系统提示词。<br><br>**类型**: `str` \| `SystemMessage`<br>**必填**: 是 |
 | `tools` | 智能体可调用的工具列表；若不传，该智能体仅拥有相关的交接工具。<br><br>**类型**: `list[BaseTool]`<br>**必填**: 否 |
 | `default` | 是否设为默认智能体；缺省为 `False`。全部配置中必须且只能有一个智能体设为 `True`。<br><br>**类型**: `bool`<br>**必填**: 否 |
@@ -41,7 +41,6 @@ from langchain_dev_utils.agents.middleware.handoffs import AgentConfig
 
 agent_config: dict[str, AgentConfig] = {
     "time_agent": {
-        "model": "vllm:qwen3-8b",
         "prompt": "你是一个时间助手",
         "tools": [get_current_time],
         "handoffs": ["default_agent"],  # 该智能体只能交接到default_agent
@@ -52,7 +51,7 @@ agent_config: dict[str, AgentConfig] = {
         "handoffs": ["default_agent"],
     },
     "code_agent": {
-        "model": load_chat_model("vllm:qwen3-coder-flash"),
+        "model": load_chat_model("vllm:glm-4.7-flash"),
         "prompt": "你是一个代码助手",
         "tools": [
             run_code,
@@ -60,6 +59,7 @@ agent_config: dict[str, AgentConfig] = {
         "handoffs": ["default_agent"],
     },
     "default_agent": {
+        "model": "openai:gpt-4o-mini",
         "prompt": "你是一个助手",
         "default": True, # 设为默认智能体
         "handoffs": "all",  # 该智能体可以交接到所有其它智能体
@@ -73,7 +73,7 @@ agent_config: dict[str, AgentConfig] = {
 from langchain_dev_utils.agents.middleware import HandoffAgentMiddleware
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     middleware=[HandoffAgentMiddleware(agents_config=agent_config)],
 )
 
@@ -86,7 +86,7 @@ print(response)
 
 ```python hl_lines="6-11"
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     middleware=[
         HandoffAgentMiddleware(
             agents_config=agent_config,
@@ -129,7 +129,7 @@ def transfer_to_code_agent(runtime: ToolRuntime) -> Command:
     )
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     middleware=[
         HandoffAgentMiddleware(
             agents_config=agent_config,

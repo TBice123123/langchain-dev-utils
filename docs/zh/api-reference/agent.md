@@ -55,7 +55,7 @@ def create_agent(  # noqa: PLR0915
 ### 示例
 
 ```python
-agent = create_agent(model="vllm:qwen3-4b", tools=[get_current_time])
+agent = create_agent(model="vllm:qwen2.5-7b", tools=[get_current_time])
 ```
 
 ---
@@ -189,7 +189,7 @@ class SummarizationMiddleware(_SummarizationMiddleware):
 ### 示例
 
 ```python
-summarization_middleware = SummarizationMiddleware(model="vllm:qwen3-4b")
+summarization_middleware = SummarizationMiddleware(model="vllm:qwen2.5-7b")
 ```
 
 ---
@@ -224,7 +224,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
 ### 示例
 
 ```python
-llm_tool_selector_middleware = LLMToolSelectorMiddleware(model="vllm:qwen3-4b")
+llm_tool_selector_middleware = LLMToolSelectorMiddleware(model="vllm:qwen2.5-7b")
 ```
 
 ---
@@ -290,8 +290,8 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
 
 ```python
 model_fallback_middleware = ModelFallbackMiddleware(
-    "vllm:qwen3-4b",
-    "vllm:qwen3-8b"
+    "vllm:qwen2.5-7b",
+    "vllm:qwen2.5-3b"
 )
 ```
 
@@ -323,7 +323,7 @@ class LLMToolEmulator(_LLMToolEmulator):
 ### 示例
 
 ```python
-llm_tool_emulator = LLMToolEmulator(model="vllm:qwen3-4b", tools=[get_current_time])
+llm_tool_emulator = LLMToolEmulator(model="vllm:qwen2.5-7b", tools=[get_current_time])
 ```
 
 ---
@@ -357,14 +357,14 @@ class ModelRouterMiddleware(AgentMiddleware):
 
 ```python
 model_router_middleware = ModelRouterMiddleware(
-    router_model="vllm:qwen3-4b",
+    router_model="vllm:qwen2.5-7b",
     model_list=[
         {
-            "model_name": "vllm:qwen3-4b",
+            "model_name": "vllm:qwen2.5-7b",
             "model_description": "适合普通任务，如对话、文本生成等"
         },
         {
-            "model_name": "vllm:qwen3-8b",
+            "model_name": "vllm:qwen3-4b",
             "model_description": "适合复杂任务，如代码生成、数据分析等",
         },
     ]
@@ -403,13 +403,13 @@ class HandoffAgentMiddleware(AgentMiddleware):
 ```python
 handoffs_agent_middleware = HandoffsAgentMiddleware({
     "time_agent":{
-        "model":"vllm:qwen3-4b",
+        "model":"vllm:qwen2.5-7b",
         "prompt":"你是一个时间智能体，负责回答时间相关的问题。",
         "tools":[get_current_time, transfer_to_default_agent],
         "handoffs":["default_agent"]
     },
     "default_agent":{
-        "model":"vllm:qwen3-8b",
+        "model":"vllm:qwen2.5-3b",
         "prompt":"你是一个复杂任务智能体，负责回答复杂任务相关的问题。",
         "default":True,
         "handoffs":["time_agent"]

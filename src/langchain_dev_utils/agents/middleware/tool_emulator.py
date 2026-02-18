@@ -26,11 +26,11 @@ class LLMToolEmulator(_LLMToolEmulator):
         from langchain_dev_utils.agents.middleware import LLMToolEmulator
 
         middleware = LLMToolEmulator(
-            model="vllm:qwen3-4b"
+            model="vllm:qwen2.5-7b"
         )
 
         agent = create_agent(
-            model="vllm:qwen3-4b",
+            model="vllm:qwen2.5-7b",
             tools=[get_weather, get_user_location, calculator],
             middleware=[middleware],
         )
@@ -38,12 +38,12 @@ class LLMToolEmulator(_LLMToolEmulator):
 
         # Emulate specific tools by name:
         ```python
-        middleware = LLMToolEmulator(model="vllm:qwen3-4b", tools=["get_weather", "get_user_location"])
+        middleware = LLMToolEmulator(model="vllm:qwen2.5-7b", tools=["get_weather", "get_user_location"])
         ```
 
         # Emulate specific tools by passing tool instances:
         ```python
-        middleware = LLMToolEmulator(model="vllm:qwen3-4b", tools=[get_weather, get_user_location])
+        middleware = LLMToolEmulator(model="vllm:qwen2.5-7b", tools=[get_weather, get_user_location])
         ```
     """
 

@@ -1,8 +1,8 @@
-# Agent Module API Reference
+# Agent Module API Reference Documentation
 
 ## create_agent
 
-Creates an agent with the same functionality as the official `langchain` `create_agent`, but extends the model specification to a string.
+Creates an agent, providing functionality identical to the official Langchain `create_agent`, but extends the model specification via string.
 
 ### Function Signature
 
@@ -31,30 +31,31 @@ def create_agent(  # noqa: PLR0915
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+|------|------|------|--------|------|
 | model | str | Yes | - | Model identifier string that can be loaded by `load_chat_model`. Can be specified in "provider:model-name" format |
 | tools | Sequence[BaseTool \| Callable \| dict[str, Any]] \| None | No | None | List of tools available to the agent |
 | system_prompt | str \| SystemMessage \| None | No | None | Custom system prompt for the agent |
-| middleware | Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] | No | () | Agent middleware |
+| middleware | Sequence[AgentMiddleware[AgentState[ResponseT], ContextT]] | No | () | Middleware for the agent |
 | response_format | ResponseFormat[ResponseT] \| type[ResponseT] \| None | No | None | Response format for the agent |
 | state_schema | type[AgentState[ResponseT]] \| None | No | None | State schema for the agent |
 | context_schema | type[ContextT] \| None | No | None | Context schema for the agent |
 | checkpointer | Checkpointer \| None | No | None | Checkpointer for state persistence |
-| store | BaseStore \| None | No | None | Storage for data persistence |
+| store | BaseStore \| None | No | None | Store for data persistence |
 | interrupt_before | list[str] \| None | No | None | Nodes to interrupt before execution |
 | interrupt_after | list[str] \| None | No | None | Nodes to interrupt after execution |
 | debug | bool | No | False | Enable debug mode |
 | name | str \| None | No | None | Agent name |
 | cache | BaseCache \| None | No | None | Cache |
 
+
 ### Notes
 
-This function provides the same functionality as the official `langchain` `create_agent`, but extends the model selection. The main difference is that the `model` parameter must be a string that can be loaded by the `load_chat_model` function, allowing more flexible model selection using registered model providers.
+This function provides functionality identical to the official `langchain` `create_agent`, but extends model selection. The main difference is that the `model` parameter must be a string loadable by the `load_chat_model` function, allowing for more flexible model selection using registered model providers.
 
 ### Example
 
 ```python
-agent = create_agent(model="vllm:qwen3-4b", tools=[get_current_time])
+agent = create_agent(model="vllm:qwen2.5-7b", tools=[get_current_time])
 ```
 
 ---
@@ -90,12 +91,13 @@ def wrap_agent_as_tool(
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| agent | CompiledStateGraph | Yes | - | The agent graph to wrap |
-| tool_name | Optional[str] | No | None | Name of the resulting tool |
-| tool_description | Optional[str] | No | None | Description of the resulting tool |
-| pre_input_hooks | - | No | None | Hooks for processing input before passing to the agent |
-| post_output_hooks | - | No | None | Hooks for processing output after receiving from the agent |
+|------|------|------|--------|------|
+| agent | CompiledStateGraph | Yes | - | The agent |
+| tool_name | Optional[str] | No | None | Tool name |
+| tool_description | Optional[str] | No | None | Tool description |
+| pre_input_hooks | - | No | None | Agent input preprocessing function |
+| post_output_hooks | - | No | None | Agent output post-processing function |
+
 
 ### Example
 
@@ -133,15 +135,16 @@ def wrap_all_agents_as_tool(
 ) -> BaseTool:
 ```
 
+
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| agents | list[CompiledStateGraph] | Yes | - | List of agents (must contain at least 2 agents, and each agent must have a unique name) |
-| tool_name | Optional[str] | No | None | Name of the resulting tool |
-| tool_description | Optional[str] | No | None | Description of the resulting tool |
-| pre_input_hooks | - | No | None | Hooks for processing input before passing to the agents |
-| post_output_hooks | - | No | None | Hooks for processing output after receiving from the agents |
+|------|------|------|--------|------|
+| agents | list[CompiledStateGraph] | Yes | - | List of agents (must contain at least 2, and each agent must have a unique name) |
+| tool_name | Optional[str] | No | None | Tool name |
+| tool_description | Optional[str] | No | None | Tool description |
+| pre_input_hooks | - | No | None | Agent input preprocessing function |
+| post_output_hooks | - | No | None | Agent output post-processing function |
 
 ### Example
 
@@ -175,18 +178,18 @@ class SummarizationMiddleware(_SummarizationMiddleware):
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+|------|------|------|--------|------|
 | model | str | Yes | - | Model identifier string that can be loaded by `load_chat_model`. Can be specified in "provider:model-name" format |
-| trigger | ContextSize \| list[ContextSize] \| None | No | None | Context size threshold that triggers summarization |
-| keep | ContextSize | No | ("messages", _DEFAULT_MESSAGES_TO_KEEP) | Context size to preserve after summarization |
-| token_counter | TokenCounter | No | count_tokens_approximately | Token counting function to use |
-| summary_prompt | str | No | DEFAULT_SUMMARY_PROMPT | System prompt used for summarization |
-| trim_tokens_to_summarize | int \| None | No | _DEFAULT_TRIM_TOKEN_LIMIT | Number of tokens to trim from the context before summarizing |
+| trigger | ContextSize \| list[ContextSize] \| None | No | None | Context size that triggers summarization |
+| keep | ContextSize | No | ("messages", _DEFAULT_MESSAGES_TO_KEEP) | Context size to keep |
+| token_counter | TokenCounter | No | count_tokens_approximately | Token counter |
+| summary_prompt | str | No | DEFAULT_SUMMARY_PROMPT | Summary prompt |
+| trim_tokens_to_summarize | int \| None | No | _DEFAULT_TRIM_TOKEN_LIMIT | Number of tokens to trim before summarizing |
 
 ### Example
 
 ```python
-summarization_middleware = SummarizationMiddleware(model="vllm:qwen3-4b")
+summarization_middleware = SummarizationMiddleware(model="vllm:qwen2.5-7b")
 ```
 
 ---
@@ -212,16 +215,16 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+|------|------|------|--------|------|
 | model | str | Yes | - | Model identifier string that can be loaded by `load_chat_model`. Can be specified in "provider:model-name" format |
-| system_prompt | Optional[str] | No | None | System prompt for the selection model |
-| max_tools | Optional[int] | No | None | Maximum number of tools to select |
-| always_include | Optional[list[str]] | No | None | List of tool names to always include in the selection |
+| system_prompt | Optional[str] | No | None | System prompt |
+| max_tools | Optional[int] | No | None | Maximum number of tools |
+| always_include | Optional[list[str]] | No | None | Tools to always include |
 
 ### Example
 
 ```python
-llm_tool_selector_middleware = LLMToolSelectorMiddleware(model="vllm:qwen3-4b")
+llm_tool_selector_middleware = LLMToolSelectorMiddleware(model="vllm:qwen2.5-7b")
 ```
 
 ---
@@ -241,16 +244,17 @@ class PlanMiddleware(AgentMiddleware):
         system_prompt: Optional[str] = None,
         custom_plan_tool_descriptions: Optional[PlanToolDescription] = None,
         use_read_plan_tool: bool = True,
-    ) -> None
+    ) -> None:
 ```
 
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| system_prompt | Optional[str] | No | None | System prompt for the planning agent |
-| custom_plan_tool_descriptions | Optional[PlanToolDescription] | No | None | Custom descriptions for plan-related tools |
-| use_read_plan_tool | bool | No | True | Whether to enable the tool that allows the model to read the current plan |
+|------|------|------|--------|------|
+| system_prompt | Optional[str] | No | None | System prompt |
+| custom_plan_tool_descriptions | Optional[PlanToolDescription] | No | None | Custom plan tool descriptions |
+| use_read_plan_tool | bool | No | True | Whether to use the read plan tool |
+
 
 ### Example
 
@@ -278,16 +282,16 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| first_model | str | Yes | - | Primary model identifier string (can be loaded by `load_chat_model`) |
-| additional_models | str | No | - | Fallback model identifier strings to use if the primary model fails |
+|------|------|------|--------|------|
+| first_model | str | Yes | - | Model identifier string that can be loaded by `load_chat_model`. Can be specified in "provider:model-name" format |
+| additional_models | str | No | - | List of fallback models |
 
 ### Example
 
 ```python
 model_fallback_middleware = ModelFallbackMiddleware(
-    "vllm:qwen3-4b",
-    "vllm:qwen3-8b"
+    "vllm:qwen2.5-7b",
+    "vllm:qwen2.5-3b"
 )
 ```
 
@@ -295,7 +299,7 @@ model_fallback_middleware = ModelFallbackMiddleware(
 
 ## LLMToolEmulator
 
-Middleware for simulating tool calls using large language models.
+Middleware for using an LLM to emulate tool calls.
 
 ### Class Definition
 
@@ -312,21 +316,21 @@ class LLMToolEmulator(_LLMToolEmulator):
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+|------|------|------|--------|------|
 | model | str | Yes | - | Model identifier string that can be loaded by `load_chat_model`. Can be specified in "provider:model-name" format |
-| tools | list[str \| BaseTool] \| None | No | None | List of tools to be emulated by the LLM |
+| tools | list[str \| BaseTool] \| None | No | None | List of tools |
 
 ### Example
 
 ```python
-llm_tool_emulator = LLMToolEmulator(model="vllm:qwen3-4b", tools=[get_current_time])
+llm_tool_emulator = LLMToolEmulator(model="vllm:qwen2.5-7b", tools=[get_current_time])
 ```
 
 ---
 
 ## ModelRouterMiddleware
 
-Middleware for dynamically routing to appropriate models based on input content.
+Middleware for dynamically routing to a suitable model based on input content.
 
 ### Class Definition
 
@@ -344,24 +348,24 @@ class ModelRouterMiddleware(AgentMiddleware):
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| router_model | str \| BaseChatModel | Yes | - | Model used for routing. Accepts a string (loaded via `load_chat_model`) or a ChatModel instance |
-| model_list | list[ModelDict] | Yes | - | List of available models. Each entry must contain `model_name` and `model_description`, and optionally `tools`, `model_kwargs`, `model_instance`, and `model_system_prompt` |
-| router_prompt | Optional[str] | No | None | Custom prompt for the router model. Uses default prompt if not provided |
+|------|------|------|--------|------|
+| router_model | str \| BaseChatModel | Yes | - | Model used for routing. Accepts a string type (loaded using `load_chat_model`) or a direct ChatModel instance |
+| model_list | list[ModelDict] | Yes | - | List of models. Each model must contain `model_name` and `model_description` keys, and can optionally contain `tools`, `model_kwargs`, `model_instance`, and `model_system_prompt` keys |
+| router_prompt | Optional[str] | No | None | Prompt for the routing model. If None, the default prompt is used |
 
 ### Example
 
 ```python
 model_router_middleware = ModelRouterMiddleware(
-    router_model="vllm:qwen3-4b",
+    router_model="vllm:qwen2.5-7b",
     model_list=[
         {
-            "model_name": "vllm:qwen3-4b",
-            "model_description": "Suitable for general tasks such as conversation, text generation, etc."
+            "model_name": "vllm:qwen2.5-7b",
+            "model_description": "Suitable for general tasks, such as conversation, text generation, etc."
         },
         {
-            "model_name": "vllm:qwen3-8b",
-            "model_description": "Suitable for complex tasks such as code generation, data analysis, etc.",
+            "model_name": "vllm:qwen3-4b",
+            "model_description": "Suitable for complex tasks, such as code generation, data analysis, etc.",
         },
     ]
 )
@@ -383,32 +387,30 @@ class HandoffAgentMiddleware(AgentMiddleware):
         agents_config: dict[str, AgentConfig],
         custom_handoffs_tool_descriptions: Optional[dict[str, str]] = None,
         handoffs_tool_overrides: Optional[dict[str, BaseTool]] = None,
-    ) -> None
+    ) -> None:
 ```
 
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| agents_config | dict[str, AgentConfig] | Yes | - | Configuration dictionary for agents. Keys are agent names, values are agent configurations |
-| custom_handoffs_tool_descriptions | Optional[dict[str, str]] | No | None | Custom descriptions for handoff tools targeting other agents |
-| handoffs_tool_overrides | Optional[dict[str, BaseTool]] | No | None | Custom handoff tools targeting other agents |
-
-
+|------|------|------|--------|------|
+| agents_config | dict[str, AgentConfig] | Yes | - | Dictionary of agent configurations, where keys are agent names and values are agent configurations |
+| custom_handoffs_tool_descriptions | Optional[dict[str, str]] | No | None | Custom descriptions for tools that hand off to other agents |
+| handoffs_tool_overrides | Optional[dict[str, BaseTool]] | No | None | Custom tools for handing off to other agents |
 
 ### Example
 
 ```python
 handoffs_agent_middleware = HandoffsAgentMiddleware({
     "time_agent":{
-        "model":"vllm:qwen3-4b",
-        "prompt":"You are a time agent responsible for answering time-related questions.",
+        "model":"vllm:qwen2.5-7b",
+        "prompt":"You are a time agent, responsible for answering time-related questions.",
         "tools":[get_current_time, transfer_to_default_agent],
         "handoffs":["default_agent"]
     },
     "default_agent":{
-        "model":"vllm:qwen3-8b",
-        "prompt":"You are a complex task agent responsible for answering complex task-related questions.",
+        "model":"vllm:qwen2.5-3b",
+        "prompt":"You are a complex task agent, responsible for answering questions related to complex tasks.",
         "default":True,
         "handoffs":["time_agent"]
     }
@@ -453,8 +455,8 @@ class FormatPromptMiddleware(AgentMiddleware):
 ### Parameters
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| template_format | Literal["f-string", "jinja2"] | No | "f-string" | Template syntax. Valid values: `f-string` or `jinja2` |
+|------|------|------|--------|------|
+| template_format | Literal["f-string", "jinja2"] | No | `"f-string"` | Template syntax, values are `f-string` or `jinja2` |
 
 ### Example
 
@@ -463,7 +465,6 @@ format_prompt_middleware = FormatPromptMiddleware(template_format="jinja2")
 ```
 
 ---
-
 
 ## PlanState
 
@@ -484,16 +485,16 @@ class PlanState(AgentState):
 ### Attributes
 
 | Attribute | Type | Description |
-|-----------|------|-------------|
-| plan | NotRequired[list[Plan]] | List of plan steps |
-| plan.content | str | Content of the plan step |
-| plan.status | Literal["pending", "in_progress", "done"] | Status of the plan step. Valid values are `pending`, `in_progress`, `done` |
+|------|------|------|
+| plan | NotRequired[list[Plan]] | List of plans |
+| plan.content | str | Plan content |
+| plan.status | Literal["pending", "in_progress", "done"] | Plan status, values are `pending`, `in_progress`, `done` |
 
 ---
 
 ## ModelDict
 
-Type definition for the model list.
+Type for the model list.
 
 ### Class Definition
 
@@ -510,13 +511,13 @@ class ModelDict(TypedDict):
 ### Attributes
 
 | Attribute | Type | Required | Description |
-|-----------|------|----------|-------------|
-| model_name | str | Yes | Name of the model |
-| model_description | str | Yes | Description of the model's capabilities |
-| tools | NotRequired[list[BaseTool \| dict[str, Any]]] | No | Tools available to this model |
-| model_kwargs | NotRequired[dict[str, Any]] | No | Additional keyword arguments to pass to the model |
-| model_instance | NotRequired[BaseChatModel] | No | A specific model instance to use |
-| model_system_prompt | NotRequired[str] | No | System prompt specific to this model |
+|------|------|------|------|
+| model_name | str | Yes | Model name |
+| model_description | str | Yes | Model description |
+| tools | NotRequired[list[BaseTool \| dict[str, Any]]] | No | Tools available to the model |
+| model_kwargs | NotRequired[dict[str, Any]] | No | Additional arguments passed to the model |
+| model_instance | NotRequired[BaseChatModel] | No | Model instance |
+| model_system_prompt | NotRequired[str] | No | System prompt for the model |
 
 ---
 
@@ -539,8 +540,8 @@ class SelectModel(BaseModel):
 ### Attributes
 
 | Attribute | Type | Required | Description |
-|-----------|------|----------|-------------|
-| model_name | str | Yes | The name of the selected model (must be the full model name, e.g., openai:gpt-4o) |
+|------|------|------|------|
+| model_name | str | Yes | Selected model name (must be the full model name, e.g., openai:gpt-4o) |
 
 ---
 
@@ -558,14 +559,14 @@ class MultiAgentState(AgentState):
 ### Attributes
 
 | Attribute | Type | Description |
-|-----------|------|-------------|
-| active_agent | NotRequired[str] | The name of the currently active agent |
+|------|------|------|
+| active_agent | NotRequired[str] | Name of the currently active agent |
 
 ---
 
 ## AgentConfig
 
-Type definition for agent configuration.
+Type for agent configuration.
 
 ### Class Definition
 
@@ -581,9 +582,9 @@ class AgentConfig(TypedDict):
 ### Attributes
 
 | Attribute | Type | Required | Description |
-|-----------|------|----------|-------------|
+|------|------|------|------|
 | model | NotRequired[str \| BaseChatModel] | No | Model name or model instance |
-| prompt | str \| SystemMessage | Yes | System prompt for the agent |
+| prompt | str \| SystemMessage | Yes | Prompt for the agent |
 | tools | list[BaseTool \| dict[str, Any]] | Yes | Tools available to the agent |
-| default | NotRequired[bool] | No | Whether this agent is the default fallback |
-| handoffs | list[str] \| Literal["all"] | Yes | List of agent names to hand off to, or "all" to allow handoffs to any agent |
+| default | NotRequired[bool] | No | Whether it is the default agent |
+| handoffs | list[str] \| Literal["all"] | Yes | List of agent names to which handoffs can occur, or "all" for all agents |

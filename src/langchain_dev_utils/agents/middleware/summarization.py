@@ -47,7 +47,7 @@ class SummarizationMiddleware(_SummarizationMiddleware):
         from langchain_dev_utils.agents.middleware import SummarizationMiddleware
 
         middleware = SummarizationMiddleware(
-            model="vllm:qwen3-4b",
+            model="vllm:qwen2.5-7b",
             trigger=("tokens", 100),
             keep=("messages", 2),
         )

@@ -126,10 +126,10 @@ batch_register_model_provider(
 
 ```python
 # 方式一：model 包含 provider 信息
-model = load_chat_model("vllm:qwen3-4b")
+model = load_chat_model("vllm:qwen2.5-7b")
 
 # 方式二：单独指定 provider
-model = load_chat_model("qwen3-4b", model_provider="vllm")
+model = load_chat_model("qwen2.5-7b", model_provider="vllm")
 ```
 
 ### 模型方法和参数

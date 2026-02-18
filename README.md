@@ -38,11 +38,14 @@ Tired of writing repetitive code in LangChain development? `langchain-dev-utils`
 
 ## ⚡ Quick Start
 
+This library is primarily used to connect to models that expose an OpenAI-Compatible API. The example below uses a `qwen2.5-7b` model served by vLLM.
+
 **1. Install `langchain-dev-utils`**
 
 ```bash
 pip install -U "langchain-dev-utils[standard]"
 ```
+**Note**: This feature requires installing `langchain-dev-utils[standard]`.
 
 **2. Start using**
 
@@ -61,12 +64,12 @@ def get_current_weather(location: str) -> str:
     return f"25 degrees, {location}"
 
 # Dynamically load model using string
-model = load_chat_model("vllm:qwen3-4b")
+model = load_chat_model("vllm:qwen2.5-7b")
 response = model.invoke("Hello")
 print(response)
 
 # Create agent
-agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
+agent = create_agent("vllm:qwen2.5-7b", tools=[get_current_weather])
 response = agent.invoke({"messages": [HumanMessage(content="What's the weather like in New York today?")]})
 print(response)
 ```

@@ -22,10 +22,10 @@ register_model_provider(
 )
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     middleware=[
         SummarizationMiddleware(
-            model="vllm:qwen3-4b",
+            model="vllm:qwen2.5-7b",
             trigger=("tokens", 50),
             keep=("messages", 1),
         )

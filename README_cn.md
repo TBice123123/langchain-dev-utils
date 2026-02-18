@@ -38,11 +38,15 @@
 
 ## ⚡ 快速开始
 
+本库的一大作用就是用于接入提供 OpenAI-Compatible API 的模型，下面以 vLLM 部署的`qwen2.5-7b` 为例。
+
 **1. 安装 `langchain-dev-utils`**
 
 ```bash
 pip install -U "langchain-dev-utils[standard]"
 ```
+
+**注意**：使用此功能必须安装 `langchain-dev-utils[standard]` 版本。
 
 **2. 开始使用**
 
@@ -61,12 +65,12 @@ def get_current_weather(location: str) -> str:
     return f"25度，{location}"
 
 # 使用字符串动态加载模型
-model = load_chat_model("vllm:qwen3-4b")
+model = load_chat_model("vllm:qwen2.5-7b")
 response = model.invoke("你好")
 print(response)
 
 # 创建智能体
-agent = create_agent("vllm:qwen3-4b", tools=[get_current_weather])
+agent = create_agent("vllm:qwen2.5-7b", tools=[get_current_weather])
 response = agent.invoke({"messages": [HumanMessage(content="今天纽约的天气如何？")]})
 print(response)
 ```

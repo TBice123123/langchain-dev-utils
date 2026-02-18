@@ -43,7 +43,8 @@ register_model_provider(
     base_url="http://localhost:8000/v1",
     compatibility_options={
         "supported_tool_choice": ["auto", "none", "required", "specific"],
-        "supported_response_format": ["json_schema"]
+        "supported_response_format": ["json_schema"],
+        "reasoning_field_name": "reasoning",
     },
     model_profiles=model_profiles,
 )

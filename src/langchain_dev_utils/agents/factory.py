@@ -85,7 +85,7 @@ def create_agent(  # noqa: PLR0915
         ... )
         >>>
         >>> agent = create_agent(
-        ...     "vllm:qwen3-4b",
+        ...     "vllm:qwen2.5-7b",
         ...     tools=[get_current_time],
         ...     name="time-agent"
         ... )

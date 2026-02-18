@@ -1,38 +1,53 @@
 # Creation and Usage of Chat Models
 
-## Creating Chat Model Classes
+## Creating a Chat Model Class
 
-Use the `create_openai_compatible_model` function to create an integrated chat model class. This function accepts the following parameters:
+You can use the `create_openai_compatible_model` function to create a chat model integration class. This function accepts the following parameters:
 
 | Parameter | Description |
-|-----------|-------------|
-| `model_provider` | Model provider name, e.g., `vllm`. Must start with a letter or number, can only contain letters, numbers, and underscores, with a maximum length of 20 characters.<br><br>**Type**: `str`<br>**Required**: Yes |
-| `base_url` | Default API endpoint for the model provider.<br><br>**Type**: `str`<br>**Required**: No |
+|------|------|
+| `model_provider` | Name of the model provider, e.g., `vllm`. Must start with a letter or number, contain only letters, numbers, and underscores, and be no longer than 20 characters.<br><br>**Type**: `str`<br>**Required**: Yes |
+| `base_url` | Default API address for the model provider.<br><br>**Type**: `str`<br>**Required**: No |
 | `compatibility_options` | Compatibility options configuration.<br><br>**Type**: `dict`<br>**Required**: No |
-| `model_profiles` | Profile configuration dictionary for each model of this provider.<br><br>**Type**: `dict`<br>**Required**: No |
-| `chat_model_cls_name` | Chat model class name (must comply with Python class naming conventions). Default value is `Chat{model_provider}` (where `{model_provider}` is capitalized).<br><br>**Type**: `str`<br>**Required**: No |
+| `model_profiles` | Dictionary of profile configurations for models under this provider.<br><br>**Type**: `dict`<br><br>**Required**: No |
+| `chat_model_cls_name` | Chat model class name (must conform to Python class naming conventions). Defaults to `Chat{model_provider}` (with the first letter of `{model_provider}` capitalized).<br><br>**Type**: `str`<br>**Required**: No |
 
-Among them, `compatibility_options` is a dictionary used to declare the provider's support for specific features of the OpenAI API, improving compatibility and stability.
+The `compatibility_options` is a dictionary used to declare the provider's support for specific OpenAI API features to improve compatibility and stability.
 
-Currently supported configuration items:
+Currently, the following configuration items are supported:
 
 | Configuration Item | Description |
-|-------------------|-------------|
+|--------|------|
 | `supported_tool_choice` | List of supported `tool_choice` strategies.<br><br>**Type**: `list[str]`<br>**Default**: `["auto"]` |
 | `supported_response_format` | List of supported `response_format` formats (`json_schema`, `json_object`).<br><br>**Type**: `list[str]`<br>**Default**: `[]` |
 | `reasoning_keep_policy` | Retention policy for the `reasoning_content` field in historical messages.<br><br>**Type**: `str`<br>**Default**: `"never"` |
-| `include_usage` | Whether to include `usage` information in streaming responses.<br><br>**Type**: `bool`<br>**Default**: `True` |
+| `reasoning_field_name` | Field name for reasoning content returned by the provider; generally does not need configuration. Optional values are `reasoning_content` or `reasoning`.<br><br>**Type**: `str`<br>**Default**: `"reasoning_content"` |
+| `include_usage` | Whether to include `usage` information in streaming results.<br><br>**Type**: `bool`<br>**Default**: `True` |
 
 !!! info "Supplement"
-    Since different models from the same provider may have varying support for parameters like `tool_choice` and `response_format`, these four compatibility options are **instance attributes** of the class. Therefore, when creating a chat model class, you can pass in values as global defaults (representing configurations supported by most models of that provider). If specific models require adjustments, you can override these parameters during instantiation.
+    Since different models from the same provider may vary in their support for parameters like `tool_choice` and `response_format`, this library treats `supported_tool_choice`, `supported_response_format`, and `reasoning_keep_policy` as **instance attributes** of the class. Default values can be passed when creating the chat model class as a general configuration for the provider; if specific models require fine-tuning, these parameters can be overridden during instantiation.
+    
+    `reasoning_field_name` and `include_usage` are private attributes of the class and can only be passed via `compatibility_options` when creating or registering the model class.
+
 
 !!! tip "Tip"
-    This library constructs a provider-specific chat model class using the built-in `BaseChatOpenAICompatible` based on user-provided parameters. This class inherits from `langchain-openai`'s `BaseChatOpenAI` and is enhanced in the following aspects:
+    This library uses the built-in `BaseChatOpenAICompatible` to construct a provider-specific chat model class based on user parameters. This class inherits from `BaseChatOpenAI` in `langchain-openai` and includes the following enhancements:
 
-    - **Supports more reasoning content formats**: In addition to the official OpenAI format, it also supports reasoning content returned via the `reasoning_content` parameter.
-    - **Supports `video` type content_block**: Fills the capability gap of `ChatOpenAI` regarding `video` type `content_block`.
-    - **Automatically selects more suitable structured output methods**: Based on the provider's actual support, automatically chooses between `function_calling` and `json_schema` for better solutions.
-    - **Fine-grained adaptation of differences via `compatibility_options`**: Configure support differences for parameters like `tool_choice` and `response_format` as needed.
+    **1. Support for extra reasoning fields (reasoning_content / reasoning)**
+    ChatOpenAI adheres to the official OpenAI response schema and therefore cannot extract or retain provider-specific fields (e.g., `reasoning_content`, `reasoning`).
+    This class extracts and retains `reasoning_content` by default and can be configured via `reasoning_field_name` in `compatibility_options` to extract `reasoning`.
+
+    **2. Dynamic adaptation for structured output methods**
+    OpenAICompatibleChatModel selects the best structured output method (`function_calling` or `json_schema`) based on the provider's actual capabilities, utilizing `supported_response_format` in `compatibility_options`.
+
+    **3. Support for relevant parameter configurations**
+    This library provides the `compatibility_options` parameter to address discrepancies between provider parameters and the official OpenAI API.
+    For example, when different model providers have inconsistent support for `tool_choice`, this can be adapted by setting `supported_tool_choice` in `compatibility_options`.
+
+    **4. Support for `video` type content_block**
+    Bridges the capability gap of `ChatOpenAI` regarding `video` type `content_block`.
+
+
 
 Use the following code to create a chat model class:
 
@@ -42,20 +57,20 @@ from langchain_dev_utils.chat_models.adapters import create_openai_compatible_mo
 ChatVLLM = create_openai_compatible_model(
     model_provider="vllm",
     base_url="http://localhost:8000/v1",
-    chat_model_cls_name="ChatVLLM",
+    chat_model_cls_name="ChatVLLM"
 )
 
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 print(model.invoke("Hello"))
 ```
 
-When creating a chat model class, the `base_url` parameter can be omitted. If not provided, the library will read the corresponding environment variable by default, for example:
+When creating a chat model class, the `base_url` parameter can be omitted. If not passed, the library will read the corresponding environment variable by default, for example:
 
 ```bash
 export VLLM_API_BASE=http://localhost:8000/v1
 ```
 
-At this point, the code can omit `base_url`:
+In this case, `base_url` can be omitted in the code:
 
 ```python hl_lines="4 5"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -65,54 +80,56 @@ ChatVLLM = create_openai_compatible_model(
     chat_model_cls_name="ChatVLLM",
 )
 
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 print(model.invoke("Hello"))
 ```
 
-**Note**: The above code successfully runs assuming the environment variable `VLLM_API_KEY` is configured. Although vLLM itself does not require an API Key, the chat model class initialization requires one. Therefore, please set this variable first, for example:
+**Note**: The prerequisite for the above code to run successfully is that the environment variable `VLLM_API_KEY` is configured. Although vLLM itself does not require an API Key, it must be passed during chat model class initialization, so please set this variable first, for example:
 
 ```bash
 export VLLM_API_KEY=vllm_api_key
 ```
 
-!!! info "Note"
-    The naming rules for environment variables for created chat model classes (embedding model classes follow the same rules):
+!!! info "Tip"
+    Naming rules for environment variables for created chat model classes (and embedding model classes):
 
-    - API Base URL: `${PROVIDER_NAME}_API_BASE` (all uppercase, underscore separated).
-    - API Key: `${PROVIDER_NAME}_API_KEY` (all uppercase, underscore separated).
+    - API Address: `${PROVIDER_NAME}_API_BASE` (uppercase, underscore separated).
+
+    - API Key: `${PROVIDER_NAME}_API_KEY` (uppercase, underscore separated).
+
 
 ## Using the Chat Model Class
 
 ### Standard Invocation
 
-Use the `invoke` method for standard invocation, returning the model's response.
+You can perform standard invocation via the `invoke` method, which returns the model response.
 
 ```python
 from langchain_core.messages import HumanMessage
 
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 response = model.invoke([HumanMessage("Hello")])
 print(response)
 ```
 
-Also supports asynchronous invocation via `ainvoke`:
+Asynchronous invocation via `ainvoke` is also supported:
 
 ```python
 from langchain_core.messages import HumanMessage
 
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 response = await model.ainvoke([HumanMessage("Hello")])
 print(response)
 ```
 
 ### Streaming Invocation
 
-Use the `stream` method for streaming invocation, for streaming model responses.
+Use the `stream` method for streaming invocation to receive model responses in a stream.
 
 ```python
 from langchain_core.messages import HumanMessage
 
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 for chunk in model.stream([HumanMessage("Hello")]):
     print(chunk)
 ```
@@ -122,18 +139,18 @@ And asynchronous streaming invocation via `astream`:
 ```python
 from langchain_core.messages import HumanMessage
 
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 async for chunk in model.astream([HumanMessage("Hello")]):
     print(chunk)
 ```
 
 ??? note "Streaming Output Options"
-    You can use `stream_options={"include_usage": True}` to append token usage information (`prompt_tokens` and `completion_tokens`) at the end of streaming responses.
-    This library enables this option by default; to disable it, you can pass the compatibility option `include_usage=False` when creating the model class or during instantiation.
+    You can append token usage information (`prompt_tokens` and `completion_tokens`) to the end of streaming responses via `stream_options={"include_usage": True}`.
+    This library enables this option by default; to disable it, pass the compatibility option `include_usage=False` when creating the model class.
 
 ### Tool Calling
 
-If the model supports tool calling, you can directly use `bind_tools` for tool calling:
+If the model supports tool calling, you can use `bind_tools` directly:
 
 ```python
 from langchain_core.messages import HumanMessage
@@ -142,16 +159,17 @@ import datetime
 
 @tool
 def get_current_time() -> str:
-    """Get the current timestamp"""
+    """Get current timestamp"""
     return str(datetime.datetime.now().timestamp())
 
-model = ChatVLLM(model="qwen3-4b").bind_tools([get_current_time])
+model = ChatVLLM(model="qwen2.5-7b").bind_tools([get_current_time])
 response = model.invoke([HumanMessage("Get the current timestamp")])
 print(response)
 ```
-??? note "Parallel Tool Calls"
-    If the model supports parallel tool calls, you can pass `parallel_tool_calls=True` in `bind_tools` to enable parallel tool calls (some model providers enable this by default, so explicit passing may not be necessary).
 
+??? note "Parallel Tool Calling"
+    If the model supports parallel tool calling, you can enable it by passing `parallel_tool_calls=True` in `bind_tools` (some providers enable this by default, so no explicit parameter is needed).
+    
     For example:
 
     ```python hl_lines="11"
@@ -161,35 +179,35 @@ print(response)
 
     @tool
     def get_current_weather(location: str) -> str:
-        """Get the current weather"""
-        return f"The weather in {location} is sunny"
+        """Get current weather"""
+        return f"The weather in {location} is currently sunny"
     
-    model = ChatVLLM(model="qwen3-4b").bind_tools(
+    model = ChatVLLM(model="qwen2.5-7b").bind_tools(
         [get_current_weather], parallel_tool_calls=True
     )
-    response = model.invoke([HumanMessage("Get the weather in Los Angeles and London")])
+    response = model.invoke([HumanMessage("Get the weather for Los Angeles and London")])
     print(response)
     ```
 
-??? note "Forced Tool Calling"
+??? note "Forcing Tool Calling"
 
-    The `tool_choice` parameter controls whether the model calls tools and which tool to call in its response, improving accuracy, reliability, and controllability. Common values include:
+    The `tool_choice` parameter allows you to control whether the model calls a tool and which tool to call, improving accuracy, reliability, and controllability. Common values include:
 
-    - `"auto"`: Model decides whether to call tools (default behavior);
-    - `"none"`: Disable tool calling;
-    - `"required"`: Force calling at least one tool;
-    - Specify a specific tool (in OpenAI-compatible APIs, specifically `{"type": "function", "function": {"name": "xxx"}}`).
+    - `"auto"`: The model decides whether to call a tool (default behavior);
+    - `"none"`: Prohibits tool calling;
+    - `"required"`: Forces calling at least one tool;
+    - Specifying a specific tool (in OpenAI compatible APIs, specifically `{"type": "function", "function": {"name": "xxx"}}`).
 
-    Different providers have varying support ranges for `tool_choice`. To address these differences, this library introduces the compatibility configuration item `supported_tool_choice`, with a default value of `["auto"]`. In this case, the `tool_choice` passed in `bind_tools` can only be `auto`; other values will be filtered out.
+    Different providers have different levels of support for `tool_choice`. To address these differences, this library introduces the compatibility configuration `supported_tool_choice`, which defaults to `["auto"]`. In this case, `tool_choice` passed in `bind_tools` can only be `auto`; other values will be filtered out.
 
-    To support other `tool_choice` values, you must configure the supported items. The configuration value is a list of strings, with each string's optional values:
+    If you need to support passing other `tool_choice` values, you must configure the supported items. The configuration value is a list of strings, where each string can be:
 
     - `"auto"`, `"none"`, `"required"`: Correspond to standard strategies;
-    - `"specific"`: A unique identifier of this library, indicating support for specifying specific tools.
+    - `"specific"`: A library-specific identifier indicating support for specifying a specific tool.
 
     For example, vLLM supports all strategies:
 
-    ```python hl_lines="6 7 8 12"  
+    ```python hl_lines="6 7 8 12"
     from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
     ChatVLLM = create_openai_compatible_model(
@@ -200,7 +218,7 @@ print(response)
         },
     )
 
-    model = ChatVLLM(model="qwen3-4b").bind_tools(
+    model = ChatVLLM(model="qwen2.5-7b").bind_tools(
         [get_current_weather], tool_choice="required"
     )
     ```
@@ -216,13 +234,14 @@ class User(BaseModel):
     name: str
     age: int
 
-model = ChatVLLM(model="qwen3-4b").with_structured_output(User)
-response = model.invoke([HumanMessage("Hello, my name is Zhang San, I am 25 years old")])
+model = ChatVLLM(model="qwen2.5-7b").with_structured_output(User)
+response = model.invoke([HumanMessage("Hello, my name is Zhang San, and I am 25 years old")])
 print(response)
+
 ```
 ??? note "Default Structured Output Method"
 
-    There are currently three common structured output methods: `json_schema`, `function_calling`, `json_mode`. Among them, `json_schema` yields the best results, so this library's `with_structured_output` prioritizes using `json_schema` as the structured output method; when the provider does not support it, it automatically falls back to `function_calling`. Different model providers have varying levels of support for structured output. This library declares the supported structured output methods via the compatibility configuration item `supported_response_format`. The default value is `[]`, indicating neither `json_schema` nor `json_mode` is supported. In this case, `with_structured_output(method=...)` will consistently use `function_calling`; even if `json_schema` / `json_mode` is passed, it will be automatically converted to `function_calling`. If you want to use the corresponding structured output method, you need to explicitly pass the relevant parameters (especially for `json_schema`).
+    There are currently three common structured output methods: `json_schema`, `function_calling`, and `json_mode`. Among them, `json_schema` offers the best performance, so this library's `with_structured_output` prioritizes `json_schema` as the structured output method; only when the provider does not support it will it automatically downgrade to `function_calling`. Different model providers have varying levels of support for structured output. This library declares the methods supported by the provider via the compatibility configuration `supported_response_format`. The default value is `[]`, indicating support for neither `json_schema` nor `json_mode`. In this case, `with_structured_output(method=...)` will strictly use `function_calling`; even if `json_schema` / `json_mode` is passed, it will be converted to `function_calling`. If you want to use a specific structured output method, you need to pass the corresponding parameters explicitly (especially for `json_schema`).
 
     For example, if a model deployed via vLLM supports the `json_schema` structured output method, you can declare it during registration:
 
@@ -235,11 +254,11 @@ print(response)
         compatibility_options={"supported_response_format": ["json_schema"]},
     )
 
-    model = ChatVLLM(model="qwen3-4b")
+    model = ChatVLLM(model="qwen2.5-7b")
     ``` 
 
     !!! note "Note"
-        If `supported_response_format` includes `json_schema`, the `structured_output` field in `model.profile` will automatically be set to `True`. In this case, when using `create_agent` for structured output without specifying a specific structured output strategy, `json_schema` will be used as the default structured output strategy.
+        If `supported_response_format` includes `json_schema`, the `structured_output` field in `model.profile` will automatically be set to `True`. In this case, if no specific structured output strategy is specified when using `create_agent`, `json_schema` will be used by default.
 
         For example: 
         ```python hl_lines="6"
@@ -251,29 +270,31 @@ print(response)
             compatibility_options={"supported_response_format": ["json_schema"]},
         )
 
-        model = ChatVLLM(model="qwen3-4b")
+        model = ChatVLLM(model="qwen2.5-7b")
         print(model.profile)
         ```
 
-        Output result:
+        The output will be:
 
         ```
         {'structured_output': True}
         ```
 
 
-### Passing Additional Parameters
+### Passing Extra Parameters
 
-Since this class inherits from `BaseChatOpenAI`, it supports passing model parameters of `BaseChatOpenAI`, such as `temperature`, `extra_body`, etc.
+Since this class inherits from `BaseChatOpenAI`, it supports passing `BaseChatOpenAI` model parameters, such as `temperature`, `extra_body`, etc.
 
-For example, using `extra_body` to pass additional parameters (here, disabling thinking mode):
+For request parameters not defined by the official OpenAI API, you can pass them via `extra_body`.
+
+For example:
 
 ```python
 from langchain_core.messages import HumanMessage
 
 model = ChatVLLM(
-    model="qwen3-4b",
-    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+    model="qwen2.5-7b",
+    extra_body={"top_k": 50},
 )
 response = model.invoke([HumanMessage("Hello")])
 print(response)
@@ -281,7 +302,7 @@ print(response)
 
 ### Passing Multimodal Data
 
-Supports passing multimodal data. You can use the OpenAI-compatible multimodal data format or directly use `content_block` from LangChain.
+Passing multimodal data is supported. You can use the OpenAI compatible multimodal data format or directly use `content_block` in LangChain.
 
 Passing image data:
 
@@ -299,7 +320,7 @@ messages = [
     )
 ]
 
-model = ChatVLLM(model="qwen3-vl-2b")
+model = ChatVLLM(model="qwen2.5-vl-7b")
 response = model.invoke(messages)
 print(response)
 ```
@@ -320,62 +341,77 @@ messages = [
     )
 ]
 
-model = ChatVLLM(model="qwen3-vl-2b")
+model = ChatVLLM(model="qwen2.5-vl-7b")
 response = model.invoke(messages)
 print(response)
 ```
    
 ### Using Reasoning Models
 
-A major feature of the model classes created by this library is further adaptation to more reasoning models.
+A major feature of the model classes created by this library is further adaptation for reasoning models. For example, integrating the `qwen3-4b` model.
 
 For example:
 
 ```python
+from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 from langchain_core.messages import HumanMessage
+
+ChatVLLM = create_openai_compatible_model(
+    model_provider="vllm",
+    base_url="http://localhost:8000/v1",
+    chat_model_cls_name="ChatVLLM",
+    compatibility_options={
+        "reasoning_field_name": "reasoning",
+    },
+)
 
 model = ChatVLLM(model="qwen3-4b")
 response = model.invoke("Why are parrot feathers so colorful?")
 reasoning_steps = [b for b in response.content_blocks if b["type"] == "reasoning"]
 print(" ".join(step["reasoning"] for step in reasoning_steps))
 ```
+!!! note "Note"
+    Since the new version of vLLM returns reasoning content via the `reasoning` field by default, if you are using a reasoning model deployed via vLLM, you must specify the `reasoning_field_name` parameter as `reasoning` when creating the chat model class.
+
+    However, to reuse the existing default parsing logic for `content_blocks`, this library still saves it to `additional_kwargs["reasoning_content"]`.
+
 
 ??? note "Support for Different Reasoning Modes"
 
-    Different models have varying reasoning modes (especially important in Agent development): some require explicitly passing the `reasoning_content` field in the current call, while others do not. This library provides the `reasoning_keep_policy` compatibility configuration to adapt to these differences.
+    Reasoning modes vary across different models (this is particularly important in Agent development): some require explicitly passing reasoning content in the current call, while others do not. This library provides the `reasoning_keep_policy` compatibility configuration to adapt to these differences.
 
     This configuration item supports the following values:
 
-    - `never`: **Do not retain any** reasoning content in historical messages (default);
+    - `never`: Do **not retain any** reasoning content in historical messages (default);
 
-    - `current`: Only retain the `reasoning_content` field from the **current conversation**;
+    - `current`: Only retain reasoning content from the **current conversation**;
 
-    - `all`: Retain the `reasoning_content` field from **all conversations**.
+    - `all`: Retain reasoning content from **all conversations**.
 
     ```mermaid
     graph LR
-        A[reasoning_content Retention Policy] --> B{Value?};
-        B -->|never| C[Contains no<br>reasoning_content];
-        B -->|current| D[Only contains current conversation's<br>reasoning_content<br>Adapts to interleaved thinking mode];
-        B -->|all| E[Contains all conversations'<br>reasoning_content];
-        C --> F[Send to model];
+        A[reasoning_content retention policy] --> B{Value?};
+        B -->|never| C[Contains no<br>reasoning content];
+        B -->|current| D[Contains reasoning content<br>from current conversation only<br>Adapts to Interleaved Thinking mode];
+        B -->|all| E[Contains reasoning content<br>from all conversations];
+        C --> F[Sent to model];
         D --> F;
         E --> F;
     ```
-
-    For example, the user first asks "What's the weather in New York?", then follows up with "What's the weather in London?". We are currently in the second round of conversation and about to make the final model call.
+    
+    For example, assuming the reasoning content field name is `reasoning_content`. When a user first asks "What is the weather in New York?", then follows up with "What is the weather in London?", currently entering the second round of dialogue and about to make the final model call.
 
     - When the value is `never`
 
-    There will be **no** `reasoning_content` fields in the messages passed to the model. The messages the model receives are:
+    The messages passed to the model will **not contain any** `reasoning_content` field. The messages received by the model are:
 
     ```python
     messages = [
-        {"content": "Check the weather in New York?", "role": "user"},
+        {"content": "Check weather in New York?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Cloudy 7~13°C", "role": "tool", "tool_call_id": "..."},
-        {"content": "The weather in New York today is cloudy, 7~13°C.", "role": "assistant"},
-        {"content": "Check the weather in London?", "role": "user"},
+        {"content": "New York is cloudy today, 7~13°C.", "role": "assistant"},
+        {"content": "Check weather in London?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Rainy, 14~20°C", "role": "tool", "tool_call_id": "..."},
     ]
@@ -383,17 +419,17 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 
     - When the value is `current`
 
-    Only retain the `reasoning_content` field from the **current conversation**. This strategy is suitable for Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls, requiring retention of reasoning content from the current round. The messages the model receives are:
+    Only the `reasoning_content` field from the **current conversation** is retained. This policy applies to Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls, requiring the retention of reasoning content from the current turn. The messages received by the model are:
     ```python
     messages = [
-        {"content": "Check the weather in New York?", "role": "user"},
+        {"content": "Check weather in New York?", "role": "user"},
         {"content": "", "role": "assistant", "tool_calls": [...]},
         {"content": "Cloudy 7~13°C", "role": "tool", "tool_call_id": "..."},
-        {"content": "The weather in New York today is cloudy, 7~13°C.", "role": "assistant"},
-        {"content": "Check the weather in London?", "role": "user"},
+        {"content": "New York is cloudy today, 7~13°C.", "role": "assistant"},
+        {"content": "Check weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "Check London weather, need to directly call weather tool.",  # Only retain current round's reasoning_content
+            "reasoning_content": "To check London weather, need to call the weather tool directly.",  # Only retain reasoning_content from this round
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -403,26 +439,26 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
 
     - When the value is `all`
 
-    Retain the `reasoning_content` field from **all** conversations. The messages the model receives are:
+    Retain `reasoning_content` fields from **all** conversations. The messages received by the model are:
     ```python
     messages = [
-        {"content": "Check the weather in New York?", "role": "user"},
+        {"content": "Check weather in New York?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "Check New York weather, need to directly call weather tool.",  # Retain reasoning_content
+            "reasoning_content": "To check New York weather, need to call the weather tool directly.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
         {"content": "Cloudy 7~13°C", "role": "tool", "tool_call_id": "..."},
         {
-            "content": "The weather in New York today is cloudy, 7~13°C.",
-            "reasoning_content": "Directly return New York weather result.",  # Retain reasoning_content
+            "content": "New York is cloudy today, 7~13°C.",
+            "reasoning_content": "Return New York weather result directly.",  # Retain reasoning_content
             "role": "assistant",
         },
-        {"content": "Check the weather in London?", "role": "user"},
+        {"content": "Check weather in London?", "role": "user"},
         {
             "content": "",
-            "reasoning_content": "Check London weather, need to directly call weather tool.",  # Retain reasoning_content
+            "reasoning_content": "To check London weather, need to call the weather tool directly.",  # Retain reasoning_content
             "role": "assistant",
             "tool_calls": [...],
         },
@@ -430,11 +466,11 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
     ]
     ```
 
-    **Note**: If the current round does not involve tool calls, `current` and `never` have the same effect.
+    **Note**: If the current round of dialogue does not involve tool calls, `current` has the same effect as `never`.
 
-    It's worth noting that although this parameter is a compatibility configuration item, different models from the same provider, or even the same model in different scenarios, may require different `reasoning_content` retention policies. Therefore, **it is recommended to explicitly specify it during instantiation**, and it's not necessary to assign a value when creating the class.
+    It is worth noting that while this parameter is a compatibility configuration item, different models from the same provider, or even the same model in different scenarios, may have different requirements for retaining reasoning content. Therefore, it is **recommended to specify it explicitly during instantiation**, and there is no need to assign a value when creating the class.
 
-    For example, for the GLM-4.7-Flash model, since it supports Interleaved Thinking mode, you generally need to set `reasoning_keep_policy` to `current` during instantiation to retain only the current round's `reasoning_content`. For example:
+    For example, taking the GLM-4.7-Flash model, since it supports Interleaved Thinking mode, it generally requires setting `reasoning_keep_policy` to `current` during instantiation to only retain the reasoning content from the current turn. For example:
 
     ```python hl_lines="3"
     from langchain_core.messages import HumanMessage
@@ -444,10 +480,10 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         model=model,
         tools=[get_current_weather],
     )
-    response = agent.invoke({"messages": [HumanMessage(content="Check the weather in New York?")]})
+    response = agent.invoke({"messages": [HumanMessage(content="Check weather in New York?")]})
     print(response)
     ```
-    Additionally, the GLM-4.7-Flash model also supports another thinking mode called Preserved Thinking. This requires retaining all `reasoning_content` fields from historical messages, so you can set `reasoning_keep_policy` to `all`. For example:
+    Meanwhile, the GLM-4.7-Flash model also supports another thinking mode called Preserved Thinking. In this case, all `reasoning_content` fields in historical messages need to be retained, so `reasoning_keep_policy` can be set to `all`. For example:
 
     ```python hl_lines="5"
     from langchain_core.messages import HumanMessage
@@ -462,38 +498,41 @@ print(" ".join(step["reasoning"] for step in reasoning_steps))
         model=model,
         tools=[get_current_weather],
     )
-    response = agent.invoke({"messages": [HumanMessage(content="Check the weather in New York?")]})
+    response = agent.invoke({"messages": [HumanMessage(content="Check weather in New York?")]})
     print(response)
     ```
 
+    !!! note "Note"
+       Similarly, the GLM-4.7-Flash model is a reasoning model, and the field for returning reasoning content is `reasoning`. Therefore, it is also necessary to specify the compatibility option `reasoning_field_name` as `reasoning` when creating the chat model class.
 
-### Model Profiles
 
-You can get the model's profile via `model.profile`. By default, it returns an empty dictionary.
+### Model profiles
 
-You can also explicitly pass a `profile` parameter during instantiation to specify the model profile.
+You can access the model's profile via `model.profile`. By default, it returns an empty dictionary.
+
+You can also explicitly pass the `profile` parameter during instantiation to specify the model profile.
 
 For example:
 ```python
 from langchain_core.messages import HumanMessage
 
 custom_profile = {
-    "max_input_tokens": 100_000,
+    "max_input_tokens": 131072,
     "tool_calling": True,
     "structured_output": True,
     # ...
 }
-model = ChatVLLM(model="qwen3-4b", profile=custom_profile)
+model = ChatVLLM(model="qwen2.5-7b", profile=custom_profile)
 print(model.profile)
 ```
-Or directly pass the `profile` parameter for all models of the provider during creation.
+Or pass the `profile` parameters for all models of the provider directly during creation.
 
 For example:
 ```python hl_lines="22"
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
 
 model_profiles = {
-    "qwen3-4b": {
+     "qwen2.5-7b": {
         "max_input_tokens": 131072,
         "max_output_tokens": 8192,
         "image_inputs": False,
@@ -502,9 +541,9 @@ model_profiles = {
         "image_outputs": False,
         "audio_outputs": False,
         "video_outputs": False,
-        "reasoning_output": True,
-        "tool_calling": True,
-    }
+        "reasoning_output": False,
+        "tool_calling": True
+    },
     # More model profiles can be added here
 }
 
@@ -515,7 +554,7 @@ ChatVLLM = create_openai_compatible_model(
 )
 
 model = ChatVLLM(
-    model="qwen3-4b",
+    model="qwen2.5-7b",
 )
 print(model.profile)
 ```
@@ -529,28 +568,31 @@ For example, if vLLM supports the `responses` API, you can use it like this:
 ```python hl_lines="3"
 from langchain_core.messages import HumanMessage
 
-model = ChatVLLM(model="qwen3-4b", use_responses_api=True)
+model = ChatVLLM(model="qwen2.5-7b", use_responses_api=True)
 response = model.invoke([HumanMessage(content="Hello")])
 print(response)
 ```
 
-Currently, the implementation of this feature relies entirely on `BaseChatOpenAI`'s implementation of the `responses` API, so there may be certain compatibility issues during use. Subsequent optimizations will be made based on actual circumstances.
+Currently, the implementation of this feature relies entirely on `BaseChatOpenAI`'s implementation of the `responses` API, so there may be some compatibility issues during use, which will be optimized later based on actual conditions.
 
-!!! warning "Note"
-    This library currently cannot guarantee 100% compatibility with all OpenAI-compatible interfaces (although compatibility configurations can improve compatibility). If the model provider has an official or community integration class, please prioritize using that integration class. If you encounter any compatibility issues, feel free to submit an issue on this library's GitHub repository.
 
-!!! warning "Note"
-    This function uses `pydantic.create_model` under the hood to create chat model classes, which incurs some performance overhead. Additionally, `create_openai_compatible_model` uses a global dictionary to record the `profiles` of each model provider. To avoid multi-threading concurrency issues, it is recommended to create integration classes during project startup and avoid dynamic creation afterward.
+!!! warning "Warning"
+    This library cannot yet guarantee 100% compatibility with all OpenAI compatible interfaces (although compatibility configurations are used to improve this, differences may still exist). If there is an official or community-maintained integration class for the target model, please prioritize using that. If you encounter compatibility issues, feel free to open an issue on the GitHub repository.
 
-!!! success "Best Practice"
-    When connecting to an OpenAI-compatible API chat model provider, you can directly use `langchain-openai`'s `ChatOpenAI` and point `base_url` and `api_key` to your provider's service. This method is simple enough and suitable for relatively simple scenarios (especially when using ordinary chat models rather than reasoning models).
+    Taking OpenRouter as an example, while it provides an OpenAI compatible interface, it has multiple compatibility differences; LangChain officially offers [ChatOpenRouter](https://docs.langchain.com/oss/python/integrations/providers/openrouter), so it is recommended to use that class directly to access OpenRouter.
 
-    However, it may have the following issues:
+!!! warning "Warning"
+    This function uses `pydantic.create_model` at the底层 to create chat model classes, which incurs some performance overhead. Additionally, `create_openai_compatible_model` uses a global dictionary to record the `profiles` of each model provider. To avoid multi-threading concurrency issues, it is recommended to create integration classes during the project startup phase and avoid dynamic creation later.
 
-    1. Cannot display the chain of thought (i.e., content returned by `reasoning_content`) of non-OpenAI official reasoning models.
+!!! success "Best Practices"
+    When integrating chat model providers with OpenAI compatible APIs, you can directly use `ChatOpenAI` from `langchain-openai` and point `base_url` and `api_key` to your provider service. This approach is simple enough and suitable for relatively simple scenarios (especially when using standard chat models rather than reasoning models).
+
+    However, the following issues exist:
+
+    1. Unable to display the chain of thought (i.e., content returned by `reasoning_content` / `reasoning`) for non-official OpenAI reasoning models.
 
     2. Does not support `video` type content_block.
 
-    3. Lower coverage for default structured output strategies.
+    3. Low coverage rate for default structured output strategies.
 
-    When you encounter the above differences, you can use the OpenAI-compatible integration classes provided by this library for adaptation.
+    When you encounter these differences, you can use the OpenAI compatible integration class provided by this library for adaptation.

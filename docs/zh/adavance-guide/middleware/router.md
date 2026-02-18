@@ -41,7 +41,7 @@ from langchain_dev_utils.agents.middleware.model_router import ModelDict
 
 model_list: list[ModelDict] = [
     {
-        "model_name": "vllm:qwen3-8b",
+        "model_name": "vllm:qwen2.5-7b",
         "model_description": "适合普通任务，如对话、文本生成等",
         "model_kwargs": {
             "temperature": 0.7,
@@ -50,12 +50,12 @@ model_list: list[ModelDict] = [
         "model_system_prompt": "你是一个助手，擅长处理普通任务，如对话、文本生成等。",
     },
     {
-        "model_name": "vllm:qwen3-vl-2b",
+        "model_name": "vllm:qwen2.5-vl-7b",
         "model_description": "适合视觉任务",
         "tools": [],  # 如果该模型不需要任何工具，请将此字段设置为空列表 []
     },
     {
-        "model_name": "vllm:qwen3-coder-flash",
+        "model_name": "vllm:glm-4.7-flash",
         "model_description": "适合代码生成任务",
         "tools": [run_python_code],  # 仅允许使用 run_python_code 工具
     },
@@ -77,11 +77,11 @@ from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
 from langchain_core.messages import HumanMessage
 
 agent = create_agent(
-    model="vllm:qwen3-4b",  # 此模型仅作占位，实际由中间件动态替换
+    model="vllm:qwen2.5-7b",  # 此模型仅作占位，实际由中间件动态替换
     tools=[get_current_time],
     middleware=[
         ModelRouterMiddleware(
-            router_model="vllm:qwen3-4b",
+            router_model="vllm:qwen2.5-7b",
             model_list=model_list,
         )
     ],

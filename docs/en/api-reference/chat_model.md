@@ -90,7 +90,7 @@ def load_chat_model(
 ### Example
 
 ```python
-model = load_chat_model("vllm:qwen3-4b")
+model = load_chat_model("vllm:qwen2.5-7b")
 ```
 
 ---
@@ -194,11 +194,12 @@ Compatibility options for model providers.
 ### Class Definition
 
 ```python
-class CompatibilityOptions(TypedDict):
-    supported_tool_choice: NotRequired[ToolChoiceType]
-    supported_response_format: NotRequired[ResponseFormatType]
-    reasoning_keep_policy: NotRequired[ReasoningKeepPolicy]
-    include_usage: NotRequired[bool]
+class CompatibilityOptions(TypedDict, total=False):
+    supported_tool_choice: ToolChoiceType
+    supported_response_format: ResponseFormatType
+    reasoning_keep_policy: ReasoningKeepPolicy
+    reasoning_field_name: ReasoningFieldName
+    include_usage: bool
 ```
 
 ### Field Description
@@ -208,6 +209,7 @@ class CompatibilityOptions(TypedDict):
 | supported_tool_choice | NotRequired[ToolChoiceType] | No | List of supported `tool_choice` strategies |
 | supported_response_format | NotRequired[ResponseFormatType] | No | List of supported `response_format` methods |
 | reasoning_keep_policy | NotRequired[ReasoningKeepPolicy] | No | Retention policy for the `reasoning_content` field in historical messages (messages) passed to the model. Optional values are `never`, `current`, `all` |
+| reasoning_field_name | NotRequired[ReasoningFieldName] | No | Field name for reasoning content in the messages list |
 | include_usage | NotRequired[bool] | No | Whether to include `usage` information in the last streaming response result |
 
 ---

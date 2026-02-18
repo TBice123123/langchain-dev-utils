@@ -35,7 +35,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         from langchain_dev_utils.agents.middleware import LLMToolSelectorMiddleware
 
         middleware = LLMToolSelectorMiddleware(
-            model="vllm:qwen3-4b",
+            model="vllm:qwen2.5-7b",
             max_tools=3
         )
         ```
@@ -43,7 +43,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         # With always-included tools:
         ```python
         middleware = LLMToolSelectorMiddleware(
-            model="vllm:qwen3-4b",
+            model="vllm:qwen2.5-7b",
             max_tools=5,
             always_include=["search", "calculator"]
         )
@@ -53,7 +53,7 @@ class LLMToolSelectorMiddleware(_LLMToolSelectorMiddleware):
         ```python
         custom_prompt = "Select tools that can help answer user questions about data."
         middleware = LLMToolSelectorMiddleware(
-            model="vllm:qwen3-4b",
+            model="vllm:qwen2.5-7b",
             system_prompt=custom_prompt
         )
         ```

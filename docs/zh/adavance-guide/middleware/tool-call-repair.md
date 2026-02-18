@@ -19,7 +19,7 @@
 from langchain_dev_utils.agents.middleware import ToolCallRepairMiddleware
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     tools=[run_python_code, get_current_time],
     middleware=[
         ToolCallRepairMiddleware()
@@ -35,7 +35,7 @@ agent = create_agent(
 from langchain_dev_utils.agents.middleware import tool_call_repair
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     tools=[run_python_code, get_current_time],
     middleware=[tool_call_repair],
 )

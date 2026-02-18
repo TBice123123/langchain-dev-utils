@@ -21,16 +21,16 @@ class ModelFallbackMiddleware(_ModelFallbackMiddleware):
         from langchain_dev_utils.agents import create_agent
 
         fallback = ModelFallbackMiddleware(
-            "vllm:qwen3-8b", ## Try first on error
-            "vllm:gpt-oss-20b", #Then this
+            "vllm:qwen2.5-7b", ## Try first on error
+            "openai:gpt-5-mini", #Then this
         )
 
         agent = create_agent(
-            model="vllm:qwen3-4b", #Primary model
+            model="vllm:qwen2.5-7b", #Primary model
             middleware=[fallback],
         )
 
-        # If primary fails: tries qwen3-8b, then gpt-oss-20b
+        # If primary fails: tries qwen2.5-7b, then openai:gpt-5-mini
         result = await agent.invoke({"messages": [HumanMessage("Hello")]})
         ```
     """

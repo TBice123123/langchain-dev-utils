@@ -57,6 +57,7 @@ from ..._utils import (
 )
 from ..types import (
     CompatibilityOptions,
+    ReasoningFieldName,
     ReasoningKeepPolicy,
     ResponseFormatType,
     ToolChoiceType,
@@ -142,14 +143,16 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     This class provides a foundation for integrating various LLM providers that
     offer OpenAI-compatible APIs. It enhances the base OpenAI functionality by:
 
-    **1. Supports output of more types of reasoning content (reasoning_content)**
-    ChatOpenAI can only output reasoning content natively supported by official
-    OpenAI models, while OpenAICompatibleChatModel can output reasoning content
-    from other model providers.
+    **1. Supports additional reasoning fields (reasoning_content / reasoning)**
+    ChatOpenAI follows the official OpenAI response schema, so provider-specific
+    fields (e.g., reasoning_content, reasoning) are not extracted or preserved.
+    This class extracts and preserves `reasoning_content` by default and can be
+    configured to extract `reasoning` via reasoning_field_name in compatibility_options.
 
     **2. Dynamically adapts to choose the most suitable structured-output method**
     OpenAICompatibleChatModel selects the best structured-output method (function_calling or json_schema)
-    based on the actual capabilities of the model provider.
+    based on the actual capabilities of the model provider, using supported_response_format
+    in compatibility_options.
 
     **3. Supports configuration of related parameters**
     For cases where parameters differ from the official OpenAI API, this library
@@ -157,6 +160,9 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     example, when different model providers have inconsistent support for
     tool_choice, you can adapt by setting supported_tool_choice in
     compatibility_options.
+
+    **4. Supports video type content_block**
+    Fills the gap in `ChatOpenAI`'s video type `content_block` support.
 
     Built on top of `langchain-openai`'s `BaseChatOpenAI`, this template class
     extends capabilities to better support diverse OpenAI-compatible model
@@ -167,6 +173,25 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
     directly. Instead, use it as a base class and provide the specific provider
     name through inheritance or the factory function
     `create_openai_compatible_model()`.
+
+    Examples:
+
+        ```python
+        from langchain_dev_utils.chat_models.adapters import (
+            create_openai_compatible_chat_model,
+        )
+        ChatVLLM = create_openai_compatible_chat_model(
+            "vllm",
+            base_url="http://localhost:8000",
+            chat_model_cls_name="ChatVLLM",
+            compatibility_options={
+                "reasoning_field_name": "reasoning",
+                # when use reasoning model with vllm,must set reasoning_field_name to reasoning
+            },
+        )
+        model = ChatVLLM(model="qwen3-4b")
+        model.invoke("hello")
+        ```
     """
 
     model_name: str = Field(alias="model", default="openai compatible model")
@@ -186,13 +211,21 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
     """Provider Compatibility Options"""
     supported_tool_choice: ToolChoiceType = Field(default_factory=list)
-    """Supported tool choice"""
     supported_response_format: ResponseFormatType = Field(default_factory=list)
-    """Supported response format"""
     reasoning_keep_policy: ReasoningKeepPolicy = Field(default="never")
-    """How to keep reasoning content in the messages"""
-    include_usage: bool = Field(default=True)
-    """Whether to include usage information in the output"""
+
+    """Private attributes"""
+    _reasoning_field_name: ReasoningFieldName = PrivateAttr(default="reasoning_content")
+    _include_usage: bool = PrivateAttr(default=True)
+    """
+    Compatibility options for the model, aligned with this class's attributes:
+
+    - supported_tool_choice: supported tool_choice values, e.g. ["auto", "none"]
+    - supported_response_format: supported response formats, e.g. ["json_object"]
+    - reasoning_keep_policy: how to keep reasoning content, e.g. "never"
+    - reasoning_field_name: reasoning field name, e.g. "reasoning_content", only can set when creating the model
+    - include_usage: whether to include usage in responses, e.g. True, only can set when creating the model
+    """
 
     @property
     def _llm_type(self) -> str:
@@ -230,6 +263,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
 
         payload_messages = []
         last_human_index = -1
+
         if self.reasoning_keep_policy == "current":
             last_human_index = _get_last_human_message_index(messages)
 
@@ -238,20 +272,17 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                 msg_dict = _convert_message_to_dict(
                     _convert_from_v1_to_chat_completions(m)
                 )
+                reasoning_key = self._reasoning_field_name
                 if self.reasoning_keep_policy == "all" and m.additional_kwargs.get(
-                    "reasoning_content"
+                    reasoning_key
                 ):
-                    msg_dict["reasoning_content"] = m.additional_kwargs.get(
-                        "reasoning_content"
-                    )
+                    msg_dict[reasoning_key] = m.additional_kwargs.get(reasoning_key)
                 elif (
                     self.reasoning_keep_policy == "current"
                     and index > last_human_index
-                    and m.additional_kwargs.get("reasoning_content")
+                    and m.additional_kwargs.get(reasoning_key)
                 ):
-                    msg_dict["reasoning_content"] = m.additional_kwargs.get(
-                        "reasoning_content"
-                    )
+                    msg_dict[reasoning_key] = m.additional_kwargs.get(reasoning_key)
                 payload_messages.append(msg_dict)
             else:
                 if (
@@ -320,9 +351,9 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         or thought processes alongside regular responses.
 
         Handles multiple response formats:
-        - Standard OpenAI response objects with `reasoning_content` attribute
-        - Responses with `model_extra` containing reasoning data
-        - Dictionary responses (pass-through to base implementation)
+
+        Non-Standard OpenAI response objects with `reasoning_content` or `reasoning` attribute
+        which will be added to `additional_kwargs` under the key `reasoning_content`.
 
         Args:
             response: Raw API response (OpenAI object or dict)
@@ -342,19 +373,10 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             generation.message.response_metadata["model_provider"] = "openai-compatible"
 
         choices = getattr(response, "choices", None)
-        if choices and hasattr(choices[0].message, "reasoning_content"):
-            rtn.generations[0].message.additional_kwargs["reasoning_content"] = choices[
-                0
-            ].message.reasoning_content
-        elif choices and hasattr(choices[0].message, "model_extra"):
-            model_extra = choices[0].message.model_extra
-            if isinstance(model_extra, dict) and (
-                reasoning := model_extra.get("reasoning")
-            ):
-                rtn.generations[0].message.additional_kwargs[
-                    "reasoning_content"
-                ] = reasoning
-
+        if choices and hasattr(choices[0].message, self._reasoning_field_name):
+            rtn.generations[0].message.additional_kwargs["reasoning_content"] = getattr(
+                choices[0].message, self._reasoning_field_name
+            )
         return rtn
 
     def _convert_chunk_to_generation_chunk(
@@ -368,6 +390,11 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
         Processes streaming response chunks to extract reasoning content alongside
         regular message content, enabling real-time streaming of both response
         text and reasoning chains from compatible models.
+
+        Handles multiple response formats:
+
+        Non-Standard OpenAI response objects with `reasoning_content` or `reasoning` attribute
+        which will be added to `additional_kwargs` under the key `reasoning_content`.
 
         Args:
             chunk: Raw streaming chunk from API
@@ -390,14 +417,12 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
                     "model_provider": "openai-compatible",
                 }
                 if (
-                    reasoning_content := top.get("delta", {}).get("reasoning_content")
+                    reasoning_content := top.get("delta", {}).get(
+                        self._reasoning_field_name
+                    )
                 ) is not None:
                     generation_chunk.message.additional_kwargs["reasoning_content"] = (
                         reasoning_content
-                    )
-                elif (reasoning := top.get("delta", {}).get("reasoning")) is not None:
-                    generation_chunk.message.additional_kwargs["reasoning_content"] = (
-                        reasoning
                     )
 
         return generation_chunk
@@ -415,7 +440,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             ):
                 yield chunk
         else:
-            if self.include_usage:
+            if self._include_usage:
                 kwargs["stream_options"] = {"include_usage": True}
             try:
                 for chunk in super()._stream(
@@ -443,7 +468,7 @@ class _BaseChatOpenAICompatible(BaseChatOpenAI):
             ):
                 yield chunk
         else:
-            if self.include_usage:
+            if self._include_usage:
                 kwargs["stream_options"] = {"include_usage": True}
             try:
                 async for chunk in super()._astream(
@@ -640,6 +665,13 @@ def _validate_compatibility_options(
                 f"include_usage must be a boolean value. Received: {_include_usage}"
             )
 
+    if "reasoning_field_name" in compatibility_options:
+        _reasoning_field_name = compatibility_options["reasoning_field_name"]
+        if _reasoning_field_name not in ["reasoning_content", "reasoning"]:
+            raise ValueError(
+                f"Unsupported reasoning_field_name: {_reasoning_field_name}. Please choose from 'reasoning_content', 'reasoning'."
+            )
+
 
 def _create_openai_compatible_model(
     provider: str,
@@ -705,16 +737,24 @@ def _create_openai_compatible_model(
             ToolChoiceType,
             Field(default=compatibility_options.get("supported_tool_choice", ["auto"])),
         ),
-        reasoning_keep_policy=(
-            ReasoningKeepPolicy,
-            Field(default=compatibility_options.get("reasoning_keep_policy", "never")),
-        ),
         supported_response_format=(
             ResponseFormatType,
             Field(default=compatibility_options.get("supported_response_format", [])),
         ),
-        include_usage=(
+        reasoning_keep_policy=(
+            ReasoningKeepPolicy,
+            Field(default=compatibility_options.get("reasoning_keep_policy", "never")),
+        ),
+        _reasoning_field_name=(
+            ReasoningFieldName,
+            PrivateAttr(
+                default=compatibility_options.get(
+                    "reasoning_field_name", "reasoning_content"
+                )
+            ),
+        ),
+        _include_usage=(
             bool,
-            Field(default=compatibility_options.get("include_usage", True)),
+            PrivateAttr(default=compatibility_options.get("include_usage", True)),
         ),
     )

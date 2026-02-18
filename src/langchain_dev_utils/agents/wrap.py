@@ -72,7 +72,7 @@ def wrap_agent_as_tool(
         ...     tool_description="Used to invoke the time sub-agent to perform time-related tasks"
         ... )
         >>>
-        >>> agent = create_agent("vllm:qwen3-4b", tools=[call_time_agent_tool], name="agent")
+        >>> agent = create_agent("vllm:qwen2.5-7b", tools=[call_time_agent_tool], name="agent")
 
         >>> response = agent.invoke({"messages": [HumanMessage(content="What time is it now?")]})
         >>> response
@@ -215,7 +215,7 @@ def wrap_all_agents_as_tool(
         ...     tool_description="Used to invoke the sub-agents to perform tasks"
         ... )
         >>>
-        >>> agent = create_agent("vllm:qwen3-4b", tools=[call_sub_agents_tool], name="agent")
+        >>> agent = create_agent("vllm:qwen2.5-7b", tools=[call_sub_agents_tool], name="agent")
 
         >>> response = agent.invoke({"messages": [HumanMessage(content="What time is it now?")]})
         >>> response

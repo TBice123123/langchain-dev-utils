@@ -42,7 +42,7 @@ Using `create_sequential_graph`, you can connect these four nodes in sequence to
 
 The following example shows how to use `create_sequential_graph` to build a sequential product purchase workflow.
 
-First, create the chat model object. Here, we use the locally deployed `qwen3-4b` via vLLM as an example. Since its interface is compatible with OpenAI, we can directly use `create_openai_compatible_model` to construct the model class.
+First, create the chat model object. Here, we use the locally deployed `qwen2.5-7b` via vLLM as an example. Since its interface is compatible with OpenAI, we can directly use `create_openai_compatible_model` to construct the model class.
 
 ```python
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -56,7 +56,7 @@ ChatVLLM = create_openai_compatible_model(
 Then instantiate a `ChatVLLM` object for subsequent agent calls.
 
 ```python
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 ```
 Next, create relevant tools, such as checking inventory, creating orders, processing payments, etc.
 

@@ -35,7 +35,7 @@ def create_openai_compatible_model(
         ...     base_url="http://localhost:8000",
         ...     chat_model_cls_name="ChatVLLM",
         ... )
-        >>> model = ChatVLLM(model="qwen3-4b")
+        >>> model = ChatVLLM(model="qwen2.5-7b")
         >>> model.invoke("hello")
     """
     _check_pkg_install("langchain_openai")

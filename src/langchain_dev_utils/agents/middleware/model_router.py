@@ -85,7 +85,7 @@ class ModelRouterMiddleware(AgentMiddleware):
         ```python
         from langchain_dev_utils.agents.middleware import ModelRouterMiddleware
         middleware = ModelRouterMiddleware(
-            router_model="vllm:qwen3-4b",
+            router_model="vllm:qwen2.5-7b",
             model_list=model_list
         )
         ```

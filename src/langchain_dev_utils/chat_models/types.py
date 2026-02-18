@@ -12,12 +12,15 @@ ResponseFormatType = list[Literal["json_schema", "json_mode"]]
 
 ReasoningKeepPolicy = Literal["never", "current", "all"]
 
+ReasoningFieldName = Literal["reasoning_content", "reasoning"]
 
-class CompatibilityOptions(TypedDict):
-    supported_tool_choice: NotRequired[ToolChoiceType]
-    supported_response_format: NotRequired[ResponseFormatType]
-    reasoning_keep_policy: NotRequired[ReasoningKeepPolicy]
-    include_usage: NotRequired[bool]
+
+class CompatibilityOptions(TypedDict, total=False):
+    supported_tool_choice: ToolChoiceType
+    supported_response_format: ResponseFormatType
+    reasoning_keep_policy: ReasoningKeepPolicy
+    reasoning_field_name: ReasoningFieldName
+    include_usage: bool
 
 
 class ChatModelProvider(TypedDict):

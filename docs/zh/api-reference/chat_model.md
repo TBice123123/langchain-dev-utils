@@ -91,7 +91,7 @@ def load_chat_model(
 ### 示例
 
 ```python
-model = load_chat_model("vllm:qwen3-4b")
+model = load_chat_model("vllm:qwen2.5-7b")
 ```
 
 ---
@@ -196,11 +196,12 @@ ReasoningKeepPolicy = Literal["never", "current", "all"]
 ### 类定义
 
 ```python
-class CompatibilityOptions(TypedDict):
-    supported_tool_choice: NotRequired[ToolChoiceType]
-    supported_response_format: NotRequired[ResponseFormatType]
-    reasoning_keep_policy: NotRequired[ReasoningKeepPolicy]
-    include_usage: NotRequired[bool]
+class CompatibilityOptions(TypedDict, total=False):
+    supported_tool_choice: ToolChoiceType
+    supported_response_format: ResponseFormatType
+    reasoning_keep_policy: ReasoningKeepPolicy
+    reasoning_field_name: ReasoningFieldName
+    include_usage: bool
 ```
 
 ### 字段说明
@@ -210,6 +211,7 @@ class CompatibilityOptions(TypedDict):
 | supported_tool_choice | NotRequired[ToolChoiceType] | 否 | 支持的 `tool_choice` 策略列表 |
 | supported_response_format | NotRequired[ResponseFormatType] | 否 | 支持的 `response_format` 方法列表 |
 | reasoning_keep_policy | NotRequired[ReasoningKeepPolicy] | 否 | 传给模型的历史消息（messages）中 `reasoning_content` 字段的保留策略。可选值有`never`、`current`、`all` |
+| reasoning_field_name | NotRequired[ReasoningFieldName] | 否 | 历史消息（messages）中 `reasoning_content` 字段的名称 |
 | include_usage | NotRequired[bool] | 否 | 是否在最后一条流式返回结果中包含 `usage` 信息 |
 
 ---

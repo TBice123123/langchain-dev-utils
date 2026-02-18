@@ -123,7 +123,7 @@ def register_model_provider(
         ...     chat_model="openai-compatible",
         ...     base_url="http://localhost:8000/v1",
         ... )
-        >>> model = load_chat_model(model="vllm:qwen3-4b")
+        >>> model = load_chat_model(model="vllm:qwen2.5-7b")
         >>> model.invoke("Hello")
     """
     _validate_provider_name(provider_name)
@@ -222,7 +222,7 @@ def batch_register_model_provider(
             >>> model = load_chat_model("fakechat:fake-model")
             >>> model.invoke("Hello")
             >>>
-            >>> model = load_chat_model("vllm:qwen3-4b")
+            >>> model = load_chat_model("vllm:qwen2.5-7b")
             >>> model.invoke("Hello")
     """
 
@@ -260,16 +260,16 @@ def load_chat_model(
     Example:
         # Load model with provider prefix:
         >>> from langchain_dev_utils.chat_models import load_chat_model
-        >>> model = load_chat_model("vllm:qwen3-4b")
+        >>> model = load_chat_model("vllm:qwen2.5-7b")
         >>> model.invoke("hello")
 
         # Load model with separate provider parameter:
-        >>> model = load_chat_model("qwen3-4b", model_provider="vllm")
+        >>> model = load_chat_model("qwen2.5-7b", model_provider="vllm")
         >>> model.invoke("hello")
 
         # Load model with additional parameters:
         >>> model = load_chat_model(
-        ...     "vllm:qwen3-4b",
+        ...     "vllm:qwen2.5-7b",
         ...     temperature=0.7
         ... )
         >>> model.invoke("Hello, how are you?")

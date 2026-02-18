@@ -62,7 +62,7 @@ EMAIL_AGENT_PROMPT = (
 )
 
 email_agent = create_agent(
-    "vllm:qwen3-4b",
+    "vllm:qwen2.5-7b",
     tools=[send_email],
     system_prompt=EMAIL_AGENT_PROMPT,
     name="email_agent",
@@ -105,7 +105,7 @@ CALENDAR_AGENT_PROMPT = (
 )
 
 calendar_agent = create_agent(
-    "vllm:qwen3-4b",
+    "vllm:qwen2.5-7b",
     tools=[create_calendar_event, get_available_time_slots],
     system_prompt=CALENDAR_AGENT_PROMPT,
     name="calendar_agent",
@@ -153,7 +153,7 @@ SUPERVISOR_PROMPT = (
 
 
 supervisor_agent = create_agent(
-    "vllm:qwen3-4b",
+    "vllm:qwen2.5-7b",
     tools=[schedule_event, manage_email],
     system_prompt=SUPERVISOR_PROMPT,
 )
@@ -204,7 +204,7 @@ MAIN_AGENT_PROMPT = (
 )
 
 main_agent = create_agent(
-    "vllm:qwen3-4b",
+    "vllm:qwen2.5-7b",
     tools=[call_subagent_tool],
     system_prompt=MAIN_AGENT_PROMPT,
 )

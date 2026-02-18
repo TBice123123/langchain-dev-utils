@@ -33,7 +33,7 @@ class AssistantState(AgentState):
     name: str
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     system_prompt="You are an intelligent assistant, and your name is {name}.",
     middleware=[format_prompt],
     state_schema=AssistantState,
@@ -58,7 +58,7 @@ class Context:
     user: str
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     # {name} will be obtained from state, {user} will be obtained from context
     system_prompt="You are an intelligent assistant, and your name is {name}. Your user is named {user}.",
     middleware=[format_prompt],
@@ -91,7 +91,7 @@ class Context:
     user: str
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     system_prompt="You are an intelligent assistant, and your name is {name}. Your user is named {user}.",
     middleware=[format_prompt],
     state_schema=AssistantState, # 'name' is also defined in state
@@ -133,7 +133,7 @@ class Context:
 jinja2_formatter = FormatPromptMiddleware(template_format="jinja2")
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="vllm:qwen2.5-7b",
     # Use {{ }} syntax
     system_prompt=(
         "You are an intelligent assistant.\n"

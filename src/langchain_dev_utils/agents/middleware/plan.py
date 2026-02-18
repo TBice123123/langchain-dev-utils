@@ -282,7 +282,7 @@ class PlanMiddleware(AgentMiddleware):
         from langchain_dev_utils.agents.middleware import PlanMiddleware
         from langchain_dev_utils.agents import create_agent
 
-        agent = create_agent("vllm:qwen3-4b", middleware=[PlanMiddleware()])
+        agent = create_agent("vllm:qwen2.5-7b", middleware=[PlanMiddleware()])
 
         # Agent now has access to write_plan tool and plan state tracking
         result = await agent.invoke({"messages": [HumanMessage("Help me refactor my codebase")]})

@@ -28,7 +28,7 @@ The keys for the `custom_plan_tool_descriptions` dictionary can be any of the fo
 from langchain_dev_utils.agents.middleware import PlanMiddleware
 
 agent = create_agent(
-    model="vllm:qwen3-4b",
+    model="openai:gpt-4o",
     middleware=[
         PlanMiddleware(
             custom_plan_tool_descriptions={

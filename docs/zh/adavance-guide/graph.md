@@ -44,7 +44,7 @@ graph LR
 
 下面示例展示如何用 `create_sequential_graph` 构建商品购买的顺序工作流。
 
-先创建对话模型对象。这里以接入本地 vLLM 部署的 `qwen3-4b` 为例，其接口与 OpenAI 兼容，因此可直接用 `create_openai_compatible_model` 构建模型类。
+先创建对话模型对象。这里以接入本地 vLLM 部署的 `qwen2.5-7b` 为例，其接口与 OpenAI 兼容，因此可直接用 `create_openai_compatible_model` 构建模型类。
 
 ```python
 from langchain_dev_utils.chat_models.adapters import create_openai_compatible_model
@@ -58,7 +58,7 @@ ChatVLLM = create_openai_compatible_model(
 再实例化一个 `ChatVLLM` 对象，供后续智能体调用。
 
 ```python
-model = ChatVLLM(model="qwen3-4b")
+model = ChatVLLM(model="qwen2.5-7b")
 ```
 随后创建相关工具，例如查询库存、创建订单、进行支付等。
 

@@ -24,6 +24,15 @@
 
     以下示例均为后续内容中会用到的模型部署命令：
     
+    **Qwen2.5-7B**：
+
+    ```bash
+    vllm serve Qwen/Qwen2.5-7B-Instruct \
+    --enable-auto-tool-choice --tool-call-parser hermes \
+    --host 0.0.0.0 --port 8000 \
+    --served-model-name qwen2.5-7b
+    ```
+
     **Qwen3-4B**：
 
     ```bash
@@ -47,13 +56,13 @@
      --served-model-name glm-4.7-flash
     ```
 
-    **Qwen3-VL-2B-Instruct**：
+    **Qwen2.5-VL-7B**：
 
     ```bash
-    vllm serve Qwen/Qwen3-VL-2B-Instruct \
+    vllm serve Qwen/Qwen2.5-VL-7B-Instruct \
     --trust-remote-code \
     --host 0.0.0.0 --port 8000 \
-    --served-model-name qwen3-vl-2b
+    --served-model-name qwen2.5-vl-7b
     ```
 
     **Qwen3-Embedding-4B**：
