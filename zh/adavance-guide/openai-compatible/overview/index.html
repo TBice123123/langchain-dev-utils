@@ -1668,6 +1668,12 @@
 <summary>vLLM 介绍</summary>
 <p>vLLM 是常用的大模型推理框架，适合本地或自建环境下的高性能推理服务。它可以将大模型部署为 OpenAI 兼容的 API，便于复用现有的 SDK 与调用方式；同时支持对话模型与嵌入模型的部署，以及多模型服务、工具调用与推理输出等能力，适用于对话、工具调用与多模态等场景。</p>
 <p>以下示例均为后续内容中会用到的模型部署命令：</p>
+<p><strong>Qwen2.5-7B</strong>：</p>
+<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen2.5-7B-Instruct<span class="w"> </span><span class="se">\</span>
+--enable-auto-tool-choice<span class="w"> </span>--tool-call-parser<span class="w"> </span>hermes<span class="w"> </span><span class="se">\</span>
+--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+--served-model-name<span class="w"> </span>qwen2.5-7b
+</code></pre></div>
 <p><strong>Qwen3-4B</strong>：</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-4B<span class="w"> </span><span class="se">\</span>
 --reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
@@ -1685,11 +1691,11 @@
 <span class="w"> </span>--enable-auto-tool-choice<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span>--served-model-name<span class="w"> </span>glm-4.7-flash
 </code></pre></div>
-<p><strong>Qwen3-VL-2B-Instruct</strong>：</p>
-<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
+<p><strong>Qwen2.5-VL-7B</strong>：</p>
+<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen2.5-VL-7B-Instruct<span class="w"> </span><span class="se">\</span>
 --trust-remote-code<span class="w"> </span><span class="se">\</span>
 --host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
---served-model-name<span class="w"> </span>qwen3-vl-2b
+--served-model-name<span class="w"> </span>qwen2.5-vl-7b
 </code></pre></div>
 <p><strong>Qwen3-Embedding-4B</strong>：</p>
 <p><div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-Embedding-4B<span class="w"> </span><span class="se">\</span>

@@ -2205,7 +2205,7 @@
 </tbody>
 </table>
 <h3 id="example_2">Example</h3>
-<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="create_openai_compatible_model">create_openai_compatible_model</h2>
@@ -2318,11 +2318,12 @@
 <h2 id="compatibilityoptions">CompatibilityOptions</h2>
 <p>Compatibility options for model providers.</p>
 <h3 id="class-definition">Class Definition</h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CompatibilityOptions</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-    <span class="n">supported_tool_choice</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ToolChoiceType</span><span class="p">]</span>
-    <span class="n">supported_response_format</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ResponseFormatType</span><span class="p">]</span>
-    <span class="n">reasoning_keep_policy</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ReasoningKeepPolicy</span><span class="p">]</span>
-    <span class="n">include_usage</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CompatibilityOptions</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">supported_tool_choice</span><span class="p">:</span> <span class="n">ToolChoiceType</span>
+    <span class="n">supported_response_format</span><span class="p">:</span> <span class="n">ResponseFormatType</span>
+    <span class="n">reasoning_keep_policy</span><span class="p">:</span> <span class="n">ReasoningKeepPolicy</span>
+    <span class="n">reasoning_field_name</span><span class="p">:</span> <span class="n">ReasoningFieldName</span>
+    <span class="n">include_usage</span><span class="p">:</span> <span class="nb">bool</span>
 </code></pre></div>
 <h3 id="field-description">Field Description</h3>
 <table>
@@ -2352,6 +2353,12 @@
 <td>NotRequired[ReasoningKeepPolicy]</td>
 <td>No</td>
 <td>Retention policy for the <code>reasoning_content</code> field in historical messages (messages) passed to the model. Optional values are <code>never</code>, <code>current</code>, <code>all</code></td>
+</tr>
+<tr>
+<td>reasoning_field_name</td>
+<td>NotRequired[ReasoningFieldName]</td>
+<td>No</td>
+<td>Field name for reasoning content in the messages list</td>
 </tr>
 <tr>
 <td>include_usage</td>

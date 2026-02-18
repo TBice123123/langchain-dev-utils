@@ -1733,7 +1733,7 @@
 
 
 <h1 id="_1">智能体交接</h1>
-<p><code>HandoffAgentMiddleware</code> 是一个用于<strong>在多个子 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>
+<p><code>HandoffAgentMiddleware</code> 是一个用于<strong>在多个 Agent 之间灵活切换</strong>的中间件，完整实现了 LangChain 官方的 <code>handoffs</code> 多智能体协作方案。</p>
 <h2 id="_2">参数说明</h2>
 <table>
 <thead>
@@ -1769,7 +1769,7 @@
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td>指定该智能体使用的模型；若不传，则沿用 <code>create_agent</code> 的 <code>model</code> 参数对应的模型。支持字符串（须为 <code>provider:model-name</code> 格式，如 <code>vllm:qwen3-4b</code>）或 <code>BaseChatModel</code> 实例。<br><br><strong>类型</strong>: <code>str</code> | <code>BaseChatModel</code><br><strong>必填</strong>: 否</td>
+<td>指定该智能体使用的模型；若不传，则沿用 <code>create_agent</code> 的 <code>model</code> 参数对应的模型。支持字符串（须为 <code>provider:model-name</code> 格式，如 <code>vllm:qwen2.5-7b</code>）或 <code>BaseChatModel</code> 实例。<br><br><strong>类型</strong>: <code>str</code> | <code>BaseChatModel</code><br><strong>必填</strong>: 否</td>
 </tr>
 <tr>
 <td><code>prompt</code></td>
@@ -1801,7 +1801,6 @@
 
 <span class="n">agent_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AgentConfig</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;time_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个时间助手&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">get_current_time</span><span class="p">],</span>
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;default_agent&quot;</span><span class="p">],</span>  <span class="c1"># 该智能体只能交接到default_agent</span>
@@ -1812,7 +1811,7 @@
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;default_agent&quot;</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="s2">&quot;code_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-coder-flash&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:glm-4.7-flash&quot;</span><span class="p">),</span>
         <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个代码助手&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="n">run_code</span><span class="p">,</span>
@@ -1820,6 +1819,7 @@
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;default_agent&quot;</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="s2">&quot;default_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
         <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手&quot;</span><span class="p">,</span>
         <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="c1"># 设为默认智能体</span>
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>  <span class="c1"># 该智能体可以交接到所有其它智能体</span>
@@ -1830,7 +1830,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">HandoffAgentMiddleware</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">HandoffAgentMiddleware</span><span class="p">(</span><span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">)],</span>
 <span class="p">)</span>
 
@@ -1840,7 +1840,7 @@
 <h2 id="_4">自定义交接工具描述</h2>
 <p>如果想要自定义交接工具的描述，可以传递第二个参数 <code>custom_handoffs_tool_descriptions</code>。</p>
 <div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>
@@ -1876,7 +1876,7 @@
     <span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">HandoffAgentMiddleware</span><span class="p">(</span>
             <span class="n">agents_config</span><span class="o">=</span><span class="n">agent_config</span><span class="p">,</span>

@@ -2597,7 +2597,7 @@
 <h3 id="_3">注意事项</h3>
 <p>此函数提供与 <code>langchain</code> 官方 <code>create_agent</code> 完全相同的功能，但拓展了模型选择。主要区别在于 <code>model</code> 参数必须是可由 <code>load_chat_model</code> 函数加载的字符串，允许使用注册的模型提供者进行更灵活的模型选择。</p>
 <h3 id="_4">示例</h3>
-<div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">])</span>
 </code></pre></div>
 <hr />
 <h2 id="wrap_agent_as_tool">wrap_agent_as_tool</h2>
@@ -2825,7 +2825,7 @@
 </tbody>
 </table>
 <h3 id="_13">示例</h3>
-<div class="highlight"><pre><span></span><code><span class="n">summarization_middleware</span> <span class="o">=</span> <span class="n">SummarizationMiddleware</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">summarization_middleware</span> <span class="o">=</span> <span class="n">SummarizationMiddleware</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="llmtoolselectormiddleware">LLMToolSelectorMiddleware</h2>
@@ -2884,7 +2884,7 @@
 </tbody>
 </table>
 <h3 id="_16">示例</h3>
-<div class="highlight"><pre><span></span><code><span class="n">llm_tool_selector_middleware</span> <span class="o">=</span> <span class="n">LLMToolSelectorMiddleware</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">llm_tool_selector_middleware</span> <span class="o">=</span> <span class="n">LLMToolSelectorMiddleware</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="planmiddleware">PlanMiddleware</h2>
@@ -2979,8 +2979,8 @@
 </table>
 <h3 id="_22">示例</h3>
 <div class="highlight"><pre><span></span><code><span class="n">model_fallback_middleware</span> <span class="o">=</span> <span class="n">ModelFallbackMiddleware</span><span class="p">(</span>
-    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;vllm:qwen3-8b&quot;</span>
+    <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vllm:qwen2.5-3b&quot;</span>
 <span class="p">)</span>
 </code></pre></div>
 <hr />
@@ -3024,7 +3024,7 @@
 </tbody>
 </table>
 <h3 id="_25">示例</h3>
-<div class="highlight"><pre><span></span><code><span class="n">llm_tool_emulator</span> <span class="o">=</span> <span class="n">LLMToolEmulator</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><span class="n">llm_tool_emulator</span> <span class="o">=</span> <span class="n">LLMToolEmulator</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">])</span>
 </code></pre></div>
 <hr />
 <h2 id="modelroutermiddleware">ModelRouterMiddleware</h2>
@@ -3076,14 +3076,14 @@
 </table>
 <h3 id="_28">示例</h3>
 <div class="highlight"><pre><span></span><code><span class="n">model_router_middleware</span> <span class="o">=</span> <span class="n">ModelRouterMiddleware</span><span class="p">(</span>
-    <span class="n">router_model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">router_model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">model_list</span><span class="o">=</span><span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
             <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合普通任务，如对话、文本生成等&quot;</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
             <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合复杂任务，如代码生成、数据分析等&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">]</span>
@@ -3140,13 +3140,13 @@
 <h3 id="_31">示例</h3>
 <div class="highlight"><pre><span></span><code><span class="n">handoffs_agent_middleware</span> <span class="o">=</span> <span class="n">HandoffsAgentMiddleware</span><span class="p">({</span>
     <span class="s2">&quot;time_agent&quot;</span><span class="p">:{</span>
-        <span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;prompt&quot;</span><span class="p">:</span><span class="s2">&quot;你是一个时间智能体，负责回答时间相关的问题。&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:[</span><span class="n">get_current_time</span><span class="p">,</span> <span class="n">transfer_to_default_agent</span><span class="p">],</span>
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:[</span><span class="s2">&quot;default_agent&quot;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="s2">&quot;default_agent&quot;</span><span class="p">:{</span>
-        <span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;vllm:qwen2.5-3b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;prompt&quot;</span><span class="p">:</span><span class="s2">&quot;你是一个复杂任务智能体，负责回答复杂任务相关的问题。&quot;</span><span class="p">,</span>
         <span class="s2">&quot;default&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
         <span class="s2">&quot;handoffs&quot;</span><span class="p">:[</span><span class="s2">&quot;time_agent&quot;</span><span class="p">]</span>

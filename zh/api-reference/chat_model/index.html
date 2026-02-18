@@ -2205,7 +2205,7 @@
 </tbody>
 </table>
 <h3 id="_9">示例</h3>
-<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="create_openai_compatible_model">create_openai_compatible_model</h2>
@@ -2318,11 +2318,12 @@
 <h2 id="compatibilityoptions">CompatibilityOptions</h2>
 <p>模型提供商的兼容性选项。</p>
 <h3 id="_18">类定义</h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CompatibilityOptions</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-    <span class="n">supported_tool_choice</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ToolChoiceType</span><span class="p">]</span>
-    <span class="n">supported_response_format</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ResponseFormatType</span><span class="p">]</span>
-    <span class="n">reasoning_keep_policy</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ReasoningKeepPolicy</span><span class="p">]</span>
-    <span class="n">include_usage</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CompatibilityOptions</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">supported_tool_choice</span><span class="p">:</span> <span class="n">ToolChoiceType</span>
+    <span class="n">supported_response_format</span><span class="p">:</span> <span class="n">ResponseFormatType</span>
+    <span class="n">reasoning_keep_policy</span><span class="p">:</span> <span class="n">ReasoningKeepPolicy</span>
+    <span class="n">reasoning_field_name</span><span class="p">:</span> <span class="n">ReasoningFieldName</span>
+    <span class="n">include_usage</span><span class="p">:</span> <span class="nb">bool</span>
 </code></pre></div>
 <h3 id="_19">字段说明</h3>
 <table>
@@ -2352,6 +2353,12 @@
 <td>NotRequired[ReasoningKeepPolicy]</td>
 <td>否</td>
 <td>传给模型的历史消息（messages）中 <code>reasoning_content</code> 字段的保留策略。可选值有<code>never</code>、<code>current</code>、<code>all</code></td>
+</tr>
+<tr>
+<td>reasoning_field_name</td>
+<td>NotRequired[ReasoningFieldName]</td>
+<td>否</td>
+<td>历史消息（messages）中 <code>reasoning_content</code> 字段的名称</td>
 </tr>
 <tr>
 <td>include_usage</td>

@@ -1854,6 +1854,10 @@
 <td>历史消息中 <code>reasoning_content</code> 字段的保留策略。<br><br><strong>类型</strong>: <code>str</code><br><strong>默认值</strong>: <code>"never"</code></td>
 </tr>
 <tr>
+<td><code>reasoning_field_name</code></td>
+<td>提供商返回推理内容的字段名，一般无需配置。可选值为 <code>reasoning_content</code>或 <code>reasoning</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>默认值</strong>: <code>"reasoning_content"</code></td>
+</tr>
+<tr>
 <td><code>include_usage</code></td>
 <td>是否在流式返回结果中包含 <code>usage</code> 信息。<br><br><strong>类型</strong>: <code>bool</code><br><strong>默认值</strong>: <code>True</code></td>
 </tr>
@@ -1861,17 +1865,22 @@
 </table>
 <div class="admonition info">
 <p class="admonition-title">补充</p>
-<p>由于同一模型提供商的不同模型对 <code>tool_choice</code>、<code>response_format</code> 等参数的支持情况存在差异，这四个兼容性选项为类的<strong>实例属性</strong>。因此，创建对话模型类时可以传入值作为全局默认值（代表该提供商大部分模型支持的配置），后续如需针对特定模型进行微调，可在实例化时覆盖同名参数。</p>
+<p>由于同一模型提供商的不同模型对 <code>tool_choice</code>、<code>response_format</code> 等参数的支持情况存在差异，本库将 <code>supported_tool_choice</code>、<code>supported_response_format</code>、<code>reasoning_keep_policy</code> 作为类的<strong>实例属性</strong>。创建对话模型类时可传入默认值，作为该提供商的通用配置；如需针对特定模型微调，可在实例化时覆盖同名参数。</p>
+<p><code>reasoning_field_name</code> 与 <code>include_usage</code> 为类的私有属性，仅能在创建或注册模型类时通过 <code>compatibility_options</code> 传入。</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">提示</p>
 <p>本库会基于用户传入的参数，使用内置的 <code>BaseChatOpenAICompatible</code> 构建面向特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并在以下方面进行了增强：</p>
-<ul>
-<li><strong>支持更多格式的推理内容</strong>：除 OpenAI 官方格式外，也支持以 <code>reasoning_content</code> 参数返回的推理内容格式。</li>
-<li><strong>支持 <code>video</code> 类型的 content_block</strong>：补齐 <code>ChatOpenAI</code> 在视频类型的 <code>content_block</code> 上的能力缺口。</li>
-<li><strong>自动选择更合适的结构化输出方式</strong>：根据提供商实际支持情况，在 <code>function_calling</code> 与 <code>json_schema</code> 之间自动选择更优方案。</li>
-<li><strong>通过 <code>compatibility_options</code> 精细适配差异</strong>：按需配置对 <code>tool_choice</code>、<code>response_format</code> 等参数的支持差异。</li>
-</ul>
+<p><strong>1. 支持额外的推理字段 (reasoning_content / reasoning)</strong>
+ChatOpenAI 遵循官方 OpenAI 响应模式，因此无法提取或保留特定于提供商的字段（例如 <code>reasoning_content</code>、<code>reasoning</code>）。
+本类默认提取并保留 <code>reasoning_content</code>，并可通过 <code>compatibility_options</code> 中的 <code>reasoning_field_name</code> 配置以提取 <code>reasoning</code>。</p>
+<p><strong>2. 动态适配以选择最合适的结构化输出方法</strong>
+OpenAICompatibleChatModel 会根据模型提供商的实际能力，利用 <code>compatibility_options</code> 中的 <code>supported_response_format</code>，选择最佳的结构化输出方法（<code>function_calling</code> 或 <code>json_schema</code>）。</p>
+<p><strong>3. 支持相关参数配置</strong>
+针对参数与官方 OpenAI API 存在差异的情况，本库提供了 <code>compatibility_options</code> 参数来解决此问题。
+例如，当不同模型提供商对 <code>tool_choice</code> 的支持不一致时，可以通过在 <code>compatibility_options</code> 中设置 <code>supported_tool_choice</code> 来进行适配。</p>
+<p><strong>4.支持<code>video</code>类型的 content_block</strong>
+补齐 <code>ChatOpenAI</code> 在视频类型的 <code>content_block</code> 上的能力缺口。</p>
 </div>
 <p>使用如下代码创建对话模型类：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
@@ -1879,10 +1888,10 @@
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
 <span class="hll">    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
 </span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-</span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span>
 </span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>在创建对话模型类时，<code>base_url</code> 参数可以省略。未传入时，本库会默认读取对应环境变量，例如：</p>
@@ -1896,7 +1905,7 @@
 </span><span class="hll">    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
 </span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p><strong>注意</strong>：上述代码成功运行的前提是已配置环境变量 <code>VLLM_API_KEY</code>。虽然 vLLM 本身不要求 API Key，但对话模型类初始化时需要传入，因此请先设置该变量，例如：</p>
@@ -1919,14 +1928,14 @@
 <p>通过 <code>invoke</code> 方法可以进行普通调用，返回模型响应。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>同时也支持 <code>ainvoke</code> 进行异步调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">model</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -1934,21 +1943,21 @@
 <p>通过 <code>stream</code> 方法可以进行流式调用，用于流式返回模型响应。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div>
 <p>以及通过 <code>astream</code> 进行异步流式调用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">astream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div>
 <details class="note">
 <summary>流式输出选项</summary>
 <p>可以通过 <code>stream_options={"include_usage": True}</code> 在流式响应末尾附加 token 使用情况（<code>prompt_tokens</code> 和 <code>completion_tokens</code>）。
-本库默认开启该选项；若需关闭，可在创建模型类或实例化时传入兼容性选项 <code>include_usage=False</code>。</p>
+本库默认开启该选项；若需关闭，可在创建模型类传入兼容性选项 <code>include_usage=False</code>。</p>
 </details>
 <h3 id="_6">工具调用</h3>
 <p>如果模型本身支持工具调用，可以直接使用 <code>bind_tools</code> 进行工具调用：</p>
@@ -1961,7 +1970,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;获取当前时间戳&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;获取当前时间戳&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -1978,7 +1987,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;获取当前天气&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;当前</span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">的天气是晴朗&quot;</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
 <span class="hll">    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">parallel_tool_calls</span><span class="o">=</span><span class="kc">True</span>
 </span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;获取洛杉矶和伦敦的天气&quot;</span><span class="p">)])</span>
@@ -2011,7 +2020,7 @@
 </span><span class="hll">    <span class="p">},</span>
 </span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
 <span class="hll">    <span class="p">[</span><span class="n">get_current_weather</span><span class="p">],</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;required&quot;</span>
 </span><span class="p">)</span>
 </code></pre></div>
@@ -2024,7 +2033,7 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;你好，我叫张三，今年25岁&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -2040,7 +2049,7 @@
 <span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
 </span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
@@ -2054,7 +2063,7 @@
 <span class="hll">    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;supported_response_format&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;json_schema&quot;</span><span class="p">]},</span>
 </span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </code></pre></div></p>
 <p>输出结果为</p>
@@ -2064,12 +2073,13 @@
 </details>
 <h3 id="_8">传递额外参数</h3>
 <p>由于该类继承自 <code>BaseChatOpenAI</code>，因此支持传递 <code>BaseChatOpenAI</code> 的模型参数，例如 <code>temperature</code>、<code>extra_body</code> 等。</p>
-<p>例如，使用 <code>extra_body</code> 传递额外参数（此处为关闭思考模式）：</p>
+<p>对于非OpenAI官方定义的请求参数，可以通过 <code>extra_body</code> 传递。</p>
+<p>例如：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span>
-    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chat_template_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span>
+    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">},</span>
 <span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
@@ -2090,7 +2100,7 @@
     <span class="p">)</span>
 <span class="p">]</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-vl-2b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-vl-7b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
@@ -2109,44 +2119,59 @@
     <span class="p">)</span>
 <span class="p">]</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-vl-2b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-vl-7b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="_10">使用推理模型</h3>
-<p>本库创建的模型类的一大特点就是进一步适配了更多的推理模型。</p>
+<p>本库创建的模型类的一大特点就是进一步适配了更多的推理模型。例如接入<code>qwen3-4b</code>模型。</p>
 <p>例如：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
+    <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">chat_model_cls_name</span><span class="o">=</span><span class="s2">&quot;ChatVLLM&quot;</span><span class="p">,</span>
+    <span class="n">compatibility_options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;reasoning_field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;为什么鹦鹉的羽毛如此鲜艳？&quot;</span><span class="p">)</span>
 <span class="n">reasoning_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">content_blocks</span> <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s2">&quot;reasoning&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">reasoning_steps</span><span class="p">))</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>由于新版的vLLM默认将推理内容以<code>reasoning</code>字段返回，因此如果使用vLLM部署的推理模型，必须在创建对话模型类时指定<code>reasoning_field_name</code>参数，取值为<code>reasoning</code>。</p>
+<p>但为复用既有的 <code>content_blocks</code> 默认解析逻辑，本库仍然会将其保存至 <code>additional_kwargs["reasoning_content"]</code>。</p>
+</div>
 <details class="note">
 <summary>不同推理模式的支持</summary>
-<p>不同模型的推理模式不尽相同（这点在Agent开发中尤为重要）：有些需要在本次调用中显式传递 <code>reasoning_content</code> 字段，有些则无需。本库提供 <code>reasoning_keep_policy</code> 兼容性配置以适配这些差异。</p>
+<p>不同模型的推理模式不尽相同（这点在Agent开发中尤为重要）：有些需要在本次调用中显式传递推理内容，有些则无需。本库提供 <code>reasoning_keep_policy</code> 兼容性配置以适配这些差异。</p>
 <p>该配置项支持以下取值：</p>
 <ul>
 <li>
 <p><code>never</code>：在历史消息中<strong>不保留任何</strong>推理内容（默认)；</p>
 </li>
 <li>
-<p><code>current</code>：仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段；</p>
+<p><code>current</code>：仅保留<strong>当前对话</strong>中的推理内容；</p>
 </li>
 <li>
-<p><code>all</code>：保留<strong>所有对话</strong>中的 <code>reasoning_content</code> 字段。</p>
+<p><code>all</code>：保留<strong>所有对话</strong>中的推理内容。</p>
 </li>
 </ul>
 <pre class="mermaid"><code>graph LR
     A[reasoning_content 保留策略] --&gt; B{取值?};
-    B --&gt;|never| C[不包含任何&lt;br&gt;reasoning_content];
-    B --&gt;|current| D[仅包含当前对话的&lt;br&gt;reasoning_content&lt;br&gt;适配交错式思考模式];
-    B --&gt;|all| E[包含所有对话的&lt;br&gt;reasoning_content];
+    B --&gt;|never| C[不包含任何&lt;br&gt;推理内容];
+    B --&gt;|current| D[仅包含当前对话的&lt;br&gt;推理内容&lt;br&gt;适配交错式思考模式];
+    B --&gt;|all| E[包含所有对话的&lt;br&gt;推理内容];
     C --&gt; F[发送给模型];
     D --&gt; F;
     E --&gt; F;</code></pre>
-<p>例如，用户先提问"纽约天气如何？"，随后追问"伦敦天气如何？"，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
+<p>例如，假设推理内容的字段名称是 <code>reasoning_content</code>，当用户先提问"纽约天气如何？"，随后追问"伦敦天气如何？"，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
 <ul>
 <li>取值为<code>never</code>时</li>
 </ul>
@@ -2209,8 +2234,8 @@
 <span class="p">]</span>
 </code></pre></div></p>
 <p><strong>注意</strong>：若本轮对话不涉及工具调用，则<code>current</code>与<code>never</code>效果相同。</p>
-<p>值得注意的是，虽然该参数属于兼容性配置项，但同一提供商的不同模型、甚至同一模型在不同场景下对 <code>reasoning_content</code> 的保留策略要求也可能不同，因此<strong>建议在实例化时显式指定</strong>，创建类时无需赋值。</p>
-<p>例如，以 GLM-4.7-Flash 模型为例，由于其支持交错式思考（Interleaved Thinking）模式，一般需要在实例化时将 <code>reasoning_keep_policy</code> 设置为 <code>current</code>，以便仅保留当前轮次的 <code>reasoning_content</code>。例如：</p>
+<p>值得注意的是，虽然该参数属于兼容性配置项，但同一提供商的不同模型、甚至同一模型在不同场景下对推理内容的保留策略要求也可能不同，因此<strong>建议在实例化时显式指定</strong>，创建类时无需赋值。</p>
+<p>例如，以 GLM-4.7-Flash 模型为例，由于其支持交错式思考（Interleaved Thinking）模式，一般需要在实例化时将 <code>reasoning_keep_policy</code> 设置为 <code>current</code>，以便仅保留当前轮次的推理内容。例如：</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
@@ -2237,6 +2262,10 @@
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+</div>
+<p>同样，GLM-4.7-Flash 模型也为推理模型，且回传推理内容的字段为 <code>reasoning</code>。故同样需要在创建对话模型类时指定兼容性选项<code>reasoning_field_name</code>取值为<code>reasoning</code>。</p>
 </details>
 <h3 id="model-profiles">Model profiles</h3>
 <p>可以通过 <code>model.profile</code> 获取模型的 profile。默认情况下返回空字典。</p>
@@ -2245,12 +2274,12 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">custom_profile</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">100_000</span><span class="p">,</span>
+    <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">131072</span><span class="p">,</span>
     <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s2">&quot;structured_output&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="c1"># ...</span>
 <span class="p">}</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">custom_profile</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">custom_profile</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </code></pre></div>
 或者直接在创建时传入模型提供商的所有模型的<code>profile</code>参数。</p>
@@ -2258,7 +2287,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">model_profiles</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;qwen3-4b&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">131072</span><span class="p">,</span>
         <span class="s2">&quot;max_output_tokens&quot;</span><span class="p">:</span> <span class="mi">8192</span><span class="p">,</span>
         <span class="s2">&quot;image_inputs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -2267,9 +2296,9 @@
         <span class="s2">&quot;image_outputs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;audio_outputs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;video_outputs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;reasoning_output&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">}</span>
+        <span class="s2">&quot;reasoning_output&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
     <span class="c1"># 此处还可以写更多的model profile</span>
 <span class="p">}</span>
 
@@ -2280,7 +2309,7 @@
 </span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </code></pre></div></p>
@@ -2289,14 +2318,15 @@
 <p>例如 vLLM 支持 <code>responses</code> API，则可以这样使用：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
-<span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>
 <p>目前该功能的实现完全依托于<code>BaseChatOpenAI</code>对于<code>responses</code> API的实现，故在使用中可能存在一定的兼容性问题，后续将会根据实际情况进行优化。</p>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
-<p>本库目前无法保证 100% 适配所有 OpenAI 兼容接口（尽管可以使用兼容性配置来提升兼容性）。若模型提供商已有官方或社区集成类，请优先采用该集成类。如遇到任何兼容性问题，欢迎在本库 GitHub 仓库提交 issue。</p>
+<p>本库尚无法保证对所有 OpenAI 兼容接口的 100% 兼容（虽然可通过兼容性配置尽量提升，但仍可能存在差异）。若目标模型已有官方或社区维护的集成类，请优先使用。如遇兼容性问题，欢迎在 GitHub 仓库提 issue。</p>
+<p>以 OpenRouter 为例，其虽提供 OpenAI 兼容接口，但存在多项兼容差异；LangChain 官方已推出 <a href="https://docs.langchain.com/oss/python/integrations/providers/openrouter">ChatOpenRouter</a>，建议直接采用该类接入 OpenRouter。</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
@@ -2308,7 +2338,7 @@
 <p>但是会存在以下问题：</p>
 <ol>
 <li>
-<p>无法显示非 OpenAI 官方推理模型的思维链（即<code>reasoning_content</code>返回的内容）</p>
+<p>无法显示非 OpenAI 官方推理模型的思维链（即<code>reasoning_content</code> / <code>reasoning</code> 返回的内容）</p>
 </li>
 <li>
 <p>不支持 <code>video</code> 类型的 content_block</p>

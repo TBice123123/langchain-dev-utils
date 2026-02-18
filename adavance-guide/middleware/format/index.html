@@ -1788,7 +1788,7 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, and your name is </span><span class="si">{name}</span><span class="s2">.&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span>
@@ -1809,7 +1809,7 @@
     <span class="n">user</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="c1"># {name} will be obtained from state, {user} will be obtained from context</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, and your name is </span><span class="si">{name}</span><span class="s2">. Your user is named </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
@@ -1838,7 +1838,7 @@
     <span class="n">user</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are an intelligent assistant, and your name is </span><span class="si">{name}</span><span class="s2">. Your user is named </span><span class="si">{user}</span><span class="s2">.&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">format_prompt</span><span class="p">],</span>
     <span class="n">state_schema</span><span class="o">=</span><span class="n">AssistantState</span><span class="p">,</span> <span class="c1"># &#39;name&#39; is also defined in state</span>
@@ -1874,7 +1874,7 @@
 <span class="n">jinja2_formatter</span> <span class="o">=</span> <span class="n">FormatPromptMiddleware</span><span class="p">(</span><span class="n">template_format</span><span class="o">=</span><span class="s2">&quot;jinja2&quot;</span><span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="c1"># Use {{ }} syntax</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
         <span class="s2">&quot;You are an intelligent assistant.</span><span class="se">\n</span><span class="s2">&quot;</span>

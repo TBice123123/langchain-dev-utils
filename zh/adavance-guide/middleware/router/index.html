@@ -1785,7 +1785,7 @@
 
 <span class="n">model_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-8b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合普通任务，如对话、文本生成等&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
@@ -1794,12 +1794,12 @@
         <span class="s2">&quot;model_system_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个助手，擅长处理普通任务，如对话、文本生成等。&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-vl-2b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen2.5-vl-7b&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合视觉任务&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># 如果该模型不需要任何工具，请将此字段设置为空列表 []</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:qwen3-coder-flash&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm:glm-4.7-flash&quot;</span><span class="p">,</span>
         <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="s2">&quot;适合代码生成任务&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_python_code</span><span class="p">],</span>  <span class="c1"># 仅允许使用 run_python_code 工具</span>
     <span class="p">},</span>
@@ -1818,11 +1818,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>  <span class="c1"># 此模型仅作占位，实际由中间件动态替换</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>  <span class="c1"># 此模型仅作占位，实际由中间件动态替换</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_time</span><span class="p">],</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">ModelRouterMiddleware</span><span class="p">(</span>
-            <span class="n">router_model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+            <span class="n">router_model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
             <span class="n">model_list</span><span class="o">=</span><span class="n">model_list</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">],</span>

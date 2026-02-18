@@ -1655,10 +1655,10 @@
 <span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">middleware</span><span class="o">=</span><span class="p">[</span>
         <span class="n">SummarizationMiddleware</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
             <span class="n">trigger</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
             <span class="n">keep</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="p">)</span>

@@ -317,16 +317,17 @@ h1 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid var(--md-default-fg-color--lightest); /* Subtle border */
-  background: transparent;
-  border-radius: 6px; /* Slightly rounded, like standard buttons */
-  color: var(--md-default-fg-color--light);
-  font-size: 0.8rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50px; /* Pill shape */
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
   font-weight: 500;
-  line-height: 1; /* Reset line-height inside H1 */
+  line-height: 1;
   cursor: pointer;
   transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
   
   /* Reset H1 inheritances */
   letter-spacing: normal;
@@ -337,35 +338,35 @@ h1 {
   width: 1rem;
   height: 1rem;
   fill: currentColor;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .copy-llm-btn-inline:hover {
-  background-color: var(--md-default-bg-color); /* Ensure readability on hover */
-  border-color: var(--md-default-fg-color--light);
-  color: var(--md-default-fg-color);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .copy-llm-btn-inline.copy-success {
   color: #10b981; /* Emerald 500 */
   border-color: #10b981;
-  background-color: rgba(16, 185, 129, 0.05);
+  background-color: rgba(16, 185, 129, 0.1);
 }
 
 .copy-llm-text {
-  /* Ensure text is visible and properly sized */
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
-/* Dark mode specific adjustments */
-[data-md-color-scheme="slate"] .copy-llm-btn-inline {
-  border-color: rgba(255, 255, 255, 0.2);
+/* Light mode adjustments */
+[data-md-color-scheme="default"] .copy-llm-btn-inline {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.7);
 }
 
-[data-md-color-scheme="slate"] .copy-llm-btn-inline:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background-color: rgba(255, 255, 255, 0.05);
+[data-md-color-scheme="default"] .copy-llm-btn-inline:hover {
+  border-color: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 /* Mobile responsive */
@@ -375,6 +376,5 @@ h1 {
   }
   .copy-llm-btn-inline {
     padding: 0.4rem;
-    border-radius: 4px;
   }
 }

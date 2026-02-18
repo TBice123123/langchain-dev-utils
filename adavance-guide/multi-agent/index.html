@@ -1921,7 +1921,7 @@
 <span class="p">)</span>
 
 <span class="n">email_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">send_email</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">EMAIL_AGENT_PROMPT</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;email_agent&quot;</span><span class="p">,</span>
@@ -1961,7 +1961,7 @@
 <span class="p">)</span>
 
 <span class="n">calendar_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">create_calendar_event</span><span class="p">,</span> <span class="n">get_available_time_slots</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">CALENDAR_AGENT_PROMPT</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;calendar_agent&quot;</span><span class="p">,</span>
@@ -2004,7 +2004,7 @@ To allow the primary agent to identify and invoke the subagent more accurately, 
 
 
 <span class="n">supervisor_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">schedule_event</span><span class="p">,</span> <span class="n">manage_email</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">SUPERVISOR_PROMPT</span><span class="p">,</span>
 <span class="p">)</span>
@@ -2050,7 +2050,7 @@ To allow the primary agent to identify and invoke the subagent more accurately, 
 <span class="p">)</span>
 
 <span class="n">main_agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
-    <span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span>
     <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">call_subagent_tool</span><span class="p">],</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">MAIN_AGENT_PROMPT</span><span class="p">,</span>
 <span class="p">)</span>

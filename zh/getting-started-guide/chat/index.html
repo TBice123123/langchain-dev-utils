@@ -1941,10 +1941,10 @@
 </ul>
 <h4 id="_11">代码示例</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># 方式一：model 包含 provider 信息</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 
 <span class="c1"># 方式二：单独指定 provider</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="_12">模型方法和参数</h3>
 <p>对于支持的模型方法和参数，需要参考对应的对话模型类的使用说明。如果采用的是第二种情况，则支持所有的<code>BaseChatOpenAI</code> 类的方法和参数。</p>

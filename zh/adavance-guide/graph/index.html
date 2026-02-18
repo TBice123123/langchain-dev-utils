@@ -1810,7 +1810,7 @@
 <p>其中这四个环节（库存确认、创建订单、完成支付、确认发货）可抽象为独立节点，并由专属智能体负责执行。
 使用 <code>create_sequential_graph</code> 将四个节点按顺序连接，即可形成高度自动化、职责清晰的商品购买工作流。</p>
 <p>下面示例展示如何用 <code>create_sequential_graph</code> 构建商品购买的顺序工作流。</p>
-<p>先创建对话模型对象。这里以接入本地 vLLM 部署的 <code>qwen3-4b</code> 为例，其接口与 OpenAI 兼容，因此可直接用 <code>create_openai_compatible_model</code> 构建模型类。</p>
+<p>先创建对话模型对象。这里以接入本地 vLLM 部署的 <code>qwen2.5-7b</code> 为例，其接口与 OpenAI 兼容，因此可直接用 <code>create_openai_compatible_model</code> 构建模型类。</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 
 <span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -1820,7 +1820,7 @@
 <span class="p">)</span>
 </code></pre></div>
 再实例化一个 <code>ChatVLLM</code> 对象，供后续智能体调用。</p>
-<p><div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
+<p><div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </code></pre></div>
 随后创建相关工具，例如查询库存、创建订单、进行支付等。</p>
 <details class="example">

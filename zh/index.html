@@ -1756,9 +1756,11 @@
 </ul>
 </div>
 <h2 id="_2">快速开始</h2>
+<p>本库的一大作用就是用于接入提供 OpenAI-Compatible API 的模型，下面以 vLLM 部署的<code>qwen2.5-7b</code> 为例。</p>
 <p><strong>1. 安装 <code>langchain-dev-utils</code></strong></p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;langchain-dev-utils[standard]&quot;</span>
 </code></pre></div>
+<p><strong>注意</strong>：使用此功能必须安装 <code>langchain-dev-utils[standard]</code> 版本。</p>
 <p><strong>2. 开始使用</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
@@ -1774,12 +1776,12 @@
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;25度，</span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <span class="c1"># 使用字符串动态加载模型</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
 <span class="c1"># 创建智能体</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_current_weather</span><span class="p">])</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;今天纽约的天气如何？&quot;</span><span class="p">)]})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div>

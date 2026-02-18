@@ -616,15 +616,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#existing-langchain-chat-model-classes" class="md-nav__link">
+  <a href="#existing-langchain-chat-model-class" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing LangChain Chat Model Classes
+        Existing LangChain Chat Model Class
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Existing LangChain Chat Model Classes">
+    <nav class="md-nav" aria-label="Existing LangChain Chat Model Class">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -655,15 +655,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#no-existing-langchain-chat-model-class-but-model-provider-supports-openai-compatible-api" class="md-nav__link">
+  <a href="#no-langchain-chat-model-class-but-provider-supports-openai-compatible-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        No Existing LangChain Chat Model Class, but Model Provider Supports OpenAI-Compatible API
+        No LangChain Chat Model Class, but Provider Supports OpenAI Compatible API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="No Existing LangChain Chat Model Class, but Model Provider Supports OpenAI-Compatible API">
+    <nav class="md-nav" aria-label="No LangChain Chat Model Class, but Provider Supports OpenAI Compatible API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1849,33 +1849,33 @@
 
 <h1 id="chat-model-management">Chat Model Management</h1>
 <h2 id="overview">Overview</h2>
-<p>LangChain's <code>init_chat_model</code> function only supports a limited number of model providers. This library provides a more flexible chat model management solution that supports custom model providers, particularly suitable for scenarios requiring integration with model services not natively supported (such as vLLM, etc.).</p>
+<p>LangChain's <code>init_chat_model</code> function only supports a limited number of model providers. This library provides a more flexible chat model management solution, supporting custom model providers, which is particularly useful for scenarios requiring integration with model services not natively supported (such as vLLM, etc.).</p>
 <h2 id="registering-model-providers">Registering Model Providers</h2>
-<p>Registering a chat model provider requires calling <code>register_model_provider</code>. The registration steps vary slightly depending on the situation.</p>
-<h3 id="existing-langchain-chat-model-classes">Existing LangChain Chat Model Classes</h3>
-<p>If the model provider already has a ready-made and suitable LangChain integration (see <a href="https://docs.langchain.com/oss/python/integrations/chat">Chat Model Class Integrations</a>), pass the corresponding integrated chat model class as the <code>chat_model</code> parameter.</p>
+<p>To register a chat model provider, you need to call <code>register_model_provider</code>. The registration steps vary slightly depending on the situation.</p>
+<h3 id="existing-langchain-chat-model-class">Existing LangChain Chat Model Class</h3>
+<p>If the model provider already has a ready-made and suitable LangChain integration (see <a href="https://docs.langchain.com/oss/python/integrations/chat">Chat Model Integrations</a>), pass the corresponding integrated chat model class as the <code>chat_model</code> parameter.</p>
 <h4 id="code-example">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.fake_chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeChatModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_model_provider</span>
 
 <span class="n">register_model_provider</span><span class="p">(</span>
 <span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
-</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChat</span><span class="p">,</span>
 </span><span class="p">)</span>
 
-<span class="c1"># FakeChatModel is for testing only. In actual usage, you must pass a ChatModel class with real functionality.</span>
+<span class="c1"># FakeChatModel is for testing only; in actual usage, you must pass a ChatModel class with real functionality.</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Parameter Setting Instructions</p>
-<p><code>provider_name</code> represents the name of the model provider, used for subsequent referencing in <code>load_chat_model</code>. The name must start with a letter or number, can only contain letters, numbers, and underscores, with a maximum length of 20 characters.</p>
+<p><code>provider_name</code> represents the name of the model provider, used for subsequent reference in <code>load_chat_model</code>. The name must start with a letter or number, contain only letters, numbers, and underscores, and be no longer than 20 characters.</p>
 </div>
 <h4 id="optional-parameter-description">Optional Parameter Description</h4>
 <p><strong>base_url</strong></p>
-<p>This parameter typically does not need to be set (because chat model classes usually define a default API address internally). Pass <code>base_url</code> only when you need to override the chat model class's default address, and it only affects attributes with field names <code>api_base</code> or <code>base_url</code> (including aliases).</p>
+<p>This parameter usually does not need to be set (since the chat model class generally defines a default API address internally). Only pass <code>base_url</code> when you need to override the default address of the chat model class, and it only takes effect for attributes named <code>api_base</code> or <code>base_url</code> (including aliases).</p>
 <p><strong>model_profiles</strong></p>
-<p>If your LangChain integrated chat model class fully supports the <code>profile</code> parameter (i.e., you can directly access the model's related properties via <code>model.profile</code>, such as <code>max_input_tokens</code>, <code>tool_calling</code>, etc.), you do not need to set <code>model_profiles</code> additionally.</p>
-<p>If accessing <code>model.profile</code> returns an empty dictionary <code>{}</code>, it indicates that the LangChain chat model class may not yet support the <code>profile</code> parameter. In this case, you can manually provide <code>model_profiles</code>.</p>
-<p><code>model_profiles</code> is a dictionary where each key is a model name and the value is the corresponding model's profile configuration:</p>
+<p>If your LangChain integrated chat model class fully supports the <code>profile</code> parameter (i.e., relevant model properties like <code>max_input_tokens</code>, <code>tool_calling</code>, etc., can be accessed directly via <code>model.profile</code>), there is no need to set <code>model_profiles</code> additionally.</p>
+<p>If accessing via <code>model.profile</code> returns an empty dictionary <code>{}</code>, it indicates that the LangChain chat model class may not currently support the <code>profile</code> parameter. In this case, you can manually provide <code>model_profiles</code>.</p>
+<p><code>model_profiles</code> is a dictionary where each key is a model name, and the value is the profile configuration for that model:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
     <span class="s2">&quot;model_name_1&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">100_000</span><span class="p">,</span>
@@ -1893,10 +1893,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition info">
-<p class="admonition-title">Tip</p>
-<p>It is recommended to use the <code>langchain-model-profiles</code> library to obtain profiles for the model providers you use.</p>
+<p class="admonition-title">Hint</p>
+<p>It is recommended to use the <code>langchain-model-profiles</code> library to obtain profiles for your model provider.</p>
 </div>
-<h3 id="no-existing-langchain-chat-model-class-but-model-provider-supports-openai-compatible-api">No Existing LangChain Chat Model Class, but Model Provider Supports OpenAI-Compatible API</h3>
+<h3 id="no-langchain-chat-model-class-but-provider-supports-openai-compatible-api">No LangChain Chat Model Class, but Provider Supports OpenAI Compatible API</h3>
 <p>In this case, the <code>chat_model</code> parameter must be set to <code>"openai-compatible"</code>.</p>
 <h4 id="code-example_1">Code Example</h4>
 <div class="highlight"><pre><span></span><code><span class="n">register_model_provider</span><span class="p">(</span>
@@ -1905,7 +1905,7 @@
 </span><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
 </span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Note</strong>: For more details about this part, please refer to <a href="../../adavance-guide/openai-compatible/register/">OpenAI-Compatible API Integration</a>.</p>
+<p><strong>Note</strong>: For more details on this part, please refer to <a href="../../adavance-guide/openai-compatible/register/">OpenAI Compatible API Integration</a>.</p>
 <h2 id="batch-registration">Batch Registration</h2>
 <p>If you need to register multiple providers, you can use <code>batch_register_model_provider</code> to avoid repeated calls.</p>
 <h4 id="code-example_2">Code Example</h4>
@@ -1928,44 +1928,44 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
-<p>Both registration functions are implemented based on a global dictionary. To avoid multi-threading issues, <strong>all registrations must be completed during application startup</strong>; dynamic registration during runtime is prohibited.</p>
-<p>Additionally, when setting <code>chat_model</code> to <code>openai-compatible</code> during registration, the library dynamically creates a new model class internally using <code>pydantic.create_model</code> (generating the corresponding chat model integration class based on <code>BaseChatOpenAICompatible</code>). This process involves Python metaclass operations and pydantic validation logic initialization, incurring some performance overhead. Therefore, avoid frequent registration during runtime.</p>
+<p>Both registration functions are implemented based on a global dictionary. To avoid multi-threading issues, <strong>all registrations must be completed during the application startup phase</strong>; dynamic registration at runtime is prohibited.</p>
+<p>Additionally, if <code>chat_model</code> is set to <code>openai-compatible</code> during registration, a new model class is dynamically created internally via <code>pydantic.create_model</code> (generating the corresponding chat model integration class based on <code>BaseChatOpenAICompatible</code>). This process involves Python metaclass operations and pydantic validation logic initialization, which incurs some performance overhead. Therefore, please avoid frequent registration during runtime.</p>
 </div>
 <h2 id="loading-chat-models">Loading Chat Models</h2>
 <p>Use the <code>load_chat_model</code> function to load a chat model (initialize a chat model instance).</p>
-<p>This function receives the <code>model</code> parameter to specify the model name, the optional <code>model_provider</code> parameter to specify the model provider, and can also accept any number of keyword arguments for passing additional parameters to the chat model class.</p>
+<p>This function accepts a <code>model</code> parameter to specify the model name, an optional <code>model_provider</code> parameter to specify the model provider, and any number of keyword arguments to pass extra parameters to the chat model class.</p>
 <h4 id="parameter-rules">Parameter Rules</h4>
 <ul>
-<li>If <code>model_provider</code> is not passed, <code>model</code> must be in the format <code>provider_name:model_name</code>;</li>
-<li>If <code>model_provider</code> is passed, <code>model</code> must be only <code>model_name</code>.</li>
+<li>If <code>model_provider</code> is not passed, <code>model</code> must be in the <code>provider_name:model_name</code> format;</li>
+<li>If <code>model_provider</code> is passed, <code>model</code> must be just the <code>model_name</code>.</li>
 </ul>
 <h4 id="code-example_3">Code Example</h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Method 1: model includes provider information</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-4b&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Method 1: model includes provider info</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;vllm:qwen2.5-7b&quot;</span><span class="p">)</span>
 
-<span class="c1"># Method 2: separately specify provider</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
+<span class="c1"># Method 2: Specify provider separately</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="model-methods-and-parameters">Model Methods and Parameters</h3>
-<p>For supported model methods and parameters, refer to the usage documentation of the corresponding chat model class. If you are using the second case, all methods and parameters of the <code>BaseChatOpenAI</code> class are supported.</p>
+<p>For supported model methods and parameters, refer to the usage instructions of the corresponding chat model class. If using the second scenario (OpenAI-compatible), all methods and parameters of the <code>BaseChatOpenAI</code> class are supported.</p>
 <h3 id="compatibility-with-official-providers">Compatibility with Official Providers</h3>
-<p><code>load_chat_model</code> looks up the global registration dictionary based on the <code>model_provider</code> parameter: if found, it instantiates using the corresponding model class from the dictionary; if not found, it initializes via <code>init_chat_model</code>. This means providers officially supported by LangChain (e.g., openai) can be called directly without registration.</p>
+<p><code>load_chat_model</code> looks up the global registration dictionary based on the <code>model_provider</code> parameter: if found, it instantiates the model class from that dictionary; if not found, it initializes via <code>init_chat_model</code>. This means providers officially supported by LangChain (like <code>openai</code>) can be called directly without registration.</p>
 <div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">)</span>
-<span class="c1"># or</span>
+<span class="c1"># Or</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">load_chat_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">model_provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition success">
-<p class="admonition-title">Best Practice</p>
-<p>For using this module, you can choose based on the following three situations:</p>
+<p class="admonition-title">Best Practices</p>
+<p>For the usage of this module, you can choose based on the following three situations:</p>
 <ol>
 <li>
-<p>If all model providers you are integrating are supported by the official <code>init_chat_model</code>, use the official function directly for the best compatibility and stability.</p>
+<p>If all model providers being integrated are supported by the official <code>init_chat_model</code>, please use the official function directly for optimal compatibility and stability.</p>
 </li>
 <li>
-<p>If some model providers you are integrating are not officially supported, use this module's functionality: first register the model provider using <code>register_model_provider</code>, then load the model using <code>load_chat_model</code>.</p>
+<p>If some model providers being integrated are not officially supported, you can use the features of this module: first register the model provider using <code>register_model_provider</code>, and then load the model using <code>load_chat_model</code>.</p>
 </li>
 <li>
-<p>If the model provider you are integrating does not have a suitable integration yet, but the provider offers an OpenAI-compatible API (such as vLLM), it is recommended to use this module's functionality: first register the model provider using <code>register_model_provider</code> (passing <code>openai-compatible</code> for <code>chat_model</code>), then load the model using <code>load_chat_model</code>.</p>
+<p>If there is no suitable integration for the model provider yet, but the provider offers an OpenAI-compatible API (like vLLM), it is recommended to use the features of this module: first register the model provider using <code>register_model_provider</code> (pass <code>openai-compatible</code> to <code>chat_model</code>), and then load the model using <code>load_chat_model</code>.</p>
 </li>
 </ol>
 </div>
