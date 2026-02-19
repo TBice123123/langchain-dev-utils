@@ -100,7 +100,7 @@ print(res)
 
 
 !!! warning "注意"
-    同样，该函数底层使用 `pydantic.create_model` 创建嵌入模型类，会带来一定的性能开销。建议在项目启动阶段创建好集成类，后续避免动态创建。
+    同样，该函数底层使用 [pydantic 的 create_model](https://docs.pydantic.dev/latest/concepts/models/#dynamic-model-creation) 创建嵌入模型类，会带来一定的性能开销。建议在项目启动阶段创建好集成类，后续避免动态创建。
 
 
 !!! success "最佳实践"

@@ -54,6 +54,6 @@ The package automatically installs the following dependencies:
 
 If you install the `standard` version, the following additional dependencies will also be installed:
 
-- `langchain-openai` (for model management)
-- `json-repair` (for fixing tool-call errors in middleware)
-- `jinja2` (for formatting system prompt templates in middleware)
+- `langchain-openai` (for implementing OpenAI-compatible API integration model classes)
+- `json-repair` (for implementing tool-call error repair middleware)
+- `jinja2` (for implementing system prompt template formatting middleware)

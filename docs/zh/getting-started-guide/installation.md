@@ -55,9 +55,9 @@ print(langchain_dev_utils.__version__)
 
 如果是 standard 版本，还会安装以下依赖项：
 
-- `langchain-openai`（用于模型管理）
-- `json-repair`(用于中间件的工具调用错误修复)
-- `jinja2`(用于中间件的格式化系统提示词模板)
+- `langchain-openai`：用于实现 OpenAI 兼容 API 的模型类集成
+- `json-repair`：用于实现工具调用错误修复中间件
+- `jinja2`：用于实现系统提示词模板格式化中间件
 
 
 

@@ -46,12 +46,19 @@ extra_css:
 extra_javascript:
   - assets/javascripts/extra.js
 
+
 markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
   - admonition
   - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.highlight
   - attr_list
   - md_in_html
   - tables

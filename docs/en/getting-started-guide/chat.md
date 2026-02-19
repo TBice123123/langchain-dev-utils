@@ -6,7 +6,7 @@ LangChain's `init_chat_model` function only supports a limited number of model p
 
 ## Registering Model Providers
 
-To register a chat model provider, you need to call `register_model_provider`. The registration steps vary slightly depending on the situation.
+To register a chat model provider, call `register_model_provider`. The registration steps vary slightly depending on the situation.
 
 ### Existing LangChain Chat Model Class
 
@@ -20,7 +20,7 @@ from langchain_dev_utils.chat_models import register_model_provider
 
 register_model_provider(
     provider_name="fake_provider",
-    chat_model=FakeChat,
+    chat_model=FakeChatModel,
 )
 
 # FakeChatModel is for testing only; in actual usage, you must pass a ChatModel class with real functionality.
@@ -57,7 +57,7 @@ If accessing via `model.profile` returns an empty dictionary `{}`, it indicates 
         "tool_calling": False,
         # ... other optional fields
     },
-    # Can have any number of model configurations
+    # Can contain any number of model configurations
 }
 ```
 !!! info "Hint"

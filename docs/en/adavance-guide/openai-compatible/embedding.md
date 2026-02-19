@@ -98,7 +98,8 @@ print(res)
     4. Single-text token limit: Cannot be controlled via parameters; must be ensured during preprocessing and chunking stages.
 
 !!! warning "Note"
-    Similarly, this function uses `pydantic.create_model` under the hood to create embedding model classes, which incurs some performance overhead. It is recommended to create integration classes during project startup and avoid dynamic creation afterward.
+    Similarly, this function uses [pydantic's create_model](https://docs.pydantic.dev/latest/concepts/models/#dynamic-model-creation) under the hood to create the embedding model class, which incurs a certain performance overhead. It is recommended to create the integration class during the project startup phase and avoid dynamic creation later on.
+
 
 !!! success "Best Practice"
     When connecting to an OpenAI-compatible API embedding model provider, you can directly use `langchain-openai`'s `OpenAIEmbeddings` and point `base_url` and `api_key` to your provider's service. Embedding model API compatibility is usually better: in most cases, you can directly use `OpenAIEmbeddings` with `check_embedding_ctx_length=False`.
