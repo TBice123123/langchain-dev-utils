@@ -2,406 +2,406 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/graph/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/graph/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/graph/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/multi-agent/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/multi-agent/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/multi-agent/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/format/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/format/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/format/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/handoffs/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/handoffs/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/handoffs/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/official/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/official/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/official/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/overview/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/overview/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/overview/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/plan/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/plan/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/plan/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/router/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/router/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/router/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/tool-call-repair/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/tool-call-repair/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/tool-call-repair/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/chat/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/chat/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/chat/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/embedding/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/embedding/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/embedding/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/overview/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/overview/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/overview/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/register/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/register/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/register/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/api-reference/agent/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/agent/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/agent/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/api-reference/chat_model/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/chat_model/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/chat_model/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/api-reference/embeddings/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/embeddings/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/embeddings/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/api-reference/graph/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/graph/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/graph/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/api-reference/message_convert/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/message_convert/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/message_convert/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/api-reference/tool_calling/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/tool_calling/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/tool_calling/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/chat/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/chat/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/chat/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/embedding/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/embedding/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/embedding/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/format/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/format/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/format/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/human-in-the-loop/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/human-in-the-loop/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/human-in-the-loop/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/installation/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/installation/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/installation/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/message/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/message/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/message/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/tool/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/tool/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/tool/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/resource/coding/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/resource/coding/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/resource/coding/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/resource/example-project/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/resource/example-project/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/resource/example-project/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/graph/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/graph/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/graph/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/multi-agent/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/multi-agent/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/multi-agent/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/format/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/format/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/format/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/handoffs/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/handoffs/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/handoffs/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/official/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/official/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/official/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/overview/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/overview/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/overview/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/plan/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/plan/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/plan/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/router/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/router/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/router/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/tool-call-repair/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/middleware/tool-call-repair/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/middleware/tool-call-repair/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/chat/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/chat/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/chat/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/embedding/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/embedding/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/embedding/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/overview/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/overview/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/overview/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/register/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/adavance-guide/openai-compatible/register/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/adavance-guide/openai-compatible/register/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/agent/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/agent/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/agent/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/chat_model/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/chat_model/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/chat_model/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/embeddings/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/embeddings/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/embeddings/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/graph/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/graph/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/graph/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/message_convert/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/message_convert/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/message_convert/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/tool_calling/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/api-reference/tool_calling/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/api-reference/tool_calling/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/chat/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/chat/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/chat/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/embedding/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/embedding/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/embedding/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/format/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/format/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/format/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/human-in-the-loop/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/human-in-the-loop/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/human-in-the-loop/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/installation/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/installation/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/installation/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/message/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/message/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/message/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/tool/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/getting-started-guide/tool/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/getting-started-guide/tool/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/resource/coding/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/resource/coding/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/resource/coding/"/>
     </url>
     <url>
         <loc>https://tbice123123.github.io/langchain-dev-utils/zh/resource/example-project/</loc>
-        <lastmod>2026-02-18</lastmod>
+        <lastmod>2026-02-19</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://tbice123123.github.io/langchain-dev-utils/zh/resource/example-project/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://tbice123123.github.io/langchain-dev-utils/resource/example-project/"/>

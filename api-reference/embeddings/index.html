@@ -1956,12 +1956,12 @@
 <h2 id="register_embeddings_provider">register_embeddings_provider</h2>
 <p>Register a provider for embedding models.</p>
 <h3 id="function-signature">Function Signature</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">register_embeddings_provider</span><span class="p">(</span>
-    <span class="n">provider_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">embeddings_model</span><span class="p">:</span> <span class="n">EmbeddingsType</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">register_embeddings_provider</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">provider_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">embeddings_model</span><span class="p">:</span> <span class="n">EmbeddingsType</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></code></pre></div>
 <h3 id="parameters">Parameters</h3>
 <table>
 <thead>
@@ -1998,17 +1998,17 @@
 </tbody>
 </table>
 <h3 id="example">Example</h3>
-<div class="highlight"><pre><span></span><code><span class="n">register_embeddings_provider</span><span class="p">(</span><span class="s2">&quot;fakeembeddings&quot;</span><span class="p">,</span> <span class="n">FakeEmbeddings</span><span class="p">)</span>
-<span class="n">register_embeddings_provider</span><span class="p">(</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">register_embeddings_provider</span><span class="p">(</span><span class="s2">&quot;fakeembeddings&quot;</span><span class="p">,</span> <span class="n">FakeEmbeddings</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">register_embeddings_provider</span><span class="p">(</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">)</span>
+</span></code></pre></div>
 <hr />
 <h2 id="batch_register_embeddings_provider">batch_register_embeddings_provider</h2>
 <p>Batch register embedding model providers.</p>
 <h3 id="function-signature_1">Function Signature</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">batch_register_embeddings_provider</span><span class="p">(</span>
-    <span class="n">providers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EmbeddingProvider</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">batch_register_embeddings_provider</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">providers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EmbeddingProvider</span><span class="p">]</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></code></pre></div>
 <h3 id="parameters_1">Parameters</h3>
 <table>
 <thead>
@@ -2031,22 +2031,22 @@
 </tbody>
 </table>
 <h3 id="example_1">Example</h3>
-<div class="highlight"><pre><span></span><code><span class="n">batch_register_embeddings_provider</span><span class="p">([</span>
-    <span class="p">{</span><span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;fakeembeddings&quot;</span><span class="p">,</span> <span class="s2">&quot;embeddings_model&quot;</span><span class="p">:</span> <span class="n">FakeEmbeddings</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;embeddings_model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">},</span>
-<span class="p">])</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">batch_register_embeddings_provider</span><span class="p">([</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="p">{</span><span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;fakeembeddings&quot;</span><span class="p">,</span> <span class="s2">&quot;embeddings_model&quot;</span><span class="p">:</span> <span class="n">FakeEmbeddings</span><span class="p">},</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="p">{</span><span class="s2">&quot;provider_name&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;embeddings_model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">},</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">])</span>
+</span></code></pre></div>
 <hr />
 <h2 id="load_embeddings">load_embeddings</h2>
 <p>Load an embedding model from registered providers.</p>
 <h3 id="function-signature_2">Function Signature</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_embeddings</span><span class="p">(</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">provider</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Embeddings</span><span class="p">:</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_embeddings</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">provider</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Embeddings</span><span class="p">:</span>
+</span></code></pre></div>
 <h3 id="parameters_2">Parameters</h3>
 <table>
 <thead>
@@ -2083,18 +2083,18 @@
 </tbody>
 </table>
 <h3 id="example_2">Example</h3>
-<div class="highlight"><pre><span></span><code><span class="n">embeddings</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-embedding-4b&quot;</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">embeddings</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;vllm:qwen3-embedding-4b&quot;</span><span class="p">)</span>
+</span></code></pre></div>
 <hr />
 <h2 id="create_openai_compatible_embedding">create_openai_compatible_embedding</h2>
 <p>Create an OpenAI compatible embedding model class.</p>
 <h3 id="function-signature_3">Function Signature</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_openai_compatible_embedding</span><span class="p">(</span>
-    <span class="n">embedding_provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">embedding_model_cls_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Embeddings</span><span class="p">]:</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_openai_compatible_embedding</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">embedding_provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">embedding_model_cls_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Embeddings</span><span class="p">]:</span>
+</span></code></pre></div>
 <h3 id="parameters_3">Parameters</h3>
 <table>
 <thead>
@@ -2146,26 +2146,26 @@
 </tbody>
 </table>
 <h3 id="example_3">Example</h3>
-<h2 id="vllmembeddings-create_openai_compatible_embedding-embedding_providervllm-base_urlhttplocalhost8000v1-embedding_model_cls_namevllmembeddings"><div class="highlight"><pre><span></span><code><span class="n">VLLMEmbeddings</span> <span class="o">=</span> <span class="n">create_openai_compatible_embedding</span><span class="p">(</span>
-    <span class="n">embedding_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
-    <span class="n">embedding_model_cls_name</span><span class="o">=</span><span class="s2">&quot;VLLMEmbeddings&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div></h2>
+<h2 id="vllmembeddings-create_openai_compatible_embedding-embedding_providervllm-base_urlhttplocalhost8000v1-embedding_model_cls_namevllmembeddings"><div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">VLLMEmbeddings</span> <span class="o">=</span> <span class="n">create_openai_compatible_embedding</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">embedding_provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">embedding_model_cls_name</span><span class="o">=</span><span class="s2">&quot;VLLMEmbeddings&quot;</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">)</span>
+</span></code></pre></div></h2>
 <h2 id="embeddingstype">EmbeddingsType</h2>
 <p>Types supported by the <code>embeddings_model</code> parameter when registering embedding providers.</p>
 <h3 id="type-definition">Type Definition</h3>
-<div class="highlight"><pre><span></span><code><span class="n">EmbeddingsType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">Embeddings</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">]]</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">EmbeddingsType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">Embeddings</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">]]</span>
+</span></code></pre></div>
 <hr />
 <h2 id="embeddingprovider">EmbeddingProvider</h2>
 <p>Embedding model provider configuration type.</p>
 <h3 id="class-definition">Class Definition</h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmbeddingProvider</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-    <span class="n">provider_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">embeddings_model</span><span class="p">:</span> <span class="n">EmbeddingsType</span>
-    <span class="n">base_url</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">EmbeddingProvider</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">provider_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">embeddings_model</span><span class="p">:</span> <span class="n">EmbeddingsType</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">base_url</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span></code></pre></div>
 <h3 id="field-description">Field Description</h3>
 <table>
 <thead>
