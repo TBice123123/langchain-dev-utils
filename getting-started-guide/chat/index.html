@@ -1851,7 +1851,7 @@
 <h2 id="overview">Overview</h2>
 <p>LangChain's <code>init_chat_model</code> function only supports a limited number of model providers. This library provides a more flexible chat model management solution, supporting custom model providers, which is particularly useful for scenarios requiring integration with model services not natively supported (such as vLLM, etc.).</p>
 <h2 id="registering-model-providers">Registering Model Providers</h2>
-<p>To register a chat model provider, you need to call <code>register_model_provider</code>. The registration steps vary slightly depending on the situation.</p>
+<p>To register a chat model provider, call <code>register_model_provider</code>. The registration steps vary slightly depending on the situation.</p>
 <h3 id="existing-langchain-chat-model-class">Existing LangChain Chat Model Class</h3>
 <p>If the model provider already has a ready-made and suitable LangChain integration (see <a href="https://docs.langchain.com/oss/python/integrations/chat">Chat Model Integrations</a>), pass the corresponding integrated chat model class as the <code>chat_model</code> parameter.</p>
 <h4 id="code-example">Code Example</h4>
@@ -1860,7 +1860,7 @@
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">register_model_provider</span><span class="p">(</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;fake_provider&quot;</span><span class="p">,</span>
-</span></span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChat</span><span class="p">,</span>
+</span></span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="hll">    <span class="n">chat_model</span><span class="o">=</span><span class="n">FakeChatModel</span><span class="p">,</span>
 </span></span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># FakeChatModel is for testing only; in actual usage, you must pass a ChatModel class with real functionality.</span>
@@ -1889,7 +1889,7 @@
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="c1"># ... other optional fields</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="p">},</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="c1"># Can have any number of model configurations</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="c1"># Can contain any number of model configurations</span>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
 </span></code></pre></div>
 <div class="admonition info">

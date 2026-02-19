@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#creation-and-usage-of-chat-models" class="md-skip">
+        <a href="#creating-and-using-chat-models" class="md-skip">
           Skip to content
         </a>
       
@@ -1798,9 +1798,9 @@
   
 
 
-<h1 id="creation-and-usage-of-chat-models">Creation and Usage of Chat Models</h1>
+<h1 id="creating-and-using-chat-models">Creating and Using Chat Models</h1>
 <h2 id="creating-a-chat-model-class">Creating a Chat Model Class</h2>
-<p>You can use the <code>create_openai_compatible_model</code> function to create a chat model integration class. This function accepts the following parameters:</p>
+<p>Use the <code>create_openai_compatible_model</code> function to create a chat model integration class. This function accepts the following parameters:</p>
 <table>
 <thead>
 <tr>
@@ -1823,7 +1823,7 @@
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td>A dictionary of profile configurations for models under this provider.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
+<td>A dictionary of profile configurations for various models under this provider.<br><br><strong>Type</strong>: <code>dict</code><br><strong>Required</strong>: No</td>
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
@@ -1831,7 +1831,7 @@
 </tr>
 </tbody>
 </table>
-<p>The <code>compatibility_options</code> is a dictionary used to declare the provider's support for specific OpenAI API features to improve compatibility and stability.</p>
+<p><code>compatibility_options</code> is a dictionary used to declare the support status and configuration methods for various features of the provider to improve compatibility and stability. These features include the level of support for official OpenAI API features (such as <code>tool_choice</code>, <code>response_format</code>), as well as unofficial extended features (such as reasoning fields <code>reasoning_content</code> / <code>reasoning</code>).</p>
 <p>Currently, the following configuration items are supported:</p>
 <table>
 <thead>
@@ -1855,7 +1855,7 @@
 </tr>
 <tr>
 <td><code>reasoning_field_name</code></td>
-<td>The field name for reasoning content returned by the provider; generally does not need configuration. Optional values are <code>reasoning_content</code> or <code>reasoning</code>.<br><br><strong>Type</strong>: <code>str</code><br><strong>Default Value</strong>: <code>"reasoning_content"</code></td>
+<td>The field name the provider uses to return reasoning content; generally does not need configuration. Options are <code>reasoning_content</code> or <code>reasoning</code>.<br><br><strong>Type</strong>: <code>str</code><br><strong>Default Value</strong>: <code>"reasoning_content"</code></td>
 </tr>
 <tr>
 <td><code>include_usage</code></td>
@@ -1864,25 +1864,23 @@
 </tbody>
 </table>
 <div class="admonition info">
-<p class="admonition-title">Supplement</p>
-<p>Different models from the same provider may have varying support for parameters like <code>tool_choice</code> and <code>response_format</code>. Therefore, this library designs <code>supported_tool_choice</code>, <code>supported_response_format</code>, and <code>reasoning_keep_policy</code> as <strong>instance attributes</strong> of the class. You can pass these parameters when creating the chat model class to represent the support situation for most models of that provider. If specific models require fine-tuning later, these parameters can be overridden during instantiation.</p>
-<p><code>reasoning_field_name</code> and <code>include_usage</code> are private attributes of the class (implemented via <a href="https://docs.pydantic.dev/latest/concepts/models/#private-model-attributes">pydantic's PrivateAttr</a>). They can only be passed via <code>compatibility_options</code> when creating or registering the model class and cannot be passed during instantiation.</p>
+<p class="admonition-title">Additional Notes</p>
+<p>Different models from the same provider may have different levels of support for parameters like <code>tool_choice</code> and <code>response_format</code>. Therefore, this library designs <code>supported_tool_choice</code>, <code>supported_response_format</code>, and <code>reasoning_keep_policy</code> as <strong>instance attributes</strong> of the class. You can pass these parameters when creating the chat model class to set the default support status for most models of that provider; if specific models require fine-tuning later, they can be overridden during instantiation.</p>
+<p><code>reasoning_field_name</code> and <code>include_usage</code> are private attributes of the class (implemented via <a href="https://docs.pydantic.dev/latest/concepts/models/#private-model-attributes">pydantic's PrivateAttr</a>). They can only be passed via <code>compatibility_options</code> when creating or registering the model class and cannot be overridden during instantiation.</p>
 </div>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>This library uses the built-in <code>BaseChatOpenAICompatible</code> to build a provider-specific chat model class based on user-provided parameters. This class inherits from <code>BaseChatOpenAI</code> in <code>langchain-openai</code> and enhances it in the following ways:</p>
-<p><strong>1. Support for Extra Reasoning Fields (reasoning_content / reasoning)</strong></p>
-<p><code>ChatOpenAI</code> adheres to the official OpenAI response schema and thus cannot extract or retain provider-specific fields (e.g., <code>reasoning_content</code>, <code>reasoning</code>).
-This class extracts and retains <code>reasoning_content</code> by default and can be configured via <code>reasoning_field_name</code> in <code>compatibility_options</code> to extract <code>reasoning</code>.</p>
-<p><strong>2. Dynamic Adaptation for Optimal Structured Output Method</strong></p>
-<p>The chat model class created by this library dynamically selects the best structured output method (<code>function_calling</code> or <code>json_schema</code>) based on the actual capabilities of the model provider, utilizing <code>supported_response_format</code> in <code>compatibility_options</code>.</p>
-<p><strong>3. Support for Relevant Parameter Configuration</strong></p>
-<p>This library provides the <code>compatibility_options</code> parameter to address discrepancies between parameters and the official OpenAI API.
-For example, when different model providers have inconsistent support for <code>tool_choice</code>, it can be adapted by setting <code>supported_tool_choice</code> in <code>compatibility_options</code>.</p>
+<p class="admonition-title">Feature Enhancements</p>
+<p>Based on user-provided parameters, this library uses the built-in <code>BaseChatOpenAICompatible</code> to build a chat model class oriented towards specific providers. This class inherits from <code>BaseChatOpenAI</code> in <code>langchain-openai</code> and includes the following enhancements:</p>
+<p><strong>1. Support for Additional Reasoning Fields (reasoning_content / reasoning)</strong></p>
+<p><code>ChatOpenAI</code> follows the official OpenAI response format and cannot extract or retain provider-specific fields (e.g., <code>reasoning_content</code>, <code>reasoning</code>). This class extracts and retains <code>reasoning_content</code> by default and can be configured via <code>reasoning_field_name</code> in <code>compatibility_options</code> to extract <code>reasoning</code>.</p>
+<p><strong>2. Dynamic Adaptation of Structured Output Methods</strong></p>
+<p>The chat model class created by this library dynamically selects the best structured output method (<code>function_calling</code> or <code>json_schema</code>) based on the provider's actual capabilities, utilizing <code>supported_response_format</code> in <code>compatibility_options</code>.</p>
+<p><strong>3. Support for Parameter Differentiation</strong></p>
+<p>For cases where certain parameters differ from the official OpenAI API, this library provides the <code>compatibility_options</code> parameter for adaptation. For example, when different model providers have inconsistent support for <code>tool_choice</code>, adaptation can be achieved by setting <code>supported_tool_choice</code>.</p>
 <p><strong>4. Support for <code>video</code> Type content_block</strong></p>
-<p>Fills the capability gap of <code>ChatOpenAI</code> regarding <code>video</code> type <code>content_block</code>.</p>
+<p>Bridges the capability gap of <code>ChatOpenAI</code> regarding video type <code>content_block</code>.</p>
 </div>
-<p>Use the following code to create a chat model class:</p>
+<p>Example code for creating a chat model class:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -1894,7 +1892,7 @@ For example, when different model providers have inconsistent support for <code>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
 </span></code></pre></div>
-<p>When creating the chat model class, the <code>base_url</code> parameter can be omitted. If not passed, the library will read the corresponding environment variable by default, for example:</p>
+<p>The <code>base_url</code> parameter can be omitted when creating the chat model class. If not passed, the library will read the corresponding environment variable, for example:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
 </span></code></pre></div>
 <p>In this case, the code can omit <code>base_url</code>:</p>
@@ -1908,31 +1906,31 @@ For example, when different model providers have inconsistent support for <code>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
 </span></code></pre></div>
-<p><strong>Note</strong>: The prerequisite for the above code to run successfully is that the environment variable <code>VLLM_API_KEY</code> is configured. Although vLLM itself does not require an API Key, it needs to be passed during the initialization of the chat model class, so please set this variable first, for example:</p>
+<p><strong>Note</strong>: The prerequisite for the above code to run successfully is that the environment variable <code>VLLM_API_KEY</code> has been configured. Although vLLM itself does not require an API Key, it is needed when initializing the chat model class, so please set this variable first, for example:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm_api_key
 </span></code></pre></div>
 <div class="admonition info">
-<p class="admonition-title">Tip</p>
-<p>Naming rules for environment variables of created chat model classes (embedding model classes also follow this rule):</p>
+<p class="admonition-title">Environment Variable Naming Rules</p>
+<p>Environment variable naming rules for created chat model classes (embedding model classes follow the same rule):</p>
 <ul>
 <li>
-<p>API Address: <code>${PROVIDER_NAME}_API_BASE</code> (all uppercase, separated by underscores).</p>
+<p>API Address: <code>${PROVIDER_NAME}_API_BASE</code> (all uppercase, underscore separated)</p>
 </li>
 <li>
-<p>API Key: <code>${PROVIDER_NAME}_API_KEY</code> (all uppercase, separated by underscores).</p>
+<p>API Key: <code>${PROVIDER_NAME}_API_KEY</code> (all uppercase, underscore separated)</p>
 </li>
 </ul>
 </div>
 <h2 id="using-the-chat-model-class">Using the Chat Model Class</h2>
 <h3 id="standard-invocation">Standard Invocation</h3>
-<p>You can perform standard invocation via the <code>invoke</code> method, which returns the model response.</p>
+<p>Use the <code>invoke</code> method for standard invocation, which returns the model response:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Asynchronous invocation via <code>ainvoke</code> is also supported:</p>
+<p>It also supports <code>ainvoke</code> for asynchronous invocation:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
@@ -1940,14 +1938,14 @@ For example, when different model providers have inconsistent support for <code>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="streaming-invocation">Streaming Invocation</h3>
-<p>You can perform streaming invocation via the <code>stream</code> method to stream the model response.</p>
+<p>Use the <code>stream</code> method for streaming invocation:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">stream</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)]):</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </span></code></pre></div>
-<p>And asynchronous streaming invocation via <code>astream</code>:</p>
+<p>And use <code>astream</code> for asynchronous streaming invocation:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
@@ -1956,22 +1954,21 @@ For example, when different model providers have inconsistent support for <code>
 </span></code></pre></div>
 <details class="note">
 <summary>Streaming Output Options</summary>
-<p>You can append token usage (<code>prompt_tokens</code> and <code>completion_tokens</code>) to the end of the streaming response via <code>stream_options={"include_usage": True}</code>.
-This library enables this option by default; to disable it, pass the compatibility option <code>include_usage=False</code> when creating the model class.</p>
+<p>You can append token usage information (<code>prompt_tokens</code> and <code>completion_tokens</code>) at the end of the streaming response via <code>stream_options={"include_usage": True}</code>. This library enables this option by default; to disable it, pass the compatibility option <code>include_usage=False</code> when creating the model class.</p>
 </details>
 <h3 id="tool-calling">Tool Calling</h3>
-<p>If the model itself supports tool calling, you can use <code>bind_tools</code> directly:</p>
+<p>If the model supports tool calling, you can directly use <code>bind_tools</code> for tool invocation:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nd">@tool</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get current timestamp&quot;&quot;&quot;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current timestamp&quot;&quot;&quot;</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_current_time</span><span class="p">])</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Get current timestamp&quot;</span><span class="p">)])</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="s2">&quot;Get the current timestamp&quot;</span><span class="p">)])</span>
 </span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <details class="note">
@@ -1984,7 +1981,7 @@ This library enables this option by default; to disable it, pass the compatibili
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nd">@tool</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_weather</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get current weather&quot;&quot;&quot;</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current weather&quot;&quot;&quot;</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The weather in </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2"> is currently sunny&quot;</span>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
@@ -1996,18 +1993,18 @@ This library enables this option by default; to disable it, pass the compatibili
 </details>
 <details class="note">
 <summary>Forcing Tool Calling</summary>
-<p>Through the <code>tool_choice</code> parameter, you can control whether the model calls a tool and which tool to call when responding, to improve accuracy, reliability, and controllability. Common values are:</p>
+<p>Through the <code>tool_choice</code> parameter, you can control whether the model calls a tool and which tool to call when responding, to improve accuracy and controllability. Common values:</p>
 <ul>
-<li><code>"auto"</code>: The model decides whether to call a tool (default behavior);</li>
-<li><code>"none"</code>: Prohibits tool calling;</li>
-<li><code>"required"</code>: Forces calling at least one tool;</li>
-<li>Specify a specific tool (in OpenAI compatible APIs, specifically <code>{"type": "function", "function": {"name": "xxx"}}</code>).</li>
+<li><code>"auto"</code>: The model decides autonomously whether to call a tool (default behavior)</li>
+<li><code>"none"</code>: Prohibits tool calling</li>
+<li><code>"required"</code>: Forces calling at least one tool</li>
+<li>Specify a specific tool (in OpenAI compatible APIs, the format is <code>{"type": "function", "function": {"name": "xxx"}}</code>)</li>
 </ul>
-<p>Different providers have different support ranges for <code>tool_choice</code>. To resolve these differences, this library introduces the compatibility configuration <code>supported_tool_choice</code>, which defaults to <code>["auto"]</code>. In this case, the <code>tool_choice</code> passed in <code>bind_tools</code> can only be <code>auto</code>; other values will be filtered out.</p>
-<p>If you need to support passing other <code>tool_choice</code> values, you must configure the supported items. The configuration value is a list of strings, where each string can be:</p>
+<p>Different providers have different ranges of support for <code>tool_choice</code>. To resolve these differences, this library introduces the compatibility configuration item <code>supported_tool_choice</code>, which defaults to <code>["auto"]</code>. In this case, the <code>tool_choice</code> passed in <code>bind_tools</code> can only be <code>auto</code>; other values will be filtered out.</p>
+<p>If you need to support other <code>tool_choice</code> values, you must configure the supported items. The configuration value is a list of strings, where each string can be:</p>
 <ul>
-<li><code>"auto"</code>, <code>"none"</code>, <code>"required"</code>: Correspond to standard strategies;</li>
-<li><code>"specific"</code>: A library-specific identifier indicating support for specifying a specific tool.</li>
+<li><code>"auto"</code>, <code>"none"</code>, <code>"required"</code>: Correspond to standard strategies</li>
+<li><code>"specific"</code>: A unique identifier in this library, indicating support for specifying a specific tool</li>
 </ul>
 <p>For example, vLLM supports all strategies:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
@@ -2039,8 +2036,9 @@ This library enables this option by default; to disable it, pass the compatibili
 </span></code></pre></div>
 <details class="note">
 <summary>Default Structured Output Method</summary>
-<p>Currently, there are three common structured output methods: <code>json_schema</code>, <code>function_calling</code>, and <code>json_mode</code>. Among them, <code>json_schema</code> provides the best results, so this library's <code>with_structured_output</code> prioritizes using <code>json_schema</code> as the structured output method; when the provider does not support it, it automatically falls back to <code>function_calling</code>. Different model providers have different levels of support for structured output. This library declares the structured output methods supported by the provider through the compatibility configuration <code>supported_response_format</code>. The default value is <code>[]</code>, indicating support for neither <code>json_schema</code> nor <code>json_mode</code>. In this case, <code>with_structured_output(method=...)</code> will fixedly use <code>function_calling</code>; even if <code>json_schema</code> / <code>json_mode</code> is passed, it will be automatically converted to <code>function_calling</code>. If you want to use a specific structured output method, you need to pass the corresponding parameters explicitly (especially <code>json_schema</code>).</p>
-<p>For example, if a model deployed via vLLM supports the <code>json_schema</code> structured output method, you can declare it during registration:</p>
+<p>Currently, there are three common structured output methods: <code>json_schema</code>, <code>function_calling</code>, and <code>json_mode</code>. Among them, <code>json_schema</code> is the most effective, so this library's <code>with_structured_output</code> prioritizes using <code>json_schema</code> as the structured output method; when the provider does not support it, it automatically falls back to <code>function_calling</code>.</p>
+<p>Different model providers have different levels of support for structured output. This library declares the structured output methods supported by the provider through the compatibility configuration item <code>supported_response_format</code>. The default value is <code>[]</code>, indicating support for neither <code>json_schema</code> nor <code>json_mode</code>. In this case, <code>with_structured_output(method=...)</code> will fixedly use <code>function_calling</code>; even passing <code>json_schema</code> / <code>json_mode</code> will be automatically converted to <code>function_calling</code>. If you want to use the corresponding structured output method, you need to pass the relevant parameters explicitly (especially <code>json_schema</code>).</p>
+<p>For example, models deployed via vLLM support the <code>json_schema</code> structured output method, which can be declared during registration:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -2053,8 +2051,8 @@ This library enables this option by default; to disable it, pass the compatibili
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <code>supported_response_format</code> contains <code>json_schema</code>, the <code>structured_output</code> field in <code>model.profile</code> will automatically be set to <code>True</code>. In this case, if a specific structured output strategy is not specified when using <code>create_agent</code>, <code>json_schema</code> will be used as the default structured output strategy.</p>
-<p>For example: 
+<p>If <code>supported_response_format</code> contains <code>json_schema</code>, the <code>structured_output</code> field in <code>model.profile</code> will automatically be set to <code>True</code>. At this point, when using <code>create_agent</code> for structured output, if no specific structured output strategy is specified, <code>json_schema</code> will be used by default.</p>
+<p>For example:
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -2066,15 +2064,14 @@ This library enables this option by default; to disable it, pass the compatibili
 </span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </span></code></pre></div></p>
-<p>The output will be:</p>
+<p>The output result is:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>{&#39;structured_output&#39;: True}
 </span></code></pre></div>
 </div>
 </details>
 <h3 id="passing-extra-parameters">Passing Extra Parameters</h3>
-<p>Since this class inherits from <code>BaseChatOpenAI</code>, it supports passing <code>BaseChatOpenAI</code> model parameters, such as <code>temperature</code>, <code>extra_body</code>, etc.</p>
-<p>For request parameters not defined by official OpenAI, they can be passed via <code>extra_body</code>.</p>
-<p>For example:</p>
+<p>Since this class inherits from <code>BaseChatOpenAI</code>, it supports passing model parameters from <code>BaseChatOpenAI</code>, such as <code>temperature</code>, <code>extra_body</code>, etc.</p>
+<p>For request parameters not defined in the official OpenAI API, they can be passed via <code>extra_body</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
@@ -2085,7 +2082,7 @@ This library enables this option by default; to disable it, pass the compatibili
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="passing-multimodal-data">Passing Multimodal Data</h3>
-<p>Passing multimodal data is supported. You can use OpenAI compatible multimodal data formats or directly use <code>content_block</code> in LangChain.</p>
+<p>Supports passing multimodal data. You can use OpenAI compatible multimodal data formats or directly use <code>content_block</code> in LangChain.</p>
 <p>Passing image data:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
@@ -2124,8 +2121,7 @@ This library enables this option by default; to disable it, pass the compatibili
 </span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="using-reasoning-models">Using Reasoning Models</h3>
-<p>A major feature of the model classes created by this library is further adaptation for reasoning models. For example, integrating the <code>qwen3-4b</code> model.</p>
-<p>For example:</p>
+<p>The model class created by this library is deeply adapted for reasoning models. Taking the deployment of the <code>qwen3-4b</code> reasoning model using vLLM as an example:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
@@ -2139,42 +2135,42 @@ This library enables this option by default; to disable it, pass the compatibili
 </span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="p">)</span>
 </span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
 </span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen3-4b&quot;</span><span class="p">)</span>
-</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Why are parrot feathers so colorful?&quot;</span><span class="p">)</span>
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Why are parrot feathers so brightly colored?&quot;</span><span class="p">)</span>
 </span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="n">reasoning_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">content_blocks</span> <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;reasoning&quot;</span><span class="p">]</span>
 </span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s2">&quot;reasoning&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">reasoning_steps</span><span class="p">))</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Since the new version of vLLM returns reasoning content via the <code>reasoning</code> field by default, if you are using a reasoning model deployed with vLLM, you must specify the <code>reasoning_field_name</code> parameter with the value <code>reasoning</code> when creating the chat model class.</p>
-<p>However, to reuse the existing default parsing logic for <code>content_blocks</code>, this library will still save it to <code>additional_kwargs["reasoning_content"]</code>.</p>
+<p>Since the new version of vLLM returns reasoning content in the <code>reasoning</code> field by default, if you use vLLM to deploy a reasoning model, you must specify the <code>reasoning_field_name</code> parameter as <code>reasoning</code> when creating the chat model class.</p>
+<p>However, to reuse the existing default parsing logic for <code>content_blocks</code>, this library still saves it to <code>additional_kwargs["reasoning_content"]</code>.</p>
 </div>
 <details class="note">
 <summary>Support for Different Reasoning Modes</summary>
-<p>Reasoning modes differ across models (this is particularly important in Agent development): some require explicitly passing reasoning content in the current call, while others do not. This library provides the <code>reasoning_keep_policy</code> compatibility configuration to adapt to these differences.</p>
+<p>Different models have different reasoning modes (this is particularly important in Agent development): some require explicit transmission of reasoning content in the current call, while others do not. This library provides the <code>reasoning_keep_policy</code> compatibility configuration to adapt to these differences.</p>
 <p>This configuration item supports the following values:</p>
 <ul>
-<li><code>never</code>: Does <strong>not retain any</strong> reasoning content in historical messages (default);</li>
-<li><code>current</code>: Retains reasoning content from the <strong>current conversation</strong> only;</li>
-<li><code>all</code>: Retains reasoning content from <strong>all conversations</strong>.</li>
+<li><code>never</code>: Do <strong>not retain any</strong> reasoning content in historical messages (default value)</li>
+<li><code>current</code>: Retain reasoning content only from the <strong>current conversation</strong></li>
+<li><code>all</code>: Retain reasoning content from <strong>all conversations</strong></li>
 </ul>
 <pre class="mermaid"><code>graph LR
-    A[reasoning_content Retention Policy] --&gt; B{Value?};
+    A[reasoning_content retention policy] --&gt; B{Value?};
     B --&gt;|never| C[Does not contain any&lt;br&gt;reasoning content];
-    B --&gt;|current| D[Contains reasoning content from&lt;br&gt;current conversation only&lt;br&gt;Adapts to Interleaved Thinking mode];
-    B --&gt;|all| E[Contains reasoning content from&lt;br&gt;all conversations];
+    B --&gt;|current| D[Contains reasoning content&lt;br&gt;from the current conversation only&lt;br&gt;Adapted for interleaved thinking mode];
+    B --&gt;|all| E[Contains reasoning content&lt;br&gt;from all conversations];
     C --&gt; F[Sent to model];
     D --&gt; F;
     E --&gt; F;</code></pre>
-<p>For example, assuming the field name for reasoning content is <code>reasoning_content</code>, when a user first asks "What's the weather in New York?", then follows up with "What's the weather in London?", and the second round of dialogue is about to take place with the final model call.</p>
+<p>For example, assuming the field name for reasoning content is <code>reasoning_content</code>, the user first asks "How is the weather in New York?", then follows up with "How is the weather in London?", and the last model call of the second round of conversation is currently taking place.</p>
 <ul>
 <li>When the value is <code>never</code></li>
 </ul>
-<p>The messages passed to the model will <strong>not have any</strong> <code>reasoning_content</code> fields. The messages received by the model are:</p>
+<p>The messages finally passed to the model will <strong>not have any</strong> <code>reasoning_content</code> fields. The messages received by the model are:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;New York is cloudy today, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
 </span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
 </span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
@@ -2183,54 +2179,54 @@ This library enables this option by default; to disable it, pass the compatibili
 <ul>
 <li>When the value is <code>current</code></li>
 </ul>
-<p>Only retains the <code>reasoning_content</code> field from the <strong>current conversation</strong>. This policy applies to Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls. In this case, the reasoning content of the current turn needs to be retained. The messages received by the model are:
+<p>Only the <code>reasoning_content</code> field from the <strong>current conversation</strong> is retained. This policy applies to Interleaved Thinking scenarios, where the model alternates between explicit reasoning and tool calls, requiring the retention of reasoning content from the current turn. The messages received by the model are:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
 </span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;New York is cloudy today, 7~13°C.&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">},</span>
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="p">{</span>
 </span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Checking London weather, need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain this round&#39;s reasoning_content</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Only retain reasoning_content from this round</span>
 </span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
 </span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
 </span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="p">},</span>
 </span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 </span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="p">]</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <ul>
 <li>When the value is <code>all</code></li>
 </ul>
-<p>Retains the <code>reasoning_content</code> field from <strong>all</strong> conversations. The messages received by the model are:
+<p>The <code>reasoning_content</code> field from <strong>all</strong> conversations is retained. The messages received by the model are:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check the weather in New York?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="p">{</span>
 </span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Checking New York weather, need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check New York weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
 </span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
 </span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
 </span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="p">},</span>
 </span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cloudy 7~13°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 </span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    <span class="p">{</span>
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The weather in New York today is cloudy, 7~13°C.&quot;</span><span class="p">,</span>
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Return the New York weather result directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;New York is cloudy today, 7~13°C.&quot;</span><span class="p">,</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Directly return the New York weather result.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
 </span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
 </span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>    <span class="p">},</span>
 </span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Check the weather in London?&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>    <span class="p">{</span>
 </span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;Checking London weather, need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>        <span class="s2">&quot;reasoning_content&quot;</span><span class="p">:</span> <span class="s2">&quot;To check London weather, I need to call the weather tool directly.&quot;</span><span class="p">,</span>  <span class="c1"># Retain reasoning_content</span>
 </span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
 </span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>        <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
 </span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>    <span class="p">},</span>
 </span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Rainy, 14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 </span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="p">]</span>
-</span></code></pre></div></p>
-<p><strong>Note</strong>: If the current round does not involve tool calling, <code>current</code> has the same effect as <code>never</code>.</p>
-<p>It is worth noting that while this parameter is a compatibility configuration item, different models from the same provider, or even the same model in different scenarios, may have different requirements for retaining reasoning content. Therefore, it is <strong>recommended to specify it explicitly during instantiation</strong>, and there is no need to assign it when creating the class.</p>
-<p>Currently, the vast majority of the latest generation of reasoning models (especially open-source models) adopt the "Interleaved Thinking" mode. Taking GLM-4.7-Flash as an example, when enabling this mode, you need to set <code>reasoning_keep_policy</code> to <code>current</code> during instantiation to retain only the current turn's reasoning content. Example:</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+</span></code></pre></div>
+<p><strong>Note</strong>: If the current round of conversation does not involve tool calls, <code>current</code> has the same effect as <code>never</code>.</p>
+<p>Although this parameter belongs to the compatibility configuration, different models from the same provider, or even the same model in different scenarios, may have different requirements for the retention policy of reasoning content. Therefore, it is <strong>recommended to specify it explicitly during instantiation</strong>; there is no need to assign it when creating the class.</p>
+<p>Currently, the vast majority of the latest generation of reasoning models (especially open-source models) adopt the "Interleaved Thinking" mode. Taking GLM-4.7-Flash as an example, when enabling this mode, you need to set <code>reasoning_keep_policy</code> to <code>current</code> during instantiation to only retain reasoning content from the current turn. Example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
 </span></span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2240,7 +2236,7 @@ This library enables this option by default; to disable it, pass the compatibili
 </span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Check the weather in New York?&quot;</span><span class="p">)]})</span>
 </span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
-Meanwhile, the GLM-4.7-Flash model also supports another thinking mode called Preserved Thinking. In this case, all <code>reasoning_content</code> fields in historical messages need to be retained. You can set <code>reasoning_keep_policy</code> to <code>all</code>. For example:</p>
+<p>The GLM-4.7-Flash model also supports another thinking mode—Preserved Thinking. At this time, all <code>reasoning_content</code> fields in historical messages need to be retained, which can be done by setting <code>reasoning_keep_policy</code> to <code>all</code>. For example:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
@@ -2258,13 +2254,12 @@ Meanwhile, the GLM-4.7-Flash model also supports another thinking mode called Pr
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Similarly, the GLM-4.7-Flash model is also a reasoning model. When deployed using <code>vLLM</code>, if you want to return reasoning content to implement interleaved thinking, the corresponding field is <code>reasoning</code> instead of <code>reasoning_content</code>. Therefore, you also need to specify the compatibility option <code>reasoning_field_name</code> with the value <code>reasoning</code> when creating the chat model class.</p>
+<p>When GLM-4.7-Flash is deployed using vLLM as a reasoning model, if you want to return reasoning content to achieve interleaved thinking, the corresponding field is <code>reasoning</code> instead of <code>reasoning_content</code>. Therefore, you also need to specify the compatibility option <code>reasoning_field_name</code> as <code>reasoning</code> when creating the chat model class.</p>
 </div>
 </details>
 <h3 id="model-profiles">Model profiles</h3>
 <p>You can get the model's profile via <code>model.profile</code>. By default, it returns an empty dictionary.</p>
-<p>You can also explicitly pass the <code>profile</code> parameter during instantiation to specify the model profile.</p>
-<p>For example:
+<p>You can also explicitly pass the <code>profile</code> parameter during instantiation to specify the model profile:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">custom_profile</span> <span class="o">=</span> <span class="p">{</span>
@@ -2276,12 +2271,11 @@ Meanwhile, the GLM-4.7-Flash model also supports another thinking mode called Pr
 </span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">custom_profile</span><span class="p">)</span>
 </span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </span></code></pre></div>
-Or pass the <code>profile</code> parameters for all models of the provider directly during creation.</p>
-<p>For example:
+<p>Or pass the <code>profile</code> parameters for all models of the provider directly during creation:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">model_profiles</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>     <span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    <span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">:</span> <span class="p">{</span>
 </span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>        <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">131072</span><span class="p">,</span>
 </span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>        <span class="s2">&quot;max_output_tokens&quot;</span><span class="p">:</span> <span class="mi">8192</span><span class="p">,</span>
 </span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>        <span class="s2">&quot;image_inputs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -2306,42 +2300,42 @@ Or pass the <code>profile</code> parameters for all models of the provider direc
 </span><span id="__span-25-26"><a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span>
 </span><span id="__span-25-27"><a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a><span class="p">)</span>
 </span><span id="__span-25-28"><a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="support-for-openais-latest-responses-api">Support for OpenAI's Latest Responses API</h3>
 <p>This model class also supports OpenAI's latest <code>responses</code> API (parameter name <code>use_responses_api</code>). Currently, only a few providers support this style of interface; if your provider supports it, you can enable it via <code>use_responses_api=True</code>.</p>
-<p>For example, since vLLM supports the <code>responses</code> API, you can use it like this:</p>
+<p>For example, vLLM supports the <code>responses</code> API:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">)])</span>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Currently, the implementation of this feature relies entirely on <code>BaseChatOpenAI</code>'s implementation of the <code>responses</code> API, so there may be some compatibility issues during use. Optimizations will be made later based on the actual situation.</p>
+<p>Currently, the implementation of this feature relies entirely on <code>BaseChatOpenAI</code>'s implementation of the <code>responses</code> API. There may be some compatibility issues during use, and optimizations will be made later based on the actual situation.</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This library cannot yet guarantee 100% compatibility with all OpenAI compatible interfaces (although compatibility configurations can improve it, differences may still exist). If the target model has an officially or community-maintained integration class, please use that first. If you encounter compatibility issues, feel free to open an issue on the GitHub repository.</p>
-<p>Taking OpenRouter as an example, although it provides an OpenAI compatible interface, it has multiple compatibility differences; LangChain officials have released <a href="https://docs.langchain.com/oss/python/integrations/providers/openrouter">ChatOpenRouter</a>, so it is recommended to use that class directly to access OpenRouter.</p>
+<p class="admonition-title">Compatibility Statement</p>
+<p>This library cannot yet guarantee 100% compatibility with all OpenAI compatible interfaces (although compatibility can be improved as much as possible through compatibility configurations, differences may still exist). If there is an official or community-maintained integration class for the target model, please use it first. If you encounter compatibility issues, feel free to open an issue in the GitHub repository.</p>
+<p>Taking OpenRouter as an example, although it provides an OpenAI compatible interface, there are multiple compatibility differences; LangChain official has launched <a href="https://docs.langchain.com/oss/python/integrations/providers/openrouter">ChatOpenRouter</a>, it is recommended to use that class directly to access OpenRouter.</p>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This function uses <a href="https://docs.pydantic.dev/latest/concepts/models/#dynamic-model-creation">pydantic's create_model</a> at the底层 to create chat model classes, which incurs some performance overhead. Furthermore, <code>create_openai_compatible_model</code> uses a global dictionary to record the <code>profiles</code> of each model provider. To avoid multi-threading concurrency issues, it is recommended to create integration classes during the project startup phase and avoid dynamic creation later.</p>
+<p class="admonition-title">Performance Notes</p>
+<p>This function uses <a href="https://docs.pydantic.dev/latest/concepts/models/#dynamic-model-creation">pydantic's create_model</a> at the underlying level to create chat model classes, which incurs a certain performance overhead. In addition, <code>create_openai_compatible_model</code> uses a global dictionary to record the <code>profiles</code> of each model provider. To avoid multi-threading concurrency issues, it is recommended to create integration classes during the project startup phase and avoid dynamic creation later.</p>
 </div>
 <div class="admonition success">
 <p class="admonition-title">Best Practices</p>
-<p>When integrating chat model providers with OpenAI compatible APIs, you can directly use <code>ChatOpenAI</code> from <code>langchain-openai</code> and point to your provider service via <code>base_url</code> and <code>api_key</code>. This approach is simple enough and suitable for relatively simple scenarios (especially when using standard chat models rather than reasoning models).</p>
-<p>However, the following issues exist:</p>
+<p>When integrating chat model providers with OpenAI compatible APIs, you can directly use <code>ChatOpenAI</code> from <code>langchain-openai</code> and point to your provider service via <code>base_url</code> and <code>api_key</code>. This method is simple and direct, suitable for simple scenarios (especially when using standard chat models rather than reasoning models).</p>
+<p>However, there are the following issues:</p>
 <ol>
 <li>
-<p>Cannot display the Chain of Thought for non-OpenAI official reasoning models (i.e., content returned by <code>reasoning_content</code> / <code>reasoning</code>).</p>
+<p>Cannot display the chain of thought of unofficial OpenAI reasoning models (i.e., content returned by <code>reasoning_content</code> / <code>reasoning</code>)</p>
 </li>
 <li>
-<p>Does not support <code>video</code> type content_block.</p>
+<p>Does not support <code>video</code> type content_block</p>
 </li>
 <li>
-<p>Low coverage of default structured output strategies.</p>
+<p>Low coverage rate of default structured output strategies</p>
 </li>
 </ol>
-<p>When you encounter the above differences, you can use the OpenAI compatible integration class provided by this library for adaptation.</p>
+<p>When you encounter the above problems, you can use the OpenAI compatible integration class provided by this library for adaptation.</p>
 </div>
 
 

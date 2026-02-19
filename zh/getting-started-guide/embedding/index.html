@@ -1859,7 +1859,7 @@
 <h2 id="_3">注册嵌入模型提供商</h2>
 <p>注册嵌入模型提供商需调用 <code>register_embeddings_provider</code>。根据 <code>embeddings_model</code> 类型不同，注册方式略有差异。</p>
 <h3 id="langchain">已有 LangChain 嵌入模型类</h3>
-<p>若嵌入模型提供商已有现成且合适的 LangChain 集成（详见 <a href="https://docs.langchain.com/oss/python/integrations/text_embedding">嵌入模型集成列表</a>），请将相应的嵌入模型类直接传入 <code>embeddings_model</code> 参数。</p>
+<p>若嵌入模型提供商已有现成且合适的 LangChain 集成（详见<a href="https://docs.langchain.com/oss/python/integrations/text_embedding">嵌入模型集成列表</a>），请将相应的嵌入模型类直接传入 <code>embeddings_model</code> 参数。</p>
 <h4 id="_4">代码示例</h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.embeddings.fake</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeEmbeddings</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_embeddings_provider</span>
@@ -1873,13 +1873,13 @@
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">参数设置说明</p>
-<p><code>provider_name</code>代表模型提供商的名称，用于后续在 <code>load_embeddings</code> 中引用。<code>provider_name</code> 必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。</p>
+<p><code>provider_name</code> 代表模型提供商的名称，用于后续在 <code>load_embeddings</code> 中引用。命名必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。</p>
 </div>
 <h4 id="_5">可选参数说明</h4>
 <p><strong>base_url</strong></p>
-<p>此参数通常无需设置（因为嵌入模型类内部一般已定义默认的 API 地址），仅当需要覆盖嵌入模型类默认地址时才传入 <code>base_url</code>，且仅对字段名为 <code>api_base</code> 或 <code>base_url</code>（含别名）的属性生效。</p>
+<p>此参数通常无需设置（因嵌入模型类内部一般已定义默认的 API 地址），仅当需覆盖嵌入模型类默认地址时才传入 <code>base_url</code>，且仅对字段名为 <code>api_base</code> 或 <code>base_url</code>（含别名）的属性生效。</p>
 <h3 id="langchain-openai-api">未有 LangChain 嵌入模型类，但提供商支持 OpenAI 兼容 API</h3>
-<p>与对话模型管理类似，需要设置<code>embeddings_model</code>取值为<code>"openai-compatible"</code>。</p>
+<p>与对话模型管理类似，需将 <code>embeddings_model</code> 设为 <code>"openai-compatible"</code>。</p>
 <h4 id="_6">代码示例</h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">register_embeddings_provider</span><span class="p">(</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="hll">    <span class="n">provider_name</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
@@ -1887,7 +1887,7 @@
 </span></span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="hll">    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span>
 </span></span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><strong>注意</strong>：关于这部分更多的细节，请参考<a href="../../adavance-guide/openai-compatible/register/">OpenAI 兼容 API 集成</a>。</p>
+<p><strong>注意</strong>：关于此部分更多细节，请参考 <a href="../../adavance-guide/openai-compatible/register/">OpenAI 兼容 API 集成</a>。</p>
 <h2 id="_7">批量注册</h2>
 <p>若需注册多个提供商，可使用 <code>batch_register_embeddings_provider</code>。</p>
 <h4 id="_8">代码示例</h4>
@@ -1910,7 +1910,7 @@
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">注意</p>
-<p>两个注册函数均基于全局字典实现。<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册，以避免多线程问题。 </p>
+<p>两个注册函数均基于全局字典实现。为避免多线程问题，<strong>必须在应用启动阶段完成所有注册</strong>，禁止运行时动态注册。</p>
 <p>此外，注册时若将 <code>embeddings_model</code> 设为 <code>openai-compatible</code>，内部会通过 <code>pydantic.create_model</code> 动态创建新的模型类（以 <code>BaseEmbeddingOpenAICompatible</code> 为基类，生成对应的嵌入模型集成类），此过程涉及 Python 元类操作和 pydantic 验证逻辑初始化，存在一定性能开销，因此请避免在运行期频繁注册。</p>
 </div>
 <h2 id="_9">加载嵌入模型</h2>
@@ -1929,25 +1929,25 @@
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">embedding</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;qwen3-embedding-4b&quot;</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="_12">模型方法和参数</h2>
-<p>对于支持的模型方法和参数，需要参考对应的嵌入模型类的使用说明。如果采用的是第二种情况，则支持所有的<code>OpenAIEmbeddings</code> 类的方法和参数。</p>
+<p>对于支持的模型方法和参数，需参考对应的嵌入模型类的使用说明。若采用第二种情况，则支持 <code>OpenAIEmbeddings</code> 类的所有方法和参数。</p>
 <h3 id="_13">兼容官方提供商</h3>
-<p><code>load_embeddings</code> 依据 <code>provider</code>参数查找全局注册字典：命中则使用该字典对应的模型类实例化，未命中则通过 <code>init_embeddings</code> 初始化。这意味着 LangChain 官方支持的提供商（如 openai）可直接调用，无需注册。</p>
+<p><code>load_embeddings</code> 依据 <code>provider</code> 参数查找全局注册字典：命中则使用该字典对应的模型类实例化，未命中则通过 <code>init_embeddings</code> 初始化。这意味着 LangChain 官方支持的提供商（如 openai）可直接调用，无需注册。</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;openai:text-embedding-3-large&quot;</span><span class="p">)</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># 或</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">load_embeddings</span><span class="p">(</span><span class="s2">&quot;text-embedding-3-large&quot;</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">最佳实践</p>
-<p>对于本模块的使用，可以根据下面三种情况进行选择：</p>
+<p>对于本模块的使用，可根据以下三种情况进行选择：</p>
 <ol>
 <li>
 <p>若接入的所有嵌入模型提供商均被官方 <code>init_embeddings</code> 支持，请直接使用官方函数，以获得最佳兼容性。</p>
 </li>
 <li>
-<p>若接入的部分嵌入模型提供商为非官方支持，可利用本模块的注册与加载机制，先利用<code>register_embeddings_provider</code>注册模型提供商，然后使用<code>load_embeddings</code>加载模型。</p>
+<p>若接入的部分嵌入模型提供商为非官方支持，可使用本模块的注册与加载机制：先利用 <code>register_embeddings_provider</code> 注册模型提供商，然后使用 <code>load_embeddings</code> 加载模型。</p>
 </li>
 <li>
-<p>若接入的嵌入模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM），则推荐利用本模块的功能，先利用<code>register_embeddings_provider</code>注册模型提供商（embeddings_model传入<code>openai-compatible</code>），然后使用<code>load_embeddings</code>加载模型。</p>
+<p>若接入的嵌入模型提供商暂无适合的集成，但提供商提供了 OpenAI 兼容的 API（如 vLLM），则推荐使用本模块的功能：先利用 <code>register_embeddings_provider</code> 注册模型提供商（<code>embeddings_model</code> 传入 <code>openai-compatible</code>），然后使用 <code>load_embeddings</code> 加载模型。</p>
 </li>
 </ol>
 </div>

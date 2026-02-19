@@ -1800,7 +1800,7 @@
 
 <h1 id="_1">对话模型的创建与使用</h1>
 <h2 id="_2">创建对话模型类</h2>
-<p>使用 <code>create_openai_compatible_model</code> 函数可以创建对话模型集成类。该函数接受以下参数：</p>
+<p>使用 <code>create_openai_compatible_model</code> 函数创建对话模型集成类。该函数接受以下参数：</p>
 <table>
 <thead>
 <tr>
@@ -1811,27 +1811,27 @@
 <tbody>
 <tr>
 <td><code>model_provider</code></td>
-<td>模型提供商名称，例如 <code>vllm</code>。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 是</td>
+<td>模型提供商名称，例如 <code>vllm</code>。必须以字母或数字开头，只能包含字母、数字和下划线，长度不超过 20 个字符。<br><br><strong>类型</strong>：<code>str</code><br><strong>必填</strong>：是</td>
 </tr>
 <tr>
 <td><code>base_url</code></td>
-<td>模型提供商默认 API 地址。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
+<td>模型提供商的默认 API 地址。<br><br><strong>类型</strong>：<code>str</code><br><strong>必填</strong>：否</td>
 </tr>
 <tr>
 <td><code>compatibility_options</code></td>
-<td>兼容性选项配置。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
+<td>兼容性选项配置。<br><br><strong>类型</strong>：<code>dict</code><br><strong>必填</strong>：否</td>
 </tr>
 <tr>
 <td><code>model_profiles</code></td>
-<td>该提供商各模型的 profile 配置字典。<br><br><strong>类型</strong>: <code>dict</code><br><strong>必填</strong>: 否</td>
+<td>该提供商下各模型的 profile 配置字典。<br><br><strong>类型</strong>：<code>dict</code><br><strong>必填</strong>：否</td>
 </tr>
 <tr>
 <td><code>chat_model_cls_name</code></td>
-<td>对话模型类名（需符合 Python 类名规范）。默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。<br><br><strong>类型</strong>: <code>str</code><br><strong>必填</strong>: 否</td>
+<td>对话模型类名（需符合 Python 类名规范）。默认值为 <code>Chat{model_provider}</code>（其中 <code>{model_provider}</code> 首字母大写）。<br><br><strong>类型</strong>：<code>str</code><br><strong>必填</strong>：否</td>
 </tr>
 </tbody>
 </table>
-<p>其中，<code>compatibility_options</code> 是一个字典，用于声明该提供商对 OpenAI API 的部分特性的支持情况，以提高兼容性和稳定性。</p>
+<p><code>compatibility_options</code> 是一个字典，用于声明该提供商对各类特性的支持情况与配置方式，以提高兼容性和稳定性。这些特性包括对 OpenAI 官方 API 特性的支持程度（如 <code>tool_choice</code>、<code>response_format</code>），以及非官方扩展特性（如推理字段 <code>reasoning_content</code> / <code>reasoning</code>）。</p>
 <p>目前支持以下配置项：</p>
 <table>
 <thead>
@@ -1843,46 +1843,44 @@
 <tbody>
 <tr>
 <td><code>supported_tool_choice</code></td>
-<td>支持的 <code>tool_choice</code> 策略列表。<br><br><strong>类型</strong>: <code>list[str]</code><br><strong>默认值</strong>: <code>["auto"]</code></td>
+<td>支持的 <code>tool_choice</code> 策略列表。<br><br><strong>类型</strong>：<code>list[str]</code><br><strong>默认值</strong>：<code>["auto"]</code></td>
 </tr>
 <tr>
 <td><code>supported_response_format</code></td>
-<td>支持的 <code>response_format</code> 格式列表（<code>json_schema</code>、<code>json_object</code>）。<br><br><strong>类型</strong>: <code>list[str]</code><br><strong>默认值</strong>: <code>[]</code></td>
+<td>支持的 <code>response_format</code> 格式列表（<code>json_schema</code>、<code>json_object</code>）。<br><br><strong>类型</strong>：<code>list[str]</code><br><strong>默认值</strong>：<code>[]</code></td>
 </tr>
 <tr>
 <td><code>reasoning_keep_policy</code></td>
-<td>历史消息中 <code>reasoning_content</code> 字段的保留策略。<br><br><strong>类型</strong>: <code>str</code><br><strong>默认值</strong>: <code>"never"</code></td>
+<td>历史消息中 <code>reasoning_content</code> 字段的保留策略。<br><br><strong>类型</strong>：<code>str</code><br><strong>默认值</strong>：<code>"never"</code></td>
 </tr>
 <tr>
 <td><code>reasoning_field_name</code></td>
-<td>提供商返回推理内容的字段名，一般无需配置。可选值为 <code>reasoning_content</code>或 <code>reasoning</code>。<br><br><strong>类型</strong>: <code>str</code><br><strong>默认值</strong>: <code>"reasoning_content"</code></td>
+<td>提供商返回推理内容的字段名，一般无需配置。可选值为 <code>reasoning_content</code> 或 <code>reasoning</code>。<br><br><strong>类型</strong>：<code>str</code><br><strong>默认值</strong>：<code>"reasoning_content"</code></td>
 </tr>
 <tr>
 <td><code>include_usage</code></td>
-<td>是否在流式返回结果中包含 <code>usage</code> 信息。<br><br><strong>类型</strong>: <code>bool</code><br><strong>默认值</strong>: <code>True</code></td>
+<td>是否在流式返回结果中包含 <code>usage</code> 信息。<br><br><strong>类型</strong>：<code>bool</code><br><strong>默认值</strong>：<code>True</code></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition info">
-<p class="admonition-title">补充</p>
-<p>同一模型提供商的不同模型对 <code>tool_choice</code>、<code>response_format</code> 等参数的支持情况可能不同，因此本库将 <code>supported_tool_choice</code>、<code>supported_response_format</code>、<code>reasoning_keep_policy</code> 设计为类的<strong>实例属性</strong>。创建对话模型类时可以传入此参数，作为该模型提供商的大部分模型的支持情况，后续如需针对特定模型微调，可在实例化时覆盖这些参数。</p>
-<p><code>reasoning_field_name</code> 与 <code>include_usage</code> 为类的私有属性（通过 <a href="https://docs.pydantic.dev/latest/concepts/models/#private-model-attributes">pydantic 的 PrivateAttr</a> 实现），只能在创建或注册模型类时通过 <code>compatibility_options</code> 传入，实例化时不可传入。</p>
+<p class="admonition-title">补充说明</p>
+<p>同一模型提供商的不同模型对 <code>tool_choice</code>、<code>response_format</code> 等参数的支持情况可能不同，因此本库将 <code>supported_tool_choice</code>、<code>supported_response_format</code>、<code>reasoning_keep_policy</code> 设计为类的<strong>实例属性</strong>。创建对话模型类时可传入这些参数，作为该提供商大多数模型的默认支持情况；后续如需针对特定模型微调，可在实例化时覆盖。</p>
+<p><code>reasoning_field_name</code> 与 <code>include_usage</code> 为类的私有属性（通过 <a href="https://docs.pydantic.dev/latest/concepts/models/#private-model-attributes">pydantic 的 PrivateAttr</a> 实现），只能在创建或注册模型类时通过 <code>compatibility_options</code> 传入，实例化时不可覆盖。</p>
 </div>
 <div class="admonition tip">
-<p class="admonition-title">提示</p>
-<p>本库会基于用户传入的参数，使用内置的 <code>BaseChatOpenAICompatible</code> 构建面向特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并在以下方面进行了增强：</p>
+<p class="admonition-title">特性增强</p>
+<p>本库基于用户传入的参数，使用内置的 <code>BaseChatOpenAICompatible</code> 构建面向特定提供商的对话模型类。该类继承自 <code>langchain-openai</code> 的 <code>BaseChatOpenAI</code>，并进行了以下增强：</p>
 <p><strong>1. 支持额外的推理字段 (reasoning_content / reasoning)</strong></p>
-<p><code>ChatOpenAI</code> 遵循官方 OpenAI 响应模式，因此无法提取或保留特定于提供商的字段（例如 <code>reasoning_content</code>、<code>reasoning</code>）。
-本类默认提取并保留 <code>reasoning_content</code>，并可通过 <code>compatibility_options</code> 中的 <code>reasoning_field_name</code> 配置以提取 <code>reasoning</code>。</p>
-<p><strong>2. 动态适配以选择最合适的结构化输出方法</strong></p>
-<p>利用本库创建的对话模型类会根据模型提供商的实际能力，利用 <code>compatibility_options</code> 中的 <code>supported_response_format</code>，动态选择最佳的结构化输出方法（<code>function_calling</code> 或 <code>json_schema</code>）。</p>
-<p><strong>3. 支持相关参数配置</strong></p>
-<p>针对参数与官方 OpenAI API 存在差异的情况，本库提供了 <code>compatibility_options</code> 参数来解决此问题。
-例如，当不同模型提供商对 <code>tool_choice</code> 的支持不一致时，可以通过在 <code>compatibility_options</code> 中设置 <code>supported_tool_choice</code> 来进行适配。</p>
-<p><strong>4.支持<code>video</code>类型的 content_block</strong></p>
-<p>补齐 <code>ChatOpenAI</code> 在视频类型的 <code>content_block</code> 上的能力缺口。</p>
+<p><code>ChatOpenAI</code> 遵循官方 OpenAI 响应格式，无法提取或保留特定于提供商的字段（例如 <code>reasoning_content</code>、<code>reasoning</code>）。本类默认提取并保留 <code>reasoning_content</code>，并可通过 <code>compatibility_options</code> 中的 <code>reasoning_field_name</code> 配置以提取 <code>reasoning</code>。</p>
+<p><strong>2. 动态适配结构化输出方法</strong></p>
+<p>本库创建的对话模型类会根据模型提供商的实际能力，利用 <code>compatibility_options</code> 中的 <code>supported_response_format</code>，动态选择最佳的结构化输出方法（<code>function_calling</code> 或 <code>json_schema</code>）。</p>
+<p><strong>3. 支持参数差异化配置</strong></p>
+<p>针对部分参数与官方 OpenAI API 存在差异的情况，本库提供了 <code>compatibility_options</code> 参数进行适配。例如，当不同模型提供商对 <code>tool_choice</code> 的支持不一致时，可通过设置 <code>supported_tool_choice</code> 进行适配。</p>
+<p><strong>4. 支持 <code>video</code> 类型的 content_block</strong></p>
+<p>补齐 <code>ChatOpenAI</code> 在视频类型 <code>content_block</code> 上的能力缺口。</p>
 </div>
-<p>使用如下代码创建对话模型类：</p>
+<p>创建对话模型类的示例代码：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -1894,10 +1892,10 @@
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;你好&quot;</span><span class="p">))</span>
 </span></code></pre></div>
-<p>在创建对话模型类时，<code>base_url</code> 参数可以省略。未传入时，本库会默认读取对应环境变量，例如：</p>
+<p>创建对话模型类时，<code>base_url</code> 参数可省略。若未传入，本库会读取对应的环境变量，例如：</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_BASE</span><span class="o">=</span>http://localhost:8000/v1
 </span></code></pre></div>
-<p>此时代码可以省略 <code>base_url</code>：</p>
+<p>此时代码可省略 <code>base_url</code>：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -1912,20 +1910,20 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VLLM_API_KEY</span><span class="o">=</span>vllm_api_key
 </span></code></pre></div>
 <div class="admonition info">
-<p class="admonition-title">提示</p>
-<p>创建的对话模型类（嵌入模型类也遵循此命名规则）环境变量的命名规则：</p>
+<p class="admonition-title">环境变量命名规则</p>
+<p>创建的对话模型类（嵌入模型类同样遵循此规则）环境变量命名规则：</p>
 <ul>
 <li>
-<p>API 地址：<code>${PROVIDER_NAME}_API_BASE</code>（全大写，下划线分隔）。</p>
+<p>API 地址：<code>${PROVIDER_NAME}_API_BASE</code>（全大写，下划线分隔）</p>
 </li>
 <li>
-<p>API Key：<code>${PROVIDER_NAME}_API_KEY</code>（全大写，下划线分隔）。</p>
+<p>API Key：<code>${PROVIDER_NAME}_API_KEY</code>（全大写，下划线分隔）</p>
 </li>
 </ul>
 </div>
 <h2 id="_3">使用对话模型类</h2>
 <h3 id="_4">普通调用</h3>
-<p>通过 <code>invoke</code> 方法可以进行普通调用，返回模型响应。</p>
+<p>通过 <code>invoke</code> 方法进行普通调用，返回模型响应：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
@@ -1940,7 +1938,7 @@
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="_5">流式调用</h3>
-<p>通过 <code>stream</code> 方法可以进行流式调用，用于流式返回模型响应。</p>
+<p>通过 <code>stream</code> 方法进行流式调用：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
@@ -1956,11 +1954,10 @@
 </span></code></pre></div>
 <details class="note">
 <summary>流式输出选项</summary>
-<p>可以通过 <code>stream_options={"include_usage": True}</code> 在流式响应末尾附加 token 使用情况（<code>prompt_tokens</code> 和 <code>completion_tokens</code>）。
-本库默认开启该选项；若需关闭，可在创建模型类传入兼容性选项 <code>include_usage=False</code>。</p>
+<p>可通过 <code>stream_options={"include_usage": True}</code> 在流式响应末尾附加 token 使用情况（<code>prompt_tokens</code> 和 <code>completion_tokens</code>）。本库默认开启该选项；若需关闭，可在创建模型类时传入兼容性选项 <code>include_usage=False</code>。</p>
 </details>
 <h3 id="_6">工具调用</h3>
-<p>如果模型本身支持工具调用，可以直接使用 <code>bind_tools</code> 进行工具调用：</p>
+<p>如果模型支持工具调用，可直接使用 <code>bind_tools</code> 进行工具调用：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -1976,7 +1973,7 @@
 </span></code></pre></div>
 <details class="note">
 <summary>并行工具调用</summary>
-<p>如果模型支持并行工具调用，可以在 <code>bind_tools</code> 中传递 <code>parallel_tool_calls=True</code> 开启并行工具调用（部分模型提供商默认开启，则无需显式传参）。</p>
+<p>如果模型支持并行工具调用，可在 <code>bind_tools</code> 中传递 <code>parallel_tool_calls=True</code> 开启（部分模型提供商默认开启，则无需显式传参）。</p>
 <p>例如：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
@@ -1996,18 +1993,18 @@
 </details>
 <details class="note">
 <summary>强制工具调用</summary>
-<p>通过 <code>tool_choice</code> 参数，可以控制模型在响应时是否调用工具以及调用哪个工具，以提升准确性、可靠性和可控性。常见取值有：</p>
+<p>通过 <code>tool_choice</code> 参数，可控制模型在响应时是否调用工具以及调用哪个工具，以提升准确性和可控性。常见取值：</p>
 <ul>
-<li><code>"auto"</code>：模型自主决定是否调用工具（默认行为）；</li>
-<li><code>"none"</code>：禁止调用工具；</li>
-<li><code>"required"</code>：强制调用至少一个工具；</li>
-<li>指定具体工具（在 OpenAI 兼容 API 中，具体为 <code>{"type": "function", "function": {"name": "xxx"}}</code>）。</li>
+<li><code>"auto"</code>：模型自主决定是否调用工具（默认行为）</li>
+<li><code>"none"</code>：禁止调用工具</li>
+<li><code>"required"</code>：强制调用至少一个工具</li>
+<li>指定具体工具（在 OpenAI 兼容 API 中，格式为 <code>{"type": "function", "function": {"name": "xxx"}}</code>）</li>
 </ul>
-<p>不同提供商对<code>tool_choice</code>的支持范围不同。为解决差异，本库引入兼容性配置项 <code>supported_tool_choice</code>，默认值为 <code>["auto"]</code>，此时<code>bind_tools</code> 中传入的 <code>tool_choice</code> 只能为 <code>auto</code>，其他取值会被过滤。</p>
-<p>若需支持传递其他 <code>tool_choice</code> 取值，必须配置支持项。配置值为字符串列表，每个字符串的可选值：</p>
+<p>不同提供商对 <code>tool_choice</code> 的支持范围不同。为解决差异，本库引入兼容性配置项 <code>supported_tool_choice</code>，默认值为 <code>["auto"]</code>，此时 <code>bind_tools</code> 中传入的 <code>tool_choice</code> 只能为 <code>auto</code>，其他取值会被过滤。</p>
+<p>若需支持其他 <code>tool_choice</code> 取值，必须配置支持项。配置值为字符串列表，每个字符串的可选值：</p>
 <ul>
-<li><code>"auto"</code>, <code>"none"</code>, <code>"required"</code>：对应标准策略；</li>
-<li><code>"specific"</code>：本库特有标识，表示支持指定具体工具。</li>
+<li><code>"auto"</code>、<code>"none"</code>、<code>"required"</code>：对应标准策略</li>
+<li><code>"specific"</code>：本库特有标识，表示支持指定具体工具</li>
 </ul>
 <p>例如 vLLM 支持全部策略：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
@@ -2039,8 +2036,9 @@
 </span></code></pre></div>
 <details class="note">
 <summary>默认的结构化输出方法</summary>
-<p>目前常见的结构化输出方法有三种：<code>json_schema</code>、<code>function_calling</code>、<code>json_mode</code>。其中，效果最好的是<code>json_schema</code>，故本库的 <code>with_structured_output</code> 会优先使用<code>json_schema</code>作为结构化输出方法；当提供商不支持时，才会自动降级为 <code>function_calling</code>。不同的模型提供商对于结构化输出的支持程度有所不同。本库通过兼容性配置项 <code>supported_response_format</code> 声明提供商支持的结构化输出方法。默认值为 <code>[]</code>，表示既不支持 <code>json_schema</code> 也不支持 <code>json_mode</code>。此时 <code>with_structured_output(method=...)</code> 会固定使用 <code>function_calling</code>；即使传入 <code>json_schema</code> / <code>json_mode</code> 也会自动转化为 <code>function_calling</code>，如果想要使用对应的结构化输出方法，需要显式传入响应的参数（尤其是<code>json_schema</code>)。</p>
-<p>例如，vLLM 部署的模型支持 <code>json_schema</code> 结构化输出方法，则可以在注册时进行声明：</p>
+<p>目前常见的结构化输出方法有三种：<code>json_schema</code>、<code>function_calling</code>、<code>json_mode</code>。其中效果最好的是 <code>json_schema</code>，故本库的 <code>with_structured_output</code> 会优先使用 <code>json_schema</code> 作为结构化输出方法；当提供商不支持时，才会自动降级为 <code>function_calling</code>。</p>
+<p>不同模型提供商对结构化输出的支持程度有所不同。本库通过兼容性配置项 <code>supported_response_format</code> 声明提供商支持的结构化输出方法。默认值为 <code>[]</code>，表示既不支持 <code>json_schema</code> 也不支持 <code>json_mode</code>。此时 <code>with_structured_output(method=...)</code> 会固定使用 <code>function_calling</code>；即使传入 <code>json_schema</code> / <code>json_mode</code> 也会自动转化为 <code>function_calling</code>。若想使用对应的结构化输出方法，需显式传入相应参数（尤其是 <code>json_schema</code>）。</p>
+<p>例如，vLLM 部署的模型支持 <code>json_schema</code> 结构化输出方法，可在注册时声明：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -2053,8 +2051,8 @@
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
-<p>若 <code>supported_response_format</code> 包含 <code>json_schema</code>，则 <code>model.profile</code> 中的 <code>structured_output</code> 字段将自动置为 <code>True</code>，此时使用 <code>create_agent</code> 进行结构化输出时如果未指定具体的结构化输出策略，默认会采用 <code>json_schema</code> 作为结构化输出策略。</p>
-<p>例如: 
+<p>若 <code>supported_response_format</code> 包含 <code>json_schema</code>，则 <code>model.profile</code> 中的 <code>structured_output</code> 字段将自动置为 <code>True</code>。此时使用 <code>create_agent</code> 进行结构化输出时，若未指定具体的结构化输出策略，默认会采用 <code>json_schema</code>。</p>
+<p>例如：
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -2066,15 +2064,14 @@
 </span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">)</span>
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </span></code></pre></div></p>
-<p>输出结果为</p>
+<p>输出结果为：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>{&#39;structured_output&#39;: True}
 </span></code></pre></div>
 </div>
 </details>
 <h3 id="_8">传递额外参数</h3>
 <p>由于该类继承自 <code>BaseChatOpenAI</code>，因此支持传递 <code>BaseChatOpenAI</code> 的模型参数，例如 <code>temperature</code>、<code>extra_body</code> 等。</p>
-<p>对于非OpenAI官方定义的请求参数，可以通过 <code>extra_body</code> 传递。</p>
-<p>例如：</p>
+<p>对于非 OpenAI 官方定义的请求参数，可通过 <code>extra_body</code> 传递：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
@@ -2085,9 +2082,9 @@
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="_9">传递多模态数据</h3>
-<p>支持传递多模态数据。你可以使用 OpenAI 兼容的多模态数据格式，或直接使用 LangChain 中的 <code>content_block</code>。</p>
-<p>传递图片类数据：</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<p>支持传递多模态数据。可使用 OpenAI 兼容的多模态数据格式，或直接使用 LangChain 中的 <code>content_block</code>。</p>
+<p>传递图片数据：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">HumanMessage</span><span class="p">(</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="n">content_blocks</span><span class="o">=</span><span class="p">[</span>
@@ -2104,7 +2101,7 @@
 </span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 </span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
-传递视频类数据：</p>
+<p>传递视频数据：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
@@ -2124,8 +2121,7 @@
 </span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="_10">使用推理模型</h3>
-<p>本库创建的模型类的一大特点就是进一步适配了更多的推理模型。例如接入<code>qwen3-4b</code>模型。</p>
-<p>例如：</p>
+<p>本库创建的模型类针对推理模型进行了深度适配。以使用 vLLM 部署 <code>qwen3-4b</code> 推理模型为例：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
@@ -2145,23 +2141,17 @@
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
-<p>由于新版的vLLM默认将推理内容以<code>reasoning</code>字段返回，因此如果使用vLLM部署的推理模型，必须在创建对话模型类时指定<code>reasoning_field_name</code>参数，取值为<code>reasoning</code>。</p>
-<p>但为复用既有的 <code>content_blocks</code> 默认解析逻辑，本库仍然会将其保存至 <code>additional_kwargs["reasoning_content"]</code>。</p>
+<p>由于新版 vLLM 默认将推理内容以 <code>reasoning</code> 字段返回，因此若使用 vLLM 部署推理模型，必须在创建对话模型类时指定 <code>reasoning_field_name</code> 参数为 <code>reasoning</code>。</p>
+<p>但为复用既有的 <code>content_blocks</code> 默认解析逻辑，本库仍会将其保存至 <code>additional_kwargs["reasoning_content"]</code>。</p>
 </div>
 <details class="note">
 <summary>不同推理模式的支持</summary>
-<p>不同模型的推理模式不尽相同（这点在Agent开发中尤为重要）：有些需要在本次调用中显式传递推理内容，有些则无需。本库提供 <code>reasoning_keep_policy</code> 兼容性配置以适配这些差异。</p>
+<p>不同模型的推理模式存在差异（这点在 Agent 开发中尤为重要）：有些需要在本次调用中显式传递推理内容，有些则无需。本库提供 <code>reasoning_keep_policy</code> 兼容性配置以适配这些差异。</p>
 <p>该配置项支持以下取值：</p>
 <ul>
-<li>
-<p><code>never</code>：在历史消息中<strong>不保留任何</strong>推理内容（默认)；</p>
-</li>
-<li>
-<p><code>current</code>：仅保留<strong>当前对话</strong>中的推理内容；</p>
-</li>
-<li>
-<p><code>all</code>：保留<strong>所有对话</strong>中的推理内容。</p>
-</li>
+<li><code>never</code>：在历史消息中<strong>不保留任何</strong>推理内容（默认值）</li>
+<li><code>current</code>：仅保留<strong>当前对话</strong>中的推理内容</li>
+<li><code>all</code>：保留<strong>所有对话</strong>中的推理内容</li>
 </ul>
 <pre class="mermaid"><code>graph LR
     A[reasoning_content 保留策略] --&gt; B{取值?};
@@ -2171,9 +2161,9 @@
     C --&gt; F[发送给模型];
     D --&gt; F;
     E --&gt; F;</code></pre>
-<p>例如，假设推理内容的字段名称是 <code>reasoning_content</code>，当用户先提问"纽约天气如何？"，随后追问"伦敦天气如何？"，当前正要进行第二轮对话，且即将进行最后一次模型调用。</p>
+<p>例如，假设推理内容的字段名称是 <code>reasoning_content</code>，用户先提问"纽约天气如何？"，随后追问"伦敦天气如何？"，当前正要进行第二轮对话的最后一次模型调用。</p>
 <ul>
-<li>取值为<code>never</code>时</li>
+<li>取值为 <code>never</code> 时</li>
 </ul>
 <p>最终传递给模型的 messages 中<strong>不会有任何</strong> <code>reasoning_content</code> 字段，模型收到的 messages 为：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
@@ -2187,9 +2177,9 @@
 </span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="p">]</span>
 </span></code></pre></div>
 <ul>
-<li>取值为<code>current</code>时</li>
+<li>取值为 <code>current</code> 时</li>
 </ul>
-<p>仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段。该策略适用于交错式思考（Interleaved Thinking）场景，即模型在显式推理与工具调用之间交替进行，此时需要将当前轮次的推理内容进行保留。模型收到的 messages 为：
+<p>仅保留<strong>当前对话</strong>中的 <code>reasoning_content</code> 字段。该策略适用于交错式思考（Interleaved Thinking）场景，即模型在显式推理与工具调用之间交替进行，此时需保留当前轮次的推理内容。模型收到的 messages 为：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
@@ -2204,11 +2194,11 @@
 </span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="p">},</span>
 </span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 </span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="p">]</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <ul>
-<li>取值为<code>all</code>时</li>
+<li>取值为 <code>all</code> 时</li>
 </ul>
-<p>保留<strong>所有</strong>对话中的 <code>reasoning_content</code> 字段。模型收到的 messages 为：
+<p>保留<strong>所有</strong>对话中的 <code>reasoning_content</code> 字段。模型收到的 messages 为：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">},</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="p">{</span>
@@ -2232,11 +2222,11 @@
 </span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>    <span class="p">},</span>
 </span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>    <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;雨天，14~20°C&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
 </span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="p">]</span>
-</span></code></pre></div></p>
-<p><strong>注意</strong>：若本轮对话不涉及工具调用，则<code>current</code>与<code>never</code>效果相同。</p>
-<p>值得注意的是，虽然该参数属于兼容性配置项，但同一提供商的不同模型、甚至同一模型在不同场景下对推理内容的保留策略要求也可能不同，因此<strong>建议在实例化时显式指定</strong>，创建类时无需赋值。</p>
-<p>目前，最新一代推理模型（尤其是开源模型）绝大多数都采用“交错式思考（Interleaved Thinking）”模式。以 GLM-4.7-Flash 为例，启用该模式时，需在实例化时将 <code>reasoning_keep_policy</code> 设为 <code>current</code>，仅保留当前轮次的推理内容。示例：</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+</span></code></pre></div>
+<p><strong>注意</strong>：若本轮对话不涉及工具调用，则 <code>current</code> 与 <code>never</code> 效果相同。</p>
+<p>该参数虽属于兼容性配置项，但同一提供商的不同模型、甚至同一模型在不同场景下对推理内容的保留策略要求也可能不同，因此<strong>建议在实例化时显式指定</strong>，创建类时无需赋值。</p>
+<p>目前最新一代推理模型（尤其是开源模型）绝大多数采用"交错式思考（Interleaved Thinking）"模式。以 GLM-4.7-Flash 为例，启用该模式时，需在实例化时将 <code>reasoning_keep_policy</code> 设为 <code>current</code>，仅保留当前轮次的推理内容。示例：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4.7-flash&quot;</span><span class="p">,</span> <span class="n">reasoning_keep_policy</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
 </span></span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
@@ -2246,7 +2236,7 @@
 </span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;查纽约天气如何？&quot;</span><span class="p">)]})</span>
 </span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
-同时，GLM-4.7-Flash 模型也支持另一种思考模式，被称之为Preserved Thinking。此时需要保留历史消息中的所有 <code>reasoning_content</code> 字段，可以将 <code>reasoning_keep_policy</code> 设置为 <code>all</code>。例如：</p>
+<p>GLM-4.7-Flash 模型也支持另一种思考模式——Preserved Thinking。此时需保留历史消息中的所有 <code>reasoning_content</code> 字段，可将 <code>reasoning_keep_policy</code> 设置为 <code>all</code>。例如：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span>
@@ -2264,13 +2254,12 @@
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
-<p>同样，GLM-4.7-Flash 模型也为推理模型，在使用<code>vLLM</code>部署时，如果要回传推理内容实现交错式思考，则对应的字段为 <code>reasoning</code>而不是<code>reasoning_content</code>。故同样需要在创建对话模型类时指定兼容性选项<code>reasoning_field_name</code>取值为<code>reasoning</code>。</p>
+<p>GLM-4.7-Flash 作为推理模型，使用 vLLM 部署时，若要回传推理内容实现交错式思考，对应的字段为 <code>reasoning</code> 而非 <code>reasoning_content</code>。故同样需在创建对话模型类时指定兼容性选项 <code>reasoning_field_name</code> 为 <code>reasoning</code>。</p>
 </div>
 </details>
 <h3 id="model-profiles">Model profiles</h3>
-<p>可以通过 <code>model.profile</code> 获取模型的 profile。默认情况下返回空字典。</p>
-<p>你也可以在实例化时显式传入 <code>profile</code> 参数指定模型 profile。</p>
-<p>例如：
+<p>可通过 <code>model.profile</code> 获取模型的 profile。默认情况下返回空字典。</p>
+<p>也可在实例化时显式传入 <code>profile</code> 参数指定模型 profile：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">custom_profile</span> <span class="o">=</span> <span class="p">{</span>
@@ -2282,12 +2271,11 @@
 </span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">custom_profile</span><span class="p">)</span>
 </span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 </span></code></pre></div>
-或者直接在创建时传入模型提供商的所有模型的<code>profile</code>参数。</p>
-<p>例如：
+<p>或者直接在创建时传入模型提供商所有模型的 <code>profile</code> 参数：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_dev_utils.chat_models.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_openai_compatible_model</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">model_profiles</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>     <span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    <span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">:</span> <span class="p">{</span>
 </span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>        <span class="s2">&quot;max_input_tokens&quot;</span><span class="p">:</span> <span class="mi">131072</span><span class="p">,</span>
 </span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>        <span class="s2">&quot;max_output_tokens&quot;</span><span class="p">:</span> <span class="mi">8192</span><span class="p">,</span>
 </span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>        <span class="s2">&quot;image_inputs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -2299,7 +2287,7 @@
 </span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>        <span class="s2">&quot;reasoning_output&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>        <span class="s2">&quot;tool_calling&quot;</span><span class="p">:</span> <span class="kc">True</span>
 </span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>    <span class="p">},</span>
-</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>    <span class="c1"># 此处还可以写更多的model profile</span>
+</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>    <span class="c1"># 此处可添加更多 model profile</span>
 </span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="p">}</span>
 </span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>
 </span><span id="__span-25-19"><a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a><span class="n">ChatVLLM</span> <span class="o">=</span> <span class="n">create_openai_compatible_model</span><span class="p">(</span>
@@ -2312,33 +2300,33 @@
 </span><span id="__span-25-26"><a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span>
 </span><span id="__span-25-27"><a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a><span class="p">)</span>
 </span><span id="__span-25-28"><a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="openai-responses-api">支持 OpenAI 最新的 Responses API</h3>
 <p>该模型类也支持 OpenAI 最新的 <code>responses</code> API（参数名为 <code>use_responses_api</code>）。目前仅少量提供商支持该风格接口；若你的提供商支持，可通过 <code>use_responses_api=True</code> 开启。</p>
-<p>例如 vLLM 支持 <code>responses</code> API，则可以这样使用：</p>
+<p>例如 vLLM 支持 <code>responses</code> API：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 </span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="hll"><span class="n">model</span> <span class="o">=</span> <span class="n">ChatVLLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5-7b&quot;</span><span class="p">,</span> <span class="n">use_responses_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;你好&quot;</span><span class="p">)])</span>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
-<p>目前该功能的实现完全依托于<code>BaseChatOpenAI</code>对于<code>responses</code> API的实现，故在使用中可能存在一定的兼容性问题，后续将会根据实际情况进行优化。</p>
+<p>目前该功能的实现完全依托于 <code>BaseChatOpenAI</code> 对 <code>responses</code> API 的实现，使用中可能存在一定的兼容性问题，后续将根据实际情况优化。</p>
 <div class="admonition warning">
-<p class="admonition-title">注意</p>
-<p>本库尚无法保证对所有 OpenAI 兼容接口的 100% 兼容（虽然可通过兼容性配置尽量提升，但仍可能存在差异）。若目标模型已有官方或社区维护的集成类，请优先使用。如遇兼容性问题，欢迎在 GitHub 仓库提 issue。</p>
+<p class="admonition-title">兼容性说明</p>
+<p>本库尚无法保证对所有 OpenAI 兼容接口的 100% 兼容（虽可通过兼容性配置尽量提升，但仍可能存在差异）。若目标模型已有官方或社区维护的集成类，请优先使用。如遇兼容性问题，欢迎在 GitHub 仓库提 issue。</p>
 <p>以 OpenRouter 为例，其虽提供 OpenAI 兼容接口，但存在多项兼容差异；LangChain 官方已推出 <a href="https://docs.langchain.com/oss/python/integrations/providers/openrouter">ChatOpenRouter</a>，建议直接采用该类接入 OpenRouter。</p>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">注意</p>
-<p>该函数底层使用 <a href="https://docs.pydantic.dev/latest/concepts/models/#dynamic-model-creation">pydantic 的 create_model</a> 创建对话模型类，会带来一定的性能开销。此外，<code>create_openai_compatible_model</code> 使用全局字典记录各模型提供商的 <code>profiles</code>，为了避免多线程并发问题，建议在项目启动阶段创建好集成类，后续避免动态创建。</p>
+<p class="admonition-title">性能注意事项</p>
+<p>该函数底层使用 <a href="https://docs.pydantic.dev/latest/concepts/models/#dynamic-model-creation">pydantic 的 create_model</a> 创建对话模型类，会带来一定的性能开销。此外，<code>create_openai_compatible_model</code> 使用全局字典记录各模型提供商的 <code>profiles</code>，为避免多线程并发问题，建议在项目启动阶段创建好集成类，后续避免动态创建。</p>
 </div>
 <div class="admonition success">
 <p class="admonition-title">最佳实践</p>
-<p>接入 OpenAI 兼容 API 的对话模型提供商时，可以直接使用 <code>langchain-openai</code> 的 <code>ChatOpenAI</code>，并通过 <code>base_url</code> 与 <code>api_key</code> 指向你的提供商服务。该方式足够简单，适用于比较简单的场景（尤其是使用的是普通的对话模型而不是推理模型）。</p>
-<p>但是会存在以下问题：</p>
+<p>接入 OpenAI 兼容 API 的对话模型提供商时，可直接使用 <code>langchain-openai</code> 的 <code>ChatOpenAI</code>，并通过 <code>base_url</code> 与 <code>api_key</code> 指向你的提供商服务。该方式简单直接，适用于简单场景（尤其是使用普通对话模型而非推理模型时）。</p>
+<p>但存在以下问题：</p>
 <ol>
 <li>
-<p>无法显示非 OpenAI 官方推理模型的思维链（即<code>reasoning_content</code> / <code>reasoning</code> 返回的内容）</p>
+<p>无法显示非 OpenAI 官方推理模型的思维链（即 <code>reasoning_content</code> / <code>reasoning</code> 返回的内容）</p>
 </li>
 <li>
 <p>不支持 <code>video</code> 类型的 content_block</p>
@@ -2347,7 +2335,7 @@
 <p>结构化输出的默认策略覆盖率较低</p>
 </li>
 </ol>
-<p>当你遇到上述差异时，可以使用本库提供的 OpenAI 兼容集成类进行适配。</p>
+<p>当你遇到上述问题时，可使用本库提供的 OpenAI 兼容集成类进行适配。</p>
 </div>
 
 
