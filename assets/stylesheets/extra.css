@@ -185,6 +185,40 @@ h1 {
   border-color: var(--md-accent-fg-color);
 }
 
+/* Light Mode Code Blocks - Clear Boundaries */
+[data-md-color-scheme="default"] .md-typeset pre > code {
+  background-color: #f8fafc; /* Slate 50 - Light background */
+  border: 1px solid #cbd5e1; /* Slate 300 - Clear visible border */
+  box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.08),
+    0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  color: #1e293b; /* Slate 800 - Dark text */
+}
+
+[data-md-color-scheme="default"] .md-typeset pre > code:hover {
+  border-color: #94a3b8; /* Slate 400 */
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Inline Code - Light Mode */
+[data-md-color-scheme="default"] .md-typeset code:not(pre > code) {
+  background-color: #f1f5f9; /* Slate 100 */
+  border: 1px solid #e2e8f0; /* Slate 200 */
+  border-radius: 6px;
+  padding: 0.15em 0.4em;
+  color: #be185d; /* Pink 700 - Better contrast */
+}
+
+/* Dark Mode Inline Code */
+[data-md-color-scheme="slate"] .md-typeset code:not(pre > code) {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 0.15em 0.4em;
+}
+
 /* Admonitions - Soft Glow */
 .md-typeset .admonition, 
 .md-typeset details {
